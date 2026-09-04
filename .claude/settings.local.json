@@ -1,0 +1,19 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(cp \"/Users/khurodza/Downloads/00sl-favor-move-articleLarge.png.webp\" /Users/khurodza/Documents/polina_classes/lessons/images/story-favour.webp)",
+      "Bash(cp \"/Users/khurodza/Downloads/0*6B0LjztC5RQxA76f.jpg\" /Users/khurodza/Documents/polina_classes/lessons/images/story-decision.jpg)",
+      "Bash(cp \"/Users/khurodza/Downloads/images.jpeg\" /Users/khurodza/Documents/polina_classes/lessons/images/story-risk.jpeg)",
+      "Bash(cp \"/Users/khurodza/Downloads/images-2.jpeg\" /Users/khurodza/Documents/polina_classes/lessons/images/story-speech.jpeg)",
+      "Bash(curl -L -A 'Mozilla/5.0 \\(Macintosh; Intel Mac OS X 10_15_7\\) AppleWebKit/537.36' -o /Users/khurodza/Documents/polina_classes/lessons/images/people/person-lovelace.jpg https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/Ada_Lovelace_portrait.jpg/400px-Ada_Lovelace_portrait.jpg)",
+      "Bash(curl -L -A 'Mozilla/5.0 \\(Macintosh; Intel Mac OS X 10_15_7\\) AppleWebKit/537.36' -o /Users/khurodza/Documents/polina_classes/lessons/images/people/person-babbage.jpg https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/Charles_Babbage_-_1860.jpg/400px-Charles_Babbage_-_1860.jpg)",
+      "Bash(curl -L -A 'Mozilla/5.0 \\(Macintosh; Intel Mac OS X 10_15_7\\) AppleWebKit/537.36' -o /Users/khurodza/Documents/polina_classes/lessons/images/people/person-turing.jpg https://upload.wikimedia.org/wikipedia/commons/thumb/a/a1/Alan_Turing_Aged_16.jpg/400px-Alan_Turing_Aged_16.jpg)",
+      "Bash(curl -L -A 'Mozilla/5.0 \\(Macintosh; Intel Mac OS X 10_15_7\\) AppleWebKit/537.36' -o /Users/khurodza/Documents/polina_classes/lessons/images/people/person-bernstein.jpg https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/Leonard_Bernstein_-_publicity.jpg/400px-Leonard_Bernstein_-_publicity.jpg)",
+      "Bash(curl -L -A 'Mozilla/5.0 \\(Macintosh; Intel Mac OS X 10_15_7\\) AppleWebKit/537.36' -o /Users/khurodza/Documents/polina_classes/lessons/images/people/person-perry.jpg https://upload.wikimedia.org/wikipedia/commons/thumb/a/a6/Antoinette_Perry.jpg/400px-Antoinette_Perry.jpg)",
+      "Bash(curl -L -A 'Mozilla/5.0 \\(Macintosh; Intel Mac OS X 10_15_7\\) AppleWebKit/537.36 \\(KHTML, like Gecko\\) Chrome/120.0.0.0 Safari/537.36' -H 'Referer: https://en.wikipedia.org/' -o /Users/khurodza/Documents/polina_classes/lessons/images/people/person-lovelace.jpg https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/Ada_Lovelace_portrait.jpg/440px-Ada_Lovelace_portrait.jpg)",
+      "Bash(curl -s -L -A \"Mozilla/5.0\" \"https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/Ada_Lovelace_portrait.jpg/440px-Ada_Lovelace_portrait.jpg\")",
+      "Bash(curl -s \"https://en.wikipedia.org/w/api.php?action=query&titles=Ada_Lovelace&prop=pageimages&format=json&pithumbsize=400&piprop=thumbnail\")",
+      "Bash(python3 -c \"import sys,json; d=json.load\\(sys.stdin\\); pages=d['query']['pages']; print\\(list\\(pages.values\\(\\)\\)[0].get\\('thumbnail',{}\\).get\\('source',''\\)\\)\")"
+    ]
+  }
+}

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>English Classes</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .welcome {
+      text-align: center;
+      padding: 20px 0 8px;
+    }
+    .welcome h2 { font-family: 'Fraunces', Georgia, serif; font-size: 1.7rem; color: var(--primary); }
+    .welcome p  { color: var(--muted); margin-top: 6px; }
+    .empty-state {
+      text-align: center;
+      color: var(--muted);
+      padding: 40px 20px;
+      font-size: .95rem;
+    }
+  </style>
+</head>
+<body>
+
+<header class="site-header">
+  <h1>📚 English Classes</h1>
+</header>
+
+<div class="container">
+
+  <!-- Student name -->
+  <div class="student-bar">
+    <label for="studentName">👋 Your name:</label>
+    <input type="text" id="studentName" placeholder="Type your name here…" autocomplete="off">
+  </div>
+
+  <div class="welcome">
+    <h2 id="greetingText">Hello!</h2>
+    <p>Choose a lesson below to start or continue.</p>
+  </div>
+
+  <!-- ── ADD NEW LESSONS BELOW THIS LINE ────────────────────────────────────
+       Copy one .file-folder block and update:
+         href           → the lesson filename  (e.g. lessons/lesson-02.html)
+         .file-num      → lesson number
+         .file-topic    → topic title
+         .file-date     → date of the class
+       Badges: keep badge-class, add badge-done when homework is submitted.
+       Colors cycle automatically: terracotta → blue → rose → gold → repeat.
+  ──────────────────────────────────────────────────────────────────────── -->
+
+  <div class="section-title">All Lessons</div>
+
+  <div class="file-stack" id="lessonGrid">
+
+    <!-- LESSON 1 -->
+    <a class="file-folder" href="lessons/lesson-01.html">
+      <div class="file-row">
+        <span class="file-num">1</span>
+        <div class="file-info">
+          <span class="file-topic">Delexical Verbs, IPA &amp; Culture</span>
+          <span class="file-date">4 September 2026</span>
+        </div>
+        <div class="file-badges">
+          <span class="badge badge-class">Class</span>
+          <span class="badge badge-hw">Homework</span>
+        </div>
+      </div>
+    </a>
+
+    <!-- ADD MORE LESSONS HERE — copy the block above -->
+
+  </div>
+
+</div>
+
+<script>
+  const nameInput = document.getElementById('studentName');
+  const greeting  = document.getElementById('greetingText');
+
+  // Restore saved name
+  const saved = localStorage.getItem('studentName') || '';
+  nameInput.value = saved;
+  updateGreeting(saved);
+
+  nameInput.addEventListener('input', () => {
+    localStorage.setItem('studentName', nameInput.value.trim());
+    updateGreeting(nameInput.value.trim());
+  });
+
+  function updateGreeting(name) {
+    greeting.textContent = name ? `Hello, ${name}!` : 'Hello!';
+  }
+</script>
+
+</body>
+</html>

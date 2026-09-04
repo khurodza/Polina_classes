@@ -1,0 +1,1256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lesson 1 – Delexical Verbs, IPA &amp; Culture</title>
+  <link rel="stylesheet" href="../style.css">
+  <style>
+    .emoji-selector { display:flex; flex-wrap:wrap; gap:6px; margin:12px 0; }
+    .emoji-btn { font-size:1.4rem; width:46px; height:46px; border:2px solid var(--border); border-radius:10px; background:var(--card); cursor:pointer; transition:all .15s; }
+    .emoji-btn:hover { border-color:var(--primary); transform:scale(1.1); }
+    .emoji-btn.selected { border-color:var(--primary); background:rgba(212,87,42,.12); }
+    .emoji-count { font-size:.85rem; color:var(--muted); margin-bottom:6px; }
+    .emoji-display { font-size:1.6rem; min-height:38px; letter-spacing:4px; margin:6px 0 10px; }
+
+    .rule-box { background:linear-gradient(135deg,#FDF5EC,#F0E8D4); border:2px solid var(--border); border-radius:var(--radius); padding:20px 24px; margin-bottom:20px; }
+    .rule-box-title { font-family:'Fraunces',Georgia,serif; font-weight:700; font-size:1rem; margin-bottom:14px; color:var(--text); }
+    .rule-cols { display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+    .rule-col { padding:14px; border-radius:10px; }
+    .rule-take { background:rgba(95,142,196,.12); border-left:3px solid var(--blue); }
+    .rule-give { background:rgba(201,160,48,.12); border-left:3px solid var(--accent); }
+    .rule-verb { font-size:1.1rem; font-weight:800; margin-bottom:6px; }
+    .rule-take .rule-verb { color:var(--blue); }
+    .rule-give .rule-verb { color:var(--accent-dk); }
+    .rule-col p { font-size:.9rem; margin-bottom:6px; }
+    .rule-col ul { margin-left:16px; margin-top:8px; font-size:.9rem; }
+    .rule-col li { margin-bottom:4px; }
+
+    .word-choice { display:inline-flex; border:2px solid var(--border); border-radius:8px; overflow:hidden; margin:0 4px; vertical-align:middle; }
+    .word-choice-btn { padding:3px 10px; cursor:pointer; border:none; background:transparent; font-size:.95rem; color:var(--muted); transition:background .15s,color .15s; font-family:inherit; }
+    .word-choice-btn:hover { background:var(--bg); color:var(--text); }
+    .word-choice-btn.selected { background:var(--primary); color:#fff; }
+    .word-choice-btn.correct { background:var(--green) !important; color:#fff !important; }
+    .word-choice-btn.wrong   { background:var(--red) !important; color:#fff !important; }
+
+    .word-bank { margin:12px 0 16px; }
+    .wb-row { display:flex; flex-wrap:wrap; align-items:center; gap:6px; margin-bottom:8px; }
+    .wb-verb { font-weight:700; font-size:.85rem; text-transform:uppercase; color:var(--primary); margin-right:4px; }
+    .wb-chip { background:rgba(212,87,42,.10); color:var(--primary); border-radius:100px; padding:3px 14px; font-size:.85rem; cursor:pointer; user-select:none; transition:all .2s; }
+    .wb-chip:hover { background:rgba(212,87,42,.18); }
+    .wb-chip.crossed { text-decoration:line-through; opacity:.4; background:rgba(44,32,16,.07); color:var(--muted); }
+
+    .story-cards { display:grid; grid-template-columns:repeat(2,1fr); gap:14px; margin-bottom:18px; }
+    .story-card { border-radius:var(--radius); overflow:hidden; border:2px solid var(--border); background:var(--card); box-shadow:var(--shadow); }
+    .story-card img { width:100%; height:200px; object-fit:cover; display:block; }
+
+    /* Per-tab accent colours (folder-tab style) */
+    .tab-btn:nth-child(2).active { background:var(--blue);     border-color:var(--blue); }
+    .tab-btn:nth-child(3).active { background:var(--rose);     border-color:var(--rose); }
+    .tab-btn:nth-child(4).active { background:var(--accent-dk);border-color:var(--accent-dk); }
+
+    .ipa-chart { background:var(--card); border:2px solid var(--border); border-radius:var(--radius); padding:20px 24px; margin-bottom:20px; }
+    .ipa-section-label { font-weight:700; font-size:.8rem; text-transform:uppercase; letter-spacing:1px; color:var(--muted); margin-bottom:10px; }
+    .ipa-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin-bottom:14px; }
+    .ipa-cell { background:var(--bg); border-radius:8px; padding:10px 8px; text-align:center; }
+    .ipa-s { font-size:1.2rem; font-weight:700; color:var(--primary); display:block; }
+    .ipa-e { font-size:.75rem; color:var(--muted); margin-top:3px; display:block; }
+
+    .ipa-exercise { display:flex; flex-direction:column; gap:8px; }
+    .ipa-row { display:flex; align-items:center; gap:14px; padding:9px 14px; background:var(--bg); border-radius:8px; }
+    .ipa-num { font-weight:700; color:var(--muted); min-width:22px; font-size:.9rem; }
+    .ipa-trans { font-size:1rem; color:var(--primary-dk); flex:1; }
+    .ipa-blank { min-width:180px; text-align:left !important; padding:3px 12px !important; }
+    .ipa-set-label { font-size:.72rem; font-weight:700; text-transform:uppercase; letter-spacing:.5px; color:var(--primary); padding:8px 14px 2px; border-top:2px dashed var(--border); margin-top:4px; }
+
+    .person-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; }
+    .person-card { background:var(--card); border-radius:var(--radius); box-shadow:var(--shadow); padding:0 0 14px; text-align:center; overflow:hidden; }
+    .person-photo { width:100%; height:240px; object-fit:contain; object-position:center; display:block; background:var(--bg); padding:8px; box-sizing:border-box; }
+    .person-card-body { padding:10px 12px 0; }
+    .person-name { font-weight:700; font-size:.9rem; margin-bottom:4px; }
+    .person-desc { font-size:.78rem; color:var(--muted); line-height:1.55; text-align:left; }
+    .p-badge { display:inline-block; font-size:.68rem; padding:2px 8px; border-radius:20px; margin-bottom:6px; font-weight:700; }
+    .badge-tech    { background:#DBEAFE; color:#2563EB; }
+    .badge-music   { background:#F3E8FF; color:#9333EA; }
+    .badge-theatre { background:#FCE7F3; color:#DB2777; }
+    .badge-art     { background:#D1FAE5; color:#059669; }
+    .badge-lit     { background:#FEF3C7; color:#D97706; }
+
+    .intro-card { background:linear-gradient(135deg,#FDF5EC,#F0E8D4); border:1px solid var(--border); border-radius:var(--radius); padding:16px 20px; margin-bottom:24px; font-size:.95rem; color:var(--text); }
+    .wordwall-btn { display:inline-flex; align-items:center; gap:10px; margin-top:12px; padding:12px 26px; background:var(--primary); color:#fff; border-radius:100px; font-size:1rem; font-weight:700; text-decoration:none; transition:opacity .2s,transform .1s; box-shadow:0 3px 10px rgba(212,87,42,.28); }
+    .wordwall-btn:hover { opacity:.88; transform:translateY(-2px); text-decoration:none; }
+
+    .colloc-grid { display:grid; grid-template-columns:1fr 1fr; gap:0; margin:12px 0; border:1px solid var(--border); border-radius:var(--radius); overflow:hidden; }
+    .colloc-col { padding:14px 18px; }
+    .colloc-col:first-child { border-right:1px solid var(--border); }
+    .colloc-col-header { font-weight:800; font-size:.85rem; text-transform:uppercase; letter-spacing:.5px; color:var(--primary); margin-bottom:10px; }
+    .colloc-item { font-size:.88rem; padding:5px 0; border-bottom:1px solid var(--border); color:var(--text); }
+    .colloc-item:last-child { border-bottom:none; }
+    .listen-item { margin-bottom:22px; padding-bottom:22px; border-bottom:1px dashed var(--border); }
+    .listen-item:last-of-type { border-bottom:none; margin-bottom:0; }
+    .listen-header { display:flex; align-items:center; gap:12px; margin-bottom:10px; }
+    .listen-num { font-weight:800; color:var(--primary); font-size:1rem; min-width:28px; }
+    .listen-header audio { flex:1; }
+
+    @media(max-width:560px){
+      .rule-cols,.story-cards,.person-grid,.colloc-grid { grid-template-columns:1fr; }
+      .ipa-grid { grid-template-columns:repeat(2,1fr); }
+      .colloc-col:first-child { border-right:none; border-bottom:1px solid var(--border); }
+    }
+  </style>
+</head>
+<body>
+
+<header class="site-header">
+  <h1>Lesson 1 — Delexical Verbs, IPA &amp; Culture</h1>
+  <a class="back-link" href="../index.html">← All Lessons</a>
+</header>
+
+<div class="container">
+
+  <div class="lesson-meta">
+    <h2>Delexical Verbs, IPA Sounds &amp; Culture</h2>
+    <p>📅 4 September 2026 &nbsp;·&nbsp; Lesson 1</p>
+  </div>
+
+  <div class="tab-bar">
+    <button class="tab-btn active" onclick="switchTab('p1',this)">Part 1 · Verbs</button>
+    <button class="tab-btn"        onclick="switchTab('p2',this)">Part 2 · Sounds</button>
+    <button class="tab-btn"        onclick="switchTab('p3',this)">Part 3 · Culture</button>
+    <button class="tab-btn"        onclick="switchTab('hw',this)">📝 Homework</button>
+  </div>
+  <div class="tab-scallop"></div>
+
+  <!-- ══════════════════════════════════════════════════════
+       PART 1 — DELEXICAL VERBS
+  ══════════════════════════════════════════════════════ -->
+  <div class="tab-content active" id="tab-p1">
+
+    <!-- Exercise 1: Emoji Warm-up -->
+    <div class="exercise">
+      <div class="exercise-label">Warm-up</div>
+      <h3>Choose 5 emojis that represent your week. Then explain your choices below.</h3>
+      <div class="emoji-count" id="emojiCount">0/5 selected</div>
+      <div class="emoji-display" id="emojiDisplay">—</div>
+      <div class="emoji-selector" id="emojiSelector"></div>
+      <textarea class="free-write" id="fw-warmup" placeholder="Explain your emoji choices…" rows="5"></textarea>
+      <div class="char-count" id="cc-fw-warmup">0 characters</div>
+    </div>
+
+    <!-- Exercise 2: Wordwall -->
+    <div class="exercise">
+      <div class="exercise-label">Vocabulary Game</div>
+      <h3>Play the game and match the collocations with <em>make</em> and <em>do</em>.</h3>
+      <a class="wordwall-btn" href="https://wordwall.net/resource/118183782?wwmethod=link&wwshareintent=student" target="_blank" rel="noopener">
+        🎮 Open Wordwall Game
+      </a>
+    </div>
+
+    <!-- Exercise 3: Free writing with word bank -->
+    <div class="exercise">
+      <div class="exercise-label">Use the Words</div>
+      <h3>Write 5 sentences about yourself. Choose any words or phrases from the list and use them with a suitable verb.</h3>
+      <div class="word-bank">
+        <div class="wb-row">
+          <span class="wb-chip" id="wc-1" onclick="toggleChip(this)">a mistake</span>
+          <span class="wb-chip" id="wc-2" onclick="toggleChip(this)">an effort</span>
+          <span class="wb-chip" id="wc-3" onclick="toggleChip(this)">a mess</span>
+          <span class="wb-chip" id="wc-4" onclick="toggleChip(this)">a difference</span>
+          <span class="wb-chip" id="wc-5" onclick="toggleChip(this)">a complaint</span>
+          <span class="wb-chip" id="wc-6" onclick="toggleChip(this)">a favour</span>
+          <span class="wb-chip" id="wc-7" onclick="toggleChip(this)">your best</span>
+          <span class="wb-chip" id="wc-8" onclick="toggleChip(this)">damage</span>
+        </div>
+      </div>
+      <textarea class="free-write" id="fw-ex3" placeholder="Write your 5 sentences here…" rows="7"></textarea>
+      <div class="char-count" id="cc-fw-ex3">0 characters</div>
+    </div>
+
+    <!-- Exercise 4: Rule Box -->
+    <div class="exercise">
+      <div class="exercise-label">Grammar Rule</div>
+      <div class="rule-box">
+        <div class="rule-box-title">📐 The Inward–Outward Principle</div>
+        <div class="rule-cols">
+          <div class="rule-col rule-take">
+            <div class="rule-verb">TAKE ←</div>
+            <p>brings something <strong>toward you</strong> or removes it</p>
+            <ul>
+              <li>take a risk</li>
+              <li>take medicine</li>
+              <li>take a photograph</li>
+              <li>take control</li>
+              <li>take someone's temperature</li>
+            </ul>
+          </div>
+          <div class="rule-col rule-give">
+            <div class="rule-verb">GIVE →</div>
+            <p>sends something <strong>outward</strong> — often a sound or a gesture</p>
+            <ul>
+              <li>give a smile</li>
+              <li>give a laugh</li>
+              <li>give a sigh</li>
+              <li>give a shout</li>
+              <li>give a speech</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Exercise 5: Three Matching Exercises -->
+    <div class="exercise">
+      <div class="exercise-label">Matching</div>
+      <h3>Match the verbs with the collocations. Click one from each column.</h3>
+
+      <!-- Task 270 -->
+      <p style="font-weight:700;margin:16px 0 10px;">Task 270</p>
+      <div id="ex-match-270">
+        <div class="match-grid">
+          <div class="match-col" data-side="left">
+            <div class="match-item" data-pair="1" onclick="selectMatch(this,'ex-match-270')">do</div>
+            <div class="match-item" data-pair="2" onclick="selectMatch(this,'ex-match-270')">give</div>
+            <div class="match-item" data-pair="3" onclick="selectMatch(this,'ex-match-270')">put</div>
+            <div class="match-item" data-pair="4" onclick="selectMatch(this,'ex-match-270')">make</div>
+            <div class="match-item" data-pair="5" onclick="selectMatch(this,'ex-match-270')">take</div>
+          </div>
+          <div class="match-col" data-side="right">
+            <div class="match-item" data-pair="2" onclick="selectMatch(this,'ex-match-270')">a broad smile</div>
+            <div class="match-item" data-pair="1" onclick="selectMatch(this,'ex-match-270')">the housework</div>
+            <div class="match-item" data-pair="4" onclick="selectMatch(this,'ex-match-270')">a speech</div>
+            <div class="match-item" data-pair="5" onclick="selectMatch(this,'ex-match-270')">pity on</div>
+            <div class="match-item" data-pair="3" onclick="selectMatch(this,'ex-match-270')">pressure on someone</div>
+          </div>
+        </div>
+        <div class="btn-row"><button class="btn btn-ghost" onclick="resetMatchEx('ex-match-270')">Reset</button></div>
+      </div>
+
+      <!-- Task 271 -->
+      <p style="font-weight:700;margin:24px 0 10px;">Task 271</p>
+      <div id="ex-match-271">
+        <div class="match-grid">
+          <div class="match-col" data-side="left">
+            <div class="match-item" data-pair="1" onclick="selectMatch(this,'ex-match-271')">get</div>
+            <div class="match-item" data-pair="2" onclick="selectMatch(this,'ex-match-271')">take</div>
+            <div class="match-item" data-pair="3" onclick="selectMatch(this,'ex-match-271')">make</div>
+            <div class="match-item" data-pair="4" onclick="selectMatch(this,'ex-match-271')">give</div>
+            <div class="match-item" data-pair="5" onclick="selectMatch(this,'ex-match-271')">do</div>
+          </div>
+          <div class="match-col" data-side="right">
+            <div class="match-item" data-pair="3" onclick="selectMatch(this,'ex-match-271')">a living</div>
+            <div class="match-item" data-pair="4" onclick="selectMatch(this,'ex-match-271')">a nervous laugh</div>
+            <div class="match-item" data-pair="1" onclick="selectMatch(this,'ex-match-271')">rid of something</div>
+            <div class="match-item" data-pair="2" onclick="selectMatch(this,'ex-match-271')">some medicine</div>
+            <div class="match-item" data-pair="5" onclick="selectMatch(this,'ex-match-271')">someone a favour</div>
+          </div>
+        </div>
+        <div class="btn-row"><button class="btn btn-ghost" onclick="resetMatchEx('ex-match-271')">Reset</button></div>
+      </div>
+
+      <!-- Task 272 -->
+      <p style="font-weight:700;margin:24px 0 10px;">Task 272</p>
+      <div id="ex-match-272">
+        <div class="match-grid">
+          <div class="match-col" data-side="left">
+            <div class="match-item" data-pair="1" onclick="selectMatch(this,'ex-match-272')">take</div>
+            <div class="match-item" data-pair="2" onclick="selectMatch(this,'ex-match-272')">give</div>
+            <div class="match-item" data-pair="3" onclick="selectMatch(this,'ex-match-272')">get</div>
+            <div class="match-item" data-pair="4" onclick="selectMatch(this,'ex-match-272')">do</div>
+            <div class="match-item" data-pair="5" onclick="selectMatch(this,'ex-match-272')">make</div>
+          </div>
+          <div class="match-col" data-side="right">
+            <div class="match-item" data-pair="2" onclick="selectMatch(this,'ex-match-272')">a deep sigh</div>
+            <div class="match-item" data-pair="1" onclick="selectMatch(this,'ex-match-272')">someone's temperature</div>
+            <div class="match-item" data-pair="5" onclick="selectMatch(this,'ex-match-272')">a mistake</div>
+            <div class="match-item" data-pair="4" onclick="selectMatch(this,'ex-match-272')">some research</div>
+            <div class="match-item" data-pair="3" onclick="selectMatch(this,'ex-match-272')">on someone's nerves</div>
+          </div>
+        </div>
+        <div class="btn-row"><button class="btn btn-ghost" onclick="resetMatchEx('ex-match-272')">Reset</button></div>
+      </div>
+    </div>
+
+    <!-- Exercise 6: Take or Give? -->
+    <div class="exercise" id="ex6">
+      <div class="exercise-label">Take or Give?</div>
+      <h3>Choose the correct verb for each sentence.</h3>
+
+      <p>1. She tends to
+        <span class="word-choice" id="gap-1" data-answer="take"><button class="word-choice-btn" data-val="take" onclick="selectGap(this)">take</button><button class="word-choice-btn" data-val="give" onclick="selectGap(this)">give</button></span>
+        a lot of risks, which sometimes gets her into trouble.
+      </p>
+      <p>2. He just
+        <span class="word-choice" id="gap-2" data-answer="give"><button class="word-choice-btn" data-val="take" onclick="selectGap(this)">take</button><button class="word-choice-btn" data-val="give" onclick="selectGap(this)">give</button></span>
+        a deep sigh and walked out of the room without a word.
+      </p>
+      <p>3. The nurse will
+        <span class="word-choice" id="gap-3" data-answer="take"><button class="word-choice-btn" data-val="take" onclick="selectGap(this)">take</button><button class="word-choice-btn" data-val="give" onclick="selectGap(this)">give</button></span>
+        your blood pressure before you see the doctor.
+      </p>
+      <p>4. Don't worry — I'll
+        <span class="word-choice" id="gap-4" data-answer="give"><button class="word-choice-btn" data-val="take" onclick="selectGap(this)">take</button><button class="word-choice-btn" data-val="give" onclick="selectGap(this)">give</button></span>
+        you a call as soon as I arrive.
+      </p>
+      <p>5. It took her a moment to
+        <span class="word-choice" id="gap-5" data-answer="take"><button class="word-choice-btn" data-val="take" onclick="selectGap(this)">take</button><button class="word-choice-btn" data-val="give" onclick="selectGap(this)">give</button></span>
+        in the whole situation.
+      </p>
+      <p>6. She
+        <span class="word-choice" id="gap-6" data-answer="give"><button class="word-choice-btn" data-val="take" onclick="selectGap(this)">take</button><button class="word-choice-btn" data-val="give" onclick="selectGap(this)">give</button></span>
+        a nervous laugh when asked about her plans for the future.
+      </p>
+      <p>7. The director decided to
+        <span class="word-choice" id="gap-7" data-answer="take"><button class="word-choice-btn" data-val="take" onclick="selectGap(this)">take</button><button class="word-choice-btn" data-val="give" onclick="selectGap(this)">give</button></span>
+        the lead role in the film himself.
+      </p>
+      <p>8. Could you
+        <span class="word-choice" id="gap-8" data-answer="give"><button class="word-choice-btn" data-val="take" onclick="selectGap(this)">take</button><button class="word-choice-btn" data-val="give" onclick="selectGap(this)">give</button></span>
+        this message to the manager? I can't reach him by phone.
+      </p>
+
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="checkGaps()">Check ✓</button>
+        <button class="btn btn-ghost"   onclick="resetGaps()">Try again</button>
+      </div>
+    </div>
+
+    <!-- Exercise 7: Multiple Choice — all 4 verbs -->
+    <div class="exercise" id="ex7">
+      <div class="exercise-label">Make, Do, Take or Give?</div>
+      <h3>Choose the correct verb for each sentence.</h3>
+
+      <p style="font-weight:600;margin-bottom:8px;">1. She needs to ___ a decision by tomorrow or she'll lose the opportunity.</p>
+      <div class="mc-options" data-correct="b">
+        <label class="mc-option"><input type="radio" name="mc7q1" value="a"><span class="mc-bullet">A</span> do</label>
+        <label class="mc-option"><input type="radio" name="mc7q1" value="b"><span class="mc-bullet">B</span> make</label>
+        <label class="mc-option"><input type="radio" name="mc7q1" value="c"><span class="mc-bullet">C</span> take</label>
+        <label class="mc-option"><input type="radio" name="mc7q1" value="d"><span class="mc-bullet">D</span> give</label>
+      </div>
+
+      <p style="font-weight:600;margin:18px 0 8px;">2. He always ___ his best, even when the task seems impossible.</p>
+      <div class="mc-options" data-correct="d">
+        <label class="mc-option"><input type="radio" name="mc7q2" value="a"><span class="mc-bullet">A</span> makes</label>
+        <label class="mc-option"><input type="radio" name="mc7q2" value="b"><span class="mc-bullet">B</span> gives</label>
+        <label class="mc-option"><input type="radio" name="mc7q2" value="c"><span class="mc-bullet">C</span> takes</label>
+        <label class="mc-option"><input type="radio" name="mc7q2" value="d"><span class="mc-bullet">D</span> does</label>
+      </div>
+
+      <p style="font-weight:600;margin:18px 0 8px;">3. Could you ___ me a favour and post this letter on your way out?</p>
+      <div class="mc-options" data-correct="c">
+        <label class="mc-option"><input type="radio" name="mc7q3" value="a"><span class="mc-bullet">A</span> make</label>
+        <label class="mc-option"><input type="radio" name="mc7q3" value="b"><span class="mc-bullet">B</span> take</label>
+        <label class="mc-option"><input type="radio" name="mc7q3" value="c"><span class="mc-bullet">C</span> do</label>
+        <label class="mc-option"><input type="radio" name="mc7q3" value="d"><span class="mc-bullet">D</span> give</label>
+      </div>
+
+      <p style="font-weight:600;margin:18px 0 8px;">4. The journalist decided to ___ a closer look at the company's finances.</p>
+      <div class="mc-options" data-correct="c">
+        <label class="mc-option"><input type="radio" name="mc7q4" value="a"><span class="mc-bullet">A</span> give</label>
+        <label class="mc-option"><input type="radio" name="mc7q4" value="b"><span class="mc-bullet">B</span> make</label>
+        <label class="mc-option"><input type="radio" name="mc7q4" value="c"><span class="mc-bullet">C</span> take</label>
+        <label class="mc-option"><input type="radio" name="mc7q4" value="d"><span class="mc-bullet">D</span> do</label>
+      </div>
+
+      <p style="font-weight:600;margin:18px 0 8px;">5. She ___ a warm smile when she saw the surprise they had planned for her.</p>
+      <div class="mc-options" data-correct="b">
+        <label class="mc-option"><input type="radio" name="mc7q5" value="a"><span class="mc-bullet">A</span> took</label>
+        <label class="mc-option"><input type="radio" name="mc7q5" value="b"><span class="mc-bullet">B</span> gave</label>
+        <label class="mc-option"><input type="radio" name="mc7q5" value="c"><span class="mc-bullet">C</span> made</label>
+        <label class="mc-option"><input type="radio" name="mc7q5" value="d"><span class="mc-bullet">D</span> did</label>
+      </div>
+
+      <p style="font-weight:600;margin:18px 0 8px;">6. It's hard to ___ a difference when the system is so resistant to change.</p>
+      <div class="mc-options" data-correct="d">
+        <label class="mc-option"><input type="radio" name="mc7q6" value="a"><span class="mc-bullet">A</span> take</label>
+        <label class="mc-option"><input type="radio" name="mc7q6" value="b"><span class="mc-bullet">B</span> give</label>
+        <label class="mc-option"><input type="radio" name="mc7q6" value="c"><span class="mc-bullet">C</span> do</label>
+        <label class="mc-option"><input type="radio" name="mc7q6" value="d"><span class="mc-bullet">D</span> make</label>
+      </div>
+
+      <p style="font-weight:600;margin:18px 0 8px;">7. He ___ a lot of research before writing the article.</p>
+      <div class="mc-options" data-correct="d">
+        <label class="mc-option"><input type="radio" name="mc7q7" value="a"><span class="mc-bullet">A</span> made</label>
+        <label class="mc-option"><input type="radio" name="mc7q7" value="b"><span class="mc-bullet">B</span> gave</label>
+        <label class="mc-option"><input type="radio" name="mc7q7" value="c"><span class="mc-bullet">C</span> took</label>
+        <label class="mc-option"><input type="radio" name="mc7q7" value="d"><span class="mc-bullet">D</span> did</label>
+      </div>
+
+      <p style="font-weight:600;margin:18px 0 8px;">8. The company is likely to ___ serious damage to its reputation if the scandal breaks.</p>
+      <div class="mc-options" data-correct="b">
+        <label class="mc-option"><input type="radio" name="mc7q8" value="a"><span class="mc-bullet">A</span> take</label>
+        <label class="mc-option"><input type="radio" name="mc7q8" value="b"><span class="mc-bullet">B</span> do</label>
+        <label class="mc-option"><input type="radio" name="mc7q8" value="c"><span class="mc-bullet">C</span> give</label>
+        <label class="mc-option"><input type="radio" name="mc7q8" value="d"><span class="mc-bullet">D</span> make</label>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="checkMC()">Check ✓</button>
+        <button class="btn btn-ghost"   onclick="resetMC()">Try again</button>
+      </div>
+    </div>
+
+    <!-- Exercise 8: Picture Story -->
+    <div class="exercise">
+      <div class="exercise-label">Tell a Story</div>
+      <h3>Look at the four pictures. What collocation does each one remind you of? Use all four in a short story.</h3>
+      <div class="story-cards">
+        <div class="story-card"><img src="images/story-favour.webp"   alt="Picture 1"></div>
+        <div class="story-card"><img src="images/story-decision.jpg"  alt="Picture 2"></div>
+        <div class="story-card"><img src="images/story-risk.jpeg"     alt="Picture 3"></div>
+        <div class="story-card"><img src="images/story-speech.jpeg"   alt="Picture 4"></div>
+      </div>
+      <textarea class="free-write" id="fw-story" placeholder="Write your story here (4–6 sentences)…" rows="7"></textarea>
+      <div class="char-count" id="cc-fw-story">0 characters</div>
+    </div>
+
+  </div><!-- /tab-p1 -->
+
+  <!-- ══════════════════════════════════════════════════════
+       PART 2 — IPA SOUNDS
+  ══════════════════════════════════════════════════════ -->
+  <div class="tab-content" id="tab-p2">
+
+    <!-- Sound Reference Chart -->
+    <div class="ipa-chart">
+      <div style="font-weight:700;font-size:1rem;margin-bottom:16px;color:var(--primary-dk);">🔊 Sound Reference</div>
+
+      <div class="ipa-section-label">Diphthongs</div>
+      <div class="ipa-grid">
+        <div class="ipa-cell"><span class="ipa-s">/eɪ/</span><span class="ipa-e">day, face</span></div>
+        <div class="ipa-cell"><span class="ipa-s">/aɪ/</span><span class="ipa-e">my, time</span></div>
+        <div class="ipa-cell"><span class="ipa-s">/ɔɪ/</span><span class="ipa-e">boy, join</span></div>
+        <div class="ipa-cell"><span class="ipa-s">/əʊ/</span><span class="ipa-e">go, home</span></div>
+        <div class="ipa-cell"><span class="ipa-s">/aʊ/</span><span class="ipa-e">now, town</span></div>
+        <div class="ipa-cell"><span class="ipa-s">/ɪə/</span><span class="ipa-e">here, ear</span></div>
+        <div class="ipa-cell"><span class="ipa-s">/eə/</span><span class="ipa-e">hair, fair</span></div>
+        <div class="ipa-cell"><span class="ipa-s">/ʊə/</span><span class="ipa-e">tour, cure</span></div>
+      </div>
+
+      <div class="ipa-section-label">Tricky Consonants</div>
+      <div class="ipa-grid">
+        <div class="ipa-cell"><span class="ipa-s">/θ/</span><span class="ipa-e">think, bath</span></div>
+        <div class="ipa-cell"><span class="ipa-s">/ð/</span><span class="ipa-e">this, breathe</span></div>
+        <div class="ipa-cell"><span class="ipa-s">/ŋ/</span><span class="ipa-e">sing, long</span></div>
+        <div class="ipa-cell"><span class="ipa-s">/ʃ/</span><span class="ipa-e">she, wash</span></div>
+        <div class="ipa-cell"><span class="ipa-s">/ʒ/</span><span class="ipa-e">measure</span></div>
+        <div class="ipa-cell"><span class="ipa-s">/dʒ/</span><span class="ipa-e">job, age</span></div>
+        <div class="ipa-cell" style="background:transparent;box-shadow:none;"></div>
+        <div class="ipa-cell" style="background:transparent;box-shadow:none;"></div>
+      </div>
+    </div>
+
+    <!-- 20-word transcription exercise -->
+    <div class="exercise" id="ex-ipa20">
+      <div class="exercise-label">Transcription → Word</div>
+      <h3>Read each transcription and write the correct English word.</h3>
+      <p style="color:var(--muted);font-size:.9rem;margin-bottom:14px;">💡 Some items are in sets — they look almost the same but with a different vowel sound. Can you spot them?</p>
+
+      <div class="ipa-exercise">
+        <div class="ipa-row"><span class="ipa-num">1</span><span class="ipa-trans">/ˈeɪ.dʒənt/</span><input class="blank ipa-blank" id="ipa-w1" data-answer="agent" placeholder="write the word"></div>
+        <div class="ipa-row"><span class="ipa-num">2</span><span class="ipa-trans">/ˈpaɪ.rɪt/</span><input class="blank ipa-blank" id="ipa-w2" data-answer="pirate" placeholder="write the word"></div>
+        <div class="ipa-row"><span class="ipa-num">3</span><span class="ipa-trans">/ˈlɔɪ.əl/</span><input class="blank ipa-blank" id="ipa-w3" data-answer="loyal" placeholder="write the word"></div>
+        <div class="ipa-row"><span class="ipa-num">4</span><span class="ipa-trans">/ˈnəʊ.bəl/</span><input class="blank ipa-blank" id="ipa-w4" data-answer="noble" placeholder="write the word"></div>
+        <div class="ipa-row"><span class="ipa-num">5</span><span class="ipa-trans">/ˈaʊt.rɪdʒ/</span><input class="blank ipa-blank" id="ipa-w5" data-answer="outrage" placeholder="write the word"></div>
+        <div class="ipa-row"><span class="ipa-num">6</span><span class="ipa-trans">/ɪˈnɔːm.əs/</span><input class="blank ipa-blank" id="ipa-w6" data-answer="enormous" placeholder="write the word"></div>
+        <div class="ipa-row"><span class="ipa-num">7</span><span class="ipa-trans">/ˈkɒn.ʃəns/</span><input class="blank ipa-blank" id="ipa-w7" data-answer="conscience" placeholder="write the word"></div>
+        <div class="ipa-row"><span class="ipa-num">8</span><span class="ipa-trans">/ˈfɔːtʃ.ən/</span><input class="blank ipa-blank" id="ipa-w8" data-answer="fortune" placeholder="write the word"></div>
+        <div class="ipa-row"><span class="ipa-num">9</span><span class="ipa-trans">/ˈdʒɜː.ni/</span><input class="blank ipa-blank" id="ipa-w9" data-answer="journey" placeholder="write the word"></div>
+        <div class="ipa-row"><span class="ipa-num">10</span><span class="ipa-trans">/ˈhɒn.ɪst/</span><input class="blank ipa-blank" id="ipa-w10" data-answer="honest" placeholder="write the word"></div>
+        <div class="ipa-row"><span class="ipa-num">11</span><span class="ipa-trans">/ˈaɪ.lənd/</span><input class="blank ipa-blank" id="ipa-w11" data-answer="island" placeholder="write the word"></div>
+
+        <div class="ipa-set-label">Minimal Set A — only the diphthong changes (/eɪ/ · /aɪ/ · /ɔɪ/)</div>
+        <div class="ipa-row"><span class="ipa-num">12</span><span class="ipa-trans">/leɪn/</span><input class="blank ipa-blank" id="ipa-w12" data-answer="lane" placeholder="write the word"></div>
+        <div class="ipa-row"><span class="ipa-num">13</span><span class="ipa-trans">/laɪn/</span><input class="blank ipa-blank" id="ipa-w13" data-answer="line" placeholder="write the word"></div>
+        <div class="ipa-row"><span class="ipa-num">14</span><span class="ipa-trans">/lɔɪn/</span><input class="blank ipa-blank" id="ipa-w14" data-answer="loin" placeholder="write the word"></div>
+
+        <div class="ipa-set-label">Minimal Set B — (/əʊ/ · /aʊ/)</div>
+        <div class="ipa-row"><span class="ipa-num">15</span><span class="ipa-trans">/həʊl/</span><input class="blank ipa-blank" id="ipa-w15" data-answer="hole" placeholder="write the word"></div>
+        <div class="ipa-row"><span class="ipa-num">16</span><span class="ipa-trans">/haʊl/</span><input class="blank ipa-blank" id="ipa-w16" data-answer="howl" placeholder="write the word"></div>
+
+        <div class="ipa-set-label">Minimal Set C — (/ɪə/ · /eə/)</div>
+        <div class="ipa-row"><span class="ipa-num">17</span><span class="ipa-trans">/fɪə/</span><input class="blank ipa-blank" id="ipa-w17" data-answer="fear" placeholder="write the word"></div>
+        <div class="ipa-row"><span class="ipa-num">18</span><span class="ipa-trans">/feə/</span><input class="blank ipa-blank" id="ipa-w18" data-answer="fair" placeholder="write the word"></div>
+
+        <div class="ipa-set-label">Minimal Set D — (/eɪ/ · /əʊ/)</div>
+        <div class="ipa-row"><span class="ipa-num">19</span><span class="ipa-trans">/steɪk/</span><input class="blank ipa-blank" id="ipa-w19" data-answer="steak" placeholder="write the word"></div>
+        <div class="ipa-row"><span class="ipa-num">20</span><span class="ipa-trans">/stəʊk/</span><input class="blank ipa-blank" id="ipa-w20" data-answer="stoke" placeholder="write the word"></div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="checkIPA('ex-ipa20')">Check ✓</button>
+        <button class="btn btn-ghost"   onclick="resetIPA('ex-ipa20')">Try again</button>
+      </div>
+    </div>
+
+    <!-- Place Names -->
+    <div class="exercise" id="ex-ipa-places">
+      <div class="exercise-label">Place Names</div>
+      <h3>These are IPA transcriptions of place names. Write the correct spelling.</h3>
+
+      <div class="ipa-exercise">
+        <div class="ipa-row"><span class="ipa-num">1</span><span class="ipa-trans">/əˈlæs.kə/</span><input class="blank ipa-blank" id="ipa-p1" data-answer="alaska" placeholder="write the place name"></div>
+        <div class="ipa-row"><span class="ipa-num">2</span><span class="ipa-trans">/ænˈdɔː.rə/</span><input class="blank ipa-blank" id="ipa-p2" data-answer="andorra" placeholder="write the place name"></div>
+        <div class="ipa-row"><span class="ipa-num">3</span><span class="ipa-trans">/ˌhɒŋ ˈkɒŋ/</span><input class="blank ipa-blank" id="ipa-p3" data-answer="hong kong" placeholder="write the place name"></div>
+        <div class="ipa-row"><span class="ipa-num">4</span><span class="ipa-trans">/ˌkæz.ækˈstɑːn/</span><input class="blank ipa-blank" id="ipa-p4" data-answer="kazakhstan" placeholder="write the place name"></div>
+        <div class="ipa-row"><span class="ipa-num">5</span><span class="ipa-trans">/ˌkɜː.gɪˈstɑːn/</span><input class="blank ipa-blank" id="ipa-p5" data-answer="kyrgyzstan" placeholder="write the place name"></div>
+        <div class="ipa-row"><span class="ipa-num">6</span><span class="ipa-trans">/ˈlɪk.tən.staɪn/</span><input class="blank ipa-blank" id="ipa-p6" data-answer="liechtenstein" placeholder="write the place name"></div>
+        <div class="ipa-row"><span class="ipa-num">7</span><span class="ipa-trans">/ˌməʊ.zæmˈbiːk/</span><input class="blank ipa-blank" id="ipa-p7" data-answer="mozambique" placeholder="write the place name"></div>
+        <div class="ipa-row"><span class="ipa-num">8</span><span class="ipa-trans">/nɑːˈuː.ruː/</span><input class="blank ipa-blank" id="ipa-p8" data-answer="nauru" placeholder="write the place name"></div>
+        <div class="ipa-row"><span class="ipa-num">9</span><span class="ipa-trans">/nəˈpɔːl/</span><input class="blank ipa-blank" id="ipa-p9" data-answer="nepal" placeholder="write the place name"></div>
+        <div class="ipa-row"><span class="ipa-num">10</span><span class="ipa-trans">/ˌpwɜː.tə ˈriː.kəʊ/</span><input class="blank ipa-blank" id="ipa-p10" data-answer="puerto rico" placeholder="write the place name"></div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="checkIPA('ex-ipa-places')">Check ✓</button>
+        <button class="btn btn-ghost"   onclick="resetIPA('ex-ipa-places')">Try again</button>
+      </div>
+    </div>
+
+    <!-- Everyday Words -->
+    <div class="exercise" id="ex-ipa-sports">
+      <div class="exercise-label">Everyday Words</div>
+      <h3>Write the correct spelling of each word.</h3>
+
+      <div class="ipa-exercise">
+        <div class="ipa-row"><span class="ipa-num">1</span><span class="ipa-trans">/ˈbentʃ.wɔː.mər/</span><input class="blank ipa-blank" id="ipa-s1" data-answer="benchwarmer" placeholder="write the word"></div>
+        <div class="ipa-row"><span class="ipa-num">2</span><span class="ipa-trans">/ˈtʃæl.ɪndʒ/</span><input class="blank ipa-blank" id="ipa-s2" data-answer="challenge" placeholder="write the word"></div>
+        <div class="ipa-row"><span class="ipa-num">3</span><span class="ipa-trans">/ˌkləʊsˈrʌn/</span><input class="blank ipa-blank" id="ipa-s3" data-answer="close-run|close run" placeholder="write the word"></div>
+        <div class="ipa-row"><span class="ipa-num">4</span><span class="ipa-trans">/kəmˈpet.ɪ.tɪv/</span><input class="blank ipa-blank" id="ipa-s4" data-answer="competitive" placeholder="write the word"></div>
+        <div class="ipa-row"><span class="ipa-num">5</span><span class="ipa-trans">/kənˈtes.tənt/</span><input class="blank ipa-blank" id="ipa-s5" data-answer="contestant" placeholder="write the word"></div>
+        <div class="ipa-row"><span class="ipa-num">6</span><span class="ipa-trans">/ˈgeɪm ˌtʃeɪn.dʒər/</span><input class="blank ipa-blank" id="ipa-s6" data-answer="game changer|game-changer" placeholder="write the word"></div>
+        <div class="ipa-row"><span class="ipa-num">7</span><span class="ipa-trans">/ˈraɪ.vəl.ri/</span><input class="blank ipa-blank" id="ipa-s7" data-answer="rivalry" placeholder="write the word"></div>
+        <div class="ipa-row"><span class="ipa-num">8</span><span class="ipa-trans">/ˈskɔː.bɔːd/</span><input class="blank ipa-blank" id="ipa-s8" data-answer="scoreboard" placeholder="write the word"></div>
+        <div class="ipa-row"><span class="ipa-num">9</span><span class="ipa-trans">/ˈtrəʊ.fi.ləs/</span><input class="blank ipa-blank" id="ipa-s9" data-answer="trophyless" placeholder="write the word"></div>
+        <div class="ipa-row"><span class="ipa-num">10</span><span class="ipa-trans">/ˈʌn.də.dɒg/</span><input class="blank ipa-blank" id="ipa-s10" data-answer="underdog" placeholder="write the word"></div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="checkIPA('ex-ipa-sports')">Check ✓</button>
+        <button class="btn btn-ghost"   onclick="resetIPA('ex-ipa-sports')">Try again</button>
+      </div>
+    </div>
+
+  </div><!-- /tab-p2 -->
+
+  <!-- ══════════════════════════════════════════════════════
+       PART 3 — CULTURAL KNOWLEDGE
+  ══════════════════════════════════════════════════════ -->
+  <div class="tab-content" id="tab-p3">
+
+    <div class="intro-card">
+      📖 These people are all part of English-language culture. Read about them and be ready to discuss.
+    </div>
+
+    <div class="person-grid">
+
+      <div class="person-card">
+        <img class="person-photo" src="images/people/person-lovelace.jpg" alt="Ada Lovelace" onerror="this.style.display='none'">
+        <div class="person-card-body">
+          <span class="p-badge badge-tech">Computing</span>
+          <div class="person-name">Ada Lovelace</div>
+          <div class="person-desc">Daughter of the poet Lord Byron, she collaborated with Charles Babbage on his Analytical Engine and wrote what is considered the world's first computer algorithm (1843). Ada Lovelace Day is celebrated each October to honour women in STEM.</div>
+        </div>
+      </div>
+
+      <div class="person-card">
+        <img class="person-photo" src="images/people/person-babbage.jpg" alt="Charles Babbage" onerror="this.style.display='none'">
+        <div class="person-card-body">
+          <span class="p-badge badge-tech">Computing</span>
+          <div class="person-name">Charles Babbage</div>
+          <div class="person-desc">Designed the Difference Engine (1822) to calculate mathematical tables without human error, and later the Analytical Engine — the first concept of a general-purpose programmable computer. Neither machine was completed in his lifetime. He also invented an early version of the cowcatcher fitted to the front of trains.</div>
+        </div>
+      </div>
+
+      <div class="person-card">
+        <img class="person-photo" src="images/people/person-turing.jpg" alt="Alan Turing" onerror="this.style.display='none'">
+        <div class="person-card-body">
+          <span class="p-badge badge-tech">Computing</span>
+          <div class="person-name">Alan Turing</div>
+          <div class="person-desc">Studied at King's College, Cambridge, and invented the theoretical 'Turing Machine' — the foundation of modern computer science. During WWII he led the team at Bletchley Park that cracked the German naval Enigma code, saving countless lives. His 1950 paper introduced the Turing Test for machine intelligence. He was prosecuted for homosexuality in 1952 and given a royal pardon in 2013. His portrait appears on the British £50 note.</div>
+        </div>
+      </div>
+
+      <div class="person-card">
+        <img class="person-photo" src="images/people/person-bernstein.jpg" alt="Leonard Bernstein" onerror="this.style.display='none'">
+        <div class="person-card-body">
+          <span class="p-badge badge-music">Music</span>
+          <div class="person-name">Leonard Bernstein</div>
+          <div class="person-desc">Conductor, composer and pianist. In 1958 he became Music Director of the New York Philharmonic — the first American-born conductor to lead a major American orchestra. He composed the musical <em>West Side Story</em> (1957), a modern retelling of <em>Romeo and Juliet</em> set in New York. His televised <em>Young People's Concerts</em> introduced classical music to millions of children.</div>
+        </div>
+      </div>
+
+      <div class="person-card">
+        <img class="person-photo" src="images/people/person-perry.jpg" alt="Antoinette Perry" onerror="this.style.display='none'">
+        <div class="person-card-body">
+          <span class="p-badge badge-theatre">Theatre</span>
+          <div class="person-name">Antoinette Perry</div>
+          <div class="person-desc">Known as 'Tony', she was an actress, director and producer, and one of the first women to direct on Broadway. She co-founded the American Theatre Wing, which organised entertainment for troops during WWII. The Tony Awards — the highest honour in American theatre — were established in 1947, the year after her death, and named in her honour.</div>
+        </div>
+      </div>
+
+      <div class="person-card">
+        <img class="person-photo" src="images/people/person-wood.jpg" alt="Grant Wood — American Gothic" onerror="this.style.display='none'">
+        <div class="person-card-body">
+          <span class="p-badge badge-art">Art</span>
+          <div class="person-name">Grant Wood</div>
+          <div class="person-desc">American regionalist painter from Iowa, best known for <em>American Gothic</em> (1930). The two figures are his sister Nan Wood Graham and his dentist Dr Byron McKeeby — not a married couple, as often assumed. The painting is now at the Art Institute of Chicago. Wood believed art should celebrate ordinary American rural life.</div>
+        </div>
+      </div>
+
+      <div class="person-card">
+        <img class="person-photo" src="images/people/person-hopper.jpg" alt="Edward Hopper — Nighthawks" onerror="this.style.display='none'" style="object-position:center;">
+        <div class="person-card-body">
+          <span class="p-badge badge-art">Art</span>
+          <div class="person-name">Edward Hopper</div>
+          <div class="person-desc">American realist painter whose work captures urban loneliness and the light of everyday American life. His most famous painting, <em>Nighthawks</em> (1942), shows four figures in a late-night diner in New York City and has become one of the most recognisable images in American art. He also painted empty hotel rooms, petrol stations and New England lighthouses.</div>
+        </div>
+      </div>
+
+      <div class="person-card">
+        <img class="person-photo" src="images/people/person-whistler.jpg" alt="James Whistler" onerror="this.style.display='none'" style="object-position:center;">
+        <div class="person-card-body">
+          <span class="p-badge badge-art">Art</span>
+          <div class="person-name">James Whistler</div>
+          <div class="person-desc">Born in Massachusetts but spent most of his life in London and Paris. His painting <em>Arrangement in Grey and Black No. 1</em> (1871) — known as <em>Whistler's Mother</em> — is now in the Musée d'Orsay in Paris. Whistler championed 'art for art's sake' and famously sued the critic John Ruskin for libel in 1878, winning one farthing in damages.</div>
+        </div>
+      </div>
+
+      <div class="person-card">
+        <img class="person-photo" src="images/people/person-wodehouse.jpg" alt="P.G. Wodehouse" onerror="this.style.display='none'">
+        <div class="person-card-body">
+          <span class="p-badge badge-lit">Literature</span>
+          <div class="person-name">P. G. Wodehouse</div>
+          <div class="person-desc">Full name Sir Pelham Grenville Wodehouse. Created the much-loved comic duo Bertie Wooster, a cheerfully clueless English aristocrat, and Jeeves, his supremely competent valet. The first Jeeves story appeared in 1915. Wodehouse wrote over 90 books and was knighted just weeks before his death in 1975 at the age of 93.</div>
+        </div>
+      </div>
+
+    </div><!-- /person-grid -->
+
+  </div><!-- /tab-p3 -->
+
+  <!-- ══════════════════════════════════════════════════════
+       HOMEWORK
+  ══════════════════════════════════════════════════════ -->
+  <div class="tab-content" id="tab-hw">
+
+    <!-- Task 1: Take / Give reference -->
+    <div class="exercise">
+      <div class="exercise-label">Task 1 — Reference</div>
+      <h3>Study these collocations with <em>take</em> and <em>give</em>.</h3>
+      <div class="colloc-grid">
+        <div class="colloc-col">
+          <div class="colloc-col-header">take</div>
+          <div class="colloc-item">take a risk</div>
+          <div class="colloc-item">take pity on someone</div>
+          <div class="colloc-item">take some medicine</div>
+          <div class="colloc-item">take someone's temperature</div>
+          <div class="colloc-item">take part in</div>
+          <div class="colloc-item">take place</div>
+          <div class="colloc-item">take care of</div>
+          <div class="colloc-item">take advantage of</div>
+          <div class="colloc-item">take notice of</div>
+          <div class="colloc-item">take responsibility</div>
+          <div class="colloc-item">take a break</div>
+          <div class="colloc-item">take a photograph</div>
+          <div class="colloc-item">take an exam</div>
+          <div class="colloc-item">take your time</div>
+          <div class="colloc-item">take offence</div>
+          <div class="colloc-item">take control</div>
+        </div>
+        <div class="colloc-col">
+          <div class="colloc-col-header">give</div>
+          <div class="colloc-item">give a concert</div>
+          <div class="colloc-item">give a broad smile</div>
+          <div class="colloc-item">give a nervous laugh</div>
+          <div class="colloc-item">give a deep sigh</div>
+          <div class="colloc-item">give advice</div>
+          <div class="colloc-item">give permission</div>
+          <div class="colloc-item">give someone a lift</div>
+          <div class="colloc-item">give an example</div>
+          <div class="colloc-item">give birth to</div>
+          <div class="colloc-item">give someone a hand</div>
+          <div class="colloc-item">give notice</div>
+          <div class="colloc-item">give way to</div>
+          <div class="colloc-item">give priority to</div>
+          <div class="colloc-item">give a lecture</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Task 2a -->
+    <div class="exercise" id="hw-ex2a">
+      <div class="exercise-label">Task 2 — Exercise A</div>
+      <h3>Choose <em>take</em> or <em>give</em>.</h3>
+      <p>1. Don't be afraid to <span class="word-choice" id="hw2a-1" data-answer="take"><button class="word-choice-btn" data-val="take" onclick="selectGap(this)">take</button><button class="word-choice-btn" data-val="give" onclick="selectGap(this)">give</button></span> a risk — you'll never know what you're capable of.</p>
+      <p>2. She finally <span class="word-choice" id="hw2a-2" data-answer="took"><button class="word-choice-btn" data-val="took" onclick="selectGap(this)">took</button><button class="word-choice-btn" data-val="gave" onclick="selectGap(this)">gave</button></span> pity on him and offered to help.</p>
+      <p>3. The orchestra will <span class="word-choice" id="hw2a-3" data-answer="give"><button class="word-choice-btn" data-val="take" onclick="selectGap(this)">take</button><button class="word-choice-btn" data-val="give" onclick="selectGap(this)">give</button></span> a concert at the Royal Albert Hall next Friday.</p>
+      <p>4. All students are encouraged to <span class="word-choice" id="hw2a-4" data-answer="take"><button class="word-choice-btn" data-val="take" onclick="selectGap(this)">take</button><button class="word-choice-btn" data-val="give" onclick="selectGap(this)">give</button></span> part in the discussion.</p>
+      <p>5. She <span class="word-choice" id="hw2a-5" data-answer="gave"><button class="word-choice-btn" data-val="took" onclick="selectGap(this)">took</button><button class="word-choice-btn" data-val="gave" onclick="selectGap(this)">gave</button></span> a broad smile when she saw her old friend at the airport.</p>
+      <p>6. The ceremony will <span class="word-choice" id="hw2a-6" data-answer="take"><button class="word-choice-btn" data-val="take" onclick="selectGap(this)">take</button><button class="word-choice-btn" data-val="give" onclick="selectGap(this)">give</button></span> place in the main hall at noon.</p>
+      <p>7. He <span class="word-choice" id="hw2a-7" data-answer="gave"><button class="word-choice-btn" data-val="took" onclick="selectGap(this)">took</button><button class="word-choice-btn" data-val="gave" onclick="selectGap(this)">gave</button></span> a nervous laugh when the teacher asked him the answer.</p>
+      <p>8. Who is going to <span class="word-choice" id="hw2a-8" data-answer="take"><button class="word-choice-btn" data-val="take" onclick="selectGap(this)">take</button><button class="word-choice-btn" data-val="give" onclick="selectGap(this)">give</button></span> care of the dog while we're on holiday?</p>
+      <p>9. She <span class="word-choice" id="hw2a-9" data-answer="gave"><button class="word-choice-btn" data-val="took" onclick="selectGap(this)">took</button><button class="word-choice-btn" data-val="gave" onclick="selectGap(this)">gave</button></span> a deep sigh and closed her laptop — it had been a long day.</p>
+      <p>10. Make sure you <span class="word-choice" id="hw2a-10" data-answer="take"><button class="word-choice-btn" data-val="take" onclick="selectGap(this)">take</button><button class="word-choice-btn" data-val="give" onclick="selectGap(this)">give</button></span> advantage of this offer before it expires.</p>
+      <p>11. It's easy to <span class="word-choice" id="hw2a-11" data-answer="give"><button class="word-choice-btn" data-val="take" onclick="selectGap(this)">take</button><button class="word-choice-btn" data-val="give" onclick="selectGap(this)">give</button></span> advice, but harder to follow it yourself.</p>
+      <p>12. Nobody seemed to <span class="word-choice" id="hw2a-12" data-answer="take"><button class="word-choice-btn" data-val="take" onclick="selectGap(this)">take</button><button class="word-choice-btn" data-val="give" onclick="selectGap(this)">give</button></span> notice of the warning signs.</p>
+      <p>13. Could you <span class="word-choice" id="hw2a-13" data-answer="give"><button class="word-choice-btn" data-val="take" onclick="selectGap(this)">take</button><button class="word-choice-btn" data-val="give" onclick="selectGap(this)">give</button></span> me a lift to the station? My car is broken.</p>
+      <p>14. She was the first to <span class="word-choice" id="hw2a-14" data-answer="take"><button class="word-choice-btn" data-val="take" onclick="selectGap(this)">take</button><button class="word-choice-btn" data-val="give" onclick="selectGap(this)">give</button></span> responsibility for the delay.</p>
+      <p>15. Could you <span class="word-choice" id="hw2a-15" data-answer="give"><button class="word-choice-btn" data-val="take" onclick="selectGap(this)">take</button><button class="word-choice-btn" data-val="give" onclick="selectGap(this)">give</button></span> me a hand with these boxes?</p>
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="checkHWGaps('hw-ex2a')">Check ✓</button>
+        <button class="btn btn-ghost"   onclick="resetHWGaps('hw-ex2a')">Try again</button>
+      </div>
+    </div>
+
+    <!-- Task 2b -->
+    <div class="exercise" id="hw-ex2b">
+      <div class="exercise-label">Task 2 — Exercise B</div>
+      <h3>Choose <em>take</em> or <em>give</em>.</h3>
+      <p>1. After three hours of revision it's time to <span class="word-choice" id="hw2b-1" data-answer="take"><button class="word-choice-btn" data-val="take" onclick="selectGap(this)">take</button><button class="word-choice-btn" data-val="give" onclick="selectGap(this)">give</button></span> a break.</p>
+      <p>2. Can you <span class="word-choice" id="hw2b-2" data-answer="give"><button class="word-choice-btn" data-val="take" onclick="selectGap(this)">take</button><button class="word-choice-btn" data-val="give" onclick="selectGap(this)">give</button></span> an example of what you mean?</p>
+      <p>3. He asked a stranger to <span class="word-choice" id="hw2b-3" data-answer="take"><button class="word-choice-btn" data-val="take" onclick="selectGap(this)">take</button><button class="word-choice-btn" data-val="give" onclick="selectGap(this)">give</button></span> a photograph of them in front of the Eiffel Tower.</p>
+      <p>4. She <span class="word-choice" id="hw2b-4" data-answer="gave"><button class="word-choice-btn" data-val="took" onclick="selectGap(this)">took</button><button class="word-choice-btn" data-val="gave" onclick="selectGap(this)">gave</button></span> birth to twins last April.</p>
+      <p>5. You'll need to <span class="word-choice" id="hw2b-5" data-answer="take"><button class="word-choice-btn" data-val="take" onclick="selectGap(this)">take</button><button class="word-choice-btn" data-val="give" onclick="selectGap(this)">give</button></span> an exam to prove your language level.</p>
+      <p>6. He decided to <span class="word-choice" id="hw2b-6" data-answer="give"><button class="word-choice-btn" data-val="take" onclick="selectGap(this)">take</button><button class="word-choice-btn" data-val="give" onclick="selectGap(this)">give</button></span> notice and resigned the next morning.</p>
+      <p>7. There's no rush — please <span class="word-choice" id="hw2b-7" data-answer="take"><button class="word-choice-btn" data-val="take" onclick="selectGap(this)">take</button><button class="word-choice-btn" data-val="give" onclick="selectGap(this)">give</button></span> your time.</p>
+      <p>8. The old bridge finally <span class="word-choice" id="hw2b-8" data-answer="gave"><button class="word-choice-btn" data-val="took" onclick="selectGap(this)">took</button><button class="word-choice-btn" data-val="gave" onclick="selectGap(this)">gave</button></span> way to the weight of the lorry.</p>
+      <p>9. I hope you won't <span class="word-choice" id="hw2b-9" data-answer="take"><button class="word-choice-btn" data-val="take" onclick="selectGap(this)">take</button><button class="word-choice-btn" data-val="give" onclick="selectGap(this)">give</button></span> offence if I say something honest.</p>
+      <p>10. Hospitals should <span class="word-choice" id="hw2b-10" data-answer="give"><button class="word-choice-btn" data-val="take" onclick="selectGap(this)">take</button><button class="word-choice-btn" data-val="give" onclick="selectGap(this)">give</button></span> priority to emergency cases.</p>
+      <p>11. When the pilot fainted, a passenger had to <span class="word-choice" id="hw2b-11" data-answer="take"><button class="word-choice-btn" data-val="take" onclick="selectGap(this)">take</button><button class="word-choice-btn" data-val="give" onclick="selectGap(this)">give</button></span> control of the aircraft.</p>
+      <p>12. She was invited to <span class="word-choice" id="hw2b-12" data-answer="give"><button class="word-choice-btn" data-val="take" onclick="selectGap(this)">take</button><button class="word-choice-btn" data-val="give" onclick="selectGap(this)">give</button></span> a lecture at Oxford University.</p>
+      <p>13. The doctor told me to <span class="word-choice" id="hw2b-13" data-answer="take"><button class="word-choice-btn" data-val="take" onclick="selectGap(this)">take</button><button class="word-choice-btn" data-val="give" onclick="selectGap(this)">give</button></span> some medicine twice a day.</p>
+      <p>14. The head teacher <span class="word-choice" id="hw2b-14" data-answer="gave"><button class="word-choice-btn" data-val="took" onclick="selectGap(this)">took</button><button class="word-choice-btn" data-val="gave" onclick="selectGap(this)">gave</button></span> permission to leave early.</p>
+      <p>15. The nurse will <span class="word-choice" id="hw2b-15" data-answer="take"><button class="word-choice-btn" data-val="take" onclick="selectGap(this)">take</button><button class="word-choice-btn" data-val="give" onclick="selectGap(this)">give</button></span> your temperature before you see the doctor.</p>
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="checkHWGaps('hw-ex2b')">Check ✓</button>
+        <button class="btn btn-ghost"   onclick="resetHWGaps('hw-ex2b')">Try again</button>
+      </div>
+    </div>
+
+    <!-- Task 3: Get / Put reference -->
+    <div class="exercise">
+      <div class="exercise-label">Task 3 — Reference</div>
+      <h3>Study these collocations with <em>get</em> and <em>put</em>.</h3>
+      <div class="colloc-grid">
+        <div class="colloc-col">
+          <div class="colloc-col-header">get</div>
+          <div class="colloc-item">get a cold</div>
+          <div class="colloc-item">get rid of something</div>
+          <div class="colloc-item">get on someone's nerves</div>
+          <div class="colloc-item">get married</div>
+          <div class="colloc-item">get lost</div>
+          <div class="colloc-item">get in touch with</div>
+          <div class="colloc-item">get dressed</div>
+          <div class="colloc-item">get ready</div>
+          <div class="colloc-item">get a job</div>
+          <div class="colloc-item">get the impression</div>
+          <div class="colloc-item">get permission</div>
+          <div class="colloc-item">get angry</div>
+          <div class="colloc-item">get better</div>
+          <div class="colloc-item">get used to</div>
+        </div>
+        <div class="colloc-col">
+          <div class="colloc-col-header">put</div>
+          <div class="colloc-item">put pressure on someone</div>
+          <div class="colloc-item">put an end to something</div>
+          <div class="colloc-item">put the blame on someone</div>
+          <div class="colloc-item">put a stop to something</div>
+          <div class="colloc-item">put someone at ease</div>
+          <div class="colloc-item">put your feet up</div>
+          <div class="colloc-item">put emphasis on</div>
+          <div class="colloc-item">put something into words</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Task 4: Get or Put? -->
+    <div class="exercise" id="hw-ex4">
+      <div class="exercise-label">Task 4 — Fill in the Gaps</div>
+      <h3>Choose <em>get</em> or <em>put</em> to complete each sentence.</h3>
+      <p>1. After walking in the rain without a coat, she <span class="word-choice" id="hw4-1" data-answer="got"><button class="word-choice-btn" data-val="got" onclick="selectGap(this)">got</button><button class="word-choice-btn" data-val="put" onclick="selectGap(this)">put</button></span> a cold and spent three days in bed.</p>
+      <p>2. His parents <span class="word-choice" id="hw4-2" data-answer="put"><button class="word-choice-btn" data-val="got" onclick="selectGap(this)">got</button><button class="word-choice-btn" data-val="put" onclick="selectGap(this)">put</button></span> a lot of pressure on him to study medicine.</p>
+      <p>3. They finally managed to <span class="word-choice" id="hw4-3" data-answer="get"><button class="word-choice-btn" data-val="get" onclick="selectGap(this)">get</button><button class="word-choice-btn" data-val="put" onclick="selectGap(this)">put</button></span> rid of the old sofa that had been in the garage for years.</p>
+      <p>4. The new law finally <span class="word-choice" id="hw4-4" data-answer="put"><button class="word-choice-btn" data-val="got" onclick="selectGap(this)">got</button><button class="word-choice-btn" data-val="put" onclick="selectGap(this)">put</button></span> an end to the illegal trade.</p>
+      <p>5. That constant tapping really <span class="word-choice" id="hw4-5" data-answer="gets"><button class="word-choice-btn" data-val="gets" onclick="selectGap(this)">gets</button><button class="word-choice-btn" data-val="puts" onclick="selectGap(this)">puts</button></span> on my nerves.</p>
+      <p>6. He always <span class="word-choice" id="hw4-6" data-answer="puts"><button class="word-choice-btn" data-val="gets" onclick="selectGap(this)">gets</button><button class="word-choice-btn" data-val="puts" onclick="selectGap(this)">puts</button></span> the blame on others when something goes wrong.</p>
+      <p>7. They <span class="word-choice" id="hw4-7" data-answer="got"><button class="word-choice-btn" data-val="got" onclick="selectGap(this)">got</button><button class="word-choice-btn" data-val="put" onclick="selectGap(this)">put</button></span> married in a small church ceremony last spring.</p>
+      <p>8. The school had to <span class="word-choice" id="hw4-8" data-answer="put"><button class="word-choice-btn" data-val="get" onclick="selectGap(this)">get</button><button class="word-choice-btn" data-val="put" onclick="selectGap(this)">put</button></span> a stop to the bullying immediately.</p>
+      <p>9. Don't <span class="word-choice" id="hw4-9" data-answer="get"><button class="word-choice-btn" data-val="get" onclick="selectGap(this)">get</button><button class="word-choice-btn" data-val="put" onclick="selectGap(this)">put</button></span> lost — I'll send you the address on your phone.</p>
+      <p>10. She was so welcoming that she immediately <span class="word-choice" id="hw4-10" data-answer="put"><button class="word-choice-btn" data-val="got" onclick="selectGap(this)">got</button><button class="word-choice-btn" data-val="put" onclick="selectGap(this)">put</button></span> the new students at ease.</p>
+      <p>11. Please <span class="word-choice" id="hw4-11" data-answer="get"><button class="word-choice-btn" data-val="get" onclick="selectGap(this)">get</button><button class="word-choice-btn" data-val="put" onclick="selectGap(this)">put</button></span> in touch with me if you have any questions.</p>
+      <p>12. After a long day, just <span class="word-choice" id="hw4-12" data-answer="put"><button class="word-choice-btn" data-val="get" onclick="selectGap(this)">get</button><button class="word-choice-btn" data-val="put" onclick="selectGap(this)">put</button></span> your feet up and relax.</p>
+      <p>13. He was still <span class="word-choice" id="hw4-13" data-answer="getting"><button class="word-choice-btn" data-val="getting" onclick="selectGap(this)">getting</button><button class="word-choice-btn" data-val="putting" onclick="selectGap(this)">putting</button></span> dressed when his guests arrived.</p>
+      <p>14. Our teacher always <span class="word-choice" id="hw4-14" data-answer="puts"><button class="word-choice-btn" data-val="gets" onclick="selectGap(this)">gets</button><button class="word-choice-btn" data-val="puts" onclick="selectGap(this)">puts</button></span> emphasis on pronunciation.</p>
+      <p>15. How long do you usually take to <span class="word-choice" id="hw4-15" data-answer="get"><button class="word-choice-btn" data-val="get" onclick="selectGap(this)">get</button><button class="word-choice-btn" data-val="put" onclick="selectGap(this)">put</button></span> ready in the morning?</p>
+      <p>16. Sometimes it's hard to <span class="word-choice" id="hw4-16" data-answer="put"><button class="word-choice-btn" data-val="get" onclick="selectGap(this)">get</button><button class="word-choice-btn" data-val="put" onclick="selectGap(this)">put</button></span> your feelings into words.</p>
+      <p>17. After months of searching, she finally <span class="word-choice" id="hw4-17" data-answer="got"><button class="word-choice-btn" data-val="got" onclick="selectGap(this)">got</button><button class="word-choice-btn" data-val="put" onclick="selectGap(this)">put</button></span> a job at a publishing house.</p>
+      <p>18. You need to <span class="word-choice" id="hw4-18" data-answer="get"><button class="word-choice-btn" data-val="get" onclick="selectGap(this)">get</button><button class="word-choice-btn" data-val="put" onclick="selectGap(this)">put</button></span> permission from the head teacher before leaving early.</p>
+      <p>19. I <span class="word-choice" id="hw4-19" data-answer="got"><button class="word-choice-btn" data-val="got" onclick="selectGap(this)">got</button><button class="word-choice-btn" data-val="put" onclick="selectGap(this)">put</button></span> the impression that he wasn't telling us the whole story.</p>
+      <p>20. There's no point <span class="word-choice" id="hw4-20" data-answer="getting"><button class="word-choice-btn" data-val="getting" onclick="selectGap(this)">getting</button><button class="word-choice-btn" data-val="putting" onclick="selectGap(this)">putting</button></span> angry — it won't change anything.</p>
+      <p>21. Don't worry, you'll <span class="word-choice" id="hw4-21" data-answer="get"><button class="word-choice-btn" data-val="get" onclick="selectGap(this)">get</button><button class="word-choice-btn" data-val="put" onclick="selectGap(this)">put</button></span> better soon. Just rest.</p>
+      <p>22. It took me a few weeks to <span class="word-choice" id="hw4-22" data-answer="get"><button class="word-choice-btn" data-val="get" onclick="selectGap(this)">get</button><button class="word-choice-btn" data-val="put" onclick="selectGap(this)">put</button></span> used to waking up so early.</p>
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="checkHWGaps('hw-ex4')">Check ✓</button>
+        <button class="btn btn-ghost"   onclick="resetHWGaps('hw-ex4')">Try again</button>
+      </div>
+    </div>
+
+    <!-- Task 5: Listening Minimal Pairs -->
+    <div class="exercise" id="hw-ex5">
+      <div class="exercise-label">Task 5 — Listening: Minimal Pairs</div>
+      <h3>Listen carefully and choose what you hear. Sounds are very similar!</h3>
+
+      <!-- 1 -->
+      <div class="listen-item">
+        <div class="listen-header">
+          <span class="listen-num">1</span>
+          <audio controls><source src="audio/Natasha-1.mp3" type="audio/mpeg"></audio>
+        </div>
+        <div class="mc-options" data-correct="b">
+          <label class="mc-option"><input type="radio" name="mp1" value="a"><span class="mc-bullet">A</span> he's gonna live</label>
+          <label class="mc-option"><input type="radio" name="mp1" value="b"><span class="mc-bullet">B</span> he's gonna leave</label>
+          <label class="mc-option"><input type="radio" name="mp1" value="c"><span class="mc-bullet">C</span> he's gonna love</label>
+        </div>
+      </div>
+
+      <!-- 2 -->
+      <div class="listen-item">
+        <div class="listen-header">
+          <span class="listen-num">2</span>
+          <audio controls><source src="audio/Florian-Multilingual-2.mp3" type="audio/mpeg"></audio>
+        </div>
+        <div class="mc-options" data-correct="c">
+          <label class="mc-option"><input type="radio" name="mp2" value="a"><span class="mc-bullet">A</span> man with a pin</label>
+          <label class="mc-option"><input type="radio" name="mp2" value="b"><span class="mc-bullet">B</span> men with a pen</label>
+          <label class="mc-option"><input type="radio" name="mp2" value="c"><span class="mc-bullet">C</span> man with a pen</label>
+          <label class="mc-option"><input type="radio" name="mp2" value="d"><span class="mc-bullet">D</span> man with a pan</label>
+        </div>
+      </div>
+
+      <!-- 3 -->
+      <div class="listen-item">
+        <div class="listen-header">
+          <span class="listen-num">3</span>
+          <audio controls><source src="audio/Ava-Multilingual-3.mp3" type="audio/mpeg"></audio>
+        </div>
+        <div class="mc-options" data-correct="a">
+          <label class="mc-option"><input type="radio" name="mp3" value="a"><span class="mc-bullet">A</span> it's a lovely gem</label>
+          <label class="mc-option"><input type="radio" name="mp3" value="b"><span class="mc-bullet">B</span> it's a lovely jam</label>
+          <label class="mc-option"><input type="radio" name="mp3" value="c"><span class="mc-bullet">C</span> it's a lovely gym</label>
+        </div>
+      </div>
+
+      <!-- 4 -->
+      <div class="listen-item">
+        <div class="listen-header">
+          <span class="listen-num">4</span>
+          <audio controls><source src="audio/Abbi-4.mp3" type="audio/mpeg"></audio>
+        </div>
+        <div class="mc-options" data-correct="d">
+          <label class="mc-option"><input type="radio" name="mp4" value="a"><span class="mc-bullet">A</span> sheet on a sheep</label>
+          <label class="mc-option"><input type="radio" name="mp4" value="b"><span class="mc-bullet">B</span> seat on a ship</label>
+          <label class="mc-option"><input type="radio" name="mp4" value="c"><span class="mc-bullet">C</span> sheet on a ship</label>
+          <label class="mc-option"><input type="radio" name="mp4" value="d"><span class="mc-bullet">D</span> seat on a sheep</label>
+        </div>
+      </div>
+
+      <!-- 5 -->
+      <div class="listen-item">
+        <div class="listen-header">
+          <span class="listen-num">5</span>
+          <audio controls><source src="audio/Bella-5.mp3" type="audio/mpeg"></audio>
+        </div>
+        <div class="mc-options" data-correct="b">
+          <label class="mc-option"><input type="radio" name="mp5" value="a"><span class="mc-bullet">A</span> there is a problem with my hat</label>
+          <label class="mc-option"><input type="radio" name="mp5" value="b"><span class="mc-bullet">B</span> there is a problem with my hut</label>
+          <label class="mc-option"><input type="radio" name="mp5" value="c"><span class="mc-bullet">C</span> there is a problem with my hot</label>
+        </div>
+      </div>
+
+      <!-- 6 -->
+      <div class="listen-item">
+        <div class="listen-header">
+          <span class="listen-num">6</span>
+          <audio controls><source src="audio/Davis-6.mp3" type="audio/mpeg"></audio>
+        </div>
+        <div class="mc-options" data-correct="a">
+          <label class="mc-option"><input type="radio" name="mp6" value="a"><span class="mc-bullet">A</span> she said: come down</label>
+          <label class="mc-option"><input type="radio" name="mp6" value="b"><span class="mc-bullet">B</span> she said: calm down</label>
+          <label class="mc-option"><input type="radio" name="mp6" value="c"><span class="mc-bullet">C</span> she said: count down</label>
+        </div>
+      </div>
+
+      <!-- 7 -->
+      <div class="listen-item">
+        <div class="listen-header">
+          <span class="listen-num">7</span>
+          <audio controls><source src="audio/Floki-7.mp3" type="audio/mpeg"></audio>
+        </div>
+        <div class="mc-options" data-correct="c">
+          <label class="mc-option"><input type="radio" name="mp7" value="a"><span class="mc-bullet">A</span> it's getting harder and harder</label>
+          <label class="mc-option"><input type="radio" name="mp7" value="b"><span class="mc-bullet">B</span> it's getting better and better</label>
+          <label class="mc-option"><input type="radio" name="mp7" value="c"><span class="mc-bullet">C</span> it's getting hotter and hotter</label>
+        </div>
+      </div>
+
+      <!-- 8 -->
+      <div class="listen-item">
+        <div class="listen-header">
+          <span class="listen-num">8</span>
+          <audio controls><source src="audio/Sara-8.mp3" type="audio/mpeg"></audio>
+        </div>
+        <div class="mc-options" data-correct="a">
+          <label class="mc-option"><input type="radio" name="mp8" value="a"><span class="mc-bullet">A</span> turn that top slowly</label>
+          <label class="mc-option"><input type="radio" name="mp8" value="b"><span class="mc-bullet">B</span> turn that tap slowly</label>
+          <label class="mc-option"><input type="radio" name="mp8" value="c"><span class="mc-bullet">C</span> turn that tip slowly</label>
+        </div>
+      </div>
+
+      <!-- 9 -->
+      <div class="listen-item">
+        <div class="listen-header">
+          <span class="listen-num">9</span>
+          <audio controls><source src="audio/Emma-9.mp3" type="audio/mpeg"></audio>
+        </div>
+        <div class="mc-options" data-correct="b">
+          <label class="mc-option"><input type="radio" name="mp9" value="a"><span class="mc-bullet">A</span> testing paper</label>
+          <label class="mc-option"><input type="radio" name="mp9" value="b"><span class="mc-bullet">B</span> testing pepper</label>
+          <label class="mc-option"><input type="radio" name="mp9" value="c"><span class="mc-bullet">C</span> testing piper</label>
+        </div>
+      </div>
+
+      <!-- 10 -->
+      <div class="listen-item">
+        <div class="listen-header">
+          <span class="listen-num">10</span>
+          <audio controls><source src="audio/Hala-10.mp3" type="audio/mpeg"></audio>
+        </div>
+        <div class="mc-options" data-correct="a">
+          <label class="mc-option"><input type="radio" name="mp10" value="a"><span class="mc-bullet">A</span> Paddy's writing</label>
+          <label class="mc-option"><input type="radio" name="mp10" value="b"><span class="mc-bullet">B</span> Patty's writing</label>
+          <label class="mc-option"><input type="radio" name="mp10" value="c"><span class="mc-bullet">C</span> Daddy's writing</label>
+          <label class="mc-option"><input type="radio" name="mp10" value="d"><span class="mc-bullet">D</span> Betty's writing</label>
+        </div>
+      </div>
+
+      <!-- 11 -->
+      <div class="listen-item">
+        <div class="listen-header">
+          <span class="listen-num">11</span>
+          <audio controls><source src="audio/Libby-11.mp3" type="audio/mpeg"></audio>
+        </div>
+        <div class="mc-options" data-correct="c">
+          <label class="mc-option"><input type="radio" name="mp11" value="a"><span class="mc-bullet">A</span> she was shirt</label>
+          <label class="mc-option"><input type="radio" name="mp11" value="b"><span class="mc-bullet">B</span> she was shot</label>
+          <label class="mc-option"><input type="radio" name="mp11" value="c"><span class="mc-bullet">C</span> she was short</label>
+          <label class="mc-option"><input type="radio" name="mp11" value="d"><span class="mc-bullet">D</span> she was sort</label>
+        </div>
+      </div>
+
+      <!-- 12 -->
+      <div class="listen-item">
+        <div class="listen-header">
+          <span class="listen-num">12</span>
+          <audio controls><source src="audio/Elsie-12.mp3" type="audio/mpeg"></audio>
+        </div>
+        <div class="mc-options" data-correct="d">
+          <label class="mc-option"><input type="radio" name="mp12" value="a"><span class="mc-bullet">A</span> the dog's in the shade</label>
+          <label class="mc-option"><input type="radio" name="mp12" value="b"><span class="mc-bullet">B</span> the dog's in the bed</label>
+          <label class="mc-option"><input type="radio" name="mp12" value="c"><span class="mc-bullet">C</span> the dog's in the head</label>
+          <label class="mc-option"><input type="radio" name="mp12" value="d"><span class="mc-bullet">D</span> the dog's in the shed</label>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="checkMCIn('hw-ex5')">Check ✓</button>
+        <button class="btn btn-ghost"   onclick="resetMCIn('hw-ex5')">Try again</button>
+      </div>
+    </div>
+
+  </div><!-- /tab-hw -->
+
+</div><!-- /container -->
+
+<div class="save-indicator" id="saveIndicator">✓ Saved</div>
+
+<script>
+const LESSON_KEY = 'lesson-01';
+let data = {};
+try { data = JSON.parse(localStorage.getItem(LESSON_KEY)) || {}; } catch(e) {}
+
+function save(patch) {
+  Object.assign(data, patch);
+  localStorage.setItem(LESSON_KEY, JSON.stringify(data));
+  flashSaved();
+}
+let saveTimer;
+function flashSaved() {
+  const el = document.getElementById('saveIndicator');
+  el.classList.add('show');
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(() => el.classList.remove('show'), 1600);
+}
+
+// ── TABS ──
+function switchTab(name, btn) {
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  btn.classList.add('active');
+  save({ activeTab: name });
+}
+
+// ── AUTOSAVE for .blank and .free-write ──
+function setupAutosave() {
+  document.querySelectorAll('.blank, .free-write').forEach(el => {
+    if (data[el.id] !== undefined) el.value = data[el.id];
+    el.addEventListener('input', () => {
+      save({ [el.id]: el.value });
+      const cc = document.getElementById('cc-' + el.id);
+      if (cc) cc.textContent = el.value.length + ' characters';
+    });
+    const cc = document.getElementById('cc-' + el.id);
+    if (cc) cc.textContent = (el.value || '').length + ' characters';
+  });
+  if (data.activeTab) {
+    const btn = document.querySelector('.tab-btn[onclick*="' + data.activeTab + '"]');
+    if (btn) switchTab(data.activeTab, btn);
+  }
+}
+
+// ── EMOJI WARM-UP ──
+const EMOJIS = ['😊','😂','😢','😴','😤','🤔','🥳','😅','😬','😍','🤗','😷',
+                '🎮','📚','🎵','🏃','🏊','🎨','🍕','🍔','☕','🍰','🍎','🥗',
+                '☀️','🌧️','❄️','🌙','🌸','🌿','📝','💡','🏫','💻','📱','✈️'];
+let selectedEmojis = data.selectedEmojis || [];
+
+function initEmojis() {
+  const container = document.getElementById('emojiSelector');
+  EMOJIS.forEach(emoji => {
+    const btn = document.createElement('button');
+    btn.className = 'emoji-btn' + (selectedEmojis.includes(emoji) ? ' selected' : '');
+    btn.textContent = emoji;
+    btn.type = 'button';
+    btn.onclick = () => toggleEmoji(btn, emoji);
+    container.appendChild(btn);
+  });
+  updateEmojiDisplay();
+}
+function toggleEmoji(btn, emoji) {
+  if (btn.classList.contains('selected')) {
+    selectedEmojis = selectedEmojis.filter(e => e !== emoji);
+    btn.classList.remove('selected');
+  } else if (selectedEmojis.length < 5) {
+    selectedEmojis.push(emoji);
+    btn.classList.add('selected');
+  }
+  updateEmojiDisplay();
+  save({ selectedEmojis });
+}
+function updateEmojiDisplay() {
+  document.getElementById('emojiDisplay').textContent = selectedEmojis.join(' ') || '—';
+  document.getElementById('emojiCount').textContent = selectedEmojis.length + '/5 selected';
+}
+
+// ── GAP CHOICES (take / give) ──
+function selectGap(btn) {
+  const group = btn.closest('.word-choice');
+  group.querySelectorAll('.word-choice-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  save({ [group.id]: btn.dataset.val });
+}
+function checkGaps() {
+  document.querySelectorAll('#ex6 .word-choice').forEach(group => {
+    const correct = group.dataset.answer;
+    const selected = group.querySelector('.word-choice-btn.selected');
+    group.querySelectorAll('.word-choice-btn').forEach(b => b.classList.remove('correct','wrong'));
+    if (!selected) return;
+    if (selected.dataset.val === correct) {
+      selected.classList.add('correct');
+    } else {
+      selected.classList.add('wrong');
+      group.querySelectorAll('.word-choice-btn').forEach(b => {
+        if (b.dataset.val === correct) b.classList.add('correct');
+      });
+    }
+  });
+}
+function resetGaps() {
+  document.querySelectorAll('#ex6 .word-choice').forEach(group => {
+    group.querySelectorAll('.word-choice-btn').forEach(b => b.classList.remove('selected','correct','wrong'));
+    save({ [group.id]: '' });
+  });
+}
+function restoreGaps() {
+  document.querySelectorAll('.word-choice').forEach(group => {
+    const saved = data[group.id];
+    if (saved) group.querySelectorAll('.word-choice-btn').forEach(b => {
+      if (b.dataset.val === saved) b.classList.add('selected');
+    });
+  });
+}
+
+// ── MULTIPLE CHOICE ──
+document.querySelectorAll('.mc-option').forEach(label => {
+  label.addEventListener('click', () => {
+    const group = label.closest('.mc-options');
+    group.querySelectorAll('.mc-option').forEach(l => l.classList.remove('selected'));
+    label.classList.add('selected');
+    save({ ['mc-' + label.querySelector('input').name]: label.querySelector('input').value });
+  });
+});
+function checkMC() {
+  document.querySelectorAll('.mc-options').forEach(group => {
+    const correct = group.dataset.correct;
+    const selected = group.querySelector('.mc-option.selected');
+    group.querySelectorAll('.mc-option').forEach(l => l.classList.remove('correct','wrong'));
+    if (!selected) return;
+    const val = selected.querySelector('input').value;
+    selected.classList.add(val === correct ? 'correct' : 'wrong');
+    if (val !== correct) group.querySelectorAll('.mc-option').forEach(l => {
+      if (l.querySelector('input').value === correct) l.classList.add('correct');
+    });
+  });
+}
+function resetMC() {
+  document.querySelectorAll('.mc-option').forEach(l => {
+    l.classList.remove('selected','correct','wrong');
+    save({ ['mc-' + l.querySelector('input').name]: '' });
+  });
+}
+function restoreMC() {
+  document.querySelectorAll('.mc-options').forEach(group => {
+    group.querySelectorAll('.mc-option').forEach(label => {
+      const name = label.querySelector('input').name;
+      const saved = data['mc-' + name];
+      if (saved && saved === label.querySelector('input').value) label.classList.add('selected');
+    });
+  });
+}
+function checkMCIn(containerId) {
+  document.querySelectorAll('#' + containerId + ' .mc-options').forEach(group => {
+    const correct = group.dataset.correct;
+    const selected = group.querySelector('.mc-option.selected');
+    group.querySelectorAll('.mc-option').forEach(l => l.classList.remove('correct','wrong'));
+    if (!selected) return;
+    const val = selected.querySelector('input').value;
+    selected.classList.add(val === correct ? 'correct' : 'wrong');
+    if (val !== correct) group.querySelectorAll('.mc-option').forEach(l => {
+      if (l.querySelector('input').value === correct) l.classList.add('correct');
+    });
+  });
+}
+function resetMCIn(containerId) {
+  document.querySelectorAll('#' + containerId + ' .mc-option').forEach(l => {
+    l.classList.remove('selected','correct','wrong');
+    save({ ['mc-' + l.querySelector('input').name]: '' });
+  });
+}
+
+// ── MATCHING (3 exercises) ──
+const matchState = {};
+function selectMatch(el, exId) {
+  const side = el.closest('.match-col').dataset.side;
+  if (!matchState[exId]) matchState[exId] = { selected:{left:null,right:null}, matched:new Set() };
+  const state = matchState[exId];
+  if (el.classList.contains('matched')) return;
+  el.closest('.match-col').querySelectorAll('.match-item').forEach(i => i.classList.remove('selected'));
+  el.classList.add('selected');
+  state.selected[side] = el;
+  const other = side === 'left' ? 'right' : 'left';
+  if (state.selected[other]) {
+    const a = state.selected['left'], b = state.selected['right'];
+    if (a.dataset.pair === b.dataset.pair) {
+      a.classList.remove('selected'); a.classList.add('matched','locked');
+      b.classList.remove('selected'); b.classList.add('matched','locked');
+      state.matched.add(a.dataset.pair);
+      save({ ['match-' + exId]: [...state.matched] });
+    } else {
+      [a,b].forEach(x => x.classList.add('shake'));
+      setTimeout(() => [a,b].forEach(x => x.classList.remove('selected','shake')), 400);
+    }
+    state.selected = { left:null, right:null };
+  }
+}
+function resetMatchEx(exId) {
+  document.querySelectorAll('#' + exId + ' .match-item')
+    .forEach(el => el.classList.remove('matched','locked','selected','shake'));
+  matchState[exId] = { selected:{left:null,right:null}, matched:new Set() };
+  save({ ['match-' + exId]: [] });
+}
+function restoreAllMatches() {
+  ['ex-match-270','ex-match-271','ex-match-272'].forEach(exId => {
+    matchState[exId] = { selected:{left:null,right:null}, matched:new Set() };
+    (data['match-' + exId] || []).forEach(pair => {
+      document.querySelectorAll('#' + exId + ' .match-item[data-pair="' + pair + '"]')
+        .forEach(el => el.classList.add('matched','locked'));
+      matchState[exId].matched.add(pair);
+    });
+  });
+}
+
+// ── IPA EXERCISES ──
+function checkIPA(containerId) {
+  document.querySelectorAll('#' + containerId + ' .blank').forEach(inp => {
+    const val = inp.value.trim().toLowerCase();
+    const answers = (inp.dataset.answer || '').split('|').map(a => a.trim().toLowerCase());
+    inp.classList.remove('correct','wrong');
+    if (!val) return;
+    inp.classList.add(answers.includes(val) ? 'correct' : 'wrong');
+  });
+}
+function resetIPA(containerId) {
+  document.querySelectorAll('#' + containerId + ' .blank').forEach(inp => {
+    inp.value = ''; inp.classList.remove('correct','wrong');
+    save({ [inp.id]: '' });
+  });
+}
+
+// ── WORD BANK CHIPS ──
+function toggleChip(el) {
+  el.classList.toggle('crossed');
+  const crossed = [...document.querySelectorAll('.wb-chip.crossed')].map(c => c.id);
+  save({ crossedChips: crossed });
+}
+function restoreChips() {
+  (data.crossedChips || []).forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.classList.add('crossed');
+  });
+}
+
+// ── INIT ──
+// ── HOMEWORK GAP CHECKS ──
+function checkHWGaps(containerId) {
+  document.querySelectorAll('#' + containerId + ' .word-choice').forEach(group => {
+    const correct = group.dataset.answer;
+    const selected = group.querySelector('.word-choice-btn.selected');
+    group.querySelectorAll('.word-choice-btn').forEach(b => b.classList.remove('correct','wrong'));
+    if (!selected) return;
+    if (selected.dataset.val === correct) {
+      selected.classList.add('correct');
+    } else {
+      selected.classList.add('wrong');
+      group.querySelectorAll('.word-choice-btn').forEach(b => {
+        if (b.dataset.val === correct) b.classList.add('correct');
+      });
+    }
+  });
+}
+function resetHWGaps(containerId) {
+  document.querySelectorAll('#' + containerId + ' .word-choice').forEach(group => {
+    group.querySelectorAll('.word-choice-btn').forEach(b => b.classList.remove('selected','correct','wrong'));
+    save({ [group.id]: '' });
+  });
+}
+
+setupAutosave();
+initEmojis();
+restoreGaps();
+restoreMC();
+restoreAllMatches();
+restoreChips();
+</script>
+
+</body>
+</html>

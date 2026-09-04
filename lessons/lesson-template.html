@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lesson NUMBER – TOPIC</title>
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <h1>Lesson NUMBER — TOPIC</h1>
+  <a class="back-link" href="../index.html">← All Lessons</a>
+</header>
+
+<div class="container">
+
+  <!-- ★ UPDATE: lesson number, topic, and date -->
+  <div class="lesson-meta">
+    <h2>TOPIC</h2>
+    <p>📅 DATE &nbsp;·&nbsp; Lesson NUMBER</p>
+  </div>
+
+  <div class="tab-bar">
+    <button class="tab-btn active" onclick="switchTab('class', this)">📖 Class Tasks</button>
+    <button class="tab-btn"        onclick="switchTab('hw',    this)">📝 Homework</button>
+  </div>
+
+  <!-- ════════════════════════════════════════════════════════════
+       CLASS TASKS TAB
+       Delete the exercise blocks you don't need.
+       Copy a block to add more exercises of the same type.
+  ════════════════════════════════════════════════════════════ -->
+  <div class="tab-content active" id="tab-class">
+
+    <!-- ══ WORDWALL EMBED ══ -->
+    <div class="exercise">
+      <div class="exercise-label">Game</div>
+      <h3>★ Replace with your instruction</h3>
+      <div class="embed-wrap">
+        <!-- Paste your Wordwall iframe here -->
+        <iframe src="https://wordwall.net/embed/GAME_ID" height="380" allowfullscreen></iframe>
+      </div>
+    </div>
+
+    <!-- ══ VIDEO EMBED ══ -->
+    <div class="exercise">
+      <div class="exercise-label">Watch</div>
+      <h3>★ Replace with your instruction</h3>
+      <div class="embed-wrap">
+        <!-- Paste your YouTube embed src here -->
+        <iframe src="https://www.youtube.com/embed/VIDEO_ID" height="320"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen></iframe>
+      </div>
+      <textarea class="free-write" id="fw-video" placeholder="Write your answer here…" rows="3" style="margin-top:14px;"></textarea>
+      <div class="char-count" id="cc-fw-video">0 characters</div>
+    </div>
+
+    <!-- ══ AUDIO ══ -->
+    <div class="exercise">
+      <div class="exercise-label">Listen</div>
+      <h3>★ Replace with your instruction</h3>
+      <div class="audio-wrap">
+        <!-- Put your audio file in the lessons/ folder and update src -->
+        <audio controls>
+          <source src="audio-lessonNUMBER.mp3" type="audio/mpeg">
+          Your browser does not support audio.
+        </audio>
+      </div>
+      <textarea class="free-write" id="fw-audio" placeholder="Write what you hear…" rows="3" style="margin-top:14px;"></textarea>
+      <div class="char-count" id="cc-fw-audio">0 characters</div>
+    </div>
+
+    <!-- ══ SCREENSHOT / IMAGE ══ -->
+    <div class="exercise">
+      <div class="exercise-label">Look and Answer</div>
+      <h3>★ Replace with your instruction</h3>
+      <!-- Put your image file in the lessons/ folder and update src -->
+      <img class="media-img" src="image-lessonNUMBER.png" alt="Exercise image" onerror="this.style.display='none'">
+      <textarea class="free-write" id="fw-img" placeholder="Write your answer here…" rows="3" style="margin-top:14px;"></textarea>
+      <div class="char-count" id="cc-fw-img">0 characters</div>
+    </div>
+
+    <!-- ══ FILL IN THE BLANKS ══
+         data-answer = the expected correct answer (lowercase)
+         Give each input a unique id: f1, f2, f3 … (don't repeat ids across exercises)
+    ══ -->
+    <div class="exercise" id="ex-fill">
+      <div class="exercise-label">Fill in the Blanks</div>
+      <h3>★ Replace with your instruction</h3>
+
+      <p>1. ★ Sentence with a
+        <input class="blank" id="f1" data-answer="ANSWER" placeholder="???">
+        blank.
+      </p>
+      <p>2. ★ Another sentence
+        <input class="blank" id="f2" data-answer="ANSWER" placeholder="???">
+        here.
+      </p>
+
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="checkBlanks()">Check ✓</button>
+        <button class="btn btn-ghost"   onclick="resetBlanks()">Try again</button>
+      </div>
+    </div>
+
+    <!-- ══ MULTIPLE CHOICE ══
+         data-correct on .mc-options = the value ("a","b","c") of the correct option
+         Use a different name="mcX" for each question group
+    ══ -->
+    <div class="exercise" id="ex-mc">
+      <div class="exercise-label">Multiple Choice</div>
+      <h3>★ Replace with your instruction</h3>
+
+      <p style="font-weight:600; margin-bottom:8px;">1. ★ Question text ___</p>
+      <div class="mc-options" data-correct="a">
+        <label class="mc-option"><input type="radio" name="mc1" value="a"><span class="mc-bullet">A</span> Option A</label>
+        <label class="mc-option"><input type="radio" name="mc1" value="b"><span class="mc-bullet">B</span> Option B</label>
+        <label class="mc-option"><input type="radio" name="mc1" value="c"><span class="mc-bullet">C</span> Option C</label>
+      </div>
+
+      <p style="font-weight:600; margin: 18px 0 8px;">2. ★ Question text ___</p>
+      <div class="mc-options" data-correct="b">
+        <label class="mc-option"><input type="radio" name="mc2" value="a"><span class="mc-bullet">A</span> Option A</label>
+        <label class="mc-option"><input type="radio" name="mc2" value="b"><span class="mc-bullet">B</span> Option B</label>
+        <label class="mc-option"><input type="radio" name="mc2" value="c"><span class="mc-bullet">C</span> Option C</label>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="checkMC()">Check ✓</button>
+        <button class="btn btn-ghost"   onclick="resetMC()">Try again</button>
+      </div>
+    </div>
+
+    <!-- ══ MATCHING ══
+         data-pair on each item = a number; left and right items with the SAME number are a correct pair
+         Items in the right column can be in any order — students drag/click to match them
+    ══ -->
+    <div class="exercise" id="ex-match">
+      <div class="exercise-label">Matching</div>
+      <h3>★ Replace with your instruction</h3>
+
+      <div class="match-grid">
+        <div class="match-col" id="match-left">
+          <div class="match-item" data-pair="1" onclick="selectMatch(this,'left')">★ Word / phrase 1</div>
+          <div class="match-item" data-pair="2" onclick="selectMatch(this,'left')">★ Word / phrase 2</div>
+          <div class="match-item" data-pair="3" onclick="selectMatch(this,'left')">★ Word / phrase 3</div>
+          <div class="match-item" data-pair="4" onclick="selectMatch(this,'left')">★ Word / phrase 4</div>
+        </div>
+        <div class="match-col" id="match-right">
+          <!-- Shuffle the order of items here so they don't line up visually -->
+          <div class="match-item" data-pair="3" onclick="selectMatch(this,'right')">★ Definition / picture 3</div>
+          <div class="match-item" data-pair="1" onclick="selectMatch(this,'right')">★ Definition / picture 1</div>
+          <div class="match-item" data-pair="4" onclick="selectMatch(this,'right')">★ Definition / picture 4</div>
+          <div class="match-item" data-pair="2" onclick="selectMatch(this,'right')">★ Definition / picture 2</div>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-ghost" onclick="resetMatch()">Reset matching</button>
+      </div>
+    </div>
+
+    <!-- ══ FREE WRITING ══ -->
+    <div class="exercise">
+      <div class="exercise-label">Writing</div>
+      <h3>★ Replace with your instruction</h3>
+      <textarea class="free-write" id="fw-class-write" placeholder="Write here…" rows="5"></textarea>
+      <div class="char-count" id="cc-fw-class-write">0 characters</div>
+    </div>
+
+  </div><!-- end tab-class -->
+
+  <!-- ════════════════════════════════════════════════════════════
+       HOMEWORK TAB — same exercise types available
+  ════════════════════════════════════════════════════════════ -->
+  <div class="tab-content" id="tab-hw">
+
+    <!-- ══ HOMEWORK: Free writing ══ -->
+    <div class="exercise">
+      <div class="exercise-label">Homework 1 — Writing</div>
+      <h3>★ Replace with your homework instruction</h3>
+      <textarea class="free-write" id="hw-writing" placeholder="Write your homework here…" rows="7"></textarea>
+      <div class="char-count" id="cc-hw-writing">0 characters</div>
+    </div>
+
+    <!-- ══ HOMEWORK: Fill in blanks ══ -->
+    <div class="exercise" id="ex-hw-fill">
+      <div class="exercise-label">Homework 2 — Fill in the Blanks</div>
+      <h3>★ Replace with your instruction</h3>
+
+      <p>1. ★ Sentence
+        <input class="blank" id="hw1" data-answer="ANSWER" placeholder="???">
+        here.
+      </p>
+      <p>2. ★ Sentence
+        <input class="blank" id="hw2" data-answer="ANSWER" placeholder="???">
+        here.
+      </p>
+
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="checkBlanks('hw')">Check ✓</button>
+        <button class="btn btn-ghost"   onclick="resetBlanks('hw')">Try again</button>
+      </div>
+    </div>
+
+    <!-- ══ HOMEWORK: Wordwall ══ -->
+    <div class="exercise">
+      <div class="exercise-label">Homework 3 — Practice Game</div>
+      <h3>★ Replace with your instruction</h3>
+      <div class="embed-wrap">
+        <iframe src="https://wordwall.net/embed/GAME_ID" height="380" allowfullscreen></iframe>
+      </div>
+    </div>
+
+  </div><!-- end tab-hw -->
+
+</div><!-- end container -->
+
+<div class="save-indicator" id="saveIndicator">✓ Saved</div>
+
+<script>
+/* ★ UPDATE THIS — must be unique for every lesson */
+const LESSON_KEY = 'lesson-NUMBER';
+
+/* ────────────────────────────────────────────────────────────
+   TAB SWITCHING
+──────────────────────────────────────────────────────────── */
+function switchTab(name, btn) {
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  btn.classList.add('active');
+  save({ activeTab: name });
+}
+
+/* ────────────────────────────────────────────────────────────
+   PERSISTENCE
+──────────────────────────────────────────────────────────── */
+let data = {};
+try { data = JSON.parse(localStorage.getItem(LESSON_KEY)) || {}; } catch(e) {}
+
+function save(patch) {
+  Object.assign(data, patch);
+  localStorage.setItem(LESSON_KEY, JSON.stringify(data));
+  flashSaved();
+}
+
+let saveTimer;
+function flashSaved() {
+  const el = document.getElementById('saveIndicator');
+  el.classList.add('show');
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(() => el.classList.remove('show'), 1600);
+}
+
+function setupAutosave() {
+  document.querySelectorAll('.blank, .free-write').forEach(el => {
+    if (data[el.id] !== undefined) el.value = data[el.id];
+    el.addEventListener('input', () => {
+      save({ [el.id]: el.value });
+      const ccEl = document.getElementById('cc-' + el.id);
+      if (ccEl) ccEl.textContent = el.value.length + ' characters';
+    });
+    const ccEl = document.getElementById('cc-' + el.id);
+    if (ccEl) ccEl.textContent = (el.value || '').length + ' characters';
+  });
+
+  if (data.activeTab) {
+    const btn = document.querySelector(`.tab-btn[onclick*="${data.activeTab}"]`);
+    if (btn) switchTab(data.activeTab, btn);
+  }
+
+  restoreMC();
+  restoreMatch();
+}
+
+/* ────────────────────────────────────────────────────────────
+   FILL IN THE BLANKS
+──────────────────────────────────────────────────────────── */
+function checkBlanks(prefix) {
+  const sel = prefix ? '#ex-hw-fill .blank' : '#ex-fill .blank';
+  document.querySelectorAll(sel).forEach(inp => {
+    const val    = inp.value.trim().toLowerCase();
+    const answer = inp.dataset.answer.toLowerCase();
+    inp.classList.remove('correct','wrong');
+    if (!val) return;
+    inp.classList.add(val === answer ? 'correct' : 'wrong');
+  });
+}
+
+function resetBlanks(prefix) {
+  const sel = prefix ? '#ex-hw-fill .blank' : '#ex-fill .blank';
+  document.querySelectorAll(sel).forEach(inp => {
+    inp.value = '';
+    inp.classList.remove('correct','wrong');
+    save({ [inp.id]: '' });
+  });
+}
+
+/* ────────────────────────────────────────────────────────────
+   MULTIPLE CHOICE
+──────────────────────────────────────────────────────────── */
+document.querySelectorAll('.mc-option').forEach(label => {
+  label.addEventListener('click', () => {
+    const group = label.closest('.mc-options');
+    group.querySelectorAll('.mc-option').forEach(l => l.classList.remove('selected'));
+    label.classList.add('selected');
+    save({ ['mc-' + label.querySelector('input').name]: label.querySelector('input').value });
+  });
+});
+
+function checkMC() {
+  document.querySelectorAll('.mc-options').forEach(group => {
+    const correct  = group.dataset.correct;
+    const selected = group.querySelector('.mc-option.selected');
+    group.querySelectorAll('.mc-option').forEach(l => l.classList.remove('correct','wrong'));
+    if (!selected) return;
+    const val = selected.querySelector('input').value;
+    selected.classList.add(val === correct ? 'correct' : 'wrong');
+    if (val !== correct) {
+      group.querySelectorAll('.mc-option').forEach(l => {
+        if (l.querySelector('input').value === correct) l.classList.add('correct');
+      });
+    }
+  });
+}
+
+function resetMC() {
+  document.querySelectorAll('.mc-option').forEach(l => {
+    l.classList.remove('selected','correct','wrong');
+    save({ ['mc-' + l.querySelector('input').name]: '' });
+  });
+}
+
+function restoreMC() {
+  document.querySelectorAll('.mc-options').forEach(group => {
+    group.querySelectorAll('.mc-option').forEach(label => {
+      const name  = label.querySelector('input').name;
+      const saved = data['mc-' + name];
+      if (saved && saved === label.querySelector('input').value) label.classList.add('selected');
+    });
+  });
+}
+
+/* ────────────────────────────────────────────────────────────
+   MATCHING
+──────────────────────────────────────────────────────────── */
+let matchSelected = { left: null, right: null };
+let matchedPairs  = new Set();
+
+function selectMatch(el, side) {
+  if (el.classList.contains('matched')) return;
+  const col = document.getElementById('match-' + side);
+  col.querySelectorAll('.match-item').forEach(i => i.classList.remove('selected'));
+  el.classList.add('selected');
+  matchSelected[side] = el;
+  const other = side === 'left' ? 'right' : 'left';
+  if (matchSelected[other]) {
+    const a = matchSelected['left'];
+    const b = matchSelected['right'];
+    if (a.dataset.pair === b.dataset.pair) {
+      a.classList.remove('selected'); a.classList.add('matched','locked');
+      b.classList.remove('selected'); b.classList.add('matched','locked');
+      matchedPairs.add(a.dataset.pair);
+      save({ matchedPairs: [...matchedPairs] });
+    } else {
+      [a, b].forEach(x => x.classList.add('shake'));
+      setTimeout(() => [a, b].forEach(x => x.classList.remove('selected','shake')), 400);
+    }
+    matchSelected = { left: null, right: null };
+  }
+}
+
+function resetMatch() {
+  document.querySelectorAll('.match-item').forEach(el => el.classList.remove('matched','locked','selected','shake'));
+  matchSelected = { left: null, right: null };
+  matchedPairs  = new Set();
+  save({ matchedPairs: [] });
+}
+
+function restoreMatch() {
+  const saved = data.matchedPairs || [];
+  saved.forEach(pair => {
+    document.querySelectorAll(`.match-item[data-pair="${pair}"]`).forEach(el => el.classList.add('matched','locked'));
+    matchedPairs.add(pair);
+  });
+}
+
+/* ────────────────────────────────────────────────────────────
+   INIT
+──────────────────────────────────────────────────────────── */
+setupAutosave();
+</script>
+
+</body>
+</html>
