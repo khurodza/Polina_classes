@@ -1,5 +1,106 @@
 # How to Build Lessons — Complete Guide
 
+---
+
+## How to update your site on GitHub
+
+### The golden rule
+You **always edit files on your computer**. GitHub is just where you send the finished changes. Never edit files directly on the GitHub website.
+
+---
+
+### Before you start — one-time setup
+
+Make sure you have done these already (only needed once):
+- GitHub Desktop is installed and you are logged in
+- Your `polina_classes` folder has been added as a repository
+- The repository has been published to GitHub
+- GitHub Pages has been turned on
+
+If any of these are missing, see the Publishing section further down in this guide.
+
+---
+
+### Every time you update a lesson or add a new one
+
+#### Step 1 — Edit your files normally
+
+Open the file you want to change on your computer — in any text editor, or by asking Claude to make changes. Save the file when done. You can edit multiple files before going to the next step.
+
+#### Step 2 — Open GitHub Desktop
+
+Open the GitHub Desktop app. On the left side you will see a list of every file you changed. This updates automatically — you do not need to do anything to "tell" it what changed.
+
+Each file shows a coloured dot:
+- 🟡 Yellow — a file you edited
+- 🟢 Green — a new file you added
+- 🔴 Red — a file you deleted
+
+If you click on a file name, the right side shows exactly what changed (green = added text, red = removed text). You do not need to read this — it is just there if you are curious.
+
+#### Step 3 — Write a short summary
+
+At the **bottom left** of the screen there is a small text box that says *Summary (required)*.
+
+Write a short note about what you did. It does not have to be detailed — it is just for your own memory in case you need to find a specific version later. Examples:
+
+- `add lesson 2`
+- `update lesson 1 homework`
+- `fix typo in task 3`
+- `add audio files for lesson 2`
+
+#### Step 4 — Click "Commit to main"
+
+Click the blue **Commit to main** button just below the summary box.
+
+This saves a snapshot of your changes on your computer. The live website has **not** been updated yet — that happens in the next step.
+
+#### Step 5 — Click "Push origin"
+
+After committing, a blue button appears at the **top of the screen** that says **Push origin**. Click it.
+
+This sends your changes to GitHub. The live website will update within **1 to 2 minutes**.
+
+#### Step 6 — Check the live site
+
+Open your GitHub Pages URL in a browser and refresh the page. Your changes should be visible.
+
+> If you do not see the changes after 2 minutes, do a hard refresh: hold **Cmd + Shift + R** on Mac or **Ctrl + Shift + R** on Windows.
+
+---
+
+### Quick reference — the 4 clicks
+
+Every update follows the same 4 clicks after you have finished editing:
+
+```
+1. Open GitHub Desktop
+2. Write a summary note  (bottom left)
+3. Click  Commit to main  (bottom left)
+4. Click  Push origin  (top bar)
+```
+
+---
+
+### Common situations
+
+**You edited multiple files at once**
+No problem. GitHub Desktop lists all of them together. You commit them all in one go with a single summary note like `update lesson 2 and fix lesson 1`.
+
+**You made a mistake and already committed**
+Do not panic. Your files on your computer are the source of truth. Just fix the file, then commit and push again. The new version replaces the old one on the live site.
+
+**You forgot to push and closed GitHub Desktop**
+Nothing is lost. The next time you open GitHub Desktop it will still show the unpushed commit with a note saying *"1 commit ahead of origin"*. Just click **Push origin** and it will send it.
+
+**You added new image or audio files**
+They appear in the changed files list just like any other file. Commit and push as normal — GitHub will upload them automatically.
+
+**The live site looks the same even after pushing**
+Wait another minute, then do a hard refresh (Cmd+Shift+R / Ctrl+Shift+R). If it still does not update, open GitHub Desktop and check there are no unpushed commits (the Push button should be grey, not blue).
+
+---
+
 ## Project structure
 
 ```
