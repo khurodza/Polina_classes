@@ -58,7 +58,7 @@ a:hover { text-decoration: underline; }
 }
 .site-header .back-link:hover { color: #fff; text-decoration: none; }
 
-.container { max-width: 840px; margin: 0 auto; padding: 36px 20px 70px; }
+.container { max-width: 1120px; margin: 0 auto; padding: 36px 28px 70px; }
 
 /* ===== INDEX — STUDENT BAR ===== */
 .student-bar {
@@ -101,100 +101,74 @@ a:hover { text-decoration: underline; }
   border-bottom: 2px solid var(--border);
 }
 
-/* Stacked file-folder container */
-.file-stack {
+/* Stacked lesson cards — "workbook stamp" style */
+.lesson-stack {
   margin-top: 18px;
-  border-radius: var(--radius);
-  overflow: hidden;
-  box-shadow: 0 6px 28px rgba(44,32,16,.13);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 
-/* Each lesson = one folder */
-.file-folder {
+/* Each lesson = one tilted worksheet card */
+.lesson-card {
   position: relative;
   display: block;
-  min-height: 80px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  box-shadow: var(--shadow);
+  padding: 18px 24px 18px 76px;
   text-decoration: none;
-  color: #fff;
-  transition: filter .15s;
-  overflow: hidden;
+  color: var(--text);
+  transition: transform .15s, box-shadow .15s;
 }
-.file-folder:hover { filter: brightness(1.09); text-decoration: none; }
+.lesson-card:hover { text-decoration: none; box-shadow: 0 6px 20px rgba(44,32,16,.14); }
 
-/* Full-width lighter "folder body" behind the tab */
-.file-folder::before {
-  content: '';
+/* Alternate a slight tilt, like worksheets tossed on a desk */
+.lesson-card:nth-child(odd)  { transform: rotate(-0.6deg); }
+.lesson-card:nth-child(even) { transform: rotate(0.5deg); }
+.lesson-card:nth-child(odd):hover  { transform: rotate(-0.6deg) translateY(-2px); }
+.lesson-card:nth-child(even):hover { transform: rotate(0.5deg) translateY(-2px); }
+
+/* Hand-stamped number badge, color cycling every 4 lessons */
+.lesson-stamp {
   position: absolute;
-  inset: 0;
-  background: var(--fc, var(--primary));
-  opacity: 0.22;
-}
-
-/* Parallelogram-shaped colored tab */
-.file-folder::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: var(--fc, var(--primary));
-  clip-path: polygon(
-    0 0,
-    calc(var(--fw, 375px) - 38px) 0,
-    var(--fw, 375px) 100%,
-    0 100%
-  );
-}
-
-/* Content above pseudo-elements */
-.file-row {
-  position: relative;
-  z-index: 1;
+  left: 16px;
+  top: 50%;
+  transform: translateY(-50%) rotate(-8deg);
+  width: 46px;
+  height: 46px;
+  border: 2px dashed var(--sc, var(--primary));
+  border-radius: 50%;
   display: flex;
   align-items: center;
-  gap: 18px;
-  padding: 18px 28px 18px var(--fp, 22px);
-  min-height: 80px;
-}
-
-/* Folder color + indent cycle (repeats every 4 lessons) */
-.file-folder:nth-child(4n+1) { --fc: var(--primary);   --fp: 22px;  --fw: 370px; }
-.file-folder:nth-child(4n+2) { --fc: var(--blue);       --fp: 72px;  --fw: 420px; }
-.file-folder:nth-child(4n+3) { --fc: var(--rose);       --fp: 122px; --fw: 470px; }
-.file-folder:nth-child(4n)   { --fc: var(--accent-dk);  --fp: 172px; --fw: 520px; }
-
-.file-folder + .file-folder { border-top: 2px solid rgba(255,255,255,.12); }
-
-.file-num {
+  justify-content: center;
   font-family: 'Fraunces', Georgia, serif;
-  font-size: 1.6rem;
   font-weight: 700;
+  font-size: 1.2rem;
+  color: var(--sc, var(--primary));
   flex-shrink: 0;
-  min-width: 34px;
-  text-align: center;
-  text-shadow: 0 1px 4px rgba(0,0,0,.18);
 }
+.lesson-card:nth-child(4n+1) { --sc: var(--primary); }
+.lesson-card:nth-child(4n+2) { --sc: var(--blue); }
+.lesson-card:nth-child(4n+3) { --sc: var(--rose); }
+.lesson-card:nth-child(4n)   { --sc: var(--accent-dk); }
 
-.file-info { flex: 1; min-width: 0; }
-.file-topic {
+.lesson-title {
   display: block;
-  font-weight: 700;
-  font-size: 1.1rem;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  font-family: 'Fraunces', Georgia, serif;
+  font-weight: 600;
+  font-size: 1.12rem;
+  line-height: 1.35;
+  margin-bottom: 3px;
 }
-.file-date {
+.lesson-date {
   display: block;
-  font-size: .86rem;
-  opacity: .78;
-  margin-top: 4px;
+  font-size: .82rem;
+  color: var(--muted);
+  font-style: italic;
 }
-
-.file-badges { display: flex; gap: 7px; flex-shrink: 0; flex-wrap: wrap; }
-.file-folder .badge {
-  background: rgba(255,255,255,.22);
-  color: #fff;
-  border: 1px solid rgba(255,255,255,.32);
-}
+.lesson-tags { display: flex; gap: 6px; margin-top: 10px; flex-wrap: wrap; }
 
 .badge {
   font-size: .72rem;
@@ -254,6 +228,10 @@ a:hover { text-decoration: underline; }
   color: #fff;
   border-color: var(--primary);
 }
+/* Each part gets its own accent when active (folder-tab style) */
+.tab-btn:nth-child(2).active { background: var(--blue);      border-color: var(--blue); }
+.tab-btn:nth-child(3).active { background: var(--rose);      border-color: var(--rose); }
+.tab-btn:nth-child(4).active { background: var(--accent-dk); border-color: var(--accent-dk); }
 .tab-btn:hover:not(.active) {
   background: var(--bg);
   color: var(--text);
@@ -323,7 +301,51 @@ a:hover { text-decoration: underline; }
 .blank.wrong   { border-color: var(--red);   color: var(--red); }
 
 /* Multiple choice */
-.mc-options { display: flex; flex-direction: column; gap: 9px; }
+.mc-options {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 9px;
+}
+
+/* Question rows: hanging numeral + sentence with a fill-in slot + compact chip options */
+.mc-q { display: flex; gap: 18px; align-items: flex-start; padding: 14px 0; border-bottom: 1px dashed var(--border); }
+.mc-q:last-of-type { border-bottom: none; }
+.mc-qnum {
+  font-family: 'Fraunces', Georgia, serif;
+  font-style: italic;
+  font-size: 1.7rem;
+  line-height: 1;
+  min-width: 36px;
+  padding-top: 4px;
+  text-align: right;
+  color: var(--primary);
+}
+.mc-q:nth-child(4n+2) .mc-qnum { color: var(--blue); }
+.mc-q:nth-child(4n+3) .mc-qnum { color: var(--rose); }
+.mc-q:nth-child(4n)   .mc-qnum { color: var(--accent-dk); }
+.mc-qbody { flex: 1; min-width: 0; }
+.exercise .mc-qtext { font-weight: 500; margin-bottom: 10px; }
+.mc-slot {
+  display: inline-block;
+  min-width: 64px;
+  padding: 0 10px;
+  border-bottom: 2px solid var(--primary);
+  text-align: center;
+  color: var(--primary-dk);
+  font-weight: 700;
+  transition: color .2s, border-color .2s;
+}
+.mc-slot.correct { border-color: var(--green); color: var(--green); }
+.mc-slot.wrong   { border-color: var(--red);   color: var(--red); }
+
+.mc-options.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.mc-options.chips .mc-option {
+  flex: 0 0 auto;
+  padding: 6px 16px 6px 6px;
+  gap: 8px;
+  border-radius: 100px;
+  font-size: .95rem;
+}
 .mc-option {
   display: flex;
   align-items: center;
@@ -454,11 +476,7 @@ a:hover { text-decoration: underline; }
   .container   { padding: 20px 14px 50px; }
   .match-grid  { grid-template-columns: 1fr; }
   .tab-btn     { font-size: .85rem; padding: 10px 8px; }
-  /* On small screens, disable the parallelogram clip and reduce indents */
-  .file-folder::after { clip-path: none; }
-  .file-folder:nth-child(4n+1) { --fp: 16px; }
-  .file-folder:nth-child(4n+2) { --fp: 16px; }
-  .file-folder:nth-child(4n+3) { --fp: 16px; }
-  .file-folder:nth-child(4n)   { --fp: 16px; }
-  .file-badges { display: none; }
+  /* On small screens, shrink the stamp and tighten the card padding */
+  .lesson-card  { padding: 16px 18px 16px 62px; }
+  .lesson-stamp { width: 38px; height: 38px; font-size: 1rem; left: 12px; }
 }

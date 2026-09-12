@@ -1,0 +1,1533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lesson 2 – Get/Put, Prepositions, Word Stress &amp; Culture</title>
+  <link rel="stylesheet" href="../style.css">
+  <style>
+    .word-choice { display:inline-flex; border:2px solid var(--border); border-radius:8px; overflow:hidden; margin:0 4px; vertical-align:middle; }
+    .word-choice-btn { padding:3px 10px; cursor:pointer; border:none; background:transparent; font-size:.95rem; color:var(--muted); transition:background .15s,color .15s; font-family:inherit; }
+    .word-choice-btn:hover { background:var(--bg); color:var(--text); }
+    .word-choice-btn.selected { background:var(--primary); color:#fff; }
+    .word-choice-btn.correct { background:var(--green) !important; color:#fff !important; }
+    .word-choice-btn.wrong   { background:var(--red) !important; color:#fff !important; }
+
+    .colloc-grid { display:grid; grid-template-columns:1fr 1fr; gap:0; margin:12px 0; border:1px solid var(--border); border-radius:var(--radius); overflow:hidden; }
+    .colloc-col { padding:14px 18px; }
+    .colloc-col:first-child { border-right:1px solid var(--border); }
+    .colloc-col-header { font-weight:800; font-size:.85rem; text-transform:uppercase; letter-spacing:.5px; color:var(--primary); margin-bottom:10px; }
+    .colloc-item { font-size:.88rem; padding:5px 0; border-bottom:1px solid var(--border); color:var(--text); }
+    .colloc-item:last-child { border-bottom:none; }
+
+    .rule-box { background:linear-gradient(135deg,#FDF5EC,#F0E8D4); border:2px solid var(--border); border-radius:var(--radius); padding:20px 24px; margin-bottom:20px; }
+    .rule-box-title { font-family:'Fraunces',Georgia,serif; font-weight:700; font-size:1rem; margin-bottom:14px; color:var(--text); }
+    .rule-cols { display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px; }
+    .rule-cols.two-col { grid-template-columns:1fr 1fr; }
+    .rule-cols.four-col { grid-template-columns:repeat(4,1fr); }
+    .rule-col { padding:14px; border-radius:10px; }
+    .rule-col p { font-size:.9rem; margin-bottom:6px; }
+    .rule-col ul { margin-left:16px; margin-top:8px; font-size:.9rem; }
+    .rule-col li { margin-bottom:4px; }
+    .rule-at { background:rgba(200,64,64,.08); border-left:3px solid var(--red); }
+    .rule-on { background:rgba(95,142,196,.12); border-left:3px solid var(--blue); }
+    .rule-in { background:rgba(91,140,69,.12); border-left:3px solid var(--green); }
+    .rule-for { background:rgba(201,160,48,.14); border-left:3px solid var(--accent-dk); }
+    .rule-verb { font-size:1.1rem; font-weight:800; margin-bottom:6px; }
+    .rule-at .rule-verb { color:var(--red); }
+    .rule-on .rule-verb { color:var(--blue); }
+    .rule-in .rule-verb { color:var(--green); }
+    .rule-for .rule-verb { color:var(--accent-dk); }
+    .rule-core { font-size:.92rem; line-height:1.65; margin-bottom:16px; }
+    .rule-core b { color:var(--primary-dk); }
+
+    /* ── Word stress rules ── */
+    .stress-box { display:flex; flex-direction:column; gap:14px; margin-bottom:20px; }
+    .stress-intro { font-size:.98rem; line-height:1.6; color:var(--text); padding:14px 18px; background:linear-gradient(135deg,#FDF5EC,#F0E8D4); border-radius:12px; border:1px solid var(--border); }
+    .stress-intro b { color:var(--primary-dk); }
+    .stress-rule { --rc:var(--primary); display:flex; gap:16px; padding:18px 20px; background:#fff; border:2px solid var(--border); border-left:8px solid var(--rc); border-radius:12px; }
+    .stress-rule.rc-blue  { --rc:var(--blue); }
+    .stress-rule.rc-green { --rc:var(--green); }
+    .stress-rule.rc-gold  { --rc:var(--accent-dk); }
+    .stress-rule.rc-rose  { --rc:var(--rose); }
+    .stress-rule.rc-dark  { --rc:var(--text); }
+    .stress-rule-num { flex:0 0 36px; height:36px; display:flex; align-items:center; justify-content:center; background:var(--rc); color:#fff; font-weight:800; font-size:1.1rem; border-radius:50%; }
+    .stress-rule-text { flex:1; min-width:0; }
+    .stress-rule-title { font-family:'Fraunces',Georgia,serif; font-weight:700; font-size:1.12rem; color:var(--rc); margin-bottom:6px; line-height:1.3; }
+    .stress-rule-body { font-size:.97rem; line-height:1.65; color:var(--text); }
+    .stress-rule-body b { color:var(--text); font-weight:700; }
+    .stress-ending { display:inline-block; margin:2px 3px 2px 0; padding:1px 9px; background:var(--rc); color:#fff; font-weight:700; font-size:.9rem; border-radius:6px; font-family:'DM Sans',sans-serif; }
+    .stress-examples { display:flex; flex-wrap:wrap; gap:8px; margin-top:12px; }
+    .stress-example { display:inline-block; padding:5px 12px; background:var(--bg); border:1.5px solid var(--border); border-radius:100px; font-size:.98rem; color:var(--text); letter-spacing:.2px; }
+    .stress-example .cap { font-weight:800; color:var(--rc); text-decoration:underline; text-decoration-thickness:3px; text-underline-offset:3px; }
+    .stress-example .pos { font-size:.8rem; color:var(--muted); margin-left:4px; }
+    .stress-example .arrow { color:var(--muted); margin:0 6px; }
+    .stress-example .base { color:var(--muted); }
+    .stress-example .base .cap { color:var(--muted); text-decoration:none; }
+    .stress-legend { font-size:.92rem; color:var(--muted); margin-top:10px; }
+    .stress-legend .cap { font-weight:800; color:var(--primary); text-decoration:underline; text-decoration-thickness:3px; text-underline-offset:3px; }
+
+    .pair-table { width:100%; border-collapse:collapse; margin-top:12px; font-size:.98rem; }
+    .pair-table th { text-align:left; font-size:.8rem; text-transform:uppercase; letter-spacing:1px; color:var(--muted); padding:6px 12px; border-bottom:2px solid var(--border); }
+    .pair-table td { padding:8px 12px; border-bottom:1px solid var(--border); }
+    .pair-table tr:last-child td { border-bottom:none; }
+    .pair-table td:first-child { color:var(--muted); font-size:.88rem; width:28%; }
+    .pair-table .cap { font-weight:800; color:var(--rc); text-decoration:underline; text-decoration-thickness:3px; text-underline-offset:3px; }
+    .pair-table .pos { font-size:.78rem; color:var(--muted); margin-left:5px; }
+
+    /* ── Word stress practice grids ── */
+    .stress-exercise { display:grid; grid-template-columns:repeat(auto-fill,minmax(210px,1fr)); gap:10px; }
+    .stress-row { display:flex; align-items:center; gap:10px; padding:10px 12px 10px 10px; background:#fff; border:1.5px solid var(--border); border-radius:10px; transition:border-color .15s, box-shadow .15s; }
+    .stress-row:focus-within { border-color:var(--primary); box-shadow:0 0 0 3px rgba(212,87,42,.12); }
+    .stress-row:has(.blank.correct) { border-color:var(--green); background:rgba(91,140,69,.06); }
+    .stress-row:has(.blank.wrong)   { border-color:var(--red);   background:rgba(200,64,64,.06); }
+    .stress-num { flex:0 0 26px; height:26px; display:flex; align-items:center; justify-content:center; border-radius:50%; background:var(--bg); color:var(--muted); font-size:.8rem; font-weight:700; }
+    .stress-word { flex:1; min-width:0; font-size:1.05rem; color:var(--text); font-weight:600; letter-spacing:.2px; }
+    .stress-row .blank { flex:0 0 54px; width:54px; min-width:0; padding:3px 2px; font-size:.98rem; font-weight:700; border:2px solid var(--border); border-radius:8px; background:var(--bg); }
+    .stress-row .blank:focus { border-color:var(--primary); background:#fff; }
+    .stress-row .blank.correct { border-color:var(--green); background:#fff; }
+    .stress-row .blank.wrong   { border-color:var(--red);   background:#fff; }
+    .stress-row.pattern .blank { flex-basis:74px; width:74px; font-family:'DM Sans',monospace; letter-spacing:2px; }
+    .stress-tip { display:flex; align-items:center; gap:10px; padding:10px 14px; margin-bottom:16px; background:linear-gradient(135deg,#FDF5EC,#F0E8D4); border-radius:10px; font-size:.93rem; color:var(--text); }
+    .stress-tip .pat { font-weight:800; color:var(--primary); letter-spacing:2px; }
+    .stress-tip .cap { font-weight:800; color:var(--primary); text-decoration:underline; text-decoration-thickness:3px; text-underline-offset:3px; }
+
+    .person-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; }
+    .person-card { background:var(--card); border-radius:var(--radius); box-shadow:var(--shadow); padding:0 0 14px; text-align:center; overflow:hidden; }
+    .person-photo { width:100%; height:240px; object-fit:contain; object-position:center; display:block; background:var(--bg); padding:8px; box-sizing:border-box; }
+    .person-card-body { padding:10px 12px 0; }
+    .person-name { font-weight:700; font-size:.9rem; margin-bottom:4px; }
+    .person-desc { font-size:.78rem; color:var(--muted); line-height:1.55; text-align:left; }
+    .p-badge { display:inline-block; font-size:.68rem; padding:2px 8px; border-radius:20px; margin-bottom:6px; font-weight:700; background:#DBEAFE; color:#2563EB; }
+    .badge-science  { background:#DBEAFE; color:#2563EB; }
+    .badge-medicine { background:#D1FAE5; color:#059669; }
+    .badge-eng      { background:#FEF3C7; color:#D97706; }
+    .badge-media    { background:#FCE7F3; color:#DB2777; }
+    .person-hook { font-size:.84rem; font-weight:700; color:var(--primary-dk); background:rgba(212,87,42,.08); border-radius:8px; padding:6px 10px; margin:6px 0 8px; text-align:left; line-height:1.4; }
+    .person-hook span { display:block; font-size:.66rem; text-transform:uppercase; letter-spacing:1px; color:var(--primary); margin-bottom:2px; }
+
+    .intro-card { background:linear-gradient(135deg,#FDF5EC,#F0E8D4); border:1px solid var(--border); border-radius:var(--radius); padding:16px 20px; margin-bottom:24px; font-size:.95rem; color:var(--text); }
+    .wordwall-btn { display:inline-flex; align-items:center; gap:10px; margin-top:12px; padding:12px 26px; background:var(--primary); color:#fff; border-radius:100px; font-size:1rem; font-weight:700; text-decoration:none; transition:opacity .2s,transform .1s; box-shadow:0 3px 10px rgba(212,87,42,.28); }
+    .wordwall-btn:hover { opacity:.88; transform:translateY(-2px); text-decoration:none; }
+
+    .listen-item { margin-bottom:22px; padding-bottom:22px; border-bottom:1px dashed var(--border); }
+    .listen-item:last-of-type { border-bottom:none; margin-bottom:0; }
+    .listen-header { display:flex; align-items:center; gap:12px; margin-bottom:10px; }
+    .listen-num { font-weight:800; color:var(--primary); font-size:1rem; min-width:28px; }
+    .listen-header audio { flex:1; }
+
+
+    @media(max-width:900px){
+      .rule-cols.four-col { grid-template-columns:1fr 1fr; }
+      .person-grid { grid-template-columns:1fr 1fr; }
+    }
+    @media(max-width:560px){
+      .stress-rule { padding:14px; gap:12px; border-left-width:6px; }
+      .stress-rule-num { flex-basis:32px; height:32px; font-size:1.05rem; }
+      .stress-rule-title { font-size:1.1rem; }
+      .pair-table td:first-child { display:none; }
+      .pair-table th:first-child { display:none; }
+      .colloc-grid,.person-grid,.rule-cols,.rule-cols.four-col { grid-template-columns:1fr; }
+      .colloc-col:first-child { border-right:none; border-bottom:1px solid var(--border); }
+    }
+  </style>
+</head>
+<body>
+
+<header class="site-header">
+  <h1>Lesson 2 — Get/Put, Prepositions, Word Stress &amp; Culture</h1>
+  <a class="back-link" href="../index.html">← All Lessons</a>
+</header>
+
+<div class="container">
+
+  <div class="lesson-meta">
+    <h2>Get &amp; Put Collocations, Prepositions, Word Stress &amp; Culture</h2>
+    <p>📅 11 September 2026 &nbsp;·&nbsp; Lesson 2</p>
+  </div>
+
+  <div class="tab-bar">
+    <button class="tab-btn active" onclick="switchTab('p1',this)">Part 1 · Get/Put &amp; Prepositions</button>
+    <button class="tab-btn"        onclick="switchTab('p2',this)">Part 2 · Word Stress</button>
+    <button class="tab-btn"        onclick="switchTab('p3',this)">Part 3 · Culture</button>
+    <button class="tab-btn"        onclick="switchTab('hw',this)">📝 Homework</button>
+  </div>
+  <div class="tab-scallop"></div>
+
+  <!-- ══════════════════════════════════════════════════════
+       PART 1 — GET / PUT COLLOCATIONS + PREPOSITIONS (in/on/at)
+  ══════════════════════════════════════════════════════ -->
+  <div class="tab-content active" id="tab-p1">
+
+    <!-- Task 1: Quizlet recycle — take/give -->
+    <div class="exercise">
+      <div class="exercise-label">Task 1 — Recycle</div>
+      <h3>Flip through the flashcards to revise <em>take</em>/<em>give</em> collocations from Lesson 1.</h3>
+      <a class="wordwall-btn" href="https://quizlet.com/1207114209/takegive-collocations-flash-cards/?i=2219ss&x=1jqt" target="_blank" rel="noopener">
+        🔁 Open Quizlet: Take/Give
+      </a>
+    </div>
+
+    <!-- Task 2: Quizlet — get/put -->
+    <div class="exercise">
+      <div class="exercise-label">Task 2 — New Vocabulary</div>
+      <h3>Now flip through today's new set: <em>get</em>/<em>put</em> collocations.</h3>
+      <a class="wordwall-btn" href="https://quizlet.com/1207117434/getput-collocations-flash-cards/?i=2219ss&x=1jqt" target="_blank" rel="noopener">
+        🆕 Open Quizlet: Get/Put
+      </a>
+    </div>
+
+    <!-- Task 3: Get or Put — choose word + correct tense -->
+    <div class="exercise" id="task3-getput">
+      <div class="exercise-label">Task 3 — Get or Put?</div>
+      <h3>Choose the correct verb <em>and</em> the correct tense form for each sentence.</h3>
+
+      <p>1. She
+        <span class="word-choice" id="t3-1" data-answer="got"><button class="word-choice-btn" data-val="got" onclick="selectGap(this)">got</button><button class="word-choice-btn" data-val="put" onclick="selectGap(this)">put</button></span>
+        a bad cold last winter and missed a whole week of school.
+      </p>
+      <p>2. It's time we
+        <span class="word-choice" id="t3-2" data-answer="got"><button class="word-choice-btn" data-val="got" onclick="selectGap(this)">got</button><button class="word-choice-btn" data-val="put" onclick="selectGap(this)">put</button></span>
+        rid of all these old textbooks — nobody uses them anymore.
+      </p>
+      <p>3. My cousin
+        <span class="word-choice" id="t3-3" data-answer="got"><button class="word-choice-btn" data-val="got" onclick="selectGap(this)">got</button><button class="word-choice-btn" data-val="put" onclick="selectGap(this)">put</button></span>
+        married last summer in a small ceremony by the sea.
+      </p>
+      <p>4. He
+        <span class="word-choice" id="t3-4" data-answer="got"><button class="word-choice-btn" data-val="got" onclick="selectGap(this)">got</button><button class="word-choice-btn" data-val="put" onclick="selectGap(this)">put</button></span>
+        lost on his way to the interview and arrived twenty minutes late.
+      </p>
+      <p>5. Please
+        <span class="word-choice" id="t3-5" data-answer="get"><button class="word-choice-btn" data-val="get" onclick="selectGap(this)">get</button><button class="word-choice-btn" data-val="put" onclick="selectGap(this)">put</button></span>
+        in touch with me as soon as you land at the airport.
+      </p>
+      <p>6. I'm not
+        <span class="word-choice" id="t3-6" data-answer="getting"><button class="word-choice-btn" data-val="getting" onclick="selectGap(this)">getting</button><button class="word-choice-btn" data-val="putting" onclick="selectGap(this)">putting</button></span>
+        ready yet — give me five more minutes!
+      </p>
+      <p>7. She finally
+        <span class="word-choice" id="t3-7" data-answer="got"><button class="word-choice-btn" data-val="got" onclick="selectGap(this)">got</button><button class="word-choice-btn" data-val="put" onclick="selectGap(this)">put</button></span>
+        a job at the local hospital after months of searching.
+      </p>
+      <p>8. You need to
+        <span class="word-choice" id="t3-8" data-answer="get"><button class="word-choice-btn" data-val="get" onclick="selectGap(this)">get</button><button class="word-choice-btn" data-val="put" onclick="selectGap(this)">put</button></span>
+        permission from your parents before you can go on the school trip.
+      </p>
+      <p>9. His manager has been
+        <span class="word-choice" id="t3-9" data-answer="putting"><button class="word-choice-btn" data-val="getting" onclick="selectGap(this)">getting</button><button class="word-choice-btn" data-val="putting" onclick="selectGap(this)">putting</button></span>
+        a lot of pressure on him to finish the project early.
+      </p>
+      <p>10. After a long shift, all she wanted to do was
+        <span class="word-choice" id="t3-10" data-answer="put"><button class="word-choice-btn" data-val="get" onclick="selectGap(this)">get</button><button class="word-choice-btn" data-val="put" onclick="selectGap(this)">put</button></span>
+        her feet up and relax.
+      </p>
+
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="checkGaps('task3-getput')">Check ✓</button>
+        <button class="btn btn-ghost"   onclick="resetGaps('task3-getput')">Try again</button>
+      </div>
+    </div>
+
+    <!-- Task 4: make/do/take/give/put/get — multiple choice -->
+    <div class="exercise" id="task4-mc">
+      <div class="exercise-label">Task 4 — Make, Do, Take, Give, Put or Get?</div>
+      <h3>Choose the correct verb for each sentence.</h3>
+
+      <div class="mc-q">
+        <div class="mc-qnum">1</div>
+        <div class="mc-qbody">
+          <p class="mc-qtext">It's hard to <span class="mc-slot">___</span> a real difference when the system resists change so strongly.</p>
+          <div class="mc-options chips" data-correct="d">
+        <label class="mc-option"><input type="radio" name="t4q1" value="a"><span class="mc-bullet">A</span> take</label>
+        <label class="mc-option"><input type="radio" name="t4q1" value="b"><span class="mc-bullet">B</span> do</label>
+        <label class="mc-option"><input type="radio" name="t4q1" value="c"><span class="mc-bullet">C</span> give</label>
+        <label class="mc-option"><input type="radio" name="t4q1" value="d"><span class="mc-bullet">D</span> make</label>
+      </div>
+        </div>
+      </div>
+
+      <div class="mc-q">
+        <div class="mc-qnum">2</div>
+        <div class="mc-qbody">
+          <p class="mc-qtext">Every Saturday morning, the children have to <span class="mc-slot">___</span> the housework before they're allowed out to play.</p>
+          <div class="mc-options chips" data-correct="b">
+        <label class="mc-option"><input type="radio" name="t4q2" value="a"><span class="mc-bullet">A</span> make</label>
+        <label class="mc-option"><input type="radio" name="t4q2" value="b"><span class="mc-bullet">B</span> do</label>
+        <label class="mc-option"><input type="radio" name="t4q2" value="c"><span class="mc-bullet">C</span> take</label>
+        <label class="mc-option"><input type="radio" name="t4q2" value="d"><span class="mc-bullet">D</span> put</label>
+      </div>
+        </div>
+      </div>
+
+      <div class="mc-q">
+        <div class="mc-qnum">3</div>
+        <div class="mc-qbody">
+          <p class="mc-qtext">As team leader, you must <span class="mc-slot">___</span> responsibility for your group's results, good or bad.</p>
+          <div class="mc-options chips" data-correct="c">
+        <label class="mc-option"><input type="radio" name="t4q3" value="a"><span class="mc-bullet">A</span> give</label>
+        <label class="mc-option"><input type="radio" name="t4q3" value="b"><span class="mc-bullet">B</span> put</label>
+        <label class="mc-option"><input type="radio" name="t4q3" value="c"><span class="mc-bullet">C</span> take</label>
+        <label class="mc-option"><input type="radio" name="t4q3" value="d"><span class="mc-bullet">D</span> make</label>
+      </div>
+        </div>
+      </div>
+
+      <div class="mc-q">
+        <div class="mc-qnum">4</div>
+        <div class="mc-qbody">
+          <p class="mc-qtext">Could you <span class="mc-slot">___</span> an example to help me understand the rule better?</p>
+          <div class="mc-options chips" data-correct="d">
+        <label class="mc-option"><input type="radio" name="t4q4" value="a"><span class="mc-bullet">A</span> do</label>
+        <label class="mc-option"><input type="radio" name="t4q4" value="b"><span class="mc-bullet">B</span> take</label>
+        <label class="mc-option"><input type="radio" name="t4q4" value="c"><span class="mc-bullet">C</span> put</label>
+        <label class="mc-option"><input type="radio" name="t4q4" value="d"><span class="mc-bullet">D</span> give</label>
+      </div>
+        </div>
+      </div>
+
+      <div class="mc-q">
+        <div class="mc-qnum">5</div>
+        <div class="mc-qbody">
+          <p class="mc-qtext">The council finally decided to <span class="mc-slot">___</span> an end to the noisy building work at night.</p>
+          <div class="mc-options chips" data-correct="b">
+        <label class="mc-option"><input type="radio" name="t4q5" value="a"><span class="mc-bullet">A</span> make</label>
+        <label class="mc-option"><input type="radio" name="t4q5" value="b"><span class="mc-bullet">B</span> put</label>
+        <label class="mc-option"><input type="radio" name="t4q5" value="c"><span class="mc-bullet">C</span> get</label>
+        <label class="mc-option"><input type="radio" name="t4q5" value="d"><span class="mc-bullet">D</span> do</label>
+      </div>
+        </div>
+      </div>
+
+      <div class="mc-q">
+        <div class="mc-qnum">6</div>
+        <div class="mc-qbody">
+          <p class="mc-qtext">That constant dripping tap really starts to <span class="mc-slot">___</span> on your nerves after a while.</p>
+          <div class="mc-options chips" data-correct="c">
+        <label class="mc-option"><input type="radio" name="t4q6" value="a"><span class="mc-bullet">A</span> put</label>
+        <label class="mc-option"><input type="radio" name="t4q6" value="b"><span class="mc-bullet">B</span> make</label>
+        <label class="mc-option"><input type="radio" name="t4q6" value="c"><span class="mc-bullet">C</span> get</label>
+        <label class="mc-option"><input type="radio" name="t4q6" value="d"><span class="mc-bullet">D</span> do</label>
+      </div>
+        </div>
+      </div>
+
+      <div class="mc-q">
+        <div class="mc-qnum">7</div>
+        <div class="mc-qbody">
+          <p class="mc-qtext">Winning the scholarship pushed her to <span class="mc-slot">___</span> an even greater effort this term.</p>
+          <div class="mc-options chips" data-correct="b">
+        <label class="mc-option"><input type="radio" name="t4q7" value="a"><span class="mc-bullet">A</span> take</label>
+        <label class="mc-option"><input type="radio" name="t4q7" value="b"><span class="mc-bullet">B</span> make</label>
+        <label class="mc-option"><input type="radio" name="t4q7" value="c"><span class="mc-bullet">C</span> do</label>
+        <label class="mc-option"><input type="radio" name="t4q7" value="d"><span class="mc-bullet">D</span> give</label>
+      </div>
+        </div>
+      </div>
+
+      <div class="mc-q">
+        <div class="mc-qnum">8</div>
+        <div class="mc-qbody">
+          <p class="mc-qtext">Whatever the task is, you should always <span class="mc-slot">___</span> your best and never give up.</p>
+          <div class="mc-options chips" data-correct="c">
+        <label class="mc-option"><input type="radio" name="t4q8" value="a"><span class="mc-bullet">A</span> make</label>
+        <label class="mc-option"><input type="radio" name="t4q8" value="b"><span class="mc-bullet">B</span> take</label>
+        <label class="mc-option"><input type="radio" name="t4q8" value="c"><span class="mc-bullet">C</span> do</label>
+        <label class="mc-option"><input type="radio" name="t4q8" value="d"><span class="mc-bullet">D</span> put</label>
+      </div>
+        </div>
+      </div>
+
+      <div class="mc-q">
+        <div class="mc-qnum">9</div>
+        <div class="mc-qbody">
+          <p class="mc-qtext">Smart shoppers know exactly how to <span class="mc-slot">___</span> advantage of the January sales.</p>
+          <div class="mc-options chips" data-correct="d">
+        <label class="mc-option"><input type="radio" name="t4q9" value="a"><span class="mc-bullet">A</span> make</label>
+        <label class="mc-option"><input type="radio" name="t4q9" value="b"><span class="mc-bullet">B</span> give</label>
+        <label class="mc-option"><input type="radio" name="t4q9" value="c"><span class="mc-bullet">C</span> do</label>
+        <label class="mc-option"><input type="radio" name="t4q9" value="d"><span class="mc-bullet">D</span> take</label>
+      </div>
+        </div>
+      </div>
+
+      <div class="mc-q">
+        <div class="mc-qnum">10</div>
+        <div class="mc-qbody">
+          <p class="mc-qtext">Could a stranger really <span class="mc-slot">___</span> you a lift all the way into town?</p>
+          <div class="mc-options chips" data-correct="c">
+        <label class="mc-option"><input type="radio" name="t4q10" value="a"><span class="mc-bullet">A</span> take</label>
+        <label class="mc-option"><input type="radio" name="t4q10" value="b"><span class="mc-bullet">B</span> do</label>
+        <label class="mc-option"><input type="radio" name="t4q10" value="c"><span class="mc-bullet">C</span> give</label>
+        <label class="mc-option"><input type="radio" name="t4q10" value="d"><span class="mc-bullet">D</span> make</label>
+      </div>
+        </div>
+      </div>
+
+      <div class="mc-q">
+        <div class="mc-qnum">11</div>
+        <div class="mc-qbody">
+          <p class="mc-qtext">Her strict parents always <span class="mc-slot">___</span> pressure on her to get top grades.</p>
+          <div class="mc-options chips" data-correct="c">
+        <label class="mc-option"><input type="radio" name="t4q11" value="a"><span class="mc-bullet">A</span> take</label>
+        <label class="mc-option"><input type="radio" name="t4q11" value="b"><span class="mc-bullet">B</span> do</label>
+        <label class="mc-option"><input type="radio" name="t4q11" value="c"><span class="mc-bullet">C</span> put</label>
+        <label class="mc-option"><input type="radio" name="t4q11" value="d"><span class="mc-bullet">D</span> make</label>
+      </div>
+        </div>
+      </div>
+
+      <div class="mc-q">
+        <div class="mc-qnum">12</div>
+        <div class="mc-qbody">
+          <p class="mc-qtext">It takes time to <span class="mc-slot">___</span> used to living in a completely new country.</p>
+          <div class="mc-options chips" data-correct="d">
+        <label class="mc-option"><input type="radio" name="t4q12" value="a"><span class="mc-bullet">A</span> make</label>
+        <label class="mc-option"><input type="radio" name="t4q12" value="b"><span class="mc-bullet">B</span> do</label>
+        <label class="mc-option"><input type="radio" name="t4q12" value="c"><span class="mc-bullet">C</span> take</label>
+        <label class="mc-option"><input type="radio" name="t4q12" value="d"><span class="mc-bullet">D</span> get</label>
+      </div>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="checkMCIn('task4-mc')">Check ✓</button>
+        <button class="btn btn-ghost"   onclick="resetMCIn('task4-mc')">Try again</button>
+      </div>
+    </div>
+
+    <!-- Task 5: Prepositions rule box — at / on / in / for -->
+    <div class="exercise">
+      <div class="exercise-label">Task 5 — Grammar Rule</div>
+      <div class="rule-box">
+        <div class="rule-box-title">📐 Prepositions of Time &amp; Place: AT / ON / IN / FOR</div>
+        <div class="rule-core">
+          <b>AT</b> marks a point — a point in time (<em>at once, at first</em>), a point in space (<em>at home, at the door</em>), or a point on a scale (<em>at least, good at</em>).<br><br>
+          <b>ON</b> marks a surface or a line — literally (<em>on the table</em>) or figuratively (<em>on time, on one's way, based on</em>).<br><br>
+          <b>IN</b> marks an area or a state — somewhere you are <em>inside</em> of, whether that's a real space, a period of time, or an abstract situation (<em>in fact, in general, in advance, interested in, succeed in, in danger, in a hurry</em>).<br><br>
+          <b>FOR</b> marks purpose, exchange or a target — what something is done in order to get, in exchange for, or aimed at (<em>wait for, apply for, responsible for, famous for, for a while, for the first time</em>).
+        </div>
+        <div class="rule-cols four-col">
+          <div class="rule-col rule-at">
+            <div class="rule-verb">AT</div>
+            <ul>
+              <li>at last / at once</li>
+              <li>at least / at first</li>
+              <li>at home</li>
+              <li>surprised at</li>
+              <li>good / bad at</li>
+              <li>laugh at</li>
+              <li>arrive at (a place)</li>
+            </ul>
+          </div>
+          <div class="rule-col rule-on">
+            <div class="rule-verb">ON</div>
+            <ul>
+              <li>on one's way</li>
+              <li>on purpose</li>
+              <li>on time</li>
+              <li>on foot</li>
+              <li>depend / rely on</li>
+              <li>insist on</li>
+              <li>concentrate on</li>
+            </ul>
+          </div>
+          <div class="rule-col rule-in">
+            <div class="rule-verb">IN</div>
+            <ul>
+              <li>in the midst of</li>
+              <li>in this case / in fact</li>
+              <li>in charge of</li>
+              <li>interested in</li>
+              <li>in advance</li>
+              <li>in general</li>
+              <li>believe in / result in</li>
+            </ul>
+          </div>
+          <div class="rule-col rule-for">
+            <div class="rule-verb">FOR</div>
+            <ul>
+              <li>difficult for</li>
+              <li>famous / known for</li>
+              <li>responsible for</li>
+              <li>for the first time</li>
+              <li>apologise for</li>
+              <li>wait / search for</li>
+              <li>for a while / for good</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Task 6: gapped B1 sentences — at/on/in/for -->
+    <div class="exercise" id="task6-prep">
+      <div class="exercise-label">Task 6 — In, On, At or For?</div>
+      <h3>Choose the correct preposition for each sentence.</h3>
+
+      <div class="mc-q">
+        <div class="mc-qnum">1</div>
+        <div class="mc-qbody">
+          <p class="mc-qtext">I'm sorry, I wasn't looking — I didn't mean to laugh <span class="mc-slot">___</span> you.</p>
+          <div class="mc-options chips" data-correct="b">
+        <label class="mc-option"><input type="radio" name="t6q1" value="a"><span class="mc-bullet">A</span> in</label>
+        <label class="mc-option"><input type="radio" name="t6q1" value="b"><span class="mc-bullet">B</span> at</label>
+        <label class="mc-option"><input type="radio" name="t6q1" value="c"><span class="mc-bullet">C</span> on</label>
+        <label class="mc-option"><input type="radio" name="t6q1" value="d"><span class="mc-bullet">D</span> for</label>
+      </div>
+        </div>
+      </div>
+
+      <div class="mc-q">
+        <div class="mc-qnum">2</div>
+        <div class="mc-qbody">
+          <p class="mc-qtext">We arrived just <span class="mc-slot">___</span> time, five minutes before the gates closed.</p>
+          <div class="mc-options chips" data-correct="c">
+        <label class="mc-option"><input type="radio" name="t6q2" value="a"><span class="mc-bullet">A</span> in</label>
+        <label class="mc-option"><input type="radio" name="t6q2" value="b"><span class="mc-bullet">B</span> at</label>
+        <label class="mc-option"><input type="radio" name="t6q2" value="c"><span class="mc-bullet">C</span> on</label>
+        <label class="mc-option"><input type="radio" name="t6q2" value="d"><span class="mc-bullet">D</span> for</label>
+      </div>
+        </div>
+      </div>
+
+      <div class="mc-q">
+        <div class="mc-qnum">3</div>
+        <div class="mc-qbody">
+          <p class="mc-qtext"><span class="mc-slot">___</span> fact, she'd already finished the report before the deadline.</p>
+          <div class="mc-options chips" data-correct="a">
+        <label class="mc-option"><input type="radio" name="t6q3" value="a"><span class="mc-bullet">A</span> in</label>
+        <label class="mc-option"><input type="radio" name="t6q3" value="b"><span class="mc-bullet">B</span> at</label>
+        <label class="mc-option"><input type="radio" name="t6q3" value="c"><span class="mc-bullet">C</span> on</label>
+        <label class="mc-option"><input type="radio" name="t6q3" value="d"><span class="mc-bullet">D</span> for</label>
+      </div>
+        </div>
+      </div>
+
+      <div class="mc-q">
+        <div class="mc-qnum">4</div>
+        <div class="mc-qbody">
+          <p class="mc-qtext">He's known <span class="mc-slot">___</span> his generosity as much as his talent.</p>
+          <div class="mc-options chips" data-correct="d">
+        <label class="mc-option"><input type="radio" name="t6q4" value="a"><span class="mc-bullet">A</span> in</label>
+        <label class="mc-option"><input type="radio" name="t6q4" value="b"><span class="mc-bullet">B</span> at</label>
+        <label class="mc-option"><input type="radio" name="t6q4" value="c"><span class="mc-bullet">C</span> on</label>
+        <label class="mc-option"><input type="radio" name="t6q4" value="d"><span class="mc-bullet">D</span> for</label>
+      </div>
+        </div>
+      </div>
+
+      <div class="mc-q">
+        <div class="mc-qnum">5</div>
+        <div class="mc-qbody">
+          <p class="mc-qtext">You should always aim <span class="mc-slot">___</span> accuracy rather than speed in your writing.</p>
+          <div class="mc-options chips" data-correct="b">
+        <label class="mc-option"><input type="radio" name="t6q5" value="a"><span class="mc-bullet">A</span> in</label>
+        <label class="mc-option"><input type="radio" name="t6q5" value="b"><span class="mc-bullet">B</span> at</label>
+        <label class="mc-option"><input type="radio" name="t6q5" value="c"><span class="mc-bullet">C</span> on</label>
+        <label class="mc-option"><input type="radio" name="t6q5" value="d"><span class="mc-bullet">D</span> for</label>
+      </div>
+        </div>
+      </div>
+
+      <div class="mc-q">
+        <div class="mc-qnum">6</div>
+        <div class="mc-qbody">
+          <p class="mc-qtext">You can always depend <span class="mc-slot">___</span> her to keep her word.</p>
+          <div class="mc-options chips" data-correct="c">
+        <label class="mc-option"><input type="radio" name="t6q6" value="a"><span class="mc-bullet">A</span> in</label>
+        <label class="mc-option"><input type="radio" name="t6q6" value="b"><span class="mc-bullet">B</span> at</label>
+        <label class="mc-option"><input type="radio" name="t6q6" value="c"><span class="mc-bullet">C</span> on</label>
+        <label class="mc-option"><input type="radio" name="t6q6" value="d"><span class="mc-bullet">D</span> for</label>
+      </div>
+        </div>
+      </div>
+
+      <div class="mc-q">
+        <div class="mc-qnum">7</div>
+        <div class="mc-qbody">
+          <p class="mc-qtext">The country was <span class="mc-slot">___</span> the midst of a political crisis.</p>
+          <div class="mc-options chips" data-correct="a">
+        <label class="mc-option"><input type="radio" name="t6q7" value="a"><span class="mc-bullet">A</span> in</label>
+        <label class="mc-option"><input type="radio" name="t6q7" value="b"><span class="mc-bullet">B</span> at</label>
+        <label class="mc-option"><input type="radio" name="t6q7" value="c"><span class="mc-bullet">C</span> on</label>
+        <label class="mc-option"><input type="radio" name="t6q7" value="d"><span class="mc-bullet">D</span> for</label>
+      </div>
+        </div>
+      </div>
+
+      <div class="mc-q">
+        <div class="mc-qnum">8</div>
+        <div class="mc-qbody">
+          <p class="mc-qtext">She apologised <span class="mc-slot">___</span> arriving so late to the meeting.</p>
+          <div class="mc-options chips" data-correct="d">
+        <label class="mc-option"><input type="radio" name="t6q8" value="a"><span class="mc-bullet">A</span> in</label>
+        <label class="mc-option"><input type="radio" name="t6q8" value="b"><span class="mc-bullet">B</span> at</label>
+        <label class="mc-option"><input type="radio" name="t6q8" value="c"><span class="mc-bullet">C</span> on</label>
+        <label class="mc-option"><input type="radio" name="t6q8" value="d"><span class="mc-bullet">D</span> for</label>
+      </div>
+        </div>
+      </div>
+
+      <div class="mc-q">
+        <div class="mc-qnum">9</div>
+        <div class="mc-qbody">
+          <p class="mc-qtext">Ticket prices are <span class="mc-slot">___</span> least twice as high as they were last year.</p>
+          <div class="mc-options chips" data-correct="b">
+        <label class="mc-option"><input type="radio" name="t6q9" value="a"><span class="mc-bullet">A</span> in</label>
+        <label class="mc-option"><input type="radio" name="t6q9" value="b"><span class="mc-bullet">B</span> at</label>
+        <label class="mc-option"><input type="radio" name="t6q9" value="c"><span class="mc-bullet">C</span> on</label>
+        <label class="mc-option"><input type="radio" name="t6q9" value="d"><span class="mc-bullet">D</span> for</label>
+      </div>
+        </div>
+      </div>
+
+      <div class="mc-q">
+        <div class="mc-qnum">10</div>
+        <div class="mc-qbody">
+          <p class="mc-qtext">He always insists <span class="mc-slot">___</span> paying for dinner when we go out.</p>
+          <div class="mc-options chips" data-correct="c">
+        <label class="mc-option"><input type="radio" name="t6q10" value="a"><span class="mc-bullet">A</span> in</label>
+        <label class="mc-option"><input type="radio" name="t6q10" value="b"><span class="mc-bullet">B</span> at</label>
+        <label class="mc-option"><input type="radio" name="t6q10" value="c"><span class="mc-bullet">C</span> on</label>
+        <label class="mc-option"><input type="radio" name="t6q10" value="d"><span class="mc-bullet">D</span> for</label>
+      </div>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="checkMCIn('task6-prep')">Check ✓</button>
+        <button class="btn btn-ghost"   onclick="resetMCIn('task6-prep')">Try again</button>
+      </div>
+    </div>
+
+    <!-- Task 7: Agatha Christie — choose the correct answer -->
+    <div class="exercise" id="task7-christie">
+      <div class="exercise-label">Task 7 — Choose the Correct Answer</div>
+      <h3>From <em>The Mysterious Affair at Styles</em> by Agatha Christie.</h3>
+
+      <div class="mc-q">
+        <div class="mc-qnum">1</div>
+        <div class="mc-qbody">
+          <p class="mc-qtext">John noticed my surprise <span class="mc-slot">___</span> the news of his mother's remarriage and smiled rather ruefully.</p>
+          <div class="mc-options chips" data-correct="b">
+        <label class="mc-option"><input type="radio" name="t7q1" value="a"><span class="mc-bullet">A</span> in</label>
+        <label class="mc-option"><input type="radio" name="t7q1" value="b"><span class="mc-bullet">B</span> at</label>
+        <label class="mc-option"><input type="radio" name="t7q1" value="c"><span class="mc-bullet">C</span> on</label>
+        <label class="mc-option"><input type="radio" name="t7q1" value="d"><span class="mc-bullet">D</span> for</label>
+      </div>
+        </div>
+      </div>
+
+      <div class="mc-q">
+        <div class="mc-qnum">2</div>
+        <div class="mc-qbody">
+          <p class="mc-qtext">Their country-place, Styles Court, had been purchased by Mr. Cavendish early <span class="mc-slot">___</span> their married life.</p>
+          <div class="mc-options chips" data-correct="a">
+        <label class="mc-option"><input type="radio" name="t7q2" value="a"><span class="mc-bullet">A</span> in</label>
+        <label class="mc-option"><input type="radio" name="t7q2" value="b"><span class="mc-bullet">B</span> at</label>
+        <label class="mc-option"><input type="radio" name="t7q2" value="c"><span class="mc-bullet">C</span> on</label>
+        <label class="mc-option"><input type="radio" name="t7q2" value="d"><span class="mc-bullet">D</span> for</label>
+      </div>
+        </div>
+      </div>
+
+      <div class="mc-q">
+        <div class="mc-qnum">3</div>
+        <div class="mc-qbody">
+          <p class="mc-qtext">I can tell you, Hastings, it's making life jolly difficult <span class="mc-slot">___</span> us.</p>
+          <div class="mc-options chips" data-correct="d">
+        <label class="mc-option"><input type="radio" name="t7q3" value="a"><span class="mc-bullet">A</span> in</label>
+        <label class="mc-option"><input type="radio" name="t7q3" value="b"><span class="mc-bullet">B</span> at</label>
+        <label class="mc-option"><input type="radio" name="t7q3" value="c"><span class="mc-bullet">C</span> on</label>
+        <label class="mc-option"><input type="radio" name="t7q3" value="d"><span class="mc-bullet">D</span> for</label>
+      </div>
+        </div>
+      </div>
+
+      <div class="mc-q">
+        <div class="mc-qnum">4</div>
+        <div class="mc-qbody">
+          <p class="mc-qtext">Thus it came about that, three days later, I descended from the train at Styles St. Mary, an absurd little station, with no apparent reason for existence, perched up <span class="mc-slot">___</span> the midst of green fields and country lanes.</p>
+          <div class="mc-options chips" data-correct="a">
+        <label class="mc-option"><input type="radio" name="t7q4" value="a"><span class="mc-bullet">A</span> in</label>
+        <label class="mc-option"><input type="radio" name="t7q4" value="b"><span class="mc-bullet">B</span> at</label>
+        <label class="mc-option"><input type="radio" name="t7q4" value="c"><span class="mc-bullet">C</span> on</label>
+        <label class="mc-option"><input type="radio" name="t7q4" value="d"><span class="mc-bullet">D</span> for</label>
+      </div>
+        </div>
+      </div>
+
+      <div class="mc-q">
+        <div class="mc-qnum">5</div>
+        <div class="mc-qbody">
+          <p class="mc-qtext">The fellow must be <span class="mc-slot">___</span> least twenty years younger than she is!</p>
+          <div class="mc-options chips" data-correct="b">
+        <label class="mc-option"><input type="radio" name="t7q5" value="a"><span class="mc-bullet">A</span> in</label>
+        <label class="mc-option"><input type="radio" name="t7q5" value="b"><span class="mc-bullet">B</span> at</label>
+        <label class="mc-option"><input type="radio" name="t7q5" value="c"><span class="mc-bullet">C</span> on</label>
+        <label class="mc-option"><input type="radio" name="t7q5" value="d"><span class="mc-bullet">D</span> for</label>
+      </div>
+        </div>
+      </div>
+
+      <div class="mc-q">
+        <div class="mc-qnum">6</div>
+        <div class="mc-qbody">
+          <p class="mc-qtext">The French window swung open a little wider, and a handsome white-haired old lady, with a somewhat masterful cast of features, stepped out of it <span class="mc-slot">___</span> to the lawn.</p>
+          <div class="mc-options chips" data-correct="c">
+        <label class="mc-option"><input type="radio" name="t7q6" value="a"><span class="mc-bullet">A</span> in</label>
+        <label class="mc-option"><input type="radio" name="t7q6" value="b"><span class="mc-bullet">B</span> at</label>
+        <label class="mc-option"><input type="radio" name="t7q6" value="c"><span class="mc-bullet">C</span> on</label>
+        <label class="mc-option"><input type="radio" name="t7q6" value="d"><span class="mc-bullet">D</span> for</label>
+      </div>
+        </div>
+      </div>
+
+      <div class="mc-q">
+        <div class="mc-qnum">7</div>
+        <div class="mc-qbody">
+          <p class="mc-qtext">It was a still, warm day <span class="mc-slot">___</span> early July.</p>
+          <div class="mc-options chips" data-correct="a">
+        <label class="mc-option"><input type="radio" name="t7q7" value="a"><span class="mc-bullet">A</span> in</label>
+        <label class="mc-option"><input type="radio" name="t7q7" value="b"><span class="mc-bullet">B</span> at</label>
+        <label class="mc-option"><input type="radio" name="t7q7" value="c"><span class="mc-bullet">C</span> on</label>
+        <label class="mc-option"><input type="radio" name="t7q7" value="d"><span class="mc-bullet">D</span> for</label>
+      </div>
+        </div>
+      </div>
+
+      <div class="mc-q">
+        <div class="mc-qnum">8</div>
+        <div class="mc-qbody">
+          <p class="mc-qtext">Come on then, you've done enough gardening <span class="mc-slot">___</span> today.</p>
+          <div class="mc-options chips" data-correct="d">
+        <label class="mc-option"><input type="radio" name="t7q8" value="a"><span class="mc-bullet">A</span> in</label>
+        <label class="mc-option"><input type="radio" name="t7q8" value="b"><span class="mc-bullet">B</span> at</label>
+        <label class="mc-option"><input type="radio" name="t7q8" value="c"><span class="mc-bullet">C</span> on</label>
+        <label class="mc-option"><input type="radio" name="t7q8" value="d"><span class="mc-bullet">D</span> for</label>
+      </div>
+        </div>
+      </div>
+
+      <div class="mc-q">
+        <div class="mc-qnum">9</div>
+        <div class="mc-qbody">
+          <p class="mc-qtext">Mrs. Cavendish, however, was a lady who liked to make her own plans, and expected other people to fall in with them, and <span class="mc-slot">___</span> this case she certainly had the whip hand, namely: the purse strings.</p>
+          <div class="mc-options chips" data-correct="a">
+        <label class="mc-option"><input type="radio" name="t7q9" value="a"><span class="mc-bullet">A</span> in</label>
+        <label class="mc-option"><input type="radio" name="t7q9" value="b"><span class="mc-bullet">B</span> at</label>
+        <label class="mc-option"><input type="radio" name="t7q9" value="c"><span class="mc-bullet">C</span> on</label>
+        <label class="mc-option"><input type="radio" name="t7q9" value="d"><span class="mc-bullet">D</span> for</label>
+      </div>
+        </div>
+      </div>
+
+      <div class="mc-q">
+        <div class="mc-qnum">10</div>
+        <div class="mc-qbody">
+          <p class="mc-qtext">He had qualified as a doctor but early relinquished the profession of medicine, and lived <span class="mc-slot">___</span> home while pursuing literary ambitions; though his verses never had any marked success.</p>
+          <div class="mc-options chips" data-correct="b">
+        <label class="mc-option"><input type="radio" name="t7q10" value="a"><span class="mc-bullet">A</span> in</label>
+        <label class="mc-option"><input type="radio" name="t7q10" value="b"><span class="mc-bullet">B</span> at</label>
+        <label class="mc-option"><input type="radio" name="t7q10" value="c"><span class="mc-bullet">C</span> on</label>
+        <label class="mc-option"><input type="radio" name="t7q10" value="d"><span class="mc-bullet">D</span> for</label>
+      </div>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="checkMCIn('task7-christie')">Check ✓</button>
+        <button class="btn btn-ghost"   onclick="resetMCIn('task7-christie')">Try again</button>
+      </div>
+    </div>
+
+    <!-- Task 8: video + retell -->
+    <div class="exercise">
+      <div class="exercise-label">Task 8 — Watch &amp; Retell</div>
+      <h3>Watch the video, then retell what happened using at least 7 prepositional phrases from Tasks 5–7 (e.g. <em>at first, in fact, on purpose, for a while…</em>).</h3>
+      <div class="embed-wrap">
+        <video controls style="width:100%;display:block;">
+          <source src="video/task8-snack-attack.mp4" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
+      </div>
+      <textarea class="free-write" id="fw-task8-retell" placeholder="Retell what happened here, using at least 7 prepositional phrases…" rows="7" style="margin-top:14px;"></textarea>
+      <div class="char-count" id="cc-fw-task8-retell">0 characters</div>
+    </div>
+
+  </div><!-- /tab-p1 -->
+
+  <!-- ══════════════════════════════════════════════════════
+       PART 2 — WORD STRESS RULES & PRACTICE
+  ══════════════════════════════════════════════════════ -->
+  <div class="tab-content" id="tab-p2">
+
+    <!-- Task 1: Rules -->
+    <div class="exercise">
+      <div class="exercise-label">Task 1 — Rules</div>
+      <div class="stress-box">
+        <div class="stress-intro">🔊 Every English word with two or more syllables has <b>one main stressed syllable</b> — it sounds <b>louder, longer and higher</b>. Below, the stressed syllable is written in <b>CAPITALS</b> and <span class="cap" style="font-weight:800;color:var(--primary);text-decoration:underline;text-decoration-thickness:3px;text-underline-offset:3px;">underlined</span>.</div>
+
+        <div class="stress-rule">
+          <div class="stress-rule-num">1</div>
+          <div class="stress-rule-text">
+            <div class="stress-rule-title">Two-syllable words</div>
+            <div class="stress-rule-body"><b>Nouns &amp; adjectives</b> → stress the <b>first</b> syllable.<br><b>Verbs</b> → stress the <b>second</b> syllable.</div>
+            <div class="stress-examples">
+              <span class="stress-example"><span class="cap">PRE</span>sent<span class="pos">(noun)</span></span>
+              <span class="stress-example">pre<span class="cap">SENT</span><span class="pos">(verb)</span></span>
+              <span class="stress-example"><span class="cap">TA</span>ble<span class="pos">(noun)</span></span>
+              <span class="stress-example"><span class="cap">HAP</span>py<span class="pos">(adj)</span></span>
+              <span class="stress-example">de<span class="cap">CIDE</span><span class="pos">(verb)</span></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="stress-rule rc-blue">
+          <div class="stress-rule-num">2</div>
+          <div class="stress-rule-text">
+            <div class="stress-rule-title">Stress the syllable <u>before</u> these endings</div>
+            <div class="stress-rule-body">
+              <span class="stress-ending">-tion</span><span class="stress-ending">-sion</span><span class="stress-ending">-ic</span><span class="stress-ending">-ity</span><span class="stress-ending">-ial</span><span class="stress-ending">-ious</span><span class="stress-ending">-graphy</span><span class="stress-ending">-logy</span>
+            </div>
+            <div class="stress-examples">
+              <span class="stress-example">edu<span class="cap">CA</span>tion</span>
+              <span class="stress-example">tele<span class="cap">VI</span>sion</span>
+              <span class="stress-example">eco<span class="cap">NO</span>mic</span>
+              <span class="stress-example">ac<span class="cap">TI</span>vity</span>
+              <span class="stress-example">es<span class="cap">SEN</span>tial</span>
+              <span class="stress-example">de<span class="cap">LI</span>cious</span>
+              <span class="stress-example">pho<span class="cap">TO</span>graphy</span>
+              <span class="stress-example">tech<span class="cap">NO</span>logy</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="stress-rule rc-green">
+          <div class="stress-rule-num">3</div>
+          <div class="stress-rule-text">
+            <div class="stress-rule-title">Stress the ending <u>itself</u></div>
+            <div class="stress-rule-body">
+              <span class="stress-ending">-ee</span><span class="stress-ending">-eer</span><span class="stress-ending">-ese</span><span class="stress-ending">-ette</span><span class="stress-ending">-esque</span>
+            </div>
+            <div class="stress-examples">
+              <span class="stress-example">refu<span class="cap">GEE</span></span>
+              <span class="stress-example">engi<span class="cap">NEER</span></span>
+              <span class="stress-example">Japa<span class="cap">NESE</span></span>
+              <span class="stress-example">kitchen<span class="cap">ETTE</span></span>
+              <span class="stress-example">pictur<span class="cap">ESQUE</span></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="stress-rule rc-gold">
+          <div class="stress-rule-num">4</div>
+          <div class="stress-rule-text">
+            <div class="stress-rule-title">These endings change <u>nothing</u></div>
+            <div class="stress-rule-body">The stress stays exactly where it was in the base word:<br>
+              <span class="stress-ending">-ment</span><span class="stress-ending">-ness</span><span class="stress-ending">-ful</span><span class="stress-ending">-less</span><span class="stress-ending">-able</span><span class="stress-ending">-ly</span><span class="stress-ending">-ing</span>
+            </div>
+            <div class="stress-examples">
+              <span class="stress-example"><span class="base"><span class="cap">GOV</span>ern</span><span class="arrow">→</span><span class="cap">GOV</span>ernment</span>
+              <span class="stress-example"><span class="base"><span class="cap">HAP</span>py</span><span class="arrow">→</span><span class="cap">HAP</span>piness</span>
+              <span class="stress-example"><span class="base"><span class="cap">COM</span>fort</span><span class="arrow">→</span><span class="cap">COM</span>fortable</span>
+              <span class="stress-example"><span class="base"><span class="cap">CARE</span></span><span class="arrow">→</span><span class="cap">CARE</span>less</span>
+              <span class="stress-example"><span class="base">sur<span class="cap">PRISE</span></span><span class="arrow">→</span>sur<span class="cap">PRI</span>sing</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="stress-rule rc-rose">
+          <div class="stress-rule-num">5</div>
+          <div class="stress-rule-text">
+            <div class="stress-rule-title">Noun / verb pairs</div>
+            <div class="stress-rule-body">Same spelling, different stress: <b>noun → first</b> syllable, <b>verb → second</b> syllable.</div>
+            <table class="pair-table">
+              <thead><tr><th>Word</th><th>Noun (Oo)</th><th>Verb (oO)</th></tr></thead>
+              <tbody>
+                <tr><td>permit</td><td><span class="cap">PER</span>mit<span class="pos">a permit to park</span></td><td>per<span class="cap">MIT</span><span class="pos">to allow</span></td></tr>
+                <tr><td>record</td><td><span class="cap">RE</span>cord<span class="pos">a world record</span></td><td>re<span class="cap">CORD</span><span class="pos">to record a video</span></td></tr>
+                <tr><td>present</td><td><span class="cap">PRE</span>sent<span class="pos">a birthday present</span></td><td>pre<span class="cap">SENT</span><span class="pos">to present a project</span></td></tr>
+                <tr><td>object</td><td><span class="cap">OB</span>ject<span class="pos">a thing</span></td><td>ob<span class="cap">JECT</span><span class="pos">to disagree</span></td></tr>
+                <tr><td>subject</td><td><span class="cap">SUB</span>ject<span class="pos">a school subject</span></td><td>sub<span class="cap">JECT</span><span class="pos">to make someone experience</span></td></tr>
+                <tr><td>contract</td><td><span class="cap">CON</span>tract<span class="pos">a legal agreement</span></td><td>con<span class="cap">TRACT</span><span class="pos">to get smaller</span></td></tr>
+                <tr><td>conduct</td><td><span class="cap">CON</span>duct<span class="pos">behaviour</span></td><td>con<span class="cap">DUCT</span><span class="pos">to carry out</span></td></tr>
+                <tr><td>increase</td><td><span class="cap">IN</span>crease<span class="pos">a rise</span></td><td>in<span class="cap">CREASE</span><span class="pos">to go up</span></td></tr>
+                <tr><td>produce</td><td><span class="cap">PRO</span>duce<span class="pos">fruit &amp; vegetables</span></td><td>pro<span class="cap">DUCE</span><span class="pos">to make</span></td></tr>
+                <tr><td>progress</td><td><span class="cap">PRO</span>gress<span class="pos">improvement</span></td><td>pro<span class="cap">GRESS</span><span class="pos">to move forward</span></td></tr>
+                <tr><td>protest</td><td><span class="cap">PRO</span>test<span class="pos">a demonstration</span></td><td>pro<span class="cap">TEST</span><span class="pos">to complain</span></td></tr>
+                <tr><td>export</td><td><span class="cap">EX</span>port<span class="pos">goods sold abroad</span></td><td>ex<span class="cap">PORT</span><span class="pos">to sell abroad</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="stress-rule rc-dark">
+          <div class="stress-rule-num">+</div>
+          <div class="stress-rule-text">
+            <div class="stress-rule-title">Bonus: compound words</div>
+            <div class="stress-rule-body">Compound <b>nouns</b> → stress the <b>first</b> word. Compound <b>verbs</b> → stress the <b>second</b> word.</div>
+            <div class="stress-examples">
+              <span class="stress-example"><span class="cap">BLACK</span>board<span class="pos">(noun)</span></span>
+              <span class="stress-example"><span class="cap">FOOT</span>ball<span class="pos">(noun)</span></span>
+              <span class="stress-example">under<span class="cap">STAND</span><span class="pos">(verb)</span></span>
+              <span class="stress-example">over<span class="cap">SLEEP</span><span class="pos">(verb)</span></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Task 1: Count the Syllables -->
+    <div class="exercise" id="task1-count">
+      <div class="exercise-label">Task 1 — Practice: Count the Syllables</div>
+      <h3>How many syllables does each word have? Type the number. Careful — the spelling is misleading in every one of these.</h3>
+      <div class="stress-tip">💡 <span>Example: <b>Wednesday</b> → <b>2</b> syllables — <span class="cap">WENZ</span>-day (the first <em>d</em> is silent)</span></div>
+
+      <div class="stress-exercise">
+        <div class="stress-row"><span class="stress-num">1</span><span class="stress-word">queue</span><input class="blank" id="c-1" data-answer="1" inputmode="numeric" maxlength="1" placeholder="?"></div>
+        <div class="stress-row"><span class="stress-num">2</span><span class="stress-word">rhythm</span><input class="blank" id="c-2" data-answer="2" inputmode="numeric" maxlength="1" placeholder="?"></div>
+        <div class="stress-row"><span class="stress-num">3</span><span class="stress-word">vehicle</span><input class="blank" id="c-3" data-answer="3" inputmode="numeric" maxlength="1" placeholder="?"></div>
+        <div class="stress-row"><span class="stress-num">4</span><span class="stress-word">campaign</span><input class="blank" id="c-4" data-answer="2" inputmode="numeric" maxlength="1" placeholder="?"></div>
+        <div class="stress-row"><span class="stress-num">5</span><span class="stress-word">recipe</span><input class="blank" id="c-5" data-answer="3" inputmode="numeric" maxlength="1" placeholder="?"></div>
+        <div class="stress-row"><span class="stress-num">6</span><span class="stress-word">aisle</span><input class="blank" id="c-6" data-answer="1" inputmode="numeric" maxlength="1" placeholder="?"></div>
+        <div class="stress-row"><span class="stress-num">7</span><span class="stress-word">genuine</span><input class="blank" id="c-7" data-answer="3" inputmode="numeric" maxlength="1" placeholder="?"></div>
+        <div class="stress-row"><span class="stress-num">8</span><span class="stress-word">cooperate</span><input class="blank" id="c-8" data-answer="4" inputmode="numeric" maxlength="1" placeholder="?"></div>
+        <div class="stress-row"><span class="stress-num">9</span><span class="stress-word">naive</span><input class="blank" id="c-9" data-answer="2" inputmode="numeric" maxlength="1" placeholder="?"></div>
+        <div class="stress-row"><span class="stress-num">10</span><span class="stress-word">parliament</span><input class="blank" id="c-10" data-answer="3" inputmode="numeric" maxlength="1" placeholder="?"></div>
+        <div class="stress-row"><span class="stress-num">11</span><span class="stress-word">exhausted</span><input class="blank" id="c-11" data-answer="3" inputmode="numeric" maxlength="1" placeholder="?"></div>
+        <div class="stress-row"><span class="stress-num">12</span><span class="stress-word">bureaucracy</span><input class="blank" id="c-12" data-answer="4" inputmode="numeric" maxlength="1" placeholder="?"></div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="checkBlanks('task1-count')">Check ✓</button>
+        <button class="btn btn-ghost"   onclick="resetBlanks('task1-count')">Try again</button>
+      </div>
+    </div>
+
+    <!-- Task 2: mark the oOo pattern -->
+    <div class="exercise" id="task2-pattern">
+      <div class="exercise-label">Task 2 — Mark the Stress Pattern</div>
+      <h3>Type the stress pattern for each word using <b>O</b> for a stressed syllable and <b>o</b> for an unstressed one.</h3>
+      <div class="stress-tip">💡 <span>Example: <b>photography</b> → <span class="pat">oOoo</span> — pho-<span class="cap">TOG</span>-ra-phy</span></div>
+
+      <div class="stress-exercise">
+        <div class="stress-row pattern"><span class="stress-num">1</span><span class="stress-word">colleague</span><input class="blank" id="p-1" data-answer="Oo" data-case="strict"></div>
+        <div class="stress-row pattern"><span class="stress-num">2</span><span class="stress-word">receipt</span><input class="blank" id="p-2" data-answer="oO" data-case="strict"></div>
+        <div class="stress-row pattern"><span class="stress-num">3</span><span class="stress-word">mortgage</span><input class="blank" id="p-3" data-answer="Oo" data-case="strict"></div>
+        <div class="stress-row pattern"><span class="stress-num">4</span><span class="stress-word">champagne</span><input class="blank" id="p-4" data-answer="oO" data-case="strict"></div>
+        <div class="stress-row pattern"><span class="stress-num">5</span><span class="stress-word">subtle</span><input class="blank" id="p-5" data-answer="Oo" data-case="strict"></div>
+        <div class="stress-row pattern"><span class="stress-num">6</span><span class="stress-word">accurate</span><input class="blank" id="p-6" data-answer="Ooo" data-case="strict"></div>
+        <div class="stress-row pattern"><span class="stress-num">7</span><span class="stress-word">dilemma</span><input class="blank" id="p-7" data-answer="oOo" data-case="strict"></div>
+        <div class="stress-row pattern"><span class="stress-num">8</span><span class="stress-word">hazardous</span><input class="blank" id="p-8" data-answer="Ooo" data-case="strict"></div>
+        <div class="stress-row pattern"><span class="stress-num">9</span><span class="stress-word">volunteer</span><input class="blank" id="p-9" data-answer="ooO" data-case="strict"></div>
+        <div class="stress-row pattern"><span class="stress-num">10</span><span class="stress-word">reluctant</span><input class="blank" id="p-10" data-answer="oOo" data-case="strict"></div>
+        <div class="stress-row pattern"><span class="stress-num">11</span><span class="stress-word">persistent</span><input class="blank" id="p-11" data-answer="oOo" data-case="strict"></div>
+        <div class="stress-row pattern"><span class="stress-num">12</span><span class="stress-word">guarantee</span><input class="blank" id="p-12" data-answer="ooO" data-case="strict"></div>
+        <div class="stress-row pattern"><span class="stress-num">13</span><span class="stress-word">ambiguous</span><input class="blank" id="p-13" data-answer="oOoo" data-case="strict"></div>
+        <div class="stress-row pattern"><span class="stress-num">14</span><span class="stress-word">considerate</span><input class="blank" id="p-14" data-answer="oOoo" data-case="strict"></div>
+        <div class="stress-row pattern"><span class="stress-num">15</span><span class="stress-word">extravagant</span><input class="blank" id="p-15" data-answer="oOoo" data-case="strict"></div>
+        <div class="stress-row pattern"><span class="stress-num">16</span><span class="stress-word">pneumonia</span><input class="blank" id="p-16" data-answer="oOoo" data-case="strict"></div>
+        <div class="stress-row pattern"><span class="stress-num">17</span><span class="stress-word">significant</span><input class="blank" id="p-17" data-answer="oOoo" data-case="strict"></div>
+        <div class="stress-row pattern"><span class="stress-num">18</span><span class="stress-word">confidential</span><input class="blank" id="p-18" data-answer="ooOo" data-case="strict"></div>
+        <div class="stress-row pattern"><span class="stress-num">19</span><span class="stress-word">influential</span><input class="blank" id="p-19" data-answer="ooOo" data-case="strict"></div>
+        <div class="stress-row pattern"><span class="stress-num">20</span><span class="stress-word">controversial</span><input class="blank" id="p-20" data-answer="ooOo" data-case="strict"></div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="checkStressPattern('task2-pattern')">Check ✓</button>
+        <button class="btn btn-ghost"   onclick="resetStressPattern('task2-pattern')">Try again</button>
+      </div>
+    </div>
+
+    <!-- Task 3: noun/verb pairs in contrasting sentences -->
+    <div class="exercise" id="task3-nounverb">
+      <div class="exercise-label">Task 3 — Noun or Verb Stress?</div>
+      <h3>Each sentence uses the same word twice — once as a noun, once as a verb, in either order. Choose the correct stress pattern for <b>both</b>.</h3>
+
+      <p>1. Unless the council agrees to 
+        <span class="word-choice" id="nv-1a" data-answer="perMIT"><button class="word-choice-btn" data-val="PERmit" onclick="selectGap(this)">PERmit</button><button class="word-choice-btn" data-val="perMIT" onclick="selectGap(this)">perMIT</button></span>
+         extra parking, nobody will get a 
+        <span class="word-choice" id="nv-1b" data-answer="PERmit"><button class="word-choice-btn" data-val="perMIT" onclick="selectGap(this)">perMIT</button><button class="word-choice-btn" data-val="PERmit" onclick="selectGap(this)">PERmit</button></span>
+         for the festival.
+      </p>
+      <p>2. Every single 
+        <span class="word-choice" id="nv-2a" data-answer="REcord"><button class="word-choice-btn" data-val="reCORD" onclick="selectGap(this)">reCORD</button><button class="word-choice-btn" data-val="REcord" onclick="selectGap(this)">REcord</button></span>
+         in the archive had been damaged by damp, so the museum decided to 
+        <span class="word-choice" id="nv-2b" data-answer="reCORD"><button class="word-choice-btn" data-val="reCORD" onclick="selectGap(this)">reCORD</button><button class="word-choice-btn" data-val="REcord" onclick="selectGap(this)">REcord</button></span>
+         the collection digitally.
+      </p>
+      <p>3. Before you 
+        <span class="word-choice" id="nv-3a" data-answer="preSENT"><button class="word-choice-btn" data-val="preSENT" onclick="selectGap(this)">preSENT</button><button class="word-choice-btn" data-val="PREsent" onclick="selectGap(this)">PREsent</button></span>
+         the trophy, check that the 
+        <span class="word-choice" id="nv-3b" data-answer="PREsent"><button class="word-choice-btn" data-val="PREsent" onclick="selectGap(this)">PREsent</button><button class="word-choice-btn" data-val="preSENT" onclick="selectGap(this)">preSENT</button></span>
+         for the runner-up has arrived too.
+      </p>
+      <p>4. Nobody dared to 
+        <span class="word-choice" id="nv-4a" data-answer="obJECT"><button class="word-choice-btn" data-val="OBject" onclick="selectGap(this)">OBject</button><button class="word-choice-btn" data-val="obJECT" onclick="selectGap(this)">obJECT</button></span>
+         when the guide picked up the fragile 
+        <span class="word-choice" id="nv-4b" data-answer="OBject"><button class="word-choice-btn" data-val="obJECT" onclick="selectGap(this)">obJECT</button><button class="word-choice-btn" data-val="OBject" onclick="selectGap(this)">OBject</button></span>
+         with bare hands.
+      </p>
+      <p>5. Physics was never my strongest 
+        <span class="word-choice" id="nv-5a" data-answer="SUBject"><button class="word-choice-btn" data-val="SUBject" onclick="selectGap(this)">SUBject</button><button class="word-choice-btn" data-val="subJECT" onclick="selectGap(this)">subJECT</button></span>
+        , and I don't see why the exam board should 
+        <span class="word-choice" id="nv-5b" data-answer="subJECT"><button class="word-choice-btn" data-val="SUBject" onclick="selectGap(this)">SUBject</button><button class="word-choice-btn" data-val="subJECT" onclick="selectGap(this)">subJECT</button></span>
+         us to three hours of it.
+      </p>
+      <p>6. Metal rails 
+        <span class="word-choice" id="nv-6a" data-answer="conTRACT"><button class="word-choice-btn" data-val="conTRACT" onclick="selectGap(this)">conTRACT</button><button class="word-choice-btn" data-val="CONtract" onclick="selectGap(this)">CONtract</button></span>
+         in cold weather, which is why the railway 
+        <span class="word-choice" id="nv-6b" data-answer="CONtract"><button class="word-choice-btn" data-val="conTRACT" onclick="selectGap(this)">conTRACT</button><button class="word-choice-btn" data-val="CONtract" onclick="selectGap(this)">CONtract</button></span>
+         specifies special expansion joints.
+      </p>
+      <p>7. The choir's 
+        <span class="word-choice" id="nv-7a" data-answer="CONduct"><button class="word-choice-btn" data-val="conDUCT" onclick="selectGap(this)">conDUCT</button><button class="word-choice-btn" data-val="CONduct" onclick="selectGap(this)">CONduct</button></span>
+         on tour was impeccable, even when a student had to 
+        <span class="word-choice" id="nv-7b" data-answer="conDUCT"><button class="word-choice-btn" data-val="CONduct" onclick="selectGap(this)">CONduct</button><button class="word-choice-btn" data-val="conDUCT" onclick="selectGap(this)">conDUCT</button></span>
+         the final concert.
+      </p>
+      <p>8. A ten-percent 
+        <span class="word-choice" id="nv-8a" data-answer="INcrease"><button class="word-choice-btn" data-val="INcrease" onclick="selectGap(this)">INcrease</button><button class="word-choice-btn" data-val="inCREASE" onclick="selectGap(this)">inCREASE</button></span>
+         in rent sounds small, but landlords who 
+        <span class="word-choice" id="nv-8b" data-answer="inCREASE"><button class="word-choice-btn" data-val="inCREASE" onclick="selectGap(this)">inCREASE</button><button class="word-choice-btn" data-val="INcrease" onclick="selectGap(this)">INcrease</button></span>
+         prices every year soon lose tenants.
+      </p>
+      <p>9. Farms in the valley 
+        <span class="word-choice" id="nv-9a" data-answer="proDUCE"><button class="word-choice-btn" data-val="PROduce" onclick="selectGap(this)">PROduce</button><button class="word-choice-btn" data-val="proDUCE" onclick="selectGap(this)">proDUCE</button></span>
+         most of the region's fruit, and their 
+        <span class="word-choice" id="nv-9b" data-answer="PROduce"><button class="word-choice-btn" data-val="PROduce" onclick="selectGap(this)">PROduce</button><button class="word-choice-btn" data-val="proDUCE" onclick="selectGap(this)">proDUCE</button></span>
+         fills the Saturday market.
+      </p>
+      <p>10. Little 
+        <span class="word-choice" id="nv-10a" data-answer="PROgress"><button class="word-choice-btn" data-val="proGRESS" onclick="selectGap(this)">proGRESS</button><button class="word-choice-btn" data-val="PROgress" onclick="selectGap(this)">PROgress</button></span>
+         was made in the first hour; the talks only began to 
+        <span class="word-choice" id="nv-10b" data-answer="proGRESS"><button class="word-choice-btn" data-val="PROgress" onclick="selectGap(this)">PROgress</button><button class="word-choice-btn" data-val="proGRESS" onclick="selectGap(this)">proGRESS</button></span>
+         after lunch.
+      </p>
+      <p>11. Students will 
+        <span class="word-choice" id="nv-11a" data-answer="proTEST"><button class="word-choice-btn" data-val="proTEST" onclick="selectGap(this)">proTEST</button><button class="word-choice-btn" data-val="PROtest" onclick="selectGap(this)">PROtest</button></span>
+         outside parliament tomorrow — the third 
+        <span class="word-choice" id="nv-11b" data-answer="PROtest"><button class="word-choice-btn" data-val="proTEST" onclick="selectGap(this)">proTEST</button><button class="word-choice-btn" data-val="PROtest" onclick="selectGap(this)">PROtest</button></span>
+         this month.
+      </p>
+      <p>12. Countries that 
+        <span class="word-choice" id="nv-12a" data-answer="exPORT"><button class="word-choice-btn" data-val="EXport" onclick="selectGap(this)">EXport</button><button class="word-choice-btn" data-val="exPORT" onclick="selectGap(this)">exPORT</button></span>
+         oil depend on that single 
+        <span class="word-choice" id="nv-12b" data-answer="EXport"><button class="word-choice-btn" data-val="exPORT" onclick="selectGap(this)">exPORT</button><button class="word-choice-btn" data-val="EXport" onclick="selectGap(this)">EXport</button></span>
+         more than they would like to admit.
+      </p>
+
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="checkGaps('task3-nounverb')">Check ✓</button>
+        <button class="btn btn-ghost"   onclick="resetGaps('task3-nounverb')">Try again</button>
+      </div>
+    </div>
+
+  </div><!-- /tab-p2 -->
+
+  <!-- ══════════════════════════════════════════════════════
+       PART 3 — CULTURE
+  ══════════════════════════════════════════════════════ -->
+  <div class="tab-content" id="tab-p3">
+
+    <!-- Task 1: quick test on Lesson 1's famous people -->
+    <div class="exercise" id="task1-culture-quiz">
+      <div class="exercise-label">Task 1 — Quick Test</div>
+      <h3>How much do you remember about the people from Lesson 1? Choose the correct answer.</h3>
+
+      <div class="mc-q">
+        <div class="mc-qnum">1</div>
+        <div class="mc-qbody">
+          <p class="mc-qtext">Who wrote what is considered the world's first computer algorithm, in 1843?</p>
+          <div class="mc-options chips" data-correct="b">
+        <label class="mc-option"><input type="radio" name="cq1" value="a"><span class="mc-bullet">A</span> Charles Babbage</label>
+        <label class="mc-option"><input type="radio" name="cq1" value="b"><span class="mc-bullet">B</span> Ada Lovelace</label>
+        <label class="mc-option"><input type="radio" name="cq1" value="c"><span class="mc-bullet">C</span> Alan Turing</label>
+      </div>
+        </div>
+      </div>
+
+      <div class="mc-q">
+        <div class="mc-qnum">2</div>
+        <div class="mc-qbody">
+          <p class="mc-qtext">Ada Lovelace's father was a famous…</p>
+          <div class="mc-options chips" data-correct="a">
+        <label class="mc-option"><input type="radio" name="cq2" value="a"><span class="mc-bullet">A</span> poet</label>
+        <label class="mc-option"><input type="radio" name="cq2" value="b"><span class="mc-bullet">B</span> engineer</label>
+        <label class="mc-option"><input type="radio" name="cq2" value="c"><span class="mc-bullet">C</span> painter</label>
+      </div>
+        </div>
+      </div>
+
+      <div class="mc-q">
+        <div class="mc-qnum">3</div>
+        <div class="mc-qbody">
+          <p class="mc-qtext">Which machine did Charles Babbage design in 1822 to calculate mathematical tables without human error?</p>
+          <div class="mc-options chips" data-correct="c">
+        <label class="mc-option"><input type="radio" name="cq3" value="a"><span class="mc-bullet">A</span> The Analytical Engine</label>
+        <label class="mc-option"><input type="radio" name="cq3" value="b"><span class="mc-bullet">B</span> The Turing Machine</label>
+        <label class="mc-option"><input type="radio" name="cq3" value="c"><span class="mc-bullet">C</span> The Difference Engine</label>
+      </div>
+        </div>
+      </div>
+
+      <div class="mc-q">
+        <div class="mc-qnum">4</div>
+        <div class="mc-qbody">
+          <p class="mc-qtext">Where did Alan Turing lead the team that cracked the German Enigma code?</p>
+          <div class="mc-options chips" data-correct="b">
+        <label class="mc-option"><input type="radio" name="cq4" value="a"><span class="mc-bullet">A</span> King's College, Cambridge</label>
+        <label class="mc-option"><input type="radio" name="cq4" value="b"><span class="mc-bullet">B</span> Bletchley Park</label>
+        <label class="mc-option"><input type="radio" name="cq4" value="c"><span class="mc-bullet">C</span> The Royal Albert Hall</label>
+      </div>
+        </div>
+      </div>
+
+      <div class="mc-q">
+        <div class="mc-qnum">5</div>
+        <div class="mc-qbody">
+          <p class="mc-qtext">Whose portrait appears on the British £50 note?</p>
+          <div class="mc-options chips" data-correct="c">
+        <label class="mc-option"><input type="radio" name="cq5" value="a"><span class="mc-bullet">A</span> Charles Babbage</label>
+        <label class="mc-option"><input type="radio" name="cq5" value="b"><span class="mc-bullet">B</span> P. G. Wodehouse</label>
+        <label class="mc-option"><input type="radio" name="cq5" value="c"><span class="mc-bullet">C</span> Alan Turing</label>
+      </div>
+        </div>
+      </div>
+
+      <div class="mc-q">
+        <div class="mc-qnum">6</div>
+        <div class="mc-qbody">
+          <p class="mc-qtext">Leonard Bernstein's musical <em>West Side Story</em> is a modern retelling of which play?</p>
+          <div class="mc-options chips" data-correct="a">
+        <label class="mc-option"><input type="radio" name="cq6" value="a"><span class="mc-bullet">A</span> <em>Romeo and Juliet</em></label>
+        <label class="mc-option"><input type="radio" name="cq6" value="b"><span class="mc-bullet">B</span> <em>Hamlet</em></label>
+        <label class="mc-option"><input type="radio" name="cq6" value="c"><span class="mc-bullet">C</span> <em>Macbeth</em></label>
+      </div>
+        </div>
+      </div>
+
+      <div class="mc-q">
+        <div class="mc-qnum">7</div>
+        <div class="mc-qbody">
+          <p class="mc-qtext">In 1958 Bernstein became the first American-born conductor to lead which orchestra?</p>
+          <div class="mc-options chips" data-correct="b">
+        <label class="mc-option"><input type="radio" name="cq7" value="a"><span class="mc-bullet">A</span> The London Symphony Orchestra</label>
+        <label class="mc-option"><input type="radio" name="cq7" value="b"><span class="mc-bullet">B</span> The New York Philharmonic</label>
+        <label class="mc-option"><input type="radio" name="cq7" value="c"><span class="mc-bullet">C</span> The Chicago Symphony Orchestra</label>
+      </div>
+        </div>
+      </div>
+
+      <div class="mc-q">
+        <div class="mc-qnum">8</div>
+        <div class="mc-qbody">
+          <p class="mc-qtext">The Tony Awards — the top honour in American theatre — are named after…</p>
+          <div class="mc-options chips" data-correct="c">
+        <label class="mc-option"><input type="radio" name="cq8" value="a"><span class="mc-bullet">A</span> Leonard Bernstein</label>
+        <label class="mc-option"><input type="radio" name="cq8" value="b"><span class="mc-bullet">B</span> Grant Wood</label>
+        <label class="mc-option"><input type="radio" name="cq8" value="c"><span class="mc-bullet">C</span> Antoinette Perry</label>
+      </div>
+        </div>
+      </div>
+
+      <div class="mc-q">
+        <div class="mc-qnum">9</div>
+        <div class="mc-qbody">
+          <p class="mc-qtext">Who are the two figures in Grant Wood's painting <em>American Gothic</em>?</p>
+          <div class="mc-options chips" data-correct="b">
+        <label class="mc-option"><input type="radio" name="cq9" value="a"><span class="mc-bullet">A</span> A farmer and his wife</label>
+        <label class="mc-option"><input type="radio" name="cq9" value="b"><span class="mc-bullet">B</span> The artist's sister and his dentist</label>
+        <label class="mc-option"><input type="radio" name="cq9" value="c"><span class="mc-bullet">C</span> The artist's parents</label>
+      </div>
+        </div>
+      </div>
+
+      <div class="mc-q">
+        <div class="mc-qnum">10</div>
+        <div class="mc-qbody">
+          <p class="mc-qtext">Which painting shows four people in a late-night New York diner?</p>
+          <div class="mc-options chips" data-correct="a">
+        <label class="mc-option"><input type="radio" name="cq10" value="a"><span class="mc-bullet">A</span> <em>Nighthawks</em> by Edward Hopper</label>
+        <label class="mc-option"><input type="radio" name="cq10" value="b"><span class="mc-bullet">B</span> <em>American Gothic</em> by Grant Wood</label>
+        <label class="mc-option"><input type="radio" name="cq10" value="c"><span class="mc-bullet">C</span> <em>Whistler's Mother</em> by James Whistler</label>
+      </div>
+        </div>
+      </div>
+
+      <div class="mc-q">
+        <div class="mc-qnum">11</div>
+        <div class="mc-qbody">
+          <p class="mc-qtext">James Whistler sued the critic John Ruskin for libel in 1878. What did he win?</p>
+          <div class="mc-options chips" data-correct="c">
+        <label class="mc-option"><input type="radio" name="cq11" value="a"><span class="mc-bullet">A</span> Nothing — he lost the case</label>
+        <label class="mc-option"><input type="radio" name="cq11" value="b"><span class="mc-bullet">B</span> A house in Paris</label>
+        <label class="mc-option"><input type="radio" name="cq11" value="c"><span class="mc-bullet">C</span> One farthing in damages</label>
+      </div>
+        </div>
+      </div>
+
+      <div class="mc-q">
+        <div class="mc-qnum">12</div>
+        <div class="mc-qbody">
+          <p class="mc-qtext">Which writer created the clueless aristocrat Bertie Wooster and his brilliant valet Jeeves?</p>
+          <div class="mc-options chips" data-correct="a">
+        <label class="mc-option"><input type="radio" name="cq12" value="a"><span class="mc-bullet">A</span> P. G. Wodehouse</label>
+        <label class="mc-option"><input type="radio" name="cq12" value="b"><span class="mc-bullet">B</span> Edward Hopper</label>
+        <label class="mc-option"><input type="radio" name="cq12" value="c"><span class="mc-bullet">C</span> Charles Babbage</label>
+      </div>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="checkMCIn('task1-culture-quiz')">Check ✓</button>
+        <button class="btn btn-ghost"   onclick="resetMCIn('task1-culture-quiz')">Try again</button>
+      </div>
+    </div>
+
+    <div class="intro-card">
+      📖 These scientists, engineers and inventors are all part of English-language culture — several of them gave their names to units, prizes and everyday words. Read about them and be ready to discuss: <b>Which discovery changed everyday life the most?</b>
+    </div>
+
+    <div class="person-grid">
+
+      <div class="person-card">
+        <img class="person-photo" src="images/people/person-pulitzer.jpg" alt="Joseph Pulitzer" onerror="this.style.display='none'">
+        <div class="person-card-body">
+          <span class="p-badge badge-media">Journalism</span>
+          <div class="person-name">Joseph Pulitzer</div>
+          <div class="person-hook"><span>Famous for</span>The Pulitzer Prize — the top award in American journalism, literature and music</div>
+          <div class="person-desc">Born in Hungary in 1847, he emigrated to the USA at 17 and fought in the American Civil War. He became a newspaper publisher and turned the <em>New York World</em> into the most widely read paper in the country, mixing serious investigative reporting with sensational headlines — a style later called "yellow journalism". In his will he left money to Columbia University to found a school of journalism and the Pulitzer Prizes, first awarded in 1917. He also organised a campaign that raised the money for the pedestal of the Statue of Liberty.</div>
+        </div>
+      </div>
+
+      <div class="person-card">
+        <img class="person-photo" src="images/people/person-nobel.jpg" alt="Alfred Nobel" onerror="this.style.display='none'">
+        <div class="person-card-body">
+          <span class="p-badge badge-science">Chemistry</span>
+          <div class="person-name">Alfred Nobel</div>
+          <div class="person-hook"><span>Famous for</span>Inventing dynamite — and founding the Nobel Prizes</div>
+          <div class="person-desc">Swedish chemist, engineer and businessman (1833–1896). After several deadly accidents with the unstable explosive nitroglycerine — one of which killed his younger brother — he found a way to make it safe to handle and patented it as <b>dynamite</b> in 1867. It made him extremely rich. When a French newspaper mistakenly printed his obituary with the headline "The merchant of death is dead", he was shocked at how he would be remembered. He rewrote his will and left almost all his fortune to create the <b>Nobel Prizes</b> for physics, chemistry, medicine, literature and peace, first awarded in 1901.</div>
+        </div>
+      </div>
+
+      <div class="person-card">
+        <img class="person-photo" src="images/people/person-newton.jpg" alt="Isaac Newton" onerror="this.style.display='none'">
+        <div class="person-card-body">
+          <span class="p-badge badge-science">Physics</span>
+          <div class="person-name">Isaac Newton</div>
+          <div class="person-hook"><span>Famous for</span>The law of gravity and the three laws of motion</div>
+          <div class="person-desc">English mathematician and physicist (1643–1727), often called the most influential scientist who ever lived. In 1687 he published the <em>Principia</em>, which explained that the same force — <b>gravity</b> — makes an apple fall to the ground and keeps the Moon in orbit around the Earth. He also worked out the three laws of motion, invented calculus (at the same time as Leibniz), and showed with a prism that white light is made of all the colours of the rainbow. He built the first reflecting telescope and later ran the Royal Mint, where he chased down counterfeiters. The story of the falling apple is one he told himself in old age.</div>
+        </div>
+      </div>
+
+      <div class="person-card">
+        <img class="person-photo" src="images/people/person-darwin.jpg" alt="Charles Darwin" onerror="this.style.display='none'">
+        <div class="person-card-body">
+          <span class="p-badge badge-science">Biology</span>
+          <div class="person-name">Charles Darwin</div>
+          <div class="person-hook"><span>Famous for</span>The theory of evolution by natural selection</div>
+          <div class="person-desc">English naturalist (1809–1882). At 22 he joined a five-year round-the-world voyage on HMS <em>Beagle</em>. On the Galápagos Islands he noticed that finches on different islands had different beaks suited to the food available there. This led him to his big idea: living things change over generations because individuals with useful features survive and have more offspring — <b>natural selection</b>. He waited more than 20 years before publishing <em>On the Origin of Species</em> in 1859 because he knew the idea would be controversial. He is buried in Westminster Abbey next to Isaac Newton, and his face was on the British £10 note from 2000 to 2018.</div>
+        </div>
+      </div>
+
+      <div class="person-card">
+        <img class="person-photo" src="images/people/person-faraday.jpg" alt="Michael Faraday" onerror="this.style.display='none'">
+        <div class="person-card-body">
+          <span class="p-badge badge-science">Physics</span>
+          <div class="person-name">Michael Faraday</div>
+          <div class="person-hook"><span>Famous for</span>Discovering electromagnetic induction — the principle behind the electric motor and generator</div>
+          <div class="person-desc">English scientist (1791–1867) who had almost no formal education: he was the son of a blacksmith and started work at 14 as a bookbinder's apprentice, reading the science books he was binding. In 1831 he discovered <b>electromagnetic induction</b> — that moving a magnet near a wire produces an electric current — the principle behind every electric generator and transformer in the world. He also built the first electric motor and gave the words <em>electrode</em>, <em>anode</em> and <em>ion</em> to science. He started the famous Royal Institution Christmas Lectures for young people, which are still broadcast on British TV every year. The unit of electrical capacitance, the <em>farad</em>, is named after him.</div>
+        </div>
+      </div>
+
+      <div class="person-card">
+        <img class="person-photo" src="images/people/person-fleming.jpg" alt="Alexander Fleming" onerror="this.style.display='none'">
+        <div class="person-card-body">
+          <span class="p-badge badge-medicine">Medicine</span>
+          <div class="person-name">Alexander Fleming</div>
+          <div class="person-hook"><span>Famous for</span>Discovering penicillin, the first antibiotic</div>
+          <div class="person-desc">Scottish doctor and microbiologist (1881–1955). In September 1928 he came back from holiday to his untidy laboratory in London and noticed that a mould had grown on one of his dishes of bacteria — and that the bacteria around the mould had died. The mould was <em>Penicillium</em>, and the substance it produced, <b>penicillin</b>, became the world's first antibiotic. It was developed into a usable medicine by Howard Florey and Ernst Chain in the 1940s, saved millions of lives in World War II, and the three men shared the Nobel Prize in Medicine in 1945. Fleming often said: "One sometimes finds what one is not looking for."</div>
+        </div>
+      </div>
+
+      <div class="person-card">
+        <img class="person-photo" src="images/people/person-watt.jpg" alt="James Watt" onerror="this.style.display='none'">
+        <div class="person-card-body">
+          <span class="p-badge badge-eng">Engineering</span>
+          <div class="person-name">James Watt</div>
+          <div class="person-hook"><span>Famous for</span>Improving the steam engine — and giving his name to the unit of power, the watt</div>
+          <div class="person-desc">Scottish engineer and inventor (1736–1819). Early steam engines wasted huge amounts of fuel, so while repairing one in 1765 Watt designed a separate condenser that made the engine roughly four times more efficient. With his business partner Matthew Boulton he built engines that powered mills, mines and factories across Britain — a key step in the <b>Industrial Revolution</b>. To sell his engines he compared them to horses, inventing the term <em>horsepower</em>. In 1882 the unit of power, the <b>watt</b> (as in a 60-watt light bulb), was named in his honour. Contrary to the popular story, he did not invent the steam engine after watching a kettle boil.</div>
+        </div>
+      </div>
+
+      <div class="person-card">
+        <img class="person-photo" src="images/people/person-stephenson.jpg" alt="George Stephenson" onerror="this.style.display='none'">
+        <div class="person-card-body">
+          <span class="p-badge badge-eng">Engineering</span>
+          <div class="person-name">George Stephenson</div>
+          <div class="person-hook"><span>Famous for</span>"The Father of Railways" — building the first public passenger railway</div>
+          <div class="person-desc">English engineer (1781–1848), born into a poor mining family near Newcastle; he could not read until he was 18 and paid for night-school lessons himself. He built his first steam locomotive in 1814 to pull coal wagons, and in 1825 opened the Stockton &amp; Darlington Railway, the first public railway to use steam engines. In 1829 his locomotive <em>Rocket</em>, built with his son Robert, won the Rainhill Trials at nearly 30 mph and was chosen for the Liverpool &amp; Manchester Railway — the world's first inter-city passenger line. The distance between the rails he used, 4 ft 8½ in, is still the standard gauge for most of the world's railways today.</div>
+        </div>
+      </div>
+
+      <div class="person-card">
+        <img class="person-photo" src="images/people/person-bell.jpg" alt="Alexander Graham Bell" onerror="this.style.display='none'">
+        <div class="person-card-body">
+          <span class="p-badge badge-eng">Invention</span>
+          <div class="person-name">Alexander Graham Bell</div>
+          <div class="person-hook"><span>Famous for</span>Inventing the telephone (patented in 1876)</div>
+          <div class="person-desc">Born in Edinburgh, Scotland, in 1847; later lived in Canada and the USA. His mother and his wife were both deaf, and he spent his life as a teacher of deaf people — he considered this his real work. His experiments with transmitting speech by electricity led to the <b>telephone</b>; the first words spoken on it, on 10 March 1876, were to his assistant: "Mr Watson, come here, I want to see you." He founded the Bell Telephone Company and was one of the founders of the National Geographic Society. He refused to have a telephone in his own study because he found it a distraction. The <em>decibel</em>, the unit of sound level, is named after him.</div>
+        </div>
+      </div>
+
+    </div><!-- /person-grid -->
+
+
+  </div><!-- /tab-p3 -->
+
+  <!-- ══════════════════════════════════════════════════════
+       HOMEWORK
+  ══════════════════════════════════════════════════════ -->
+  <div class="tab-content" id="tab-hw">
+  </div><!-- /tab-hw -->
+
+</div><!-- /container -->
+
+<div class="save-indicator" id="saveIndicator">✓ Saved</div>
+
+<script>
+const LESSON_KEY = 'lesson-02';
+let data = {};
+try { data = JSON.parse(localStorage.getItem(LESSON_KEY)) || {}; } catch(e) {}
+
+function save(patch) {
+  Object.assign(data, patch);
+  localStorage.setItem(LESSON_KEY, JSON.stringify(data));
+  flashSaved();
+}
+let saveTimer;
+function flashSaved() {
+  const el = document.getElementById('saveIndicator');
+  el.classList.add('show');
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(() => el.classList.remove('show'), 1600);
+}
+
+// ── TABS ──
+function switchTab(name, btn) {
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  btn.classList.add('active');
+  save({ activeTab: name });
+}
+
+// ── AUTOSAVE for .blank and .free-write ──
+function setupAutosave() {
+  document.querySelectorAll('.blank, .free-write').forEach(el => {
+    if (data[el.id] !== undefined) el.value = data[el.id];
+    el.addEventListener('input', () => {
+      save({ [el.id]: el.value });
+      const cc = document.getElementById('cc-' + el.id);
+      if (cc) cc.textContent = el.value.length + ' characters';
+    });
+    const cc = document.getElementById('cc-' + el.id);
+    if (cc) cc.textContent = (el.value || '').length + ' characters';
+  });
+  if (data.activeTab) {
+    const btn = document.querySelector('.tab-btn[onclick*="' + data.activeTab + '"]');
+    if (btn) switchTab(data.activeTab, btn);
+  }
+}
+
+// ── FILL IN THE BLANKS (supports multiple containers) ──
+function checkBlanks(containerId) {
+  const sel = containerId ? '#' + containerId + ' .blank' : '.blank';
+  document.querySelectorAll(sel).forEach(inp => {
+    const strict = inp.dataset.case === 'strict';           // e.g. stress patterns: Oo ≠ oO
+    const norm = v => strict ? v.trim() : v.trim().toLowerCase();
+    const val = norm(inp.value);
+    const answers = (inp.dataset.answer || '').split('|').map(norm);
+    inp.classList.remove('correct','wrong');
+    if (!val) return;
+    inp.classList.add(answers.includes(val) ? 'correct' : 'wrong');
+  });
+}
+function resetBlanks(containerId) {
+  const sel = containerId ? '#' + containerId + ' .blank' : '.blank';
+  document.querySelectorAll(sel).forEach(inp => {
+    inp.value = ''; inp.classList.remove('correct','wrong');
+    save({ [inp.id]: '' });
+  });
+}
+
+// ── STRESS PATTERN (oOo notation — case matters, so no lowercasing) ──
+function checkStressPattern(containerId) {
+  document.querySelectorAll('#' + containerId + ' .blank').forEach(inp => {
+    const val = inp.value.trim();
+    const answer = (inp.dataset.answer || '').trim();
+    inp.classList.remove('correct','wrong');
+    if (!val) return;
+    inp.classList.add(val === answer ? 'correct' : 'wrong');
+  });
+}
+function resetStressPattern(containerId) {
+  document.querySelectorAll('#' + containerId + ' .blank').forEach(inp => {
+    inp.value = ''; inp.classList.remove('correct','wrong');
+    save({ [inp.id]: '' });
+  });
+}
+
+// ── WORD-CHOICE GAPS (get/put, prepositions, stress — generic, any container) ──
+function selectGap(btn) {
+  const group = btn.closest('.word-choice');
+  group.querySelectorAll('.word-choice-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  save({ [group.id]: btn.dataset.val });
+}
+function checkGaps(containerId) {
+  document.querySelectorAll('#' + containerId + ' .word-choice').forEach(group => {
+    const correct = group.dataset.answer;
+    const selected = group.querySelector('.word-choice-btn.selected');
+    group.querySelectorAll('.word-choice-btn').forEach(b => b.classList.remove('correct','wrong'));
+    if (!selected) return;
+    if (selected.dataset.val === correct) {
+      selected.classList.add('correct');
+    } else {
+      selected.classList.add('wrong');
+      group.querySelectorAll('.word-choice-btn').forEach(b => {
+        if (b.dataset.val === correct) b.classList.add('correct');
+      });
+    }
+  });
+}
+function resetGaps(containerId) {
+  document.querySelectorAll('#' + containerId + ' .word-choice').forEach(group => {
+    group.querySelectorAll('.word-choice-btn').forEach(b => b.classList.remove('selected','correct','wrong'));
+    save({ [group.id]: '' });
+  });
+}
+function restoreGaps() {
+  document.querySelectorAll('.word-choice').forEach(group => {
+    const saved = data[group.id];
+    if (saved) group.querySelectorAll('.word-choice-btn').forEach(b => {
+      if (b.dataset.val === saved) b.classList.add('selected');
+    });
+  });
+}
+
+// ── MULTIPLE CHOICE ──
+function optionText(label) {
+  const clone = label.cloneNode(true);
+  const bullet = clone.querySelector('.mc-bullet');
+  if (bullet) bullet.remove();
+  return clone.textContent.trim();
+}
+// Mirror the chosen option into the sentence's blank, if the question has one
+function syncSlot(group, state) {
+  const q = group.closest('.mc-q');
+  const slot = q && q.querySelector('.mc-slot');
+  if (!slot) return;
+  const selected = group.querySelector('.mc-option.selected');
+  slot.textContent = selected ? optionText(selected) : '___';
+  slot.classList.remove('correct','wrong');
+  if (state) slot.classList.add(state);
+}
+document.querySelectorAll('.mc-option').forEach(label => {
+  label.addEventListener('click', () => {
+    const group = label.closest('.mc-options');
+    group.querySelectorAll('.mc-option').forEach(l => l.classList.remove('selected','correct','wrong'));
+    label.classList.add('selected');
+    syncSlot(group);
+    save({ ['mc-' + label.querySelector('input').name]: label.querySelector('input').value });
+  });
+});
+function restoreMC() {
+  document.querySelectorAll('.mc-options').forEach(group => {
+    group.querySelectorAll('.mc-option').forEach(label => {
+      const name = label.querySelector('input').name;
+      const saved = data['mc-' + name];
+      if (saved && saved === label.querySelector('input').value) label.classList.add('selected');
+    });
+    syncSlot(group);
+  });
+}
+function checkMCIn(containerId) {
+  document.querySelectorAll('#' + containerId + ' .mc-options').forEach(group => {
+    const correct = group.dataset.correct;
+    const selected = group.querySelector('.mc-option.selected');
+    group.querySelectorAll('.mc-option').forEach(l => l.classList.remove('correct','wrong'));
+    if (!selected) return;
+    const val = selected.querySelector('input').value;
+    const ok = val === correct;
+    selected.classList.add(ok ? 'correct' : 'wrong');
+    if (!ok) group.querySelectorAll('.mc-option').forEach(l => {
+      if (l.querySelector('input').value === correct) l.classList.add('correct');
+    });
+    syncSlot(group, ok ? 'correct' : 'wrong');
+  });
+}
+function resetMCIn(containerId) {
+  document.querySelectorAll('#' + containerId + ' .mc-options').forEach(group => {
+    group.querySelectorAll('.mc-option').forEach(l => {
+      l.classList.remove('selected','correct','wrong');
+      save({ ['mc-' + l.querySelector('input').name]: '' });
+    });
+    syncSlot(group);
+  });
+}
+
+// ── MATCHING (generic, multiple exercises) ──
+const matchState = {};
+function selectMatch(el, exId) {
+  const side = el.closest('.match-col').dataset.side;
+  if (!matchState[exId]) matchState[exId] = { selected:{left:null,right:null}, matched:new Set() };
+  const state = matchState[exId];
+  if (el.classList.contains('matched')) return;
+  el.closest('.match-col').querySelectorAll('.match-item').forEach(i => i.classList.remove('selected'));
+  el.classList.add('selected');
+  state.selected[side] = el;
+  const other = side === 'left' ? 'right' : 'left';
+  if (state.selected[other]) {
+    const a = state.selected['left'], b = state.selected['right'];
+    if (a.dataset.pair === b.dataset.pair) {
+      a.classList.remove('selected'); a.classList.add('matched','locked');
+      b.classList.remove('selected'); b.classList.add('matched','locked');
+      state.matched.add(a.dataset.pair);
+      save({ ['match-' + exId]: [...state.matched] });
+    } else {
+      [a,b].forEach(x => x.classList.add('shake'));
+      setTimeout(() => [a,b].forEach(x => x.classList.remove('selected','shake')), 400);
+    }
+    state.selected = { left:null, right:null };
+  }
+}
+function resetMatchEx(exId) {
+  document.querySelectorAll('#' + exId + ' .match-item')
+    .forEach(el => el.classList.remove('matched','locked','selected','shake'));
+  matchState[exId] = { selected:{left:null,right:null}, matched:new Set() };
+  save({ ['match-' + exId]: [] });
+}
+function restoreAllMatches() {
+  [].forEach(exId => {
+    matchState[exId] = { selected:{left:null,right:null}, matched:new Set() };
+    (data['match-' + exId] || []).forEach(pair => {
+      document.querySelectorAll('#' + exId + ' .match-item[data-pair="' + pair + '"]')
+        .forEach(el => el.classList.add('matched','locked'));
+      matchState[exId].matched.add(pair);
+    });
+  });
+}
+
+// ── INIT ──
+setupAutosave();
+restoreGaps();
+restoreMC();
+restoreAllMatches();
+</script>
+
+</body>
+</html>

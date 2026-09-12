@@ -40,32 +40,39 @@
   </div>
 
   <!-- ── ADD NEW LESSONS BELOW THIS LINE ────────────────────────────────────
-       Copy one .file-folder block and update:
-         href           → the lesson filename  (e.g. lessons/lesson-02.html)
-         .file-num      → lesson number
-         .file-topic    → topic title
-         .file-date     → date of the class
+       Copy one .lesson-card block and update:
+         href            → the lesson filename  (e.g. lessons/lesson-03.html)
+         .lesson-stamp   → lesson number
+         .lesson-title   → topic title
+         .lesson-date    → date of the class
        Badges: keep badge-class, add badge-done when homework is submitted.
-       Colors cycle automatically: terracotta → blue → rose → gold → repeat.
+       Stamp colors cycle automatically: terracotta → blue → rose → gold → repeat.
   ──────────────────────────────────────────────────────────────────────── -->
 
   <div class="section-title">All Lessons</div>
 
-  <div class="file-stack" id="lessonGrid">
+  <div class="lesson-stack" id="lessonGrid">
 
     <!-- LESSON 1 -->
-    <a class="file-folder" href="lessons/lesson-01.html">
-      <div class="file-row">
-        <span class="file-num">1</span>
-        <div class="file-info">
-          <span class="file-topic">Delexical Verbs, IPA &amp; Culture</span>
-          <span class="file-date">4 September 2026</span>
-        </div>
-        <div class="file-badges">
-          <span class="badge badge-class">Class</span>
-          <span class="badge badge-hw">Homework</span>
-        </div>
-      </div>
+    <a class="lesson-card" href="lessons/lesson-01.html">
+      <span class="lesson-stamp">1</span>
+      <span class="lesson-title">Delexical Verbs, IPA &amp; Culture</span>
+      <span class="lesson-date">4 September 2026</span>
+      <span class="lesson-tags">
+        <span class="badge badge-class">Class</span>
+        <span class="badge badge-hw">Homework</span>
+      </span>
+    </a>
+
+    <!-- LESSON 2 -->
+    <a class="lesson-card" href="lessons/lesson-02.html">
+      <span class="lesson-stamp">2</span>
+      <span class="lesson-title">Get/Put, Prepositions &amp; Word Stress</span>
+      <span class="lesson-date">11 September 2026</span>
+      <span class="lesson-tags">
+        <span class="badge badge-class">Class</span>
+        <span class="badge badge-hw">Homework</span>
+      </span>
     </a>
 
     <!-- ADD MORE LESSONS HERE — copy the block above -->
