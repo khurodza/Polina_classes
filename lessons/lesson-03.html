@@ -1,0 +1,1231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lesson 3 – ВсОШ School Stage Mock (9–11)</title>
+  <link rel="stylesheet" href="../style.css">
+  <style>
+    /* ── exam-specific bits (only used on this page) ───────────── */
+    .exam-banner {
+      background: rgba(212,87,42,.08);
+      border: 2px dashed var(--primary);
+      border-radius: var(--radius);
+      padding: 16px 20px;
+      margin-bottom: 22px;
+      text-align: center;
+    }
+    .exam-banner strong { color: var(--primary); font-size: 1.05rem; }
+    .exam-banner p { margin: 6px 0 0; color: var(--muted); font-size: .92rem; line-height: 1.6; }
+
+    /* sticky progress */
+    .progress-wrap {
+      position: sticky; top: 0; z-index: 30;
+      background: var(--bg);
+      padding: 12px 0 14px;
+      margin-bottom: 8px;
+      border-bottom: 1px solid var(--border);
+    }
+    .progress-top {
+      display: flex; justify-content: space-between; align-items: center;
+      gap: 12px; flex-wrap: wrap; margin-bottom: 8px;
+    }
+    .progress-label { font-weight: 600; font-size: .92rem; }
+    .progress-label span { color: var(--primary); }
+    .progress-bar {
+      height: 10px; border-radius: 99px; background: var(--border); overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%; width: 0%; border-radius: 99px;
+      background: linear-gradient(90deg, var(--primary), var(--accent-dk));
+      transition: width .3s ease;
+    }
+
+    /* section + task headings, kept in the wording of the paper */
+    .section-head {
+      text-align: center;
+      border-bottom: 3px double var(--border);
+      padding-bottom: 14px;
+      margin-bottom: 22px;
+    }
+    .section-head h2 {
+      font-family: 'Fraunces', Georgia, serif;
+      font-size: 1.6rem; letter-spacing: .12em; text-transform: uppercase;
+      color: var(--primary);
+    }
+    .section-head .sh-meta { color: var(--muted); font-size: .9rem; margin-top: 4px; }
+
+    .task-num {
+      display: inline-block;
+      font-weight: 700; color: var(--accent-dk);
+      background: rgba(201,160,48,.15);
+      padding: 3px 12px; border-radius: 99px;
+      font-size: .85rem; margin-bottom: 10px;
+    }
+    .orig-instr {
+      font-style: italic; color: var(--muted);
+      border-left: 3px solid var(--border);
+      padding-left: 14px; margin: 0 0 18px;
+      line-height: 1.7; font-size: .97rem;
+    }
+    .example-box {
+      display: inline-block;
+      background: rgba(91,140,69,.10); color: var(--green);
+      border-radius: 8px; padding: 6px 14px;
+      font-weight: 600; margin-bottom: 16px; font-size: .92rem;
+    }
+
+    /* timer */
+    .timer-box {
+      display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+      background: var(--card); border: 2px solid var(--border);
+      border-radius: var(--radius); padding: 12px 16px; margin-bottom: 20px;
+    }
+    .timer-clock {
+      font-family: 'Fraunces', Georgia, serif;
+      font-size: 1.5rem; font-weight: 700; color: var(--primary);
+      min-width: 82px; letter-spacing: .04em;
+    }
+    .timer-clock.over { color: var(--red); }
+    .timer-hint { color: var(--muted); font-size: .85rem; flex: 1; min-width: 140px; }
+    .btn-mini {
+      padding: 6px 14px; font-size: .84rem; border-radius: 99px;
+      border: 2px solid var(--border); background: transparent;
+      color: var(--muted); cursor: pointer; font-weight: 600;
+    }
+    .btn-mini:hover { border-color: var(--primary); color: var(--primary); }
+
+    /* listening: questions two-up, with the choices stacked inside each card */
+    .q-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-top: 24px; }
+    @media (max-width: 760px) { .q-grid { grid-template-columns: 1fr; } }
+    .q-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px 20px 20px;
+      display: flex; flex-direction: column; gap: 11px;
+    }
+    .q-task {
+      display: inline-block; align-self: flex-start;
+      font-size: .74rem; letter-spacing: .08em; text-transform: uppercase; font-weight: 700;
+      color: var(--primary); background: rgba(212,87,42,.10);
+      padding: 3px 11px; border-radius: 99px;
+    }
+    .q-card:nth-child(4n+2) .q-task { color: var(--blue);      background: rgba(95,142,196,.15); }
+    .q-card:nth-child(4n+3) .q-task { color: var(--rose);      background: rgba(196,122,150,.17); }
+    .q-card:nth-child(4n)   .q-task { color: var(--accent-dk); background: rgba(201,160,48,.18); }
+    .q-text { font-weight: 600; line-height: 1.55; }
+    /* one option per line — .mc-options is a grid, so this collapses it to a single column */
+    .mc-options.stack { grid-template-columns: 1fr; gap: 8px; margin-top: auto; }
+    .mc-options.stack .mc-option { padding: 11px 15px; font-size: .98rem; }
+
+    /* reading passage */
+    .passage {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 22px 24px;
+      margin-bottom: 24px; max-height: 460px; overflow-y: auto;
+      line-height: 1.8;
+    }
+    .passage p { margin-bottom: 12px; font-size: .98rem; }
+    .passage .sp { font-weight: 700; color: var(--primary); }
+    .passage .sp.b { color: var(--blue); }
+
+    /* word-formation rows */
+    .wf-text { line-height: 2.5; font-size: 1.02rem; }
+    .wf-text h4 {
+      font-family: 'Fraunces', Georgia, serif;
+      text-align: center; margin: 18px 0 6px; color: var(--accent-dk);
+    }
+    .wf-cue {
+      font-size: .78rem; font-weight: 700; letter-spacing: .06em;
+      color: var(--muted); background: var(--border);
+      padding: 2px 8px; border-radius: 6px; margin-left: 3px;
+      vertical-align: middle;
+    }
+    .blank.wf { min-width: 150px; }
+
+    /* letter dropdowns for the matching tasks */
+    .exam-select {
+      font: inherit; font-weight: 700; text-align: center;
+      padding: 8px 10px; border-radius: 10px;
+      border: 2px solid var(--border); background: var(--card);
+      color: var(--text); cursor: pointer; min-width: 74px;
+    }
+    .exam-select:focus { border-color: var(--primary); outline: none; }
+    .exam-select.correct { border-color: var(--green); color: var(--green); background: rgba(91,140,69,.08); }
+    .exam-select.wrong   { border-color: var(--red);   color: var(--red);   background: rgba(200,64,64,.06); }
+
+    .pair-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
+    @media (max-width: 720px) { .pair-grid { grid-template-columns: 1fr; } }
+    .opt-box {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: var(--radius); overflow: hidden;
+    }
+    .opt-row { display: flex; border-bottom: 1px solid var(--border); }
+    .opt-row:last-child { border-bottom: none; }
+    .opt-letter {
+      flex: 0 0 46px; display: flex; align-items: center; justify-content: center;
+      font-weight: 700; color: var(--accent-dk); background: rgba(201,160,48,.10);
+      border-right: 1px solid var(--border);
+    }
+    .opt-body { padding: 10px 14px; line-height: 1.7; }
+    .answer-row {
+      display: flex; align-items: center; gap: 12px;
+      padding: 10px 0; border-bottom: 1px dashed var(--border);
+    }
+    .answer-row:last-child { border-bottom: none; }
+    .answer-row .ar-num {
+      font-family: 'Fraunces', Georgia, serif; font-weight: 700;
+      color: var(--primary); min-width: 26px;
+    }
+    .answer-row .ar-txt { flex: 1; }
+
+    /* the correct answer, revealed only after submitting */
+    .key {
+      display: none; margin-left: 8px; font-size: .85rem;
+      font-weight: 700; color: var(--green);
+      background: rgba(91,140,69,.10); padding: 2px 9px; border-radius: 6px;
+    }
+    body.revealed .key:not(:empty) { display: inline-block; }
+
+    /* results */
+    .locked-card {
+      text-align: center; background: var(--card);
+      border: 2px dashed var(--border); border-radius: var(--radius);
+      padding: 46px 26px;
+    }
+    .locked-card .lock-ico { font-size: 3rem; }
+    .locked-card h3 { font-family: 'Fraunces', Georgia, serif; font-size: 1.4rem; margin: 10px 0 6px; }
+    .locked-card p { color: var(--muted); line-height: 1.7; }
+    .todo-list { list-style: none; margin: 18px auto 0; max-width: 380px; text-align: left; }
+    .todo-list li {
+      display: flex; justify-content: space-between; gap: 10px;
+      padding: 9px 0; border-bottom: 1px dashed var(--border); font-size: .94rem;
+    }
+    .todo-list li.done { color: var(--green); }
+    .todo-list li b { font-variant-numeric: tabular-nums; }
+
+    .score-hero { text-align: center; padding: 10px 0 4px; }
+    .score-big {
+      font-family: 'Fraunces', Georgia, serif;
+      font-size: 3.6rem; font-weight: 700; color: var(--primary); line-height: 1;
+    }
+    .score-big small { font-size: 1.4rem; color: var(--muted); font-weight: 400; }
+    .score-verdict { font-size: 1.05rem; margin-top: 8px; color: var(--muted); }
+    .score-rows { margin-top: 26px; }
+    .score-row { margin-bottom: 18px; }
+    .score-row-top {
+      display: flex; justify-content: space-between;
+      font-weight: 600; font-size: .95rem; margin-bottom: 6px;
+    }
+    .score-track { height: 12px; border-radius: 99px; background: var(--border); overflow: hidden; }
+    .score-meter { height: 100%; border-radius: 99px; width: 0; transition: width .6s ease; }
+    .m1 { background: var(--primary); }
+    .m2 { background: var(--blue); }
+    .m3 { background: var(--accent-dk); }
+    .m4 { background: var(--rose); }
+    .m5 { background: var(--green); }
+    .m6 { background: var(--red); }
+  </style>
+</head>
+<body>
+
+<header class="site-header">
+  <h1>Lesson 3 — Olympiad Mock: School Stage</h1>
+  <a class="back-link" href="../index.html">← All Lessons</a>
+</header>
+
+<div class="container">
+
+  <div class="lesson-meta">
+    <h2>ВсОШ 2024–2025 · Школьный этап · 9–11 классы</h2>
+    <p>📅 15 September 2026 &nbsp;·&nbsp; Lesson 3</p>
+  </div>
+
+  <div class="exam-banner">
+    <strong>ВСЕРОССИЙСКАЯ ОЛИМПИАДА ШКОЛЬНИКОВ · АНГЛИЙСКИЙ ЯЗЫК. 2024–2025 уч. г.</strong>
+    <p>ШКОЛЬНЫЙ ЭТАП. 9–11 КЛАССЫ &nbsp;·&nbsp; Максимальный балл за работу – 55.</p>
+    <p>Do the whole paper first — Listening (7), Reading (8), Use of English (40).
+       Your score stays locked 🔒 until every one of the 55 items has an answer.</p>
+  </div>
+
+  <div class="progress-wrap">
+    <div class="progress-top">
+      <div class="progress-label">Answered: <span id="pgCount">0 / 55</span></div>
+      <div class="progress-label" id="pgHint" style="color:var(--muted);font-weight:500;">Score unlocks at 55 / 55</div>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="pgFill"></div></div>
+  </div>
+
+  <div class="tab-bar">
+    <button class="tab-btn active" onclick="switchTab('listen', this)">🎧 Listening</button>
+    <button class="tab-btn"        onclick="switchTab('read',   this)">📖 Reading</button>
+    <button class="tab-btn"        onclick="switchTab('use',    this)">✍️ Use of English</button>
+    <button class="tab-btn"        onclick="switchTab('score',  this)">🔒 My Score</button>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════
+       SECTION 1 — LISTENING (7 points)
+  ══════════════════════════════════════════════════════════ -->
+  <div class="tab-content active" id="tab-listen">
+
+    <div class="section-head">
+      <h2>Listening</h2>
+      <div class="sh-meta">Time: 15 minutes &nbsp;·&nbsp; (7 points)</div>
+    </div>
+
+    <div class="timer-box">
+      <div class="timer-clock" id="clock-listen">15:00</div>
+      <button class="btn-mini" onclick="toggleTimer('listen')" id="tbtn-listen">Start</button>
+      <button class="btn-mini" onclick="resetTimer('listen')">Reset</button>
+      <div class="timer-hint">Optional — the real paper gives you 15 minutes for this section.</div>
+    </div>
+
+    <div class="exercise" id="ex-listen">
+      <div class="exercise-label">Задание 1–7</div>
+      <p class="orig-instr">Listen to a radio interview with a member of a sporting association and
+        choose the best answer for the following questions. You will hear the text twice.</p>
+
+      <div class="audio-wrap">
+        <audio controls preload="metadata">
+          <source src="audio/olympiad-listening-9-11.mp3" type="audio/mpeg">
+          Your browser does not support audio.
+        </audio>
+      </div>
+
+      <div class="q-grid">
+        <div class="q-card">
+          <span class="q-task">Задание 1</span>
+          <p class="q-text">Where did the sport originate?</p>
+                <div class="mc-options stack" data-correct="c">
+            <label class="mc-option"><input type="radio" name="l1" value="a"><span class="mc-bullet">A</span> South Africa</label>
+            <label class="mc-option"><input type="radio" name="l1" value="b"><span class="mc-bullet">B</span> Britain</label>
+            <label class="mc-option"><input type="radio" name="l1" value="c"><span class="mc-bullet">C</span> Ireland</label>
+          </div>
+        </div>
+
+        <div class="q-card">
+          <span class="q-task">Задание 2</span>
+          <p class="q-text">What does he say about the ball?</p>
+                <div class="mc-options stack" data-correct="a">
+            <label class="mc-option"><input type="radio" name="l2" value="a"><span class="mc-bullet">A</span> It’s made from leather.</label>
+            <label class="mc-option"><input type="radio" name="l2" value="b"><span class="mc-bullet">B</span> It’s made from wood.</label>
+            <label class="mc-option"><input type="radio" name="l2" value="c"><span class="mc-bullet">C</span> It’s the same as a tennis ball.</label>
+          </div>
+        </div>
+
+        <div class="q-card">
+          <span class="q-task">Задание 3</span>
+          <p class="q-text">How many points is a goal scored past the goalkeeper worth?</p>
+                <div class="mc-options stack" data-correct="a">
+            <label class="mc-option"><input type="radio" name="l3" value="a"><span class="mc-bullet">A</span> three</label>
+            <label class="mc-option"><input type="radio" name="l3" value="b"><span class="mc-bullet">B</span> two</label>
+            <label class="mc-option"><input type="radio" name="l3" value="c"><span class="mc-bullet">C</span> one</label>
+          </div>
+        </div>
+
+        <div class="q-card">
+          <span class="q-task">Задание 4</span>
+          <p class="q-text">How many kilometres an hour can the ball travel?</p>
+                <div class="mc-options stack" data-correct="b">
+            <label class="mc-option"><input type="radio" name="l4" value="a"><span class="mc-bullet">A</span> 115</label>
+            <label class="mc-option"><input type="radio" name="l4" value="b"><span class="mc-bullet">B</span> 150</label>
+            <label class="mc-option"><input type="radio" name="l4" value="c"><span class="mc-bullet">C</span> 110</label>
+          </div>
+        </div>
+
+        <div class="q-card">
+          <span class="q-task">Задание 5</span>
+          <p class="q-text">One of the rules of the game is that you</p>
+                <div class="mc-options stack" data-correct="c">
+            <label class="mc-option"><input type="radio" name="l5" value="a"><span class="mc-bullet">A</span> cannot hold the ball in your hand.</label>
+            <label class="mc-option"><input type="radio" name="l5" value="b"><span class="mc-bullet">B</span> can only carry the ball using the hurley.</label>
+            <label class="mc-option"><input type="radio" name="l5" value="c"><span class="mc-bullet">C</span> must use the hurley to pick the ball up from the ground.</label>
+          </div>
+        </div>
+
+        <div class="q-card">
+          <span class="q-task">Задание 6</span>
+          <p class="q-text">What does Sean say about the best hurling players?</p>
+                <div class="mc-options stack" data-correct="b">
+            <label class="mc-option"><input type="radio" name="l6" value="a"><span class="mc-bullet">A</span> They earn too much money.</label>
+            <label class="mc-option"><input type="radio" name="l6" value="b"><span class="mc-bullet">B</span> They earn no money.</label>
+            <label class="mc-option"><input type="radio" name="l6" value="c"><span class="mc-bullet">C</span> They aren’t as skilful as they were in the past.</label>
+          </div>
+        </div>
+
+        <div class="q-card">
+          <span class="q-task">Задание 7</span>
+          <p class="q-text">What does he say about the fans of the game?</p>
+                <div class="mc-options stack" data-correct="b">
+            <label class="mc-option"><input type="radio" name="l7" value="a"><span class="mc-bullet">A</span> They are aggressive.</label>
+            <label class="mc-option"><input type="radio" name="l7" value="b"><span class="mc-bullet">B</span> Rival fans sit together.</label>
+            <label class="mc-option"><input type="radio" name="l7" value="c"><span class="mc-bullet">C</span> They come from the nobility.</label>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-ghost" onclick="switchTabByName('read')">Next: Reading →</button>
+      </div>
+    </div>
+
+  </div><!-- /tab-listen -->
+
+  <!-- ══════════════════════════════════════════════════════════
+       SECTION 2 — READING (8 points)
+  ══════════════════════════════════════════════════════════ -->
+  <div class="tab-content" id="tab-read">
+
+    <div class="section-head">
+      <h2>Reading</h2>
+      <div class="sh-meta">Time: 25 minutes &nbsp;·&nbsp; (8 points)</div>
+    </div>
+
+    <div class="timer-box">
+      <div class="timer-clock" id="clock-read">25:00</div>
+      <button class="btn-mini" onclick="toggleTimer('read')" id="tbtn-read">Start</button>
+      <button class="btn-mini" onclick="resetTimer('read')">Reset</button>
+      <div class="timer-hint">Optional — the real paper gives you 25 minutes for this section.</div>
+    </div>
+
+    <div class="exercise" id="ex-read">
+      <div class="exercise-label">Задание 8–15</div>
+      <p class="orig-instr">Read an interview in which an Irish-Australian writer called Patrick O'Reilly
+        is talking about the Irish-Gaelic language, and answer questions 8–15 choosing option A, B, C or D
+        which best fits according to the text.</p>
+
+      <div class="passage">
+        <p><span class="sp b">Interviewer:</span> Good evening, everyone. With me in the studio today is Patrick O'Reilly, a third-generation Irish-Australian who is a writer and broadcaster and passionate supporter of the Irish-Gaelic language. Welcome, Patrick.</p>
+        <p><span class="sp">Patrick:</span> Thank you, Sinead.</p>
+        <p><span class="sp b">Interviewer:</span> Tell me Patrick, what significance does Irish have for you?</p>
+        <p><span class="sp">Patrick:</span> Well, as you said, I'm an Irish-Australian. Irish is my second language; I didn't learn it in Ireland, but here in Australia. In the 18th century it was the first language of many of the Irish people who settled here.</p>
+        <p><span class="sp b">Interviewer:</span> And didn't it almost slip away at one point?</p>
+        <p><span class="sp">Patrick:</span> That's right, but it never quite vanished. So to me, Irish is a language of this country. It's in the streets of a Melbourne suburb, the heat of Australian summers. It's the language in which I speak to my daughter, in which I broadcast and in which I write. I'm conscious of its history here.</p>
+        <p><span class="sp b">Interviewer:</span> How do you feel about the language itself?</p>
+        <p><span class="sp">Patrick:</span> Well, Irish is a language of passionate songs, and it has one of the oldest literatures in western Europe. It's descended from the language of those Celts who arrived in the British Isles at the end of the Bronze Age, so it dates back thousands of years. But for me, what is truly remarkable is that when Ireland finally became independent early in the last century, the Irish language acquired renewed importance as a vehicle of scholarship. Now it has a television network and has achieved something inconceivable, even 30 years ago: it has also become trendy and positively cool today.</p>
+        <p><span class="sp b">Interviewer:</span> And what made you want to learn Irish as a language?</p>
+        <p><span class="sp">Patrick:</span> You may well ask! When I began learning the language my enthusiasm was viewed as eccentric.</p>
+        <p><span class="sp b">Interviewer:</span> Why?</p>
+        <p><span class="sp">Patrick:</span> Well, some people thought that Irish-Gaelic was dead, like Latin, although in fact it was still spoken as a first language by a few thousand people on the west coast of Ireland. So why did I learn it? Ireland wasn't a part of my childhood in any significant way. My great-grandparents had come here from Southern Ireland during the Gold Rush, and we had become solidly Australian. But I liked languages and the worlds they could reveal. Irish promised me a world of my own. I was conscious, I think, that my people's past lay elsewhere.</p>
+        <p><span class="sp b">Interviewer:</span> And your Irish ancestry has played a big part in your writing too, I believe?</p>
+        <p><span class="sp">Patrick:</span> That's right. The stories I write in Irish are published only in Ireland, yet they deal with the peculiar situation of the language here in Australia. If I write in English, I use a language which has had time to adapt to a new history, a new society. It has its own accent, its own everyday language. This has also happened with Italian, but Italian is the first or second language of a whole community. Irish in this country is the language of scattered individuals, so it hasn't adapted to modern needs. As an Australian who writes in Irish, I must bring about the linguistic adaptation which has taken 200 years to accomplish in English.</p>
+        <p><span class="sp b">Interviewer:</span> And yet you implied earlier that Irish had become fashionable. Is that the case in Australia?</p>
+        <p><span class="sp">Patrick:</span> Well, yes, here it actually means that every year a number of people go to Irish language classes, and that a minority eventually become fluent. Irish has become a new trend because Ireland itself is now a major draw for tourists. Thousands of Australians visit Ireland every year to seek the house their great-grandmother was born in, Irish relatives. Others want to see the green landscape of old legends. For some, the Irish language is part of all this. I once interviewed a young woman from Melbourne who became so fascinated by traditional Irish singing that she learned Irish and now works in the Aran Islands off the coast of Ireland!</p>
+        <p><span class="sp b">Interviewer:</span> And what other motivation would Australians have for learning Irish?</p>
+        <p><span class="sp">Patrick:</span> Well, many will tell you that it's something to do with their interest in languages. But I would say that other motives are concealed in this phrase - motives as various as the individuals. It's also true, surely, that it allows the expression of an aspect of identity long suppressed, yet felt to be vital. Few people can bear to be rootless. We must all come from somewhere, and language is a fundamental part of identity. Not many feel the need to explore their past by learning Irish, but that even a few should do so, is significant.</p>
+        <p><span class="sp b">Interviewer:</span> Thank you, Patrick, it's been interesting talking to you.</p>
+        <p><span class="sp">Patrick:</span> Thank you.</p>
+      </div>
+
+      <div class="q-grid">
+        <div class="q-card">
+          <span class="q-task">Задание 8</span>
+          <p class="q-text">Patrick’s offspring DOESN’T speak the Irish-Gaelic language.</p>
+          <div class="mc-options stack" data-correct="b">
+            <label class="mc-option"><input type="radio" name="r8" value="a"><span class="mc-bullet">A</span> TRUE</label>
+            <label class="mc-option"><input type="radio" name="r8" value="b"><span class="mc-bullet">B</span> FALSE</label>
+            <label class="mc-option"><input type="radio" name="r8" value="c"><span class="mc-bullet">C</span> NOT STATED</label>
+          </div>
+        </div>
+
+        <div class="q-card">
+          <span class="q-task">Задание 9</span>
+          <p class="q-text">There are TV channels in Australia that broadcast in Irish.</p>
+          <div class="mc-options stack" data-correct="c">
+            <label class="mc-option"><input type="radio" name="r9" value="a"><span class="mc-bullet">A</span> TRUE</label>
+            <label class="mc-option"><input type="radio" name="r9" value="b"><span class="mc-bullet">B</span> FALSE</label>
+            <label class="mc-option"><input type="radio" name="r9" value="c"><span class="mc-bullet">C</span> NOT STATED</label>
+          </div>
+        </div>
+
+        <div class="q-card">
+          <span class="q-task">Задание 10</span>
+          <p class="q-text">Why is the Irish language significant to Patrick?</p>
+          <div class="mc-options stack" data-correct="d">
+            <label class="mc-option"><input type="radio" name="r10" value="a"><span class="mc-bullet">A</span> It was spoken to him when he was a child.</label>
+            <label class="mc-option"><input type="radio" name="r10" value="b"><span class="mc-bullet">B</span> It evokes city life in a particular era.</label>
+            <label class="mc-option"><input type="radio" name="r10" value="c"><span class="mc-bullet">C</span> It came close to disappearing at one time.</label>
+            <label class="mc-option"><input type="radio" name="r10" value="d"><span class="mc-bullet">D</span> It is a major part of his cultural heritage.</label>
+          </div>
+        </div>
+
+        <div class="q-card">
+          <span class="q-task">Задание 11</span>
+          <p class="q-text">Which aspect of Irish has particularly impressed Patrick?</p>
+          <div class="mc-options stack" data-correct="c">
+            <label class="mc-option"><input type="radio" name="r11" value="a"><span class="mc-bullet">A</span> its age as a language</label>
+            <label class="mc-option"><input type="radio" name="r11" value="b"><span class="mc-bullet">B</span> its suitability for song lyrics</label>
+            <label class="mc-option"><input type="radio" name="r11" value="c"><span class="mc-bullet">C</span> its success in the modern world</label>
+            <label class="mc-option"><input type="radio" name="r11" value="d"><span class="mc-bullet">D</span> its role in broadcasting</label>
+          </div>
+        </div>
+
+        <div class="q-card">
+          <span class="q-task">Задание 12</span>
+          <p class="q-text">Why was Patrick keen to learn Irish?</p>
+          <div class="mc-options stack" data-correct="c">
+            <label class="mc-option"><input type="radio" name="r12" value="a"><span class="mc-bullet">A</span> He lacked a strong identity as an Australian.</label>
+            <label class="mc-option"><input type="radio" name="r12" value="b"><span class="mc-bullet">B</span> He was reacting against other people's views.</label>
+            <label class="mc-option"><input type="radio" name="r12" value="c"><span class="mc-bullet">C</span> He was aware that it would broaden his horizons.</label>
+            <label class="mc-option"><input type="radio" name="r12" value="d"><span class="mc-bullet">D</span> He wanted to be actively involved in its revival.</label>
+          </div>
+        </div>
+
+        <div class="q-card">
+          <span class="q-task">Задание 13</span>
+          <p class="q-text">According to Patrick, what makes Irish different from other languages in Australia?</p>
+          <div class="mc-options stack" data-correct="d">
+            <label class="mc-option"><input type="radio" name="r13" value="a"><span class="mc-bullet">A</span> It is impossible to show how it sounds.</label>
+            <label class="mc-option"><input type="radio" name="r13" value="b"><span class="mc-bullet">B</span> It is not a language published in Australia.</label>
+            <label class="mc-option"><input type="radio" name="r13" value="c"><span class="mc-bullet">C</span> It is used as a second language.</label>
+            <label class="mc-option"><input type="radio" name="r13" value="d"><span class="mc-bullet">D</span> It has not gone through a process of evolution.</label>
+          </div>
+        </div>
+
+        <div class="q-card">
+          <span class="q-task">Задание 14</span>
+          <p class="q-text">What reason does Patrick give for Irish becoming fashionable?</p>
+          <div class="mc-options stack" data-correct="b">
+            <label class="mc-option"><input type="radio" name="r14" value="a"><span class="mc-bullet">A</span> Speaking languages fluently has become a status symbol.</label>
+            <label class="mc-option"><input type="radio" name="r14" value="b"><span class="mc-bullet">B</span> It is associated with the popularity of the country.</label>
+            <label class="mc-option"><input type="radio" name="r14" value="c"><span class="mc-bullet">C</span> It is seen as the language of well-known fairy tales.</label>
+            <label class="mc-option"><input type="radio" name="r14" value="d"><span class="mc-bullet">D</span> Many Irish-Australians now aspire to live in Ireland.</label>
+          </div>
+        </div>
+
+        <div class="q-card">
+          <span class="q-task">Задание 15</span>
+          <p class="q-text">What does Patrick say about other people's explanations of why they are learning Irish?</p>
+          <div class="mc-options stack" data-correct="a">
+            <label class="mc-option"><input type="radio" name="r15" value="a"><span class="mc-bullet">A</span> They may not reveal the whole truth.</label>
+            <label class="mc-option"><input type="radio" name="r15" value="b"><span class="mc-bullet">B</span> They show they are trying to reassure themselves.</label>
+            <label class="mc-option"><input type="radio" name="r15" value="c"><span class="mc-bullet">C</span> They reveal a lack of self-awareness.</label>
+            <label class="mc-option"><input type="radio" name="r15" value="d"><span class="mc-bullet">D</span> They indicate that people feel little need to justify themselves.</label>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-ghost" onclick="switchTabByName('use')">Next: Use of English →</button>
+      </div>
+    </div>
+
+  </div><!-- /tab-read -->
+
+  <!-- ══════════════════════════════════════════════════════════
+       SECTION 3 — USE OF ENGLISH (40 points)
+  ══════════════════════════════════════════════════════════ -->
+  <div class="tab-content" id="tab-use">
+
+    <div class="section-head">
+      <h2>Use of English</h2>
+      <div class="sh-meta">Time: 50 minutes &nbsp;·&nbsp; (40 points)</div>
+    </div>
+
+    <div class="timer-box">
+      <div class="timer-clock" id="clock-use">50:00</div>
+      <button class="btn-mini" onclick="toggleTimer('use')" id="tbtn-use">Start</button>
+      <button class="btn-mini" onclick="resetTimer('use')">Reset</button>
+      <div class="timer-hint">Optional — the real paper gives you 50 minutes for all four tasks below.</div>
+    </div>
+
+    <!-- ── Задание 16 / Task 1 — word formation (12 points) ── -->
+    <div class="exercise" id="ex-task1">
+      <span class="task-num">Задание 16 · Task 1 · 12 points</span>
+      <div class="exercise-label">Word Formation</div>
+      <p class="orig-instr">For items 1–12, read the text below. Use the word given in brackets to form
+        a new word that fits in the provided space before the brackets. There is an example at the
+        beginning (0).</p>
+
+      <div class="example-box">Example: &nbsp;0 &nbsp;DAILY</div>
+
+      <div class="wf-text">
+        <h4>Moscow City Break</h4>
+        <p>Are you tired of <u>daily</u> <span class="wf-cue">DAY</span> routine? Would you like to have
+          a short break in one of the European cities? Have you thought of Moscow city break?
+          Maybe it is time to get acquainted with a long and fascinating history of Russia and its
+          cultural heritage? It is high time you visited Moscow, the city with
+          <input class="blank wf" id="u1" data-answer="fabulous|fabled" placeholder="1"><span class="wf-cue">FABLE</span><span class="key" data-key="FABULOUS"></span>
+          history,
+          <input class="blank wf" id="u2" data-answer="numerous" placeholder="2"><span class="wf-cue">NUMBER</span><span class="key" data-key="NUMEROUS"></span>
+          museums and turbulent nightlife!</p>
+
+        <h4>How far is Moscow?</h4>
+        <p>Moscow is not so far from Europe. It'll take you only a few hours to get from London, Paris
+          or any other European capitals. A Moscow city break can be easily included in your European
+          trip itinerary.</p>
+
+        <h4>When to come?</h4>
+        <p>That's the first question many people ask. To give an unambiguous answer is tough. The most
+          experienced would reply the best season is summer. Russian "summer" usually comes in May and
+          stays up to mid-September. The average July temperature is around 25 C (76 F). Warm weather
+          and short nights favor long walks around Moscow.</p>
+        <p>Planning your Moscow city break keep in mind that summer is also the busiest tourist season.
+          Why not come in a quieter time of the year? Moscow is so charming in the early May, when the
+          nature is waking up and lilac, cherry, chestnut trees are blossoming. Early autumn is also
+          majestic; October brings the stunning colors of falling leaves. The most
+          <input class="blank wf" id="u3" data-answer="courageous" placeholder="3"><span class="wf-cue">COURAGE</span><span class="key" data-key="COURAGEOUS"></span>
+          are welcomed in winter time.
+          <input class="blank wf" id="u4" data-answer="picturesque" placeholder="4"><span class="wf-cue">PICTURE</span><span class="key" data-key="PICTURESQUE"></span>
+          snowy scenery will make your city break to Moscow the most
+          <input class="blank wf" id="u5" data-answer="memorable" placeholder="5"><span class="wf-cue">MEMORY</span><span class="key" data-key="MEMORABLE"></span>.
+          Yes, it's cold (around – 16 C in January), but you'll enjoy this season if you've prepared
+          well. Just pack enough of
+          <input class="blank wf" id="u6" data-answer="layers" placeholder="6"><span class="wf-cue">LAY</span><span class="key" data-key="LAYERS"></span>,
+          as it's usually very cold outside and hot inside. Museums are empty and hotels and air
+          companies usually offer good
+          <input class="blank wf" id="u7" data-answer="discounts" placeholder="7"><span class="wf-cue">COUNT</span><span class="key" data-key="DISCOUNTS"></span>.
+          Winter
+          <input class="blank wf" id="u8" data-answer="amusements" placeholder="8"><span class="wf-cue">AMUSE</span><span class="key" data-key="AMUSEMENTS"></span>
+          like skiing, skating (on Red Square!), playing snowballs, sleighing (or may be ice-swimming :)
+          will give you an
+          <input class="blank wf" id="u9" data-answer="enormous" placeholder="9"><span class="wf-cue">NORM</span><span class="key" data-key="ENORMOUS"></span>
+          joy.</p>
+
+        <h4>Is it expensive?</h4>
+        <p>Moscow is not a common Cheap City Breaks destination. It is often voted as one of the most
+          expensive cities in the world. But this is not always true. A budget hotel will cost you
+          around 80 EUR per night; a dorm bed in hostel can be only 12 EUR, a meal in a local
+          restaurant can be under 10 EUR. Public transport (metro) in Moscow is convenient and
+          <input class="blank wf" id="u10" data-answer="inexpensive" placeholder="10"><span class="wf-cue">EXPENSE</span><span class="key" data-key="INEXPENSIVE"></span>.
+          Most of the museum
+          <input class="blank wf" id="u11" data-answer="entrances|entries" placeholder="11"><span class="wf-cue">ENTER</span><span class="key" data-key="ENTRANCES"></span>
+          cost 5-7 EUR and there're a lot of free
+          <input class="blank wf" id="u12" data-answer="attractions" placeholder="12"><span class="wf-cue">ATTRACT</span><span class="key" data-key="ATTRACTIONS"></span>
+          to keep a traveler busy. A Moscow City break can appear a good value for money and there're
+          many ways to do the capital of Russia on a budget.</p>
+      </div>
+    </div>
+
+    <!-- ── Задание 17 / Task 2 — verb + trio matching (8 points) ── -->
+    <div class="exercise" id="ex-task2">
+      <span class="task-num">Задание 17 · Task 2 · 8 points</span>
+      <div class="exercise-label">Collocations</div>
+      <p class="orig-instr">For the following items, match verbs with trios to form meaningful
+        collocations. There is an example at the beginning. Two trios are not used.</p>
+
+      <div class="example-box">Example: &nbsp;0 &nbsp;make &nbsp;→&nbsp; D</div>
+
+      <div class="pair-grid">
+        <div>
+          <div class="answer-row"><span class="ar-num">0</span><span class="ar-txt">make</span>
+            <select class="exam-select" disabled><option>D</option></select></div>
+          <div class="answer-row"><span class="ar-num">1</span><span class="ar-txt">save</span>
+            <select class="exam-select" id="t2-1" data-answer="E"><option value=""></option></select>
+            <span class="key" data-key="E"></span></div>
+          <div class="answer-row"><span class="ar-num">2</span><span class="ar-txt">lose</span>
+            <select class="exam-select" id="t2-2" data-answer="I"><option value=""></option></select>
+            <span class="key" data-key="I"></span></div>
+          <div class="answer-row"><span class="ar-num">3</span><span class="ar-txt">put on</span>
+            <select class="exam-select" id="t2-3" data-answer="F"><option value=""></option></select>
+            <span class="key" data-key="F"></span></div>
+          <div class="answer-row"><span class="ar-num">4</span><span class="ar-txt">deliver</span>
+            <select class="exam-select" id="t2-4" data-answer="J"><option value=""></option></select>
+            <span class="key" data-key="J"></span></div>
+          <div class="answer-row"><span class="ar-num">5</span><span class="ar-txt">pass</span>
+            <select class="exam-select" id="t2-5" data-answer="B"><option value=""></option></select>
+            <span class="key" data-key="B"></span></div>
+          <div class="answer-row"><span class="ar-num">6</span><span class="ar-txt">make up</span>
+            <select class="exam-select" id="t2-6" data-answer="C"><option value=""></option></select>
+            <span class="key" data-key="C"></span></div>
+          <div class="answer-row"><span class="ar-num">7</span><span class="ar-txt">go on</span>
+            <select class="exam-select" id="t2-7" data-answer="K"><option value=""></option></select>
+            <span class="key" data-key="K"></span></div>
+          <div class="answer-row"><span class="ar-num">8</span><span class="ar-txt">pay</span>
+            <select class="exam-select" id="t2-8" data-answer="H"><option value=""></option></select>
+            <span class="key" data-key="H"></span></div>
+        </div>
+
+        <div class="opt-box">
+          <div class="opt-row"><div class="opt-letter">A</div><div class="opt-body">old<br>a beard<br>vegetables</div></div>
+          <div class="opt-row"><div class="opt-letter">B</div><div class="opt-body">the salt<br>a test<br>a law</div></div>
+          <div class="opt-row"><div class="opt-letter">C</div><div class="opt-body">a quarrel<br>a story<br>your mind</div></div>
+          <div class="opt-row"><div class="opt-letter">D</div><div class="opt-body">a mistake<br>a bed<br>a fuss</div></div>
+          <div class="opt-row"><div class="opt-letter">E</div><div class="opt-body">money<br>someone from drowning<br>old stamps</div></div>
+          <div class="opt-row"><div class="opt-letter">F</div><div class="opt-body">the light<br>a lot of weight<br>your hat</div></div>
+          <div class="opt-row"><div class="opt-letter">G</div><div class="opt-body">trains<br>your clothes<br>a £10 note</div></div>
+          <div class="opt-row"><div class="opt-letter">H</div><div class="opt-body">a compliment<br>a bill<br>attention</div></div>
+          <div class="opt-row"><div class="opt-letter">I</div><div class="opt-body">your way<br>a purse<br>your temper</div></div>
+          <div class="opt-row"><div class="opt-letter">J</div><div class="opt-body">a speech<br>a baby<br>a letter</div></div>
+          <div class="opt-row"><div class="opt-letter">K</div><div class="opt-body">a journey<br>a diet<br>a strike</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Задание 18 / Task 3 — complaints (5 points) ── -->
+    <div class="exercise" id="ex-task3">
+      <span class="task-num">Задание 18 · Task 3 · 5 points</span>
+      <div class="exercise-label">Matching</div>
+      <p class="orig-instr">For items 1–5, match complaints from the dissatisfied diners of a busy
+        restaurant with dishes on the menu A–F. There is an example at the beginning.</p>
+
+      <div class="example-box">Example: &nbsp;0 &nbsp;It’s extremely tough &nbsp;→&nbsp; D</div>
+
+      <div class="pair-grid">
+        <div>
+          <div class="answer-row"><span class="ar-num">0</span><span class="ar-txt">It’s extremely tough</span>
+            <select class="exam-select" disabled><option>D</option></select></div>
+          <div class="answer-row"><span class="ar-num">1</span><span class="ar-txt">It’s awfully stale</span>
+            <select class="exam-select" id="t3-1" data-answer="C"><option value=""></option></select>
+            <span class="key" data-key="C"></span></div>
+          <div class="answer-row"><span class="ar-num">2</span><span class="ar-txt">It’s very bitter</span>
+            <select class="exam-select" id="t3-2" data-answer="A"><option value=""></option></select>
+            <span class="key" data-key="A"></span></div>
+          <div class="answer-row"><span class="ar-num">3</span><span class="ar-txt">It’s much too spicy</span>
+            <select class="exam-select" id="t3-3" data-answer="F"><option value=""></option></select>
+            <span class="key" data-key="F"></span></div>
+          <div class="answer-row"><span class="ar-num">4</span><span class="ar-txt">It’s not ripe enough</span>
+            <select class="exam-select" id="t3-4" data-answer="B"><option value=""></option></select>
+            <span class="key" data-key="B"></span></div>
+          <div class="answer-row"><span class="ar-num">5</span><span class="ar-txt">It’s horribly bony</span>
+            <select class="exam-select" id="t3-5" data-answer="E"><option value=""></option></select>
+            <span class="key" data-key="E"></span></div>
+        </div>
+
+        <div class="opt-box">
+          <div class="opt-row"><div class="opt-letter">A</div><div class="opt-body">coffee</div></div>
+          <div class="opt-row"><div class="opt-letter">B</div><div class="opt-body">fruit</div></div>
+          <div class="opt-row"><div class="opt-letter">C</div><div class="opt-body">bread</div></div>
+          <div class="opt-row"><div class="opt-letter">D</div><div class="opt-body">meat</div></div>
+          <div class="opt-row"><div class="opt-letter">E</div><div class="opt-body">fish</div></div>
+          <div class="opt-row"><div class="opt-letter">F</div><div class="opt-body">curry</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Задание 19 / Task 4 — multiple-choice cloze (15 points) ── -->
+    <div class="exercise" id="ex-task4">
+      <span class="task-num">Задание 19 · Task 4 · 15 points</span>
+      <div class="exercise-label">Multiple-Choice Cloze</div>
+      <p class="orig-instr">For items 1–15, read the text below and decide which answer (A, B, C or D)
+        best fits each gap. There is an example at the beginning (0).</p>
+
+      <div class="example-box">Example: &nbsp;0 &nbsp;A makes &nbsp;B puts &nbsp;C shows &nbsp;D presents &nbsp;→&nbsp; D</div>
+
+      <div class="wf-text" style="line-height:2;">
+        <h4>Spelling</h4>
+        <p>Spelling <b>(0) presents</b> a major problem to many students - and, indeed, native speakers -
+          of English. This is <b>(1) ___</b> surprising when you consider just how illogical the English
+          spelling <b>(2) ___</b> is. The spelling of such basic words as <i>right, through, once,</i> and
+          <i>who</i> seems to <b>(3) ___</b> no relation to their <b>(4) ___</b>. And how can the words
+          <i>go, sew,</i> and <i>though</i> all rhyme with <b>(5) ___</b> other?</p>
+        <p>There have been attempts in the <b>(6) ___</b> to reform English spelling. The playwright
+          George Bernard Shaw was an enthusiastic <b>(7) ___</b> for a more phonetic approach. In a clever
+          illustration of the absurdity of English spelling he suggested that the word <i>fish</i> be
+          <b>(8) ___</b> by the letters 'ghoti': the <i>gh</i> from <i>enough</i>, the <i>o</i> from
+          <i>women</i>, and the <i>ti</i> from <i>nation</i>. When he died in 1950, he <b>(9) ___</b> a
+          large part of his estate to promote spelling reform.</p>
+        <p>So why do we <b>(10) ___</b> in spelling words the way we do, <b>(11) ___</b> the efforts of
+          reformers like Shaw? One reason is that we are too <b>(12) ___</b> with the words as they are
+          currently spelled. It is certain that any change in the rules <b>(13) ___</b> be extremely
+          difficult, if not impossible, to <b>(14) ___</b>. Another is that there is <b>(15) ___</b> a
+          variety of regional accents within the English speaking world that it would be unfair to select
+          just one as the standard model for spelling.</p>
+      </div>
+
+      <div class="mc-q"><div class="mc-qnum">1</div><div class="mc-qbody">
+        <div class="mc-options chips" data-correct="b">
+          <label class="mc-option"><input type="radio" name="s1" value="a"><span class="mc-bullet">A</span> just</label>
+          <label class="mc-option"><input type="radio" name="s1" value="b"><span class="mc-bullet">B</span> hardly</label>
+          <label class="mc-option"><input type="radio" name="s1" value="c"><span class="mc-bullet">C</span> nearly</label>
+          <label class="mc-option"><input type="radio" name="s1" value="d"><span class="mc-bullet">D</span> strongly</label>
+        </div></div></div>
+
+      <div class="mc-q"><div class="mc-qnum">2</div><div class="mc-qbody">
+        <div class="mc-options chips" data-correct="a">
+          <label class="mc-option"><input type="radio" name="s2" value="a"><span class="mc-bullet">A</span> system</label>
+          <label class="mc-option"><input type="radio" name="s2" value="b"><span class="mc-bullet">B</span> procedure</label>
+          <label class="mc-option"><input type="radio" name="s2" value="c"><span class="mc-bullet">C</span> method</label>
+          <label class="mc-option"><input type="radio" name="s2" value="d"><span class="mc-bullet">D</span> schedule</label>
+        </div></div></div>
+
+      <div class="mc-q"><div class="mc-qnum">3</div><div class="mc-qbody">
+        <div class="mc-options chips" data-correct="d">
+          <label class="mc-option"><input type="radio" name="s3" value="a"><span class="mc-bullet">A</span> hold</label>
+          <label class="mc-option"><input type="radio" name="s3" value="b"><span class="mc-bullet">B</span> keep</label>
+          <label class="mc-option"><input type="radio" name="s3" value="c"><span class="mc-bullet">C</span> carry</label>
+          <label class="mc-option"><input type="radio" name="s3" value="d"><span class="mc-bullet">D</span> bear</label>
+        </div></div></div>
+
+      <div class="mc-q"><div class="mc-qnum">4</div><div class="mc-qbody">
+        <div class="mc-options chips" data-correct="d">
+          <label class="mc-option"><input type="radio" name="s4" value="a"><span class="mc-bullet">A</span> voice</label>
+          <label class="mc-option"><input type="radio" name="s4" value="b"><span class="mc-bullet">B</span> speech</label>
+          <label class="mc-option"><input type="radio" name="s4" value="c"><span class="mc-bullet">C</span> vocation</label>
+          <label class="mc-option"><input type="radio" name="s4" value="d"><span class="mc-bullet">D</span> pronunciation</label>
+        </div></div></div>
+
+      <div class="mc-q"><div class="mc-qnum">5</div><div class="mc-qbody">
+        <div class="mc-options chips" data-correct="c">
+          <label class="mc-option"><input type="radio" name="s5" value="a"><span class="mc-bullet">A</span> the</label>
+          <label class="mc-option"><input type="radio" name="s5" value="b"><span class="mc-bullet">B</span> every</label>
+          <label class="mc-option"><input type="radio" name="s5" value="c"><span class="mc-bullet">C</span> each</label>
+          <label class="mc-option"><input type="radio" name="s5" value="d"><span class="mc-bullet">D</span> one</label>
+        </div></div></div>
+
+      <div class="mc-q"><div class="mc-qnum">6</div><div class="mc-qbody">
+        <div class="mc-options chips" data-correct="c">
+          <label class="mc-option"><input type="radio" name="s6" value="a"><span class="mc-bullet">A</span> history</label>
+          <label class="mc-option"><input type="radio" name="s6" value="b"><span class="mc-bullet">B</span> years</label>
+          <label class="mc-option"><input type="radio" name="s6" value="c"><span class="mc-bullet">C</span> past</label>
+          <label class="mc-option"><input type="radio" name="s6" value="d"><span class="mc-bullet">D</span> ages</label>
+        </div></div></div>
+
+      <div class="mc-q"><div class="mc-qnum">7</div><div class="mc-qbody">
+        <div class="mc-options chips" data-correct="a">
+          <label class="mc-option"><input type="radio" name="s7" value="a"><span class="mc-bullet">A</span> campaigner</label>
+          <label class="mc-option"><input type="radio" name="s7" value="b"><span class="mc-bullet">B</span> demonstrator</label>
+          <label class="mc-option"><input type="radio" name="s7" value="c"><span class="mc-bullet">C</span> champion</label>
+          <label class="mc-option"><input type="radio" name="s7" value="d"><span class="mc-bullet">D</span> candidate</label>
+        </div></div></div>
+
+      <div class="mc-q"><div class="mc-qnum">8</div><div class="mc-qbody">
+        <div class="mc-options chips" data-correct="b">
+          <label class="mc-option"><input type="radio" name="s8" value="a"><span class="mc-bullet">A</span> described</label>
+          <label class="mc-option"><input type="radio" name="s8" value="b"><span class="mc-bullet">B</span> represented</label>
+          <label class="mc-option"><input type="radio" name="s8" value="c"><span class="mc-bullet">C</span> signed</label>
+          <label class="mc-option"><input type="radio" name="s8" value="d"><span class="mc-bullet">D</span> written</label>
+        </div></div></div>
+
+      <div class="mc-q"><div class="mc-qnum">9</div><div class="mc-qbody">
+        <div class="mc-options chips" data-correct="b">
+          <label class="mc-option"><input type="radio" name="s9" value="a"><span class="mc-bullet">A</span> inherited</label>
+          <label class="mc-option"><input type="radio" name="s9" value="b"><span class="mc-bullet">B</span> left</label>
+          <label class="mc-option"><input type="radio" name="s9" value="c"><span class="mc-bullet">C</span> gave</label>
+          <label class="mc-option"><input type="radio" name="s9" value="d"><span class="mc-bullet">D</span> divided</label>
+        </div></div></div>
+
+      <div class="mc-q"><div class="mc-qnum">10</div><div class="mc-qbody">
+        <div class="mc-options chips" data-correct="d">
+          <label class="mc-option"><input type="radio" name="s10" value="a"><span class="mc-bullet">A</span> insist</label>
+          <label class="mc-option"><input type="radio" name="s10" value="b"><span class="mc-bullet">B</span> continue</label>
+          <label class="mc-option"><input type="radio" name="s10" value="c"><span class="mc-bullet">C</span> keep</label>
+          <label class="mc-option"><input type="radio" name="s10" value="d"><span class="mc-bullet">D</span> persist</label>
+        </div></div></div>
+
+      <div class="mc-q"><div class="mc-qnum">11</div><div class="mc-qbody">
+        <div class="mc-options chips" data-correct="b">
+          <label class="mc-option"><input type="radio" name="s11" value="a"><span class="mc-bullet">A</span> in spite</label>
+          <label class="mc-option"><input type="radio" name="s11" value="b"><span class="mc-bullet">B</span> despite</label>
+          <label class="mc-option"><input type="radio" name="s11" value="c"><span class="mc-bullet">C</span> however</label>
+          <label class="mc-option"><input type="radio" name="s11" value="d"><span class="mc-bullet">D</span> although</label>
+        </div></div></div>
+
+      <div class="mc-q"><div class="mc-qnum">12</div><div class="mc-qbody">
+        <div class="mc-options chips" data-correct="d">
+          <label class="mc-option"><input type="radio" name="s12" value="a"><span class="mc-bullet">A</span> accustomed</label>
+          <label class="mc-option"><input type="radio" name="s12" value="b"><span class="mc-bullet">B</span> used</label>
+          <label class="mc-option"><input type="radio" name="s12" value="c"><span class="mc-bullet">C</span> friendly</label>
+          <label class="mc-option"><input type="radio" name="s12" value="d"><span class="mc-bullet">D</span> familiar</label>
+        </div></div></div>
+
+      <div class="mc-q"><div class="mc-qnum">13</div><div class="mc-qbody">
+        <div class="mc-options chips" data-correct="a">
+          <label class="mc-option"><input type="radio" name="s13" value="a"><span class="mc-bullet">A</span> would</label>
+          <label class="mc-option"><input type="radio" name="s13" value="b"><span class="mc-bullet">B</span> might</label>
+          <label class="mc-option"><input type="radio" name="s13" value="c"><span class="mc-bullet">C</span> ought</label>
+          <label class="mc-option"><input type="radio" name="s13" value="d"><span class="mc-bullet">D</span> should</label>
+        </div></div></div>
+
+      <div class="mc-q"><div class="mc-qnum">14</div><div class="mc-qbody">
+        <div class="mc-options chips" data-correct="b">
+          <label class="mc-option"><input type="radio" name="s14" value="a"><span class="mc-bullet">A</span> require</label>
+          <label class="mc-option"><input type="radio" name="s14" value="b"><span class="mc-bullet">B</span> enforce</label>
+          <label class="mc-option"><input type="radio" name="s14" value="c"><span class="mc-bullet">C</span> make</label>
+          <label class="mc-option"><input type="radio" name="s14" value="d"><span class="mc-bullet">D</span> oblige</label>
+        </div></div></div>
+
+      <div class="mc-q"><div class="mc-qnum">15</div><div class="mc-qbody">
+        <div class="mc-options chips" data-correct="c">
+          <label class="mc-option"><input type="radio" name="s15" value="a"><span class="mc-bullet">A</span> many</label>
+          <label class="mc-option"><input type="radio" name="s15" value="b"><span class="mc-bullet">B</span> quite</label>
+          <label class="mc-option"><input type="radio" name="s15" value="c"><span class="mc-bullet">C</span> such</label>
+          <label class="mc-option"><input type="radio" name="s15" value="d"><span class="mc-bullet">D</span> so</label>
+        </div></div></div>
+
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="switchTabByName('score')">Go to my score →</button>
+      </div>
+    </div>
+
+  </div><!-- /tab-use -->
+
+  <!-- ══════════════════════════════════════════════════════════
+       SCORE — locked until all 55 items are answered
+  ══════════════════════════════════════════════════════════ -->
+  <div class="tab-content" id="tab-score">
+
+    <!-- shown while the paper is unfinished -->
+    <div id="scoreLocked">
+      <div class="locked-card">
+        <div class="lock-ico">🔒</div>
+        <h3>Your score is locked</h3>
+        <p>Finish every task first — then the score appears and all the answers are revealed.<br>
+           Nothing is marked before that, so keep guessing sensibly rather than leaving gaps!</p>
+        <ul class="todo-list" id="todoList"></ul>
+      </div>
+    </div>
+
+    <!-- shown once everything is answered -->
+    <div id="scoreReady" style="display:none;">
+      <div class="exercise">
+        <div class="exercise-label">Ready</div>
+        <h3>All 55 items are answered. 🎉</h3>
+        <p>Press the button when you want to see how you did. After this, every answer on the page
+          is marked and the correct answers are shown.</p>
+        <div class="btn-row">
+          <button class="btn btn-primary" id="submitBtn" onclick="submitPaper()">Show my score 🏆</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- the result itself -->
+    <div id="scoreResult" style="display:none;">
+      <div class="exercise">
+        <div class="exercise-label">Result</div>
+        <div class="score-hero">
+          <div class="score-big"><span id="scTotal">0</span><small> / 55</small></div>
+          <div class="score-verdict" id="scVerdict"></div>
+        </div>
+
+        <div class="score-rows">
+          <div class="score-row">
+            <div class="score-row-top"><span>🎧 Listening</span><span id="scL">0 / 7</span></div>
+            <div class="score-track"><div class="score-meter m1" id="mL"></div></div>
+          </div>
+          <div class="score-row">
+            <div class="score-row-top"><span>📖 Reading</span><span id="scR">0 / 8</span></div>
+            <div class="score-track"><div class="score-meter m2" id="mR"></div></div>
+          </div>
+          <div class="score-row">
+            <div class="score-row-top"><span>✍️ Task 1 — Word formation</span><span id="scT1">0 / 12</span></div>
+            <div class="score-track"><div class="score-meter m3" id="mT1"></div></div>
+          </div>
+          <div class="score-row">
+            <div class="score-row-top"><span>✍️ Task 2 — Collocations</span><span id="scT2">0 / 8</span></div>
+            <div class="score-track"><div class="score-meter m4" id="mT2"></div></div>
+          </div>
+          <div class="score-row">
+            <div class="score-row-top"><span>✍️ Task 3 — Restaurant matching</span><span id="scT3">0 / 5</span></div>
+            <div class="score-track"><div class="score-meter m5" id="mT3"></div></div>
+          </div>
+          <div class="score-row">
+            <div class="score-row-top"><span>✍️ Task 4 — Cloze</span><span id="scT4">0 / 15</span></div>
+            <div class="score-track"><div class="score-meter m6" id="mT4"></div></div>
+          </div>
+        </div>
+
+        <p style="margin-top:24px; color:var(--muted); line-height:1.7;">
+          Go back through the three tabs: green = correct, red = wrong, and the green tag next to a
+          gap shows the answer that was expected. Write down every item you missed — that list is
+          your revision plan for the real first round.
+        </p>
+
+        <div class="btn-row">
+          <button class="btn btn-danger" onclick="restartPaper()">Clear everything and start again</button>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /tab-score -->
+
+</div><!-- /container -->
+
+<div class="save-indicator" id="saveIndicator">✓ Saved</div>
+
+<script>
+const LESSON_KEY = 'lesson-03';
+const TOTAL = 55;
+
+let data = {};
+try { data = JSON.parse(localStorage.getItem(LESSON_KEY)) || {}; } catch(e) {}
+
+function save(patch) {
+  Object.assign(data, patch);
+  localStorage.setItem(LESSON_KEY, JSON.stringify(data));
+  flashSaved();
+}
+let saveTimer;
+function flashSaved() {
+  const el = document.getElementById('saveIndicator');
+  el.classList.add('show');
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(() => el.classList.remove('show'), 1600);
+}
+
+// ── TABS ───────────────────────────────────────────────────────
+function switchTab(name, btn) {
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  btn.classList.add('active');
+  save({ activeTab: name });
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+function switchTabByName(name) {
+  const btn = document.querySelector('.tab-btn[onclick*="\'' + name + '\'"]');
+  if (btn) switchTab(name, btn);
+}
+
+// ── BUILD THE LETTER DROPDOWNS ─────────────────────────────────
+function fillSelect(sel, letters) {
+  letters.split('').forEach(L => {
+    const o = document.createElement('option');
+    o.value = L; o.textContent = L;
+    sel.appendChild(o);
+  });
+}
+document.querySelectorAll('#ex-task2 .exam-select[data-answer]').forEach(s => fillSelect(s, 'ABCDEFGHIJK'));
+document.querySelectorAll('#ex-task3 .exam-select[data-answer]').forEach(s => fillSelect(s, 'ABCDEF'));
+
+// ── AUTOSAVE ───────────────────────────────────────────────────
+function setupAutosave() {
+  document.querySelectorAll('.blank, .free-write').forEach(el => {
+    if (data[el.id] !== undefined) el.value = data[el.id];
+    el.addEventListener('input', () => {
+      save({ [el.id]: el.value });
+      updateProgress();
+    });
+  });
+  document.querySelectorAll('.exam-select[data-answer]').forEach(el => {
+    if (data[el.id] !== undefined) el.value = data[el.id];
+    el.addEventListener('change', () => {
+      save({ [el.id]: el.value });
+      updateProgress();
+    });
+  });
+  if (data.activeTab) {
+    const btn = document.querySelector('.tab-btn[onclick*="\'' + data.activeTab + '\'"]');
+    if (btn) {
+      document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.getElementById('tab-' + data.activeTab).classList.add('active');
+      btn.classList.add('active');
+    }
+  }
+}
+
+// ── MULTIPLE CHOICE (selection only — nothing is marked until you submit) ──
+document.querySelectorAll('.mc-option').forEach(label => {
+  label.addEventListener('click', () => {
+    if (data.submitted) return;                       // paper already handed in
+    const group = label.closest('.mc-options');
+    group.querySelectorAll('.mc-option').forEach(l => l.classList.remove('selected'));
+    label.classList.add('selected');
+    save({ ['mc-' + label.querySelector('input').name]: label.querySelector('input').value });
+    updateProgress();
+  });
+});
+function restoreMC() {
+  document.querySelectorAll('.mc-options').forEach(group => {
+    group.querySelectorAll('.mc-option').forEach(label => {
+      const saved = data['mc-' + label.querySelector('input').name];
+      if (saved && saved === label.querySelector('input').value) {
+        label.classList.add('selected');
+        label.querySelector('input').checked = true;
+      }
+    });
+  });
+}
+
+// ── PROGRESS ───────────────────────────────────────────────────
+function sectionCounts() {
+  const mcDone = sel => [...document.querySelectorAll(sel + ' .mc-options')]
+                          .filter(g => g.querySelector('.mc-option.selected')).length;
+  const blankDone = sel => [...document.querySelectorAll(sel)]
+                          .filter(i => i.value.trim() !== '').length;
+  const selDone = sel => [...document.querySelectorAll(sel)]
+                          .filter(s => s.value !== '').length;
+  return [
+    { key: 'Listening',                label: '🎧 Listening',        done: mcDone('#ex-listen'),                     max: 7  },
+    { key: 'Reading',                  label: '📖 Reading',          done: mcDone('#ex-read'),                       max: 8  },
+    { key: 'Task 1 · Word formation',  label: '✍️ Task 1',           done: blankDone('#ex-task1 .blank'),            max: 12 },
+    { key: 'Task 2 · Collocations',    label: '✍️ Task 2',           done: selDone('#ex-task2 .exam-select[data-answer]'), max: 8 },
+    { key: 'Task 3 · Restaurant',      label: '✍️ Task 3',           done: selDone('#ex-task3 .exam-select[data-answer]'), max: 5 },
+    { key: 'Task 4 · Cloze',           label: '✍️ Task 4',           done: mcDone('#ex-task4'),                      max: 15 }
+  ];
+}
+
+function updateProgress() {
+  const secs = sectionCounts();
+  const done = secs.reduce((a, s) => a + s.done, 0);
+
+  document.getElementById('pgCount').textContent = done + ' / ' + TOTAL;
+  document.getElementById('pgFill').style.width  = (done / TOTAL * 100) + '%';
+
+  const complete = done === TOTAL;
+  const scoreBtn = document.querySelectorAll('.tab-btn')[3];
+
+  if (!data.submitted) {
+    document.getElementById('pgHint').textContent =
+      complete ? '✅ All done — open “My Score”' : 'Score unlocks at ' + TOTAL + ' / ' + TOTAL;
+    scoreBtn.textContent = complete ? '🏆 My Score' : '🔒 My Score';
+    document.getElementById('scoreLocked').style.display = complete ? 'none'  : 'block';
+    document.getElementById('scoreReady').style.display  = complete ? 'block' : 'none';
+  }
+
+  // to-do list on the locked card
+  const list = document.getElementById('todoList');
+  list.innerHTML = '';
+  secs.forEach(s => {
+    const li = document.createElement('li');
+    li.className = s.done === s.max ? 'done' : '';
+    li.innerHTML = '<span>' + (s.done === s.max ? '✓ ' : '') + s.key + '</span><b>' + s.done + ' / ' + s.max + '</b>';
+    list.appendChild(li);
+  });
+}
+
+// ── MARKING (only ever runs after the paper is handed in) ──────
+function markEverything() {
+  const result = {};
+
+  const markMC = (sel) => {
+    let score = 0;
+    document.querySelectorAll(sel + ' .mc-options').forEach(group => {
+      const correct  = group.dataset.correct;
+      const selected = group.querySelector('.mc-option.selected');
+      group.querySelectorAll('.mc-option').forEach(l => l.classList.remove('correct','wrong'));
+      if (!selected) return;
+      const ok = selected.querySelector('input').value === correct;
+      if (ok) { selected.classList.add('correct'); score++; }
+      else {
+        selected.classList.add('wrong');
+        group.querySelectorAll('.mc-option').forEach(l => {
+          if (l.querySelector('input').value === correct) l.classList.add('correct');
+        });
+      }
+    });
+    return score;
+  };
+
+  result.L  = markMC('#ex-listen');
+  result.R  = markMC('#ex-read');
+  result.T4 = markMC('#ex-task4');
+
+  // Task 1 — word formation
+  let t1 = 0;
+  document.querySelectorAll('#ex-task1 .blank').forEach(inp => {
+    const val = inp.value.trim().toLowerCase();
+    const answers = (inp.dataset.answer || '').split('|').map(a => a.trim().toLowerCase());
+    inp.classList.remove('correct','wrong');
+    const ok = answers.includes(val);
+    inp.classList.add(ok ? 'correct' : 'wrong');
+    if (ok) t1++;
+    // the key span sits right after the <input> and its grey cue word
+    const cue   = inp.nextElementSibling;
+    const keyEl = cue && cue.nextElementSibling;
+    if (!ok && keyEl && keyEl.classList.contains('key')) keyEl.textContent = keyEl.dataset.key;
+  });
+  result.T1 = t1;
+
+  // Tasks 2 and 3 — letter dropdowns
+  const markSelects = (sel) => {
+    let score = 0;
+    document.querySelectorAll(sel + ' .exam-select[data-answer]').forEach(s => {
+      const ok = s.value === s.dataset.answer;
+      s.classList.remove('correct','wrong');
+      s.classList.add(ok ? 'correct' : 'wrong');
+      if (ok) score++;
+      const keyEl = s.parentElement.querySelector('.key');
+      if (keyEl && !ok) keyEl.textContent = keyEl.dataset.key;
+    });
+    return score;
+  };
+  result.T2 = markSelects('#ex-task2');
+  result.T3 = markSelects('#ex-task3');
+
+  document.body.classList.add('revealed');
+  return result;
+}
+
+function showResult(r) {
+  const total = r.L + r.R + r.T1 + r.T2 + r.T3 + r.T4;
+  const set = (id, val, max, meterId) => {
+    document.getElementById(id).textContent = val + ' / ' + max;
+    document.getElementById(meterId).style.width = (val / max * 100) + '%';
+  };
+  document.getElementById('scTotal').textContent = total;
+  set('scL',  r.L,  7,  'mL');
+  set('scR',  r.R,  8,  'mR');
+  set('scT1', r.T1, 12, 'mT1');
+  set('scT2', r.T2, 8,  'mT2');
+  set('scT3', r.T3, 5,  'mT3');
+  set('scT4', r.T4, 15, 'mT4');
+
+  const pct = total / TOTAL * 100;
+  const verdict =
+    pct >= 85 ? 'Excellent — that is a comfortable pass into the next round. 🌟' :
+    pct >= 70 ? 'Strong work — polish the weakest section and you are there. 💪' :
+    pct >= 50 ? 'A solid base. Look at the two lowest bars below and drill those. 📌' :
+                'Good that you did the whole paper — now we know exactly what to work on. 🔧';
+  document.getElementById('scVerdict').textContent = verdict;
+
+  document.getElementById('scoreLocked').style.display = 'none';
+  document.getElementById('scoreReady').style.display  = 'none';
+  document.getElementById('scoreResult').style.display = 'block';
+  document.querySelectorAll('.tab-btn')[3].textContent = '🏆 My Score';
+  document.getElementById('pgHint').textContent = 'Paper handed in — ' + total + ' / ' + TOTAL;
+}
+
+function submitPaper() {
+  const done = sectionCounts().reduce((a, s) => a + s.done, 0);
+  if (done < TOTAL) { updateProgress(); return; }      // safety net
+  const r = markEverything();
+  save({ submitted: true, result: r });
+  // lock the inputs so the marked paper stays as it was
+  document.querySelectorAll('#tab-use .blank, .exam-select[data-answer]').forEach(el => el.disabled = true);
+  showResult(r);
+}
+
+function restartPaper() {
+  if (!confirm('This clears every answer and your score. Start the whole paper again?')) return;
+  localStorage.removeItem(LESSON_KEY);
+  location.reload();
+}
+
+// ── OPTIONAL SECTION TIMERS ────────────────────────────────────
+const TIMERS = { listen: 15 * 60, read: 25 * 60, use: 50 * 60 };
+const tState = {};
+function fmt(s) {
+  const neg = s < 0; s = Math.abs(s);
+  return (neg ? '-' : '') + String(Math.floor(s / 60)).padStart(2, '0') + ':' + String(s % 60).padStart(2, '0');
+}
+function paintTimer(k) {
+  const el = document.getElementById('clock-' + k);
+  el.textContent = fmt(tState[k].left);
+  el.classList.toggle('over', tState[k].left <= 0);
+}
+function toggleTimer(k) {
+  if (!tState[k]) tState[k] = { left: TIMERS[k], id: null };
+  const btn = document.getElementById('tbtn-' + k);
+  if (tState[k].id) {
+    clearInterval(tState[k].id); tState[k].id = null; btn.textContent = 'Start';
+  } else {
+    btn.textContent = 'Pause';
+    tState[k].id = setInterval(() => { tState[k].left--; paintTimer(k); }, 1000);
+  }
+}
+function resetTimer(k) {
+  if (tState[k] && tState[k].id) clearInterval(tState[k].id);
+  tState[k] = { left: TIMERS[k], id: null };
+  document.getElementById('tbtn-' + k).textContent = 'Start';
+  paintTimer(k);
+}
+
+// ── INIT ───────────────────────────────────────────────────────
+setupAutosave();
+restoreMC();
+updateProgress();
+
+if (data.submitted) {
+  const r = markEverything();
+  document.querySelectorAll('#tab-use .blank, .exam-select[data-answer]').forEach(el => el.disabled = true);
+  showResult(data.result || r);
+}
+</script>
+
+</body>
+</html>

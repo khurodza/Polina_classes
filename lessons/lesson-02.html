@@ -117,6 +117,46 @@
     .listen-header audio { flex:1; }
 
 
+    .spell-table { width:100%; border-collapse:collapse; margin-top:16px; }
+    .spell-table th { font-family:'Fraunces',Georgia,serif; font-size:1.05rem; font-weight:700; color:var(--text); text-align:center; padding:11px; border:1px solid var(--border); background:rgba(201,160,48,.12); }
+    .spell-table td { padding:12px 14px; border:1px solid var(--border); vertical-align:top; line-height:1.85; }
+    .spell-table .sp-num { width:40px; text-align:center; color:var(--muted); font-weight:700; font-size:.9rem; }
+    .spell-table .sp-ipa { width:155px; white-space:nowrap; color:var(--primary); font-weight:600; }
+    .spell-table .blank { min-width:160px; }
+    .exercise h3.big-instr {
+      font-family:'Fraunces',Georgia,serif;
+      font-size:1.55rem; font-weight:700; line-height:1.3;
+      color:var(--primary); margin-bottom:10px;
+    }
+    .lead-instr {
+      font-size:1.05rem; line-height:1.7; color:var(--text);
+      border-left:4px solid var(--accent); padding-left:16px; margin-bottom:6px;
+    }
+    .lead-instr b { color:var(--primary-dk); }
+    @media(max-width:560px){ .exercise h3.big-instr { font-size:1.3rem; } }
+
+    .check-one {
+      margin-left:7px; width:27px; height:27px; padding:0; border-radius:50%;
+      border:2px solid var(--border); background:transparent; color:var(--muted);
+      font-family:inherit; font-size:.82rem; line-height:1; cursor:pointer;
+      vertical-align:middle; transition:border-color .2s,color .2s,background .2s;
+    }
+    .check-one:hover { border-color:var(--primary); color:var(--primary); background:rgba(212,87,42,.06); }
+    .check-one.ok { border-color:var(--green); background:var(--green); color:#fff; }
+    .check-one.no { border-color:var(--red);   background:var(--red);   color:#fff; }
+
+    .spell-2col { display:grid; grid-template-columns:1fr 1fr; gap:0 22px; align-items:start; }
+    .spell-2col .spell-table { margin-top:12px; }
+    .spell-2col .sp-ipa { width:auto; }
+    .spell-2col .blank { min-width:120px; }
+    @media(max-width:620px){
+      .spell-table, .spell-table thead, .spell-table tbody, .spell-table tr, .spell-table td, .spell-table th { display:block; width:auto; }
+      .spell-table tr { border:1px solid var(--border); border-radius:10px; margin-bottom:12px; padding:4px 0; }
+      .spell-table td { border:none; padding:5px 14px; }
+      .spell-table .sp-num, .spell-table .sp-ipa { text-align:left; width:auto; }
+      .spell-2col { grid-template-columns:1fr; }
+    }
+
     @media(max-width:900px){
       .rule-cols.four-col { grid-template-columns:1fr 1fr; }
       .person-grid { grid-template-columns:1fr 1fr; }
@@ -1292,6 +1332,157 @@
        HOMEWORK
   ══════════════════════════════════════════════════════ -->
   <div class="tab-content" id="tab-hw">
+
+    <div class="exercise" id="hw-spelling">
+      <div class="exercise-label">Homework · Task 182</div>
+      <h3 class="big-instr">🔍 Crack the transcription — write out the correct spelling.</h3>
+      <p class="lead-instr">
+        Ten gaps from the story of <b>Sir Walter Scott</b>, the man who invented the historical novel.
+        Read the sounds on the right, work out the word, and spell it properly — English spelling
+        almost never plays fair, and that is exactly the point. Check each answer on its own with the
+        little <b>✓</b>, or mark all ten at the end.
+      </p>
+
+      <table class="spell-table">
+        <thead>
+          <tr><th colspan="3">Walter Scott</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="sp-num">1</td>
+            <td>Sir Walter Scott, 1st Baronet was a <input class="blank" id="hw-sp1" data-answer="prolific" placeholder="???"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button> Scottish historical novelist and poet popular throughout Europe during his time.</td>
+            <td class="sp-ipa">/prəˈlɪf.ɪk/</td>
+          </tr>
+          <tr>
+            <td class="sp-num">2</td>
+            <td>In some ways Scott was the first English-language <input class="blank" id="hw-sp2" data-answer="author" placeholder="???"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button> to have a truly international career in his lifetime, with many contemporary readers all over Europe, Australia, and North America.</td>
+            <td class="sp-ipa">/ˈɔː.θə/</td>
+          </tr>
+          <tr>
+            <td class="sp-num">3</td>
+            <td>His novels and <input class="blank" id="hw-sp3" data-answer="poetry" placeholder="???"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button> are still read, and many of his works remain classics of both English-language literature and of Scottish literature; famous titles include <i>Ivanhoe, Rob Roy, The Lady of The Lake, Waverley</i> and <i>The Heart of Midlothian</i>.</td>
+            <td class="sp-ipa">/ˈpəʊ.ɪ.tri/</td>
+          </tr>
+          <tr>
+            <td class="sp-num">4</td>
+            <td>Among the early <input class="blank" id="hw-sp4" data-answer="critics" placeholder="???"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button> of Scott was Mark Twain, who blamed Scott’s “romanticization of battle” for what he saw as the South’s decision to fight the American Civil War.</td>
+            <td class="sp-ipa">/ˈkrɪt.ɪks/</td>
+          </tr>
+          <tr>
+            <td class="sp-num">5</td>
+            <td>From being one of the most popular novelists of the 19th century, Scott suffered from a disastrous decline in <input class="blank" id="hw-sp5" data-answer="popularity" placeholder="???"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button> after the First World War.</td>
+            <td class="sp-ipa">/ˌpɒp.jəˈlær.ə.ti/</td>
+          </tr>
+          <tr>
+            <td class="sp-num">6</td>
+            <td>Scott’s ponderousness and prolixity were fundamentally out of step with <input class="blank" id="hw-sp6" data-answer="modernist" placeholder="???"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button> sensibilities.</td>
+            <td class="sp-ipa">/ˈmɒd.ən.ɪst/</td>
+          </tr>
+          <tr>
+            <td class="sp-num">7</td>
+            <td>Nevertheless, Scott was responsible for two <input class="blank" id="hw-sp7" data-answer="major" placeholder="???"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button> trends that carry on to this day.</td>
+            <td class="sp-ipa">/ˈmeɪ.dʒə/</td>
+          </tr>
+          <tr>
+            <td class="sp-num">8</td>
+            <td>First, he essentially invented the modern historical <input class="blank" id="hw-sp8" data-answer="novel" placeholder="???"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button>; an enormous number of imitators would appear in the 19th century.</td>
+            <td class="sp-ipa">/ˈnɒv.əl/</td>
+          </tr>
+          <tr>
+            <td class="sp-num">9</td>
+            <td>Scott was also responsible, through a series of <input class="blank" id="hw-sp9" data-answer="pseudonymous" placeholder="???"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button> letters published in the Edinburgh Weekly News in 1826, for retaining the right of Scottish banks to issue their own banknotes.</td>
+            <td class="sp-ipa">/sjuːˈdɒn.ɪ.məs/</td>
+          </tr>
+          <tr>
+            <td class="sp-num">10</td>
+            <td>Sir Walter Scott is <input class="blank" id="hw-sp10" data-answer="commemorated" placeholder="???"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button> in Makars’ Court, outside The Writers’ Museum, Lawnmarket, Edinburgh.</td>
+            <td class="sp-ipa">/kəˈmem.ə.reɪtɪd/</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="checkBlanks('hw-spelling')">Check ✓</button>
+        <button class="btn btn-ghost"   onclick="resetBlanks('hw-spelling')">Try again</button>
+      </div>
+    </div>
+
+    <div class="exercise" id="hw-spelling2">
+      <div class="exercise-label">Homework · Task 12</div>
+      <h3 class="big-instr">🎧 Same sounds, different words — spell them right.</h3>
+      <p class="lead-instr">
+        Five <b>sneaky pairs</b> hiding in ten transcriptions. Sometimes only a stress mark or one
+        small vowel tells them apart, so say each word aloud before you write it. Get all ten and
+        you have beaten one of the nastiest spelling traps in English.
+      </p>
+
+      <div class="spell-2col">
+        <table class="spell-table">
+          <tbody>
+            <tr>
+              <td class="sp-num">1</td>
+              <td class="sp-ipa">/tʃəʊz/</td>
+              <td><input class="blank" id="hw-t12-1" data-answer="chose" placeholder="???"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button></td>
+            </tr>
+            <tr>
+              <td class="sp-num">2</td>
+              <td class="sp-ipa">/tʃɔɪs/</td>
+              <td><input class="blank" id="hw-t12-2" data-answer="choice" placeholder="???"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button></td>
+            </tr>
+            <tr>
+              <td class="sp-num">3</td>
+              <td class="sp-ipa">/ɪˈluː.ʒən/</td>
+              <td><input class="blank" id="hw-t12-3" data-answer="illusion" placeholder="???"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button></td>
+            </tr>
+            <tr>
+              <td class="sp-num">4</td>
+              <td class="sp-ipa">/əˈluː.ʒən/</td>
+              <td><input class="blank" id="hw-t12-4" data-answer="allusion" placeholder="???"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button></td>
+            </tr>
+            <tr>
+              <td class="sp-num">5</td>
+              <td class="sp-ipa">/ˈmæn.ʃən/</td>
+              <td><input class="blank" id="hw-t12-5" data-answer="mansion" placeholder="???"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button></td>
+            </tr>
+          </tbody>
+        </table>
+        <table class="spell-table">
+          <tbody>
+            <tr>
+              <td class="sp-num">6</td>
+              <td class="sp-ipa">/ˈmen.ʃən/</td>
+              <td><input class="blank" id="hw-t12-6" data-answer="mention" placeholder="???"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button></td>
+            </tr>
+            <tr>
+              <td class="sp-num">7</td>
+              <td class="sp-ipa">/dɪˈsent/</td>
+              <td><input class="blank" id="hw-t12-7" data-answer="descent|dissent" placeholder="???"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button></td>
+            </tr>
+            <tr>
+              <td class="sp-num">8</td>
+              <td class="sp-ipa">/ˈdiː.sənt/</td>
+              <td><input class="blank" id="hw-t12-8" data-answer="decent" placeholder="???"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button></td>
+            </tr>
+            <tr>
+              <td class="sp-num">9</td>
+              <td class="sp-ipa">/dɪˈzɜːt/</td>
+              <td><input class="blank" id="hw-t12-9" data-answer="dessert|desert" placeholder="???"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button></td>
+            </tr>
+            <tr>
+              <td class="sp-num">10</td>
+              <td class="sp-ipa">/ˈdez.ət/</td>
+              <td><input class="blank" id="hw-t12-10" data-answer="desert" placeholder="???"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="checkBlanks('hw-spelling2')">Check ✓</button>
+        <button class="btn btn-ghost"   onclick="resetBlanks('hw-spelling2')">Try again</button>
+      </div>
+    </div>
+
   </div><!-- /tab-hw -->
 
 </div><!-- /container -->
@@ -1344,22 +1535,41 @@ function setupAutosave() {
 }
 
 // ── FILL IN THE BLANKS (supports multiple containers) ──
+// Marks a single gap. If the gap has its own round check button next to it,
+// that button turns green/red too.
+function markBlank(inp) {
+  const strict = inp.dataset.case === 'strict';           // e.g. stress patterns: Oo ≠ oO
+  const norm = v => strict ? v.trim() : v.trim().toLowerCase();
+  const val = norm(inp.value);
+  const answers = (inp.dataset.answer || '').split('|').map(norm);
+  const btn = inp.nextElementSibling;
+  const hasBtn = btn && btn.classList && btn.classList.contains('check-one');
+  inp.classList.remove('correct','wrong');
+  if (hasBtn) { btn.classList.remove('ok','no'); btn.textContent = '✓'; }
+  if (!val) return;
+  const ok = answers.includes(val);
+  inp.classList.add(ok ? 'correct' : 'wrong');
+  if (hasBtn) { btn.classList.add(ok ? 'ok' : 'no'); btn.textContent = ok ? '✓' : '✕'; }
+}
+
+// One answer at a time — called by the little ✓ next to each gap
+function checkOne(btn) {
+  const inp = btn.previousElementSibling;
+  if (inp && inp.classList.contains('blank')) markBlank(inp);
+}
+
 function checkBlanks(containerId) {
   const sel = containerId ? '#' + containerId + ' .blank' : '.blank';
-  document.querySelectorAll(sel).forEach(inp => {
-    const strict = inp.dataset.case === 'strict';           // e.g. stress patterns: Oo ≠ oO
-    const norm = v => strict ? v.trim() : v.trim().toLowerCase();
-    const val = norm(inp.value);
-    const answers = (inp.dataset.answer || '').split('|').map(norm);
-    inp.classList.remove('correct','wrong');
-    if (!val) return;
-    inp.classList.add(answers.includes(val) ? 'correct' : 'wrong');
-  });
+  document.querySelectorAll(sel).forEach(markBlank);
 }
 function resetBlanks(containerId) {
   const sel = containerId ? '#' + containerId + ' .blank' : '.blank';
   document.querySelectorAll(sel).forEach(inp => {
     inp.value = ''; inp.classList.remove('correct','wrong');
+    const btn = inp.nextElementSibling;
+    if (btn && btn.classList && btn.classList.contains('check-one')) {
+      btn.classList.remove('ok','no'); btn.textContent = '✓';
+    }
     save({ [inp.id]: '' });
   });
 }
