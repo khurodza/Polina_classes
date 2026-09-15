@@ -226,6 +226,149 @@
     .m4 { background: var(--rose); }
     .m5 { background: var(--green); }
     .m6 { background: var(--red); }
+
+    /* ══ HOMEWORK — suffix reference tables ══════════════════ */
+    .suf-block { margin-bottom: 26px; }
+    .suf-title {
+      display: flex; align-items: center; gap: 10px;
+      font-family: 'Fraunces', Georgia, serif;
+      font-size: 1.18rem; font-weight: 700; margin-bottom: 10px;
+    }
+    .suf-title .dot { width: 13px; height: 13px; border-radius: 50%; flex: 0 0 13px; }
+    .suf-table {
+      width: 100%; border-collapse: separate; border-spacing: 0;
+      background: var(--card); border: 2px solid var(--border);
+      border-radius: var(--radius); overflow: hidden;
+    }
+    .suf-table th {
+      text-align: left; color: #fff; font-weight: 700;
+      font-size: .72rem; letter-spacing: .1em; text-transform: uppercase;
+      padding: 9px 15px;
+    }
+    .suf-table td {
+      padding: 10px 15px; border-top: 1px solid var(--border);
+      vertical-align: top; font-size: .96rem; line-height: 1.65;
+    }
+    .suf-table tbody tr:nth-child(even) { background: rgba(44,32,16,.025); }
+    .suf-table .c-suf  { white-space: nowrap; width: 1%; }
+    .suf-table .c-mean { color: var(--muted); font-size: .92rem; }
+    .suf-table .c-ex b { font-weight: 600; }
+    .sfx {
+      display: inline-block; font-weight: 700; font-size: .9rem;
+      padding: 3px 11px; border-radius: 99px; white-space: nowrap;
+    }
+    .suf-wrap { overflow-x: auto; }
+
+    /* one colour per family */
+    .g1 th { background: var(--primary);  } .g1 .sfx { color: var(--primary-dk); background: rgba(212,87,42,.14); }
+    .g2 th { background: var(--blue);     } .g2 .sfx { color: #3D6DA3;           background: rgba(95,142,196,.18); }
+    .g3 th { background: var(--green);    } .g3 .sfx { color: #416330;           background: rgba(91,140,69,.16); }
+    .g4 th { background: var(--rose);     } .g4 .sfx { color: #9C5171;           background: rgba(196,122,150,.18); }
+    .g5 th { background: var(--accent-dk);} .g5 .sfx { color: var(--accent-dk);  background: rgba(201,160,48,.20); }
+
+    /* the two things worth flagging */
+    .flag-box {
+      background: rgba(95,142,196,.08); border-left: 4px solid var(--blue);
+      border-radius: 10px; padding: 14px 18px; margin-bottom: 14px;
+      line-height: 1.8; font-size: .97rem;
+    }
+    .flag-box.gold { background: rgba(201,160,48,.10); border-left-color: var(--accent-dk); }
+    .flag-box h4 {
+      font-family: 'Fraunces', Georgia, serif; font-size: 1.02rem;
+      margin-bottom: 4px; color: var(--blue);
+    }
+    .flag-box.gold h4 { color: var(--accent-dk); }
+
+    /* ══ HOMEWORK — the drill ═══════════════════════════════ */
+    .hw-list { list-style: none; }
+    .hw-item {
+      display: flex; gap: 12px; align-items: baseline;
+      padding: 11px 0; border-bottom: 1px dashed var(--border);
+    }
+    .hw-item:last-child { border-bottom: none; }
+    .hw-n {
+      font-family: 'Fraunces', Georgia, serif; font-weight: 700;
+      color: var(--primary); min-width: 26px; flex: 0 0 26px;
+    }
+    .hw-q { flex: 1; line-height: 2.1; }
+    .hw-cue {
+      font-size: .78rem; font-weight: 700; letter-spacing: .06em;
+      color: var(--muted); background: var(--border);
+      padding: 2px 8px; border-radius: 6px; margin-left: 4px;
+      vertical-align: middle;
+    }
+    .hw-key {
+      display: none; margin-left: 8px; font-size: .85rem; font-weight: 700;
+      color: var(--green); background: rgba(91,140,69,.12);
+      padding: 2px 9px; border-radius: 6px;
+    }
+    .hw-key.show { display: inline-block; }
+    .blank.hw { min-width: 155px; }
+    .hw-select {
+      font: inherit; font-weight: 600; padding: 6px 11px; border-radius: 9px;
+      border: 2px solid var(--border); background: var(--bg);
+      color: var(--text); cursor: pointer;
+    }
+    .hw-select:focus  { border-color: var(--primary); outline: none; }
+    .hw-select.correct { border-color: var(--green); color: var(--green); }
+    .hw-select.wrong   { border-color: var(--red);   color: var(--red); }
+    .hw-score { font-weight: 700; color: var(--primary); margin-top: 14px; min-height: 1.4em; }
+
+    /* stress chips */
+    .syl-row {
+      display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+      padding: 11px 0; border-bottom: 1px dashed var(--border);
+    }
+    .syl-row:last-child { border-bottom: none; }
+    .syl-word { display: flex; gap: 5px; flex-wrap: wrap; }
+    .syl {
+      padding: 6px 13px; border-radius: 9px; border: 2px solid var(--border);
+      background: var(--card); cursor: pointer; font-weight: 600;
+      font-size: .98rem; transition: all .15s; user-select: none;
+    }
+    .syl:hover  { border-color: var(--primary); }
+    .syl.picked { background: var(--primary); border-color: var(--primary); color: #fff; }
+    .syl.ok     { background: var(--green); border-color: var(--green); color: #fff; }
+    .syl.no     { background: rgba(200,64,64,.10); border-color: var(--red); color: var(--red); }
+
+
+    /* Task 284 — the printed-paper table */
+    .t284 {
+      width: 100%; border-collapse: separate; border-spacing: 0;
+      background: var(--card); border: 2px solid var(--border);
+      border-radius: var(--radius); overflow: hidden;
+    }
+    .t284 th {
+      background: var(--primary); color: #fff; text-align: left; font-weight: 700;
+      font-size: .72rem; letter-spacing: .1em; text-transform: uppercase; padding: 9px 15px;
+    }
+    .t284 td {
+      padding: 13px 15px; border-top: 1px solid var(--border);
+      vertical-align: top; line-height: 2.05; font-size: 1rem;
+    }
+    .t284 tbody tr:nth-child(even) td { background: rgba(44,32,16,.025); }
+    .t284 .t-n {
+      width: 46px; text-align: center; font-family: 'Fraunces', Georgia, serif;
+      font-weight: 700; font-size: 1.05rem; color: var(--primary);
+    }
+    .t284 .t-cue { width: 1%; white-space: nowrap; text-align: center; }
+    .t284 .t-cue span {
+      display: inline-block; font-size: .78rem; font-weight: 700; letter-spacing: .07em;
+      padding: 4px 12px; border-radius: 99px;
+    }
+    /* cue pills cycle through the palette */
+    .t284 tbody tr:nth-child(5n+1) .t-cue span { color: var(--primary-dk); background: rgba(212,87,42,.14); }
+    .t284 tbody tr:nth-child(5n+2) .t-cue span { color: #3D6DA3;           background: rgba(95,142,196,.18); }
+    .t284 tbody tr:nth-child(5n+3) .t-cue span { color: #416330;           background: rgba(91,140,69,.16); }
+    .t284 tbody tr:nth-child(5n+4) .t-cue span { color: #9C5171;           background: rgba(196,122,150,.18); }
+    .t284 tbody tr:nth-child(5n)   .t-cue span { color: var(--accent-dk);  background: rgba(201,160,48,.22); }
+    @media (max-width: 620px) {
+      .t284 .t-cue { text-align: left; }
+      .t284 td { padding: 10px 11px; font-size: .95rem; }
+    }
+
+    /* homework tab colour */
+    .tab-btn:nth-child(5).active { background: var(--green); border-color: var(--green); }
   </style>
 </head>
 <body>
@@ -262,6 +405,7 @@
     <button class="tab-btn"        onclick="switchTab('read',   this)">📖 Reading</button>
     <button class="tab-btn"        onclick="switchTab('use',    this)">✍️ Use of English</button>
     <button class="tab-btn"        onclick="switchTab('score',  this)">🔒 My Score</button>
+    <button class="tab-btn"        onclick="switchTab('hw',     this)">📝 Homework</button>
   </div>
 
   <!-- ══════════════════════════════════════════════════════════
@@ -932,6 +1076,299 @@
 
   </div><!-- /tab-score -->
 
+  <!-- ══════════════════════════════════════════════════════
+       HOMEWORK — NOUN & ADJECTIVE SUFFIXES
+  ══════════════════════════════════════════════════════ -->
+  <div class="tab-content" id="tab-hw">
+
+    <div class="section-head">
+      <h2>Homework · Word Formation</h2>
+      <div class="sh-meta">Suffixes — the reference table, then three drills</div>
+    </div>
+
+    <div class="exercise">
+      <div class="exercise-label">Reference</div>
+      <h3>🎨 The suffix map</h3>
+      <p>Task 1 of the paper (and of every olympiad paper you will ever sit) is really a test of
+        <b>one thing</b>: can you take a root and grow the right ending on it? Below is the whole
+        toolkit, sorted by what each suffix <i>does</i>. Colour = family. Learn the families, not
+        the list.</p>
+
+      <!-- ── 1. agent / person ── -->
+      <div class="suf-block g1">
+        <div class="suf-title"><span class="dot" style="background:var(--primary)"></span>Nouns · the one who does X</div>
+        <div class="suf-wrap">
+        <table class="suf-table">
+          <thead><tr><th>Suffix</th><th>Meaning</th><th>Examples</th></tr></thead>
+          <tbody>
+            <tr><td class="c-suf"><span class="sfx">-er / -or</span></td><td class="c-mean">one who does it</td><td class="c-ex"><b>writer, teacher, actor, professor</b></td></tr>
+            <tr><td class="c-suf"><span class="sfx">-ist</span></td><td class="c-mean">one who practises or believes</td><td class="c-ex"><b>sociologist, novelist, Marxist</b></td></tr>
+            <tr><td class="c-suf"><span class="sfx">-ant / -ent</span></td><td class="c-mean">one taking part</td><td class="c-ex"><b>participant, respondent, applicant</b></td></tr>
+            <tr><td class="c-suf"><span class="sfx">-ian</span></td><td class="c-mean">belonging to / specialist in</td><td class="c-ex"><b>historian, Russian, librarian</b></td></tr>
+          </tbody>
+        </table>
+        </div>
+      </div>
+
+      <!-- ── 2. abstract ── -->
+      <div class="suf-block g2">
+        <div class="suf-title"><span class="dot" style="background:var(--blue)"></span>Nouns · state, quality, condition</div>
+        <div class="suf-wrap">
+        <table class="suf-table">
+          <thead><tr><th>Suffix</th><th>Meaning</th><th>Examples</th></tr></thead>
+          <tbody>
+            <tr><td class="c-suf"><span class="sfx">-ness</span></td><td class="c-mean">from adjectives</td><td class="c-ex"><b>happiness, stableness, robustness</b></td></tr>
+            <tr><td class="c-suf"><span class="sfx">-ity / -ty</span></td><td class="c-mean">from Latinate adjectives</td><td class="c-ex"><b>stability, diversity, complexity</b></td></tr>
+            <tr><td class="c-suf"><span class="sfx">-ism</span></td><td class="c-mean">doctrine, practice, condition</td><td class="c-ex"><b>structuralism, formalism, bilingualism</b></td></tr>
+            <tr><td class="c-suf"><span class="sfx">-ship</span></td><td class="c-mean">status or relation</td><td class="c-ex"><b>scholarship, friendship, authorship</b></td></tr>
+            <tr><td class="c-suf"><span class="sfx">-hood</span></td><td class="c-mean">state or collective</td><td class="c-ex"><b>childhood, likelihood, neighborhood</b></td></tr>
+            <tr><td class="c-suf"><span class="sfx">-dom</span></td><td class="c-mean">domain or condition</td><td class="c-ex"><b>freedom, kingdom, boredom</b></td></tr>
+            <tr><td class="c-suf"><span class="sfx">-cy</span></td><td class="c-mean">state or office</td><td class="c-ex"><b>literacy, fluency, presidency, legitimacy</b></td></tr>
+          </tbody>
+        </table>
+        </div>
+      </div>
+
+      <!-- ── 3. action / process / result ── -->
+      <div class="suf-block g3">
+        <div class="suf-title"><span class="dot" style="background:var(--green)"></span>Nouns · action, process or result</div>
+        <div class="suf-wrap">
+        <table class="suf-table">
+          <thead><tr><th>Suffix</th><th>Meaning</th><th>Examples</th></tr></thead>
+          <tbody>
+            <tr><td class="c-suf"><span class="sfx">-tion / -sion / -ation</span></td><td class="c-mean">action or its result</td><td class="c-ex"><b>production, decision, classification</b></td></tr>
+            <tr><td class="c-suf"><span class="sfx">-ment</span></td><td class="c-mean">result of an act</td><td class="c-ex"><b>measurement, argument, development</b></td></tr>
+            <tr><td class="c-suf"><span class="sfx">-ance / -ence</span></td><td class="c-mean">act or state</td><td class="c-ex"><b>resistance, difference, emergence</b></td></tr>
+            <tr><td class="c-suf"><span class="sfx">-al</span></td><td class="c-mean">act of</td><td class="c-ex"><b>refusal, arrival, dismissal, withdrawal</b></td></tr>
+            <tr><td class="c-suf"><span class="sfx">-ure</span></td><td class="c-mean">process or result</td><td class="c-ex"><b>closure, failure, exposure</b></td></tr>
+            <tr><td class="c-suf"><span class="sfx">-age</span></td><td class="c-mean">collection or process</td><td class="c-ex"><b>coverage, linkage, usage</b></td></tr>
+          </tbody>
+        </table>
+        </div>
+      </div>
+
+      <!-- ── 4. diminutive ── -->
+      <div class="suf-block g4">
+        <div class="suf-title"><span class="dot" style="background:var(--rose)"></span>Nouns · diminutive / small</div>
+        <div class="suf-wrap">
+        <table class="suf-table">
+          <thead><tr><th>Suffix</th><th>Meaning</th><th>Examples</th></tr></thead>
+          <tbody>
+            <tr><td class="c-suf"><span class="sfx">-let</span></td><td class="c-mean">a little one</td><td class="c-ex"><b>booklet</b></td></tr>
+            <tr><td class="c-suf"><span class="sfx">-ling</span></td><td class="c-mean">a young or small one</td><td class="c-ex"><b>duckling</b></td></tr>
+            <tr><td class="c-suf"><span class="sfx">-ette</span></td><td class="c-mean">a small version</td><td class="c-ex"><b>kitchenette, statuette</b></td></tr>
+          </tbody>
+        </table>
+        </div>
+      </div>
+
+      <!-- ── 5. adjectives ── -->
+      <div class="suf-block g5">
+        <div class="suf-title"><span class="dot" style="background:var(--accent-dk)"></span>Adjective suffixes</div>
+        <div class="suf-wrap">
+        <table class="suf-table">
+          <thead><tr><th>Suffix</th><th>Meaning</th><th>Examples</th></tr></thead>
+          <tbody>
+            <tr><td class="c-suf"><span class="sfx">-ous / -ious</span></td><td class="c-mean">full of, having</td><td class="c-ex"><b>dangerous, pseudonymous, ambitious, prestigious</b></td></tr>
+            <tr><td class="c-suf"><span class="sfx">-ful</span></td><td class="c-mean">full of</td><td class="c-ex"><b>useful, meaningful, powerful</b></td></tr>
+            <tr><td class="c-suf"><span class="sfx">-less</span></td><td class="c-mean">without</td><td class="c-ex"><b>meaningless, endless, homeless</b></td></tr>
+            <tr><td class="c-suf"><span class="sfx">-able / -ible</span></td><td class="c-mean">capable of being, worth</td><td class="c-ex"><b>measurable, reproducible, comparable</b></td></tr>
+            <tr><td class="c-suf"><span class="sfx">-al / -ial</span></td><td class="c-mean">relating to</td><td class="c-ex"><b>cultural, computational, editorial</b></td></tr>
+            <tr><td class="c-suf"><span class="sfx">-ic / -ical</span></td><td class="c-mean">pertaining to</td><td class="c-ex"><b>economic, methodological, historic / historical</b></td></tr>
+            <tr><td class="c-suf"><span class="sfx">-ive</span></td><td class="c-mean">tending to, having the nature of</td><td class="c-ex"><b>productive, normative, cumulative</b></td></tr>
+            <tr><td class="c-suf"><span class="sfx">-ary / -ory</span></td><td class="c-mean">connected with</td><td class="c-ex"><b>literary, revolutionary, explanatory</b></td></tr>
+            <tr><td class="c-suf"><span class="sfx">-y</span></td><td class="c-mean">characterized by (native, informal)</td><td class="c-ex"><b>messy, noisy, wealthy</b></td></tr>
+            <tr><td class="c-suf"><span class="sfx">-ish</span></td><td class="c-mean">somewhat, resembling</td><td class="c-ex"><b>reddish, childish, thirtyish</b></td></tr>
+            <tr><td class="c-suf"><span class="sfx">-like</span></td><td class="c-mean">resembling</td><td class="c-ex"><b>lifelike, childlike</b></td></tr>
+            <tr><td class="c-suf"><span class="sfx">-ly</span></td><td class="c-mean">having the quality of — careful, this is also the main adverb suffix</td><td class="c-ex"><b>friendly, scholarly, daily</b></td></tr>
+            <tr><td class="c-suf"><span class="sfx">-ant / -ent</span></td><td class="c-mean">in a state of</td><td class="c-ex"><b>relevant, resistant, persistent</b></td></tr>
+            <tr><td class="c-suf"><span class="sfx">-ed / -ing</span></td><td class="c-mean">participial</td><td class="c-ex"><b>experienced, interested / interesting, compelling</b></td></tr>
+          </tbody>
+        </table>
+        </div>
+      </div>
+
+      <div class="flag-box">
+        <h4>⚠️ -ic vs. -ical is usually a real difference, not free choice</h4>
+        <b>economic</b> (pertaining to the economy) vs. <b>economical</b> (thrifty) ·
+        <b>historic</b> (momentous) vs. <b>historical</b> (about the past) ·
+        <b>classic</b> (a definitive example) vs. <b>classical</b> (of antiquity, or Bach and Mozart).
+      </div>
+
+      <div class="flag-box gold">
+        <h4>🔊 Latinate suffixes move the stress; native ones don't</h4>
+        <b>-ity, -ic(al), -tion, -ious</b> pull the stress onto the syllable immediately before them —
+        hence <b>stá</b>ble → sta<b>bíl</b>ity, <b>phó</b>tograph → photo<b>gráph</b>ic,
+        <b>pséu</b>donym → pseu<b>dón</b>ymous. Native suffixes like <b>-ness, -ful, -less, -hood, -ship</b>
+        are stress-neutral: <b>háp</b>py → <b>háp</b>piness.
+      </div>
+    </div>
+
+    <!-- ── Drill A — build the word ─────────────────────────── -->
+    <div class="exercise" id="hw-partA">
+      <span class="task-num">Part A · 16 points</span>
+      <div class="exercise-label">Build the word</div>
+      <h3>✍️ Use the word in the grey box to form a word that fits the gap.</h3>
+      <p>Exactly the format of Задание 16. Watch the <b>part of speech</b> the sentence needs, and
+        watch spelling changes at the join (<i>stable → stabil-</i>, <i>red → redd-</i>).</p>
+
+      <ul class="hw-list">
+        <li class="hw-item"><span class="hw-n">1</span><span class="hw-q">Investors were worried about the <input class="blank hw" id="hw-a1" data-answer="stability" placeholder="1"><span class="hw-cue">STABLE</span> of the currency.<span class="hw-key" data-key="stability"></span></span></li>
+        <li class="hw-item"><span class="hw-n">2</span><span class="hw-q">The <input class="blank hw" id="hw-a2" data-answer="novelist" placeholder="2"><span class="hw-cue">NOVEL</span> spent six years on her first book.<span class="hw-key" data-key="novelist"></span></span></li>
+        <li class="hw-item"><span class="hw-n">3</span><span class="hw-q">Over four hundred <input class="blank hw" id="hw-a3" data-answer="applicants" placeholder="3"><span class="hw-cue">APPLY</span> competed for twelve places.<span class="hw-key" data-key="applicants"></span></span></li>
+        <li class="hw-item"><span class="hw-n">4</span><span class="hw-q">Ask the <input class="blank hw" id="hw-a4" data-answer="librarian" placeholder="4"><span class="hw-cue">LIBRARY</span> — she knows where every book is.<span class="hw-key" data-key="librarian"></span></span></li>
+        <li class="hw-item"><span class="hw-n">5</span><span class="hw-q">He spent his whole <input class="blank hw" id="hw-a5" data-answer="childhood" placeholder="5"><span class="hw-cue">CHILD</span> in a small town by the sea.<span class="hw-key" data-key="childhood"></span></span></li>
+        <li class="hw-item"><span class="hw-n">6</span><span class="hw-q">She won a full <input class="blank hw" id="hw-a6" data-answer="scholarship" placeholder="6"><span class="hw-cue">SCHOLAR</span> to study in Edinburgh.<span class="hw-key" data-key="scholarship"></span></span></li>
+        <li class="hw-item"><span class="hw-n">7</span><span class="hw-q">Out of sheer <input class="blank hw" id="hw-a7" data-answer="boredom" placeholder="7"><span class="hw-cue">BORE</span> he began counting the ceiling tiles.<span class="hw-key" data-key="boredom"></span></span></li>
+        <li class="hw-item"><span class="hw-n">8</span><span class="hw-q">Her <input class="blank hw" id="hw-a8" data-answer="fluency" placeholder="8"><span class="hw-cue">FLUENT</span> in Japanese impressed the examiners.<span class="hw-key" data-key="fluency"></span></span></li>
+        <li class="hw-item"><span class="hw-n">9</span><span class="hw-q">The <input class="blank hw" id="hw-a9" data-answer="announcement" placeholder="9"><span class="hw-cue">ANNOUNCE</span> of the results was delayed by an hour.<span class="hw-key" data-key="announcement"></span></span></li>
+        <li class="hw-item"><span class="hw-n">10</span><span class="hw-q">The plan met fierce <input class="blank hw" id="hw-a10" data-answer="resistance" placeholder="10"><span class="hw-cue">RESIST</span> from local residents.<span class="hw-key" data-key="resistance"></span></span></li>
+        <li class="hw-item"><span class="hw-n">11</span><span class="hw-q">His sudden <input class="blank hw" id="hw-a11" data-answer="withdrawal" placeholder="11"><span class="hw-cue">WITHDRAW</span> from the race surprised everyone.<span class="hw-key" data-key="withdrawal"></span></span></li>
+        <li class="hw-item"><span class="hw-n">12</span><span class="hw-q">The <input class="blank hw" id="hw-a12" data-answer="closure" placeholder="12"><span class="hw-cue">CLOSE</span> of the old factory cost three hundred jobs.<span class="hw-key" data-key="closure"></span></span></li>
+        <li class="hw-item"><span class="hw-n">13</span><span class="hw-q">The effect is real, but it is not easily <input class="blank hw" id="hw-a13" data-answer="measurable" placeholder="13"><span class="hw-cue">MEASURE</span>.<span class="hw-key" data-key="measurable"></span></span></li>
+        <li class="hw-item"><span class="hw-n">14</span><span class="hw-q">Without the diagram the instructions were completely <input class="blank hw" id="hw-a14" data-answer="meaningless" placeholder="14"><span class="hw-cue">MEANING</span>.<span class="hw-key" data-key="meaningless"></span></span></li>
+        <li class="hw-item"><span class="hw-n">15</span><span class="hw-q">It was an <input class="blank hw" id="hw-a15" data-answer="ambitious" placeholder="15"><span class="hw-cue">AMBITION</span> plan for such a small team.<span class="hw-key" data-key="ambitious"></span></span></li>
+        <li class="hw-item"><span class="hw-n">16</span><span class="hw-q">The whole sky turned <input class="blank hw" id="hw-a16" data-answer="reddish" placeholder="16"><span class="hw-cue">RED</span> just before sunset.<span class="hw-key" data-key="reddish"></span></span></li>
+      </ul>
+
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="hwCheck('hw-partA','hwScoreA')">Check ✓</button>
+        <button class="btn btn-ghost"   onclick="hwReset('hw-partA','hwScoreA')">Try again</button>
+      </div>
+      <div class="hw-score" id="hwScoreA"></div>
+    </div>
+
+    <!-- ── Drill B — Task 284 ───────────────────────────────── -->
+    <div class="exercise" id="hw-part284">
+      <span class="task-num">Part B · Task 284 · 10 points</span>
+      <div class="exercise-label">Change the form</div>
+      <h3>🏔️ Complete the sentences <u>by changing the form</u> of the word in capitals.</h3>
+      <p>Ten gaps from a Victorian traveller's account of the <b>Great St. Bernard Pass</b>. Long
+        sentences, deliberately — read to the end of each one before you decide what part of speech
+        the gap wants. Three of the ten need something other than a plain noun.</p>
+
+      <div class="suf-wrap">
+      <table class="t284">
+        <thead><tr><th>№</th><th>Sentence</th><th>Word</th></tr></thead>
+        <tbody>
+          <tr>
+            <td class="t-n">1</td>
+            <td>Now, the whole district of the St. Bernard for many miles around possesses not one of the vast caravansaries characteristic of the <input class="blank hw" id="hw-d1" data-answer="picturesque" placeholder="1"> mountain-tops in Switzerland, – indeed, not even a modest inn, – where tourists may find shelter for a few days.<span class="hw-key" data-key="picturesque"></span></td>
+            <td class="t-cue"><span>PICTURE</span></td>
+          </tr>
+          <tr>
+            <td class="t-n">2</td>
+            <td>Why, then, should these armies of <input class="blank hw" id="hw-d2" data-answer="tourists" placeholder="2"> invade the pass every summer, if it really offers little of interest?<span class="hw-key" data-key="tourists"></span></td>
+            <td class="t-cue"><span>TOUR</span></td>
+          </tr>
+          <tr>
+            <td class="t-n">3</td>
+            <td>To me, who have seen almost all the passes from one end of the Alps to the other, the trip over the Great St. Bernard was most <input class="blank hw" id="hw-d3" data-answer="enjoyable" placeholder="3">.<span class="hw-key" data-key="enjoyable"></span></td>
+            <td class="t-cue"><span>ENJOY</span></td>
+          </tr>
+          <tr>
+            <td class="t-n">4</td>
+            <td>The valley of the river Dranse, which is followed by the traveler from Martigny, in the Rhone valley, to very near the summit, more than eight thousand feet above the sea, is full of romantic beauty and <input class="blank hw" id="hw-d4" data-answer="wildness" placeholder="4">, closed in by snow-covered mountains of fantastic shapes, their steep slopes partly covered with dark pine forests.<span class="hw-key" data-key="wildness"></span></td>
+            <td class="t-cue"><span>WILD</span></td>
+          </tr>
+          <tr>
+            <td class="t-n">5</td>
+            <td>Nestling on the rocks or sleeping in the valleys there are a few straggling settlements, with heavy-visaged natives, apparently of a different race from the Swiss, and entirely <input class="blank hw" id="hw-d5" data-answer="untouched" placeholder="5"> by modern life.<span class="hw-key" data-key="untouched"></span></td>
+            <td class="t-cue"><span>TOUCH</span></td>
+          </tr>
+          <tr>
+            <td class="t-n">6</td>
+            <td>Many wayfarers stop at the modest inns to rest and take a glass of water, or even to seek shelter in the old houses when storms spring up suddenly, blowing <input class="blank hw" id="hw-d6" data-answer="furiously" placeholder="6"> down the valleys.<span class="hw-key" data-key="furiously"></span></td>
+            <td class="t-cue"><span>FURY</span></td>
+          </tr>
+          <tr>
+            <td class="t-n">7</td>
+            <td>The uncommon tenacity of these <input class="blank hw" id="hw-d7" data-answer="mountaineers" placeholder="7"> is surprising, as the St. Bernard traffic is by no means new.<span class="hw-key" data-key="mountaineers"></span></td>
+            <td class="t-cue"><span>MOUNTAIN</span></td>
+          </tr>
+          <tr>
+            <td class="t-n">8</td>
+            <td>Emperor Augustus II improved and rebuilt the road, portions of which are still seen by the side of the new carriage-road wherever the latter has not been built on the <input class="blank hw" id="hw-d8" data-answer="foundations|foundation" placeholder="8"> of the Roman highway.<span class="hw-key" data-key="foundations"></span></td>
+            <td class="t-cue"><span>FOUND</span></td>
+          </tr>
+          <tr>
+            <td class="t-n">9</td>
+            <td>Indeed, owing to its situation on the direct <input class="blank hw" id="hw-d9" data-answer="geographical" placeholder="9"> line between Italy and the North, the St. Bernard has been crossed in the course of time by more people than has any other pass.<span class="hw-key" data-key="geographical"></span></td>
+            <td class="t-cue"><span>GEOGRAPHY</span></td>
+          </tr>
+          <tr>
+            <td class="t-n">10</td>
+            <td>The traveler of today, arriving at the hospice in a comfortable carriage within ten hours from the nearest railway-station, and provided with all the luxuries of modern life, can hardly picture to himself the terrible privations of the traveler in ancient times, when <input class="blank hw" id="hw-d10" data-answer="settlements" placeholder="10"> were scarce.<span class="hw-key" data-key="settlements"></span></td>
+            <td class="t-cue"><span>SETTLE</span></td>
+          </tr>
+        </tbody>
+      </table>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="hwCheck('hw-part284','hwScore284')">Check ✓</button>
+        <button class="btn btn-ghost"   onclick="hwReset('hw-part284','hwScore284')">Try again</button>
+      </div>
+      <div class="hw-score" id="hwScore284"></div>
+    </div>
+
+    <!-- ── Drill B — -ic vs -ical ───────────────────────────── -->
+    <div class="exercise" id="hw-partB">
+      <span class="task-num">Part C · 6 points</span>
+      <div class="exercise-label">-ic vs. -ical</div>
+      <h3>🎯 Same root, different word. Choose the one the sentence actually means.</h3>
+      <p>This pair is a favourite trap at the regional stage. Ask yourself what the sentence is
+        <i>claiming</i>, not which ending looks longer.</p>
+
+      <ul class="hw-list">
+        <li class="hw-item"><span class="hw-n">1</span><span class="hw-q">Buying rice in bulk works out far more
+          <select class="hw-select" id="hw-b1" data-answer="economical"><option value="">— choose —</option><option>economic</option><option>economical</option></select>.<span class="hw-key" data-key="economical — thrifty, saves money"></span></span></li>
+        <li class="hw-item"><span class="hw-n">2</span><span class="hw-q">The fall of the Berlin Wall was a truly
+          <select class="hw-select" id="hw-b2" data-answer="historic"><option value="">— choose —</option><option>historic</option><option>historical</option></select> moment.<span class="hw-key" data-key="historic — momentous"></span></span></li>
+        <li class="hw-item"><span class="hw-n">3</span><span class="hw-q">She writes
+          <select class="hw-select" id="hw-b3" data-answer="historical"><option value="">— choose —</option><option>historic</option><option>historical</option></select> novels set in the twelfth century.<span class="hw-key" data-key="historical — about the past"></span></span></li>
+        <li class="hw-item"><span class="hw-n">4</span><span class="hw-q">The minister announced a new
+          <select class="hw-select" id="hw-b4" data-answer="economic"><option value="">— choose —</option><option>economic</option><option>economical</option></select> policy for the northern regions.<span class="hw-key" data-key="economic — of the economy"></span></span></li>
+        <li class="hw-item"><span class="hw-n">5</span><span class="hw-q">He listens mostly to
+          <select class="hw-select" id="hw-b5" data-answer="classical"><option value="">— choose —</option><option>classic</option><option>classical</option></select> music — Bach, Mozart, Haydn.<span class="hw-key" data-key="classical — of that tradition"></span></span></li>
+        <li class="hw-item"><span class="hw-n">6</span><span class="hw-q">That poster is a
+          <select class="hw-select" id="hw-b6" data-answer="classic"><option value="">— choose —</option><option>classic</option><option>classical</option></select> example of bad design.<span class="hw-key" data-key="classic — the definitive example"></span></span></li>
+      </ul>
+
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="hwCheck('hw-partB','hwScoreB')">Check ✓</button>
+        <button class="btn btn-ghost"   onclick="hwReset('hw-partB','hwScoreB')">Try again</button>
+      </div>
+      <div class="hw-score" id="hwScoreB"></div>
+    </div>
+
+    <!-- ── Drill C — stress ─────────────────────────────────── -->
+    <div class="exercise" id="hw-stress">
+      <span class="task-num">Part D · 8 points</span>
+      <div class="exercise-label">Where does the stress land?</div>
+      <h3>🔊 Say each word out loud, then click the syllable you stress.</h3>
+      <p>Four of these carry a Latinate suffix that <b>drags the stress</b> onto the syllable just
+        before it. Four carry a native suffix that <b>leaves the stress where it was</b>. If you can
+        hear which is which, you never have to memorise this again.</p>
+
+      <div class="syl-row"><span class="hw-n">1</span><span class="syl-word" id="sw1"><span class="syl">sta</span><span class="syl" data-ok>bil</span><span class="syl">i</span><span class="syl">ty</span></span><span class="hw-cue">-ity</span></div>
+      <div class="syl-row"><span class="hw-n">2</span><span class="syl-word" id="sw2"><span class="syl" data-ok>hap</span><span class="syl">pi</span><span class="syl">ness</span></span><span class="hw-cue">-ness</span></div>
+      <div class="syl-row"><span class="hw-n">3</span><span class="syl-word" id="sw3"><span class="syl">pho</span><span class="syl">to</span><span class="syl" data-ok>graph</span><span class="syl">ic</span></span><span class="hw-cue">-ic</span></div>
+      <div class="syl-row"><span class="hw-n">4</span><span class="syl-word" id="sw4"><span class="syl" data-ok>friend</span><span class="syl">ship</span></span><span class="hw-cue">-ship</span></div>
+      <div class="syl-row"><span class="hw-n">5</span><span class="syl-word" id="sw5"><span class="syl">pseu</span><span class="syl" data-ok>don</span><span class="syl">y</span><span class="syl">mous</span></span><span class="hw-cue">-ous</span></div>
+      <div class="syl-row"><span class="hw-n">6</span><span class="syl-word" id="sw6"><span class="syl" data-ok>like</span><span class="syl">li</span><span class="syl">hood</span></span><span class="hw-cue">-hood</span></div>
+      <div class="syl-row"><span class="hw-n">7</span><span class="syl-word" id="sw7"><span class="syl">clas</span><span class="syl">si</span><span class="syl">fi</span><span class="syl" data-ok>ca</span><span class="syl">tion</span></span><span class="hw-cue">-ation</span></div>
+      <div class="syl-row"><span class="hw-n">8</span><span class="syl-word" id="sw8"><span class="syl" data-ok>mean</span><span class="syl">ing</span><span class="syl">less</span></span><span class="hw-cue">-less</span></div>
+
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="hwCheckStress()">Check ✓</button>
+        <button class="btn btn-ghost"   onclick="hwResetStress()">Try again</button>
+      </div>
+      <div class="hw-score" id="hwScoreC"></div>
+    </div>
+
+  </div><!-- /tab-hw -->
+
 </div><!-- /container -->
 
 <div class="save-indicator" id="saveIndicator">✓ Saved</div>
@@ -1224,6 +1661,84 @@ if (data.submitted) {
   const r = markEverything();
   document.querySelectorAll('#tab-use .blank, .exam-select[data-answer]').forEach(el => el.disabled = true);
   showResult(data.result || r);
+}
+</script>
+
+<!-- ══ HOMEWORK — self-contained, never touches the exam score ══ -->
+<script>
+function hwNorm(s) { return (s || '').trim().toLowerCase().replace(/[.,!?;:]/g, ''); }
+
+// check one drill box (works for both the text blanks and the dropdowns)
+function hwCheck(boxId, outId) {
+  const box = document.getElementById(boxId);
+  let ok = 0, tot = 0;
+  box.querySelectorAll('.blank.hw, .hw-select').forEach(el => {
+    tot++;
+    const answers = (el.dataset.answer || '').split('|').map(a => a.trim().toLowerCase());
+    const good = answers.includes(hwNorm(el.value));
+    el.classList.remove('correct', 'wrong');
+    el.classList.add(good ? 'correct' : 'wrong');
+    if (good) ok++;
+    const item = el.closest('.hw-item, tr');
+    const key  = item && item.querySelector('.hw-key');
+    if (key) { key.textContent = key.dataset.key; key.classList.toggle('show', !good); }
+  });
+  const out = document.getElementById(outId);
+  out.textContent = ok + ' / ' + tot + (ok === tot ? ' — every single one. 🌟' : ' correct');
+}
+
+function hwReset(boxId, outId) {
+  const box = document.getElementById(boxId);
+  box.querySelectorAll('.blank.hw, .hw-select').forEach(el => {
+    el.value = '';
+    el.classList.remove('correct', 'wrong');
+    save({ [el.id]: '' });
+  });
+  box.querySelectorAll('.hw-key').forEach(k => k.classList.remove('show'));
+  document.getElementById(outId).textContent = '';
+}
+
+// dropdowns need their own autosave — the .blank ones are already covered
+document.querySelectorAll('.hw-select').forEach(el => {
+  if (data[el.id] !== undefined) el.value = data[el.id];
+  el.addEventListener('change', () => save({ [el.id]: el.value }));
+});
+
+// ── stress chips ───────────────────────────────────────────────
+document.querySelectorAll('#hw-stress .syl-word').forEach(word => {
+  const syls = [...word.querySelectorAll('.syl')];
+  const key  = 'st-' + word.id;
+  if (data[key] !== undefined && syls[data[key]]) syls[data[key]].classList.add('picked');
+  syls.forEach((s, i) => s.addEventListener('click', () => {
+    syls.forEach(x => x.classList.remove('picked', 'ok', 'no'));
+    s.classList.add('picked');
+    save({ [key]: i });
+  }));
+});
+
+function hwCheckStress() {
+  let ok = 0, tot = 0;
+  document.querySelectorAll('#hw-stress .syl-word').forEach(word => {
+    tot++;
+    const picked  = word.querySelector('.syl.picked, .syl.no');
+    const correct = word.querySelector('.syl[data-ok]');
+    word.querySelectorAll('.syl').forEach(x => x.classList.remove('picked', 'ok', 'no'));
+    if (picked === correct) { correct.classList.add('ok'); ok++; }
+    else {
+      if (picked) picked.classList.add('no');
+      correct.classList.add('ok');
+    }
+  });
+  document.getElementById('hwScoreC').textContent =
+    ok + ' / ' + tot + (ok === tot ? ' — your ear is working. 🎧' : ' correct');
+}
+
+function hwResetStress() {
+  document.querySelectorAll('#hw-stress .syl-word').forEach(word => {
+    word.querySelectorAll('.syl').forEach(x => x.classList.remove('picked', 'ok', 'no'));
+    save({ ['st-' + word.id]: undefined });
+  });
+  document.getElementById('hwScoreC').textContent = '';
 }
 </script>
 
