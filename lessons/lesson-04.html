@@ -1,0 +1,1371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lesson 4 – Prepositions, Conditionals &amp; Culture</title>
+  <link rel="stylesheet" href="../style.css">
+  <style>
+    /* ── instructions ── */
+    .exercise h3.big-instr {
+      font-family:'Fraunces',Georgia,serif;
+      font-size:1.5rem; font-weight:700; line-height:1.3;
+      color:var(--primary); margin-bottom:10px;
+    }
+    .lead-instr {
+      font-size:1.02rem; line-height:1.7; color:var(--text);
+      border-left:4px solid var(--accent); padding-left:16px; margin-bottom:6px;
+    }
+    .lead-instr b { color:var(--primary-dk); }
+    @media(max-width:560px){ .exercise h3.big-instr { font-size:1.25rem; } }
+
+    /* ── single-gap check button ── */
+    .check-one {
+      margin-left:7px; width:27px; height:27px; padding:0; border-radius:50%;
+      border:2px solid var(--border); background:transparent; color:var(--muted);
+      font-family:inherit; font-size:.82rem; line-height:1; cursor:pointer;
+      vertical-align:middle; transition:border-color .2s,color .2s,background .2s;
+    }
+    .check-one:hover { border-color:var(--primary); color:var(--primary); background:rgba(212,87,42,.06); }
+    .check-one.ok { border-color:var(--green); background:var(--green); color:#fff; }
+    .check-one.no { border-color:var(--red);   background:var(--red);   color:#fff; }
+
+    /* ── stress warm-up ── */
+    .stress-exercise { display:grid; grid-template-columns:repeat(auto-fill,minmax(230px,1fr)); gap:10px; }
+    .stress-row { display:flex; align-items:center; gap:10px; padding:10px 12px 10px 10px; background:#fff; border:1.5px solid var(--border); border-radius:10px; transition:border-color .15s, box-shadow .15s; }
+    .stress-row:focus-within { border-color:var(--primary); box-shadow:0 0 0 3px rgba(212,87,42,.12); }
+    .stress-num { flex:0 0 26px; height:26px; display:flex; align-items:center; justify-content:center; border-radius:50%; background:var(--bg); color:var(--muted); font-size:.8rem; font-weight:700; }
+    .stress-word { flex:1; min-width:0; font-size:1.02rem; color:var(--text); font-weight:600; letter-spacing:.2px; }
+    .stress-word .pos { font-size:.78rem; color:var(--muted); font-weight:500; margin-left:5px; }
+    .stress-row .blank { flex:0 0 78px; width:78px; min-width:0; padding:3px 2px; font-size:.98rem; font-weight:700; border:2px solid var(--border); border-radius:8px; background:var(--bg); font-family:'DM Sans',monospace; letter-spacing:2px; }
+    .stress-row .blank:focus { border-color:var(--primary); background:#fff; }
+    .stress-row .blank.correct { border-color:var(--green); background:#fff; }
+    .stress-row .blank.wrong   { border-color:var(--red);   background:#fff; }
+    .stress-tip { display:flex; align-items:center; gap:10px; padding:10px 14px; margin-bottom:16px; background:linear-gradient(135deg,#FDF5EC,#F0E8D4); border-radius:10px; font-size:.93rem; color:var(--text); }
+    .stress-tip .pat { font-weight:800; color:var(--primary); letter-spacing:2px; }
+    .stress-tip .cap { font-weight:800; color:var(--primary); text-decoration:underline; text-decoration-thickness:3px; text-underline-offset:3px; }
+    .say-aloud { margin-top:16px; padding:14px 18px; background:rgba(95,142,196,.10); border-left:4px solid var(--blue); border-radius:10px; font-size:.97rem; line-height:1.8; }
+    .say-aloud b { color:var(--blue); }
+    .say-aloud .cap { font-weight:800; text-decoration:underline; text-decoration-thickness:3px; text-underline-offset:3px; }
+
+    /* ── numbered gap sentences ── */
+    .gap-row { display:flex; gap:14px; align-items:flex-start; padding:12px 2px; border-bottom:1px dashed var(--border); }
+    .gap-row:last-child { border-bottom:none; }
+    .gap-num { flex:0 0 27px; height:27px; margin-top:3px; display:flex; align-items:center; justify-content:center; border-radius:50%; background:var(--bg); color:var(--primary); font-size:.82rem; font-weight:800; }
+    .gap-row:nth-child(4n+2) .gap-num { color:var(--blue); }
+    .gap-row:nth-child(4n+3) .gap-num { color:var(--rose); }
+    .gap-row:nth-child(4n)   .gap-num { color:var(--accent-dk); }
+    .gap-text { flex:1; min-width:0; line-height:2; font-size:1.02rem; }
+    .gap-text .blank { min-width:96px; }
+
+    /* ── rule box ── */
+    .rule-box { background:linear-gradient(135deg,#FDF5EC,#F0E8D4); border:2px solid var(--border); border-radius:var(--radius); padding:20px 24px; margin-bottom:20px; }
+    .rule-box-title { font-family:'Fraunces',Georgia,serif; font-weight:700; font-size:1.05rem; margin-bottom:14px; color:var(--text); }
+    .rule-core { font-size:.94rem; line-height:1.75; margin-bottom:18px; }
+    .rule-core b { color:var(--primary-dk); }
+    .rule-cols { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; }
+    .rule-col { padding:14px; border-radius:10px; }
+    .rule-col ul { margin-left:16px; margin-top:8px; font-size:.88rem; }
+    .rule-col li { margin-bottom:5px; }
+    .rule-verb { font-size:1.1rem; font-weight:800; margin-bottom:4px; }
+    .rule-gloss { font-size:.78rem; text-transform:uppercase; letter-spacing:.8px; color:var(--muted); font-weight:700; }
+    .rule-by    { background:rgba(212,87,42,.09);  border-left:3px solid var(--primary); }
+    .rule-from  { background:rgba(95,142,196,.12); border-left:3px solid var(--blue); }
+    .rule-with  { background:rgba(91,140,69,.12);  border-left:3px solid var(--green); }
+    .rule-about { background:rgba(196,122,150,.15);border-left:3px solid var(--rose); }
+    .rule-by .rule-verb    { color:var(--primary); }
+    .rule-from .rule-verb  { color:var(--blue); }
+    .rule-with .rule-verb  { color:var(--green); }
+    .rule-about .rule-verb { color:var(--rose); }
+    .recap-strip { margin-top:18px; padding:14px 16px; background:rgba(201,160,48,.14); border-left:3px solid var(--accent-dk); border-radius:10px; font-size:.92rem; line-height:1.9; }
+    .recap-strip b { color:var(--accent-dk); text-transform:uppercase; letter-spacing:.8px; font-size:.78rem; }
+    .recap-strip em { font-style:normal; background:#fff; border:1px solid var(--border); border-radius:6px; padding:2px 8px; margin:0 2px; display:inline-block; }
+    .trap-note { margin-top:14px; font-size:.9rem; color:var(--muted); line-height:1.8; }
+    .trap-note b { color:var(--red); }
+
+    /* ── speaking task ── */
+    .timer-box { display:flex; align-items:center; gap:12px; flex-wrap:wrap; background:#fff; border:2px solid var(--border); border-radius:var(--radius); padding:12px 16px; margin:14px 0 18px; }
+    .timer-clock { font-family:'Fraunces',Georgia,serif; font-size:1.5rem; font-weight:700; color:var(--primary); min-width:76px; letter-spacing:.04em; }
+    .timer-clock.over { color:var(--red); }
+    .timer-hint { color:var(--muted); font-size:.85rem; flex:1; min-width:140px; }
+    .btn-mini { padding:6px 14px; font-size:.84rem; border-radius:99px; border:2px solid var(--border); background:transparent; color:var(--muted); cursor:pointer; font-weight:600; font-family:inherit; }
+    .btn-mini:hover { border-color:var(--primary); color:var(--primary); }
+    .topic-card { background:linear-gradient(135deg,#FDF5EC,#F0E8D4); border:2px solid var(--border); border-radius:var(--radius); padding:18px 22px; margin-bottom:16px; }
+    .topic-label { font-size:.72rem; text-transform:uppercase; letter-spacing:1.5px; font-weight:800; color:var(--primary); }
+    .topic-card h4 { font-family:'Fraunces',Georgia,serif; font-size:1.3rem; line-height:1.35; margin:6px 0 0; }
+    .support-q { display:flex; gap:12px; align-items:flex-start; padding:9px 0; }
+    .support-q .gap-num { background:#fff; }
+    .support-q p { margin:0; line-height:1.7; }
+    .phrase-bank { display:flex; flex-wrap:wrap; gap:8px; margin:12px 0 6px; }
+    .phrase-chip { padding:6px 14px; border:2px solid var(--border); border-radius:100px; background:#fff; font-size:.92rem; cursor:pointer; font-family:inherit; color:var(--text); transition:background .15s,border-color .15s,color .15s; }
+    .phrase-chip:hover { border-color:var(--primary); color:var(--primary); }
+    .phrase-chip.used { background:var(--green); border-color:var(--green); color:#fff; }
+    .phrase-count { font-size:.9rem; color:var(--muted); }
+    .phrase-count b { color:var(--primary); font-size:1.05rem; }
+
+    /* ── conditionals: rule steps ── */
+    .step { --rc:var(--primary); display:flex; gap:16px; padding:18px 20px; background:#fff; border:2px solid var(--border); border-left:8px solid var(--rc); border-radius:12px; margin-bottom:12px; }
+    .step.rc-blue  { --rc:var(--blue); }
+    .step.rc-green { --rc:var(--green); }
+    .step-num { flex:0 0 36px; height:36px; display:flex; align-items:center; justify-content:center; background:var(--rc); color:#fff; font-weight:800; font-size:1.1rem; border-radius:50%; }
+    .step-body { flex:1; min-width:0; }
+    .step-title { font-family:'Fraunces',Georgia,serif; font-weight:700; font-size:1.15rem; color:var(--rc); margin-bottom:8px; line-height:1.3; }
+    .step-text { font-size:.98rem; line-height:2.1; }
+    .step-text .blank { min-width:120px; }
+    .step-text .ex { color:var(--muted); font-style:italic; }
+    .arrow-list { list-style:none; margin-top:8px; }
+    .arrow-list li { padding:5px 0; font-size:.98rem; }
+    .arrow-list .cond-key { font-weight:700; color:var(--text); }
+
+    /* ── conditionals: real / unreal decision ── */
+    .branch-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:4px; }
+    .branch { border:1.5px solid var(--border); border-radius:10px; padding:14px 16px; }
+    .branch-real   { background:rgba(91,140,69,.10);  border-left:4px solid var(--green); }
+    .branch-unreal { background:rgba(196,122,150,.13); border-left:4px solid var(--rose); }
+    .branch-head { font-weight:800; font-size:.93rem; margin-bottom:8px; }
+    .branch-real .branch-head   { color:var(--green); }
+    .branch-unreal .branch-head { color:var(--rose); }
+    .branch p { font-size:.93rem; line-height:1.7; margin-bottom:9px; }
+    .branch p:last-child { margin-bottom:0; }
+    .branch-do { border-top:1px dashed var(--border); padding-top:9px; }
+    .branch .ex { color:var(--muted); font-style:italic; }
+    .test-line { margin-top:14px; padding:11px 15px; background:rgba(201,160,48,.14); border-left:4px solid var(--accent-dk); border-radius:10px; font-size:.94rem; line-height:1.75; }
+    .ladder { display:flex; flex-direction:column; gap:8px; margin-top:10px; }
+    .ladder-item { background:var(--bg); border:1.5px solid var(--border); border-radius:10px; padding:10px 14px; font-size:.95rem; line-height:1.8; }
+    .ladder-arrow { color:var(--rose); font-weight:800; margin:0 7px; }
+    .ladder .ex { display:block; color:var(--muted); font-style:italic; font-size:.9rem; }
+    .flip-table { width:100%; border-collapse:collapse; margin-top:10px; font-size:.95rem; }
+    .flip-table th { text-align:left; font-size:.72rem; text-transform:uppercase; letter-spacing:1px; color:var(--muted); padding:6px 10px; border-bottom:2px solid var(--border); }
+    .flip-table td { padding:11px 10px; border-bottom:1px solid var(--border); line-height:1.7; vertical-align:top; }
+    .flip-table tr:last-child td { border-bottom:none; }
+    .pol { display:inline-block; width:21px; height:21px; line-height:19px; text-align:center; border-radius:50%; font-weight:800; font-size:.85rem; margin-right:7px; }
+    .pol-pos { background:rgba(91,140,69,.20); color:var(--green); }
+    .pol-neg { background:rgba(200,64,64,.16);  color:var(--red); }
+    .rw-row { display:flex; gap:12px; align-items:center; flex-wrap:wrap; padding:11px 0; border-bottom:1px dashed var(--border); }
+    .rw-row:last-of-type { border-bottom:none; }
+    .rw-row .gap-num { margin-top:0; background:var(--bg); }
+    .rw-text { flex:1; min-width:190px; font-size:.97rem; line-height:1.6; }
+    .word-choice { display:inline-flex; border:2px solid var(--border); border-radius:8px; overflow:hidden; margin:0 4px; vertical-align:middle; }
+    .word-choice-btn { padding:5px 15px; cursor:pointer; border:none; background:transparent; font-size:.9rem; font-weight:600; color:var(--muted); font-family:inherit; transition:background .15s,color .15s; }
+    .word-choice-btn:hover { background:var(--bg); color:var(--text); }
+    .word-choice-btn.selected { background:var(--primary); color:#fff; }
+    .word-choice-btn.correct  { background:var(--green) !important; color:#fff !important; }
+    .word-choice-btn.wrong    { background:var(--red)   !important; color:#fff !important; }
+
+    /* ── conditionals: form table ── */
+    .cond-table { width:100%; border-collapse:collapse; margin-top:16px; }
+    .cond-table th { font-size:.74rem; text-transform:uppercase; letter-spacing:1px; color:var(--muted); text-align:left; padding:8px 12px; border-bottom:2px solid var(--border); }
+    .cond-table td { padding:12px; border-bottom:1px solid var(--border); font-size:.97rem; line-height:1.9; vertical-align:middle; }
+    .cond-table tr:last-child td { border-bottom:none; }
+    .cond-table .blank { min-width:118px; }
+    .cond-name { font-weight:800; white-space:nowrap; }
+    .cond-name span { display:block; font-weight:500; font-size:.78rem; color:var(--muted); letter-spacing:0; }
+    .c-zero   { color:var(--muted); }
+    .c-first  { color:var(--primary); }
+    .c-second { color:var(--blue); }
+    .c-third  { color:var(--green); }
+    .c-mixed  { color:var(--rose); }
+
+    /* ── fact → conditional ── */
+    .fact-item { padding:16px 0; border-bottom:1px dashed var(--border); }
+    .fact-item:last-of-type { border-bottom:none; }
+    .fact-head { display:flex; gap:14px; align-items:flex-start; }
+    .fact-text { flex:1; min-width:0; font-weight:600; line-height:1.7; margin:0; }
+    .fact-tag { display:inline-block; font-size:.68rem; text-transform:uppercase; letter-spacing:1px; font-weight:800; padding:2px 9px; border-radius:99px; margin-left:8px; vertical-align:middle; background:rgba(196,122,150,.18); color:var(--rose); }
+    .fact-body { margin-left:41px; }
+    @media(max-width:560px){ .fact-body { margin-left:0; } }
+    .fact-body .free-write { margin-top:8px; }
+    details.model { margin-top:8px; }
+    details.model summary { cursor:pointer; font-size:.86rem; color:var(--primary); font-weight:700; list-style:none; display:inline-block; }
+    details.model summary::-webkit-details-marker { display:none; }
+    details.model summary::before { content:'💡 '; }
+    details.model summary:hover { text-decoration:underline; }
+    .model-body { font-size:.96rem; color:var(--green); background:rgba(91,140,69,.09); border-radius:8px; padding:10px 14px; margin-top:8px; line-height:1.7; }
+
+    /* ── conditional linkers (book 6 & 7) ── */
+    .sub-head { font-family:'Fraunces',Georgia,serif; font-weight:700; font-size:1.05rem; color:var(--text); margin:6px 0 12px; padding-bottom:7px; border-bottom:2px solid var(--border); }
+    .src-sentences { background:var(--bg); border:1.5px solid var(--border); border-radius:12px; padding:12px 16px; margin-bottom:16px; }
+    .src-row { display:flex; gap:12px; align-items:flex-start; padding:7px 0; }
+    .src-row p { margin:0; font-size:.97rem; line-height:1.65; }
+    .src-row b { color:var(--primary-dk); }
+    .src-row .gap-num { margin-top:2px; background:#fff; }
+    .mean-row { display:flex; align-items:center; flex-wrap:wrap; gap:8px; padding:9px 0; border-bottom:1px dashed var(--border); }
+    .mean-row:last-of-type { border-bottom:none; }
+    .mean-letter { flex:0 0 27px; height:27px; display:flex; align-items:center; justify-content:center; border-radius:50%; background:var(--accent); color:#fff; font-weight:800; font-size:.85rem; }
+    .mean-gloss { font-size:.97rem; color:var(--muted); min-width:145px; }
+    .mean-gloss em { color:var(--text); font-weight:600; }
+    .mean-amp { color:var(--muted); font-weight:700; }
+    .mean-row .blank { min-width:150px; }
+
+    /* ── starred extra task ── */
+    .extra-task { border-style:dashed; background:rgba(201,160,48,.06); }
+    .label-extra { background:var(--accent-dk); }
+    .extra-note { font-size:.9rem; color:var(--muted); font-style:italic; margin-bottom:10px; }
+
+    /* ── key-word transformation ── */
+    .kw-table { width:100%; border-collapse:collapse; margin-top:16px; }
+    .kw-table th { font-family:'Fraunces',Georgia,serif; font-size:1rem; font-weight:700; padding:11px; border:1px solid var(--border); background:rgba(201,160,48,.12); }
+    .kw-table td { padding:12px 14px; border:1px solid var(--border); line-height:2; vertical-align:top; }
+    .kw-num { width:44px; text-align:center; color:var(--muted); font-weight:700; font-size:.9rem; }
+    .kw-given { display:block; font-weight:800; color:var(--primary); margin:4px 0; letter-spacing:.04em; }
+    .kw-table .blank { min-width:230px; }
+    @media(max-width:620px){
+      .kw-table, .kw-table tbody, .kw-table tr, .kw-table td { display:block; width:auto; }
+      .kw-table tr { border:1px solid var(--border); border-radius:10px; margin-bottom:12px; padding:4px 0; }
+      .kw-table td { border:none; padding:5px 14px; }
+      .kw-num { text-align:left; width:auto; }
+      .kw-table .blank { min-width:150px; }
+    }
+
+    /* ── culture picture matching ── */
+    .pic-match { display:flex; flex-direction:column; gap:18px; }
+    .pic-grid { display:grid; grid-template-columns:repeat(5,1fr); gap:12px; }
+    .pic-card.match-item { position:relative; padding:0; border-radius:12px; overflow:hidden; background:#fff; border:2.5px solid var(--border); }
+    .pic-card.match-item:hover:not(.locked) { border-color:var(--primary); }
+    .pic-card.match-item.selected { border-color:var(--primary); box-shadow:0 0 0 3px rgba(212,87,42,.18); }
+    .pic-card.match-item.matched  { border-color:var(--green); box-shadow:0 0 0 3px rgba(91,140,69,.18); }
+    .pic-card.match-item.matched .pic-img { opacity:.72; }
+    .pic-img { width:100%; height:128px; object-fit:cover; display:block; background:var(--bg); }
+    .pic-num { position:absolute; top:7px; left:7px; z-index:2; width:26px; height:26px; border-radius:50%; background:rgba(44,32,16,.76); color:#fff; font-weight:800; font-size:.82rem; display:flex; align-items:center; justify-content:center; }
+    .pic-card.match-item.matched .pic-num { background:var(--green); }
+    .chip-bank { display:flex; flex-direction:row; flex-wrap:wrap; gap:9px; }
+    .event-chip.match-item { flex:0 1 auto; padding:9px 15px; border-radius:100px; font-size:.93rem; text-align:left; }
+    @media(max-width:900px){ .pic-grid { grid-template-columns:repeat(4,1fr); } }
+    @media(max-width:700px){ .pic-grid { grid-template-columns:repeat(3,1fr); } .pic-img { height:104px; } }
+    @media(max-width:480px){ .pic-grid { grid-template-columns:repeat(2,1fr); } .event-chip.match-item { font-size:.88rem; padding:8px 13px; } }
+
+    /* ── culture placeholder ── */
+    .soon { text-align:center; padding:46px 24px; color:var(--muted); }
+    .soon-emoji { font-size:2.4rem; display:block; margin-bottom:10px; }
+
+    @media(max-width:900px){ .rule-cols { grid-template-columns:1fr 1fr; } }
+    @media(max-width:700px){ .branch-grid { grid-template-columns:1fr; } }
+    @media(max-width:560px){
+      .rule-cols { grid-template-columns:1fr; }
+      .step { padding:14px; gap:12px; border-left-width:6px; }
+      .cond-table td, .cond-table th { padding:8px 6px; font-size:.92rem; }
+    }
+  </style>
+</head>
+<body>
+
+<header class="site-header">
+  <h1>Lesson 4 — Prepositions, Conditionals &amp; Culture</h1>
+  <a class="back-link" href="../index.html">← All Lessons</a>
+</header>
+
+<div class="container">
+
+  <div class="lesson-meta">
+    <h2>Dependent Prepositions &amp; Conditionals</h2>
+    <p>📅 18 September 2026 &nbsp;·&nbsp; Lesson 4</p>
+  </div>
+
+  <div class="tab-bar">
+    <button class="tab-btn active" onclick="switchTab('p1',this)">Part 1 · Prepositions</button>
+    <button class="tab-btn"        onclick="switchTab('p2',this)">Part 2 · Conditionals</button>
+    <button class="tab-btn"        onclick="switchTab('p3',this)">Part 3 · Culture</button>
+    <button class="tab-btn"        onclick="switchTab('hw',this)">📝 Homework</button>
+  </div>
+  <div class="tab-scallop"></div>
+
+  <!-- ══════════════════════════════════════════════════════
+       PART 1 — PREPOSITIONS
+  ══════════════════════════════════════════════════════ -->
+  <div class="tab-content active" id="tab-p1">
+
+    <!-- WARM-UP: stress patterns -->
+    <div class="exercise" id="warmup-stress">
+      <div class="exercise-label">Warm-up — Stress Patterns</div>
+      <h3 class="big-instr">🔊 Where does the stress fall?</h3>
+      <p class="lead-instr">
+        Mark the pattern: <b>O</b> stressed, <b>o</b> unstressed. Say each word aloud and name the rule.
+      </p>
+      <div class="stress-tip">💡 <span>Example: <b>photography</b> → <span class="pat">oOoo</span> — pho-<span class="cap">TOG</span>-ra-phy &nbsp;·&nbsp; <em>stress the syllable before <b>-graphy</b></em></span></div>
+
+      <div class="stress-exercise">
+        <div class="stress-row"><span class="stress-num">1</span><span class="stress-word">definition</span><input class="blank" id="w-1" data-answer="ooOo" data-case="strict"></div>
+        <div class="stress-row"><span class="stress-num">2</span><span class="stress-word">curiosity</span><input class="blank" id="w-2" data-answer="ooOoo" data-case="strict"></div>
+        <div class="stress-row"><span class="stress-num">3</span><span class="stress-word">employee</span><input class="blank" id="w-3" data-answer="ooO" data-case="strict"></div>
+        <div class="stress-row"><span class="stress-num">4</span><span class="stress-word">management</span><input class="blank" id="w-4" data-answer="Ooo" data-case="strict"></div>
+        <div class="stress-row"><span class="stress-num">5</span><span class="stress-word">scientific</span><input class="blank" id="w-5" data-answer="ooOo" data-case="strict"></div>
+        <div class="stress-row"><span class="stress-num">6</span><span class="stress-word">memorable</span><input class="blank" id="w-6" data-answer="Oooo" data-case="strict"></div>
+        <div class="stress-row"><span class="stress-num">7</span><span class="stress-word">a decrease <span class="pos">noun</span></span><input class="blank" id="w-7" data-answer="Oo" data-case="strict"></div>
+        <div class="stress-row"><span class="stress-num">8</span><span class="stress-word">to decrease <span class="pos">verb</span></span><input class="blank" id="w-8" data-answer="oO" data-case="strict"></div>
+      </div>
+
+      <div class="say-aloud">
+        <b>Now say these aloud.</b> The preposition is never stressed:<br>
+        · she's famous <b>for</b> her curi<span class="cap">O</span>sity<br>
+        · the <span class="cap">DE</span>crease <b>in</b> prices &nbsp;→&nbsp; prices de<span class="cap">CREASED</span> <b>by</b> 10%<br>
+        · who is responsible <b>for</b> <span class="cap">MAN</span>agement here?
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="checkBlanks('warmup-stress')">Check ✓</button>
+        <button class="btn btn-ghost"   onclick="resetBlanks('warmup-stress')">Try again</button>
+      </div>
+    </div>
+
+    <!-- TASK 1: revision in / on / at / for -->
+    <div class="exercise" id="t1-prep">
+      <div class="exercise-label">Task 1 — Revision: In, On, At or For?</div>
+      <h3 class="big-instr">♻️ In, on, at or for?</h3>
+      <p class="lead-instr">
+        All from Lesson 2. Each preposition is used <b>twice</b>.
+      </p>
+
+      <div class="gap-list">
+        <div class="gap-row"><span class="gap-num">1</span><p class="gap-text">Book the tickets well <input class="blank" id="p1-1" data-answer="in" placeholder="???"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button> advance — the good seats go within hours.</p></div>
+        <div class="gap-row"><span class="gap-num">2</span><p class="gap-text"><input class="blank" id="p1-2" data-answer="at" placeholder="???"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button> first the film seemed unbearably slow, but the last twenty minutes were extraordinary.</p></div>
+        <div class="gap-row"><span class="gap-num">3</span><p class="gap-text">She insisted <input class="blank" id="p1-3" data-answer="on" placeholder="???"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button> paying for everyone, although nobody had asked her to.</p></div>
+        <div class="gap-row"><span class="gap-num">4</span><p class="gap-text">He has been out of work <input class="blank" id="p1-4" data-answer="for" placeholder="???"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button> a while now, so money is tight at home.</p></div>
+        <div class="gap-row"><span class="gap-num">5</span><p class="gap-text"><input class="blank" id="p1-5" data-answer="in" placeholder="???"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button> fact, the report had been finished two days before the deadline.</p></div>
+        <div class="gap-row"><span class="gap-num">6</span><p class="gap-text">My brother is surprisingly good <input class="blank" id="p1-6" data-answer="at" placeholder="???"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button> persuading people to change their minds.</p></div>
+        <div class="gap-row"><span class="gap-num">7</span><p class="gap-text">The company is famous <input class="blank" id="p1-7" data-answer="for" placeholder="???"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button> treating its employees unusually well.</p></div>
+        <div class="gap-row"><span class="gap-num">8</span><p class="gap-text">We set off early and still didn't arrive <input class="blank" id="p1-8" data-answer="on" placeholder="???"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button> time for the opening speech.</p></div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="checkBlanks('t1-prep')">Check ✓</button>
+        <button class="btn btn-ghost"   onclick="resetBlanks('t1-prep')">Try again</button>
+      </div>
+    </div>
+
+    <!-- TASK 2: rule box by / from / with / about -->
+    <div class="exercise">
+      <div class="exercise-label">Task 2 — Grammar Rule</div>
+      <div class="rule-box">
+        <div class="rule-box-title">📐 Four More Prepositions: BY / FROM / WITH / ABOUT</div>
+        <div class="rule-core">
+          <b>BY</b> answers <em>how?</em> or <em>who did it?</em> — the means, the method, the route, the agent.
+          If something happened through a particular channel (<em>by chance, by hand, by email</em>) or was done
+          by somebody (<em>a novel written by Austen</em>), you need <b>by</b>.<br><br>
+          <b>FROM</b> marks the <em>starting point</em> — where something comes out of, and therefore also what it
+          is kept away from or told apart from (<em>suffer from, different from, prevent … from</em>).<br><br>
+          <b>WITH</b> marks <em>company or contact</em> — two things side by side: the tool you use, the person you
+          deal with, the feeling you hold towards something (<em>familiar with, satisfied with, agree with</em>).<br><br>
+          <b>ABOUT</b> marks the <em>topic</em> — what your words, thoughts or feelings are circling around
+          (<em>worried about, uncertain about, complain about</em>).
+        </div>
+
+        <div class="rule-cols">
+          <div class="rule-col rule-by">
+            <div class="rule-verb">BY</div>
+            <div class="rule-gloss">means · agent</div>
+            <ul>
+              <li>by chance / by accident</li>
+              <li>by mistake</li>
+              <li>learn sth by heart</li>
+              <li>by hand / by car / by email</li>
+              <li>written / directed by</li>
+              <li>caused / accompanied by</li>
+              <li>by far the best</li>
+              <li>by no means <em>(C1)</em></li>
+            </ul>
+          </div>
+          <div class="rule-col rule-from">
+            <div class="rule-verb">FROM</div>
+            <div class="rule-gloss">origin · separation</div>
+            <ul>
+              <li>suffer from</li>
+              <li>different from</li>
+              <li>prevent sb from doing</li>
+              <li>recover from</li>
+              <li>benefit from</li>
+              <li>borrow sth from sb</li>
+              <li>apart from</li>
+              <li>stem from <em>(C1)</em></li>
+            </ul>
+          </div>
+          <div class="rule-col rule-with">
+            <div class="rule-verb">WITH</div>
+            <div class="rule-gloss">company · contact</div>
+            <ul>
+              <li>familiar with</li>
+              <li>satisfied / pleased with</li>
+              <li>agree with</li>
+              <li>cope with / deal with</li>
+              <li>provide sb with sth</li>
+              <li>compare sth with sth</li>
+              <li>fed up with <em>(C1)</em></li>
+              <li>consistent with <em>(C1)</em></li>
+            </ul>
+          </div>
+          <div class="rule-col rule-about">
+            <div class="rule-verb">ABOUT</div>
+            <div class="rule-gloss">topic · around</div>
+            <ul>
+              <li>worried about</li>
+              <li>uncertain about</li>
+              <li>excited about</li>
+              <li>complain about</li>
+              <li>curious about</li>
+              <li>serious about</li>
+              <li>enthusiastic about <em>(C1)</em></li>
+              <li>sceptical about <em>(C1)</em></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="recap-strip">
+          <b>Already yours — the FOR family:</b><br>
+          <em>difficult for</em><em>famous / known for</em><em>responsible for</em><em>for the first time</em><em>apologise for</em><em>wait for</em><em>for a while</em>
+        </div>
+
+        <div class="trap-note">
+          <b>⚠ Traps.</b>
+          <em>agree with</em> a person, but <em>agree to</em> a plan ·
+          <em>different from</em> (BrE also <em>different to</em>, never <em>different than</em> in an exam) ·
+          <em>worried about</em> a problem, but <em>afraid of</em> it ·
+          <em>by</em> car / <em>on</em> foot ·
+          <em>apologise for</em> the thing, <em>apologise to</em> the person.
+        </div>
+      </div>
+    </div>
+
+    <!-- TASK 3: mixed gaps -->
+    <div class="exercise" id="t3-mixed">
+      <div class="exercise-label">Task 3 — All Eight Prepositions</div>
+      <h3 class="big-instr">🧩 All eight prepositions.</h3>
+      <p class="lead-instr">
+        <b>in · on · at · for · by · from · with · about.</b> The verb or adjective before the gap
+        decides it — look left before you write.
+      </p>
+
+      <div class="gap-list">
+        <div class="gap-row"><span class="gap-num">1</span><p class="gap-text">He only found out <input class="blank" id="p3-1" data-answer="by" placeholder="???"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button> chance, when a colleague mentioned it in passing.</p></div>
+        <div class="gap-row"><span class="gap-num">2</span><p class="gap-text">My conclusions differ <input class="blank" id="p3-2" data-answer="from" placeholder="???"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button> hers in one important respect.</p></div>
+        <div class="gap-row"><span class="gap-num">3</span><p class="gap-text">She isn't particularly familiar <input class="blank" id="p3-3" data-answer="with" placeholder="???"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button> the new software yet, so be patient with her.</p></div>
+        <div class="gap-row"><span class="gap-num">4</span><p class="gap-text">I'm getting seriously worried <input class="blank" id="p3-4" data-answer="about" placeholder="???"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button> how little he has been sleeping.</p></div>
+        <div class="gap-row"><span class="gap-num">5</span><p class="gap-text">The scholarship prevented her <input class="blank" id="p3-5" data-answer="from" placeholder="???"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button> having to take a second job.</p></div>
+        <div class="gap-row"><span class="gap-num">6</span><p class="gap-text">He has never once apologised <input class="blank" id="p3-6" data-answer="for" placeholder="???"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button> what he said that evening.</p></div>
+        <div class="gap-row"><span class="gap-num">7</span><p class="gap-text">We had to learn the whole speech <input class="blank" id="p3-7" data-answer="by" placeholder="???"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button> heart, which took most of the weekend.</p></div>
+        <div class="gap-row"><span class="gap-num">8</span><p class="gap-text"><input class="blank" id="p3-8" data-answer="in" placeholder="???"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button> general, the second novel is considered the stronger of the two.</p></div>
+        <div class="gap-row"><span class="gap-num">9</span><p class="gap-text">Everyone was surprised <input class="blank" id="p3-9" data-answer="at|by" placeholder="???"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button> how quickly the hall emptied after the announcement.</p></div>
+        <div class="gap-row"><span class="gap-num">10</span><p class="gap-text">Whether the trip happens at all depends entirely <input class="blank" id="p3-10" data-answer="on" placeholder="???"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button> tomorrow's forecast.</p></div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="checkBlanks('t3-mixed')">Check ✓</button>
+        <button class="btn btn-ghost"   onclick="resetBlanks('t3-mixed')">Try again</button>
+      </div>
+    </div>
+
+    <!-- TASK 4: speaking -->
+    <div class="exercise">
+      <div class="exercise-label">Task 4 — Speaking</div>
+      <h3 class="big-instr">🎤 Two minutes, five prepositional phrases.</h3>
+      <p class="lead-instr">
+        Speak for two minutes without stopping. Use <b>at least five</b> phrases from the bank —
+        tap each one as you use it.
+      </p>
+
+      <div class="topic-card">
+        <span class="topic-label">Your topic</span>
+        <h4>Something you are good at that most people find difficult.</h4>
+      </div>
+
+      <div class="support-q"><span class="gap-num">1</span><p>How did you get into it — on purpose, or completely by chance? Were you any good at it <em>at first</em>?</p></div>
+      <div class="support-q"><span class="gap-num">2</span><p>What part of it are beginners usually most uncertain about, and why is that part so difficult for them?</p></div>
+      <div class="support-q"><span class="gap-num">3</span><p>Who or what has influenced you most — and are you satisfied with how far you've got?</p></div>
+
+      <div class="timer-box">
+        <span class="timer-clock" id="timerClock">2:00</span>
+        <span class="timer-hint">Start the clock and don't stop talking until it hits 0:00.</span>
+        <button class="btn-mini" onclick="timerStart()">▶ Start</button>
+        <button class="btn-mini" onclick="timerPause()">⏸ Pause</button>
+        <button class="btn-mini" onclick="timerReset()">↺ Reset</button>
+      </div>
+
+      <p style="font-weight:600; margin-bottom:4px;">Phrase bank — tap what you manage to use:</p>
+      <div class="phrase-bank" id="bank-speak" data-count="bankCount">
+        <button class="phrase-chip" data-p="good at"        onclick="togglePhrase(this)">good at</button>
+        <button class="phrase-chip" data-p="difficult for"  onclick="togglePhrase(this)">difficult for</button>
+        <button class="phrase-chip" data-p="at first"       onclick="togglePhrase(this)">at first</button>
+        <button class="phrase-chip" data-p="by chance"      onclick="togglePhrase(this)">by chance</button>
+        <button class="phrase-chip" data-p="on purpose"     onclick="togglePhrase(this)">on purpose</button>
+        <button class="phrase-chip" data-p="familiar with"  onclick="togglePhrase(this)">familiar with</button>
+        <button class="phrase-chip" data-p="uncertain about" onclick="togglePhrase(this)">uncertain about</button>
+        <button class="phrase-chip" data-p="worried about"  onclick="togglePhrase(this)">worried about</button>
+        <button class="phrase-chip" data-p="satisfied with" onclick="togglePhrase(this)">satisfied with</button>
+        <button class="phrase-chip" data-p="responsible for" onclick="togglePhrase(this)">responsible for</button>
+        <button class="phrase-chip" data-p="for the first time" onclick="togglePhrase(this)">for the first time</button>
+        <button class="phrase-chip" data-p="benefit from"   onclick="togglePhrase(this)">benefit from</button>
+        <button class="phrase-chip" data-p="in fact"        onclick="togglePhrase(this)">in fact</button>
+        <button class="phrase-chip" data-p="cope with"      onclick="togglePhrase(this)">cope with</button>
+      </div>
+      <p class="phrase-count">Used: <b id="bankCount">0</b> / 5 needed</p>
+
+      <textarea class="free-write" id="fw-speak-notes" placeholder="Notes before you speak — three or four key words only, not full sentences…" rows="3" style="margin-top:14px;"></textarea>
+      <div class="char-count" id="cc-fw-speak-notes">0 characters</div>
+    </div>
+
+  </div><!-- /tab-p1 -->
+
+  <!-- ══════════════════════════════════════════════════════
+       PART 2 — CONDITIONALS
+  ══════════════════════════════════════════════════════ -->
+  <div class="tab-content" id="tab-p2">
+
+    <!-- TASK 1: diagnostic matching -->
+    <div class="exercise" id="ex-cond-match">
+      <div class="exercise-label">Task 1 — What Do You Already Know?</div>
+      <h3 class="big-instr">🔗 Match the two halves.</h3>
+      <p class="lead-instr">
+        Click a half on the left, then its partner on the right.
+      </p>
+
+      <div class="match-grid">
+        <div class="match-col" data-side="left">
+          <div class="match-item" data-pair="1" onclick="selectMatch(this,'ex-cond-match')">If you leave ice cream in the sun,</div>
+          <div class="match-item" data-pair="2" onclick="selectMatch(this,'ex-cond-match')">If I finish my homework before eight,</div>
+          <div class="match-item" data-pair="3" onclick="selectMatch(this,'ex-cond-match')">If I lived closer to school,</div>
+          <div class="match-item" data-pair="4" onclick="selectMatch(this,'ex-cond-match')">If she had revised the irregular verbs,</div>
+          <div class="match-item" data-pair="5" onclick="selectMatch(this,'ex-cond-match')">If you press this button twice,</div>
+          <div class="match-item" data-pair="6" onclick="selectMatch(this,'ex-cond-match')">If they hadn't cancelled our flight,</div>
+          <div class="match-item" data-pair="7" onclick="selectMatch(this,'ex-cond-match')">If I were fifteen centimetres taller,</div>
+          <div class="match-item" data-pair="8" onclick="selectMatch(this,'ex-cond-match')">If it snows at the weekend,</div>
+        </div>
+        <div class="match-col" data-side="right">
+          <div class="match-item" data-pair="4" onclick="selectMatch(this,'ex-cond-match')">she would have passed the test easily.</div>
+          <div class="match-item" data-pair="8" onclick="selectMatch(this,'ex-cond-match')">we'll go sledging in the park.</div>
+          <div class="match-item" data-pair="1" onclick="selectMatch(this,'ex-cond-match')">it melts within minutes.</div>
+          <div class="match-item" data-pair="6" onclick="selectMatch(this,'ex-cond-match')">we would have arrived on Tuesday morning.</div>
+          <div class="match-item" data-pair="3" onclick="selectMatch(this,'ex-cond-match')">I wouldn't have to get up at six.</div>
+          <div class="match-item" data-pair="7" onclick="selectMatch(this,'ex-cond-match')">I would play basketball much better.</div>
+          <div class="match-item" data-pair="5" onclick="selectMatch(this,'ex-cond-match')">the machine restarts itself.</div>
+          <div class="match-item" data-pair="2" onclick="selectMatch(this,'ex-cond-match')">I'll watch the second episode tonight.</div>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-ghost" onclick="resetMatchEx('ex-cond-match')">Reset</button>
+      </div>
+    </div>
+
+    <!-- TASK 2: complete the rule -->
+    <div class="exercise" id="t2-rule">
+      <div class="exercise-label">Task 2 — Complete the Rule</div>
+      <h3 class="big-instr">🛠 Three questions that name any conditional.</h3>
+      <p class="lead-instr">
+        Take the fact you want to rewrite and ask them in this order. Fill the gaps; click where there
+        are buttons.
+      </p>
+
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-title">Past, present or future?</div>
+          <div class="step-text">
+            Find <b>when</b> the real situation happens. That single decision does most of the work.<br>
+            <span class="ex">It's raining right now</span> → <input class="blank" id="r-1" data-answer="present" placeholder="???"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button><br>
+            <span class="ex">She missed the bus yesterday</span> → <input class="blank" id="r-2" data-answer="past" placeholder="???"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button><br>
+            <span class="ex">I'm seeing him tomorrow</span> → <input class="blank" id="r-3" data-answer="future" placeholder="???"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="step rc-blue" id="t2-step2">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <div class="step-title">Real or unreal? One question: <em>can it still happen?</em></div>
+
+          <div class="branch-grid">
+            <div class="branch branch-real">
+              <div class="branch-head">✅ YES — it is still open</div>
+              <p>Nobody knows yet how it will turn out, so you are talking about a <b>genuine option</b>.</p>
+              <p class="branch-do">→ <b>Real.</b> Don't touch the tenses.<br>
+                <span class="ex">Maybe it will snow. → If it <b>snows</b>, we<b>'ll</b> go sledging.</span></p>
+            </div>
+            <div class="branch branch-unreal">
+              <div class="branch-head">❌ NO — I already know the truth</div>
+              <p>You are not predicting anything. You know what is (or was) the case and you are imagining the <b>opposite</b> of it.</p>
+              <p class="branch-do">→ <b>Unreal.</b> Move the verb one step back.<br>
+                <span class="ex">It never snows here. → If it <b>snowed</b> here, we <b>would</b> go sledging.</span></p>
+            </div>
+          </div>
+
+          <div class="test-line">🧪 <b>Quick test:</b> add <em>“…but that's not the case”</em>. If it still makes sense, go <b>unreal</b>.</div>
+
+          <div class="step-text" style="margin-top:14px;">
+            <b>Why the verb moves backwards.</b> In an unreal sentence the past tense is not about time —
+            it is about <b>distance from the truth</b>. One step back means “this isn't real”:
+          </div>
+          <div class="ladder">
+            <div class="ladder-item">a <b>present</b> fact <span class="ladder-arrow">→</span> <b>past simple</b>
+              <span class="ex">I don't have a car → if I <b>had</b> a car…</span></div>
+            <div class="ladder-item">a <b>past</b> fact <span class="ladder-arrow">→</span> <b>past perfect</b>
+              <span class="ex">she didn't revise → if she <b>had revised</b>…</span></div>
+          </div>
+
+          <div class="step-text" style="margin-top:16px;">
+            <b>And the sentence flips.</b> Since you are saying the opposite of the truth, a real
+            <span class="pol pol-pos">+</span> becomes a <span class="pol pol-neg">−</span>, and a real
+            <span class="pol pol-neg">−</span> becomes a <span class="pol pol-pos">+</span>:
+          </div>
+          <table class="flip-table">
+            <thead><tr><th>What really happened</th><th>The conditional you build on it</th></tr></thead>
+            <tbody>
+              <tr>
+                <td><span class="pol pol-pos">+</span> She revised, so she passed.</td>
+                <td><span class="pol pol-neg">−</span> If she <b>hadn't revised</b>, she <b>wouldn't have passed</b>.</td>
+              </tr>
+              <tr>
+                <td><span class="pol pol-neg">−</span> He didn't apologise, so she's still angry.</td>
+                <td><span class="pol pol-pos">+</span> If he <b>had apologised</b>, she <b>wouldn't</b> still <b>be</b> angry.</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="step-text" style="margin-top:18px;">
+            <b>Your turn.</b> Build a conditional on each fact — real or unreal?
+          </div>
+
+          <div class="rw-row">
+            <span class="gap-num">1</span>
+            <span class="rw-text">It might snow on Saturday — nobody knows yet.</span>
+            <span class="word-choice" id="rw-1" data-answer="real"><button class="word-choice-btn" data-val="real" onclick="selectGap(this)">real</button><button class="word-choice-btn" data-val="unreal" onclick="selectGap(this)">unreal</button></span>
+          </div>
+          <div class="rw-row">
+            <span class="gap-num">2</span>
+            <span class="rw-text">I'm not old enough to drive.</span>
+            <span class="word-choice" id="rw-2" data-answer="unreal"><button class="word-choice-btn" data-val="real" onclick="selectGap(this)">real</button><button class="word-choice-btn" data-val="unreal" onclick="selectGap(this)">unreal</button></span>
+          </div>
+          <div class="rw-row">
+            <span class="gap-num">3</span>
+            <span class="rw-text">He forgot to charge his phone, so we couldn't reach him.</span>
+            <span class="word-choice" id="rw-3" data-answer="unreal"><button class="word-choice-btn" data-val="real" onclick="selectGap(this)">real</button><button class="word-choice-btn" data-val="unreal" onclick="selectGap(this)">unreal</button></span>
+          </div>
+          <div class="rw-row">
+            <span class="gap-num">4</span>
+            <span class="rw-text">I may well finish the essay tonight — it depends how tired I am.</span>
+            <span class="word-choice" id="rw-4" data-answer="real"><button class="word-choice-btn" data-val="real" onclick="selectGap(this)">real</button><button class="word-choice-btn" data-val="unreal" onclick="selectGap(this)">unreal</button></span>
+          </div>
+          <div class="rw-row">
+            <span class="gap-num">5</span>
+            <span class="rw-text">She lives in Madrid, not here.</span>
+            <span class="word-choice" id="rw-5" data-answer="unreal"><button class="word-choice-btn" data-val="real" onclick="selectGap(this)">real</button><button class="word-choice-btn" data-val="unreal" onclick="selectGap(this)">unreal</button></span>
+          </div>
+          <div class="rw-row">
+            <span class="gap-num">6</span>
+            <span class="rw-text">Water boils at 100 °C — always has, always will.</span>
+            <span class="word-choice" id="rw-6" data-answer="real"><button class="word-choice-btn" data-val="real" onclick="selectGap(this)">real</button><button class="word-choice-btn" data-val="unreal" onclick="selectGap(this)">unreal</button></span>
+          </div>
+
+          <div class="btn-row">
+            <button class="btn btn-primary" onclick="checkGaps('t2-step2')">Check these six ✓</button>
+            <button class="btn btn-ghost"   onclick="resetGaps('t2-step2')">Try again</button>
+          </div>
+
+          <div class="test-line" style="margin-top:16px;">
+            👉 Two answers now: <em>when?</em> and <em>real or unreal?</em> Step 3 turns them into a name.
+          </div>
+        </div>
+      </div>
+
+      <div class="step rc-green">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <div class="step-title">Put the two answers together</div>
+          <div class="step-text">Your two answers name the type. Write the name of the conditional:</div>
+          <ul class="arrow-list">
+            <li><span class="cond-key">future + real</span> → the <input class="blank" id="r-7" data-answer="first|1st" placeholder="???"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button> conditional</li>
+            <li><span class="cond-key">present + unreal</span> → the <input class="blank" id="r-8" data-answer="second|2nd" placeholder="???"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button> conditional</li>
+            <li><span class="cond-key">past + unreal</span> → the <input class="blank" id="r-9" data-answer="third|3rd" placeholder="???"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button> conditional</li>
+            <li><span class="cond-key">past cause + present result</span> → a <input class="blank" id="r-10" data-answer="mixed" placeholder="???"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button> conditional</li>
+          </ul>
+        </div>
+      </div>
+
+      <h3 style="margin-top:22px;">The forms.</h3>
+      <table class="cond-table">
+        <thead>
+          <tr><th>Type</th><th>If-clause</th><th>Main clause</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="cond-name c-zero">Zero<span>always true</span></td>
+            <td>if + <input class="blank" id="r-11" data-answer="present simple|present" placeholder="???"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button></td>
+            <td><input class="blank" id="r-12" data-answer="present simple|present" placeholder="???"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button></td>
+          </tr>
+          <tr>
+            <td class="cond-name c-first">First<span>future · real</span></td>
+            <td>if + <input class="blank" id="r-13" data-answer="present simple|present" placeholder="???"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button></td>
+            <td><input class="blank" id="r-14" data-answer="will|'ll|will/won't" placeholder="???"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button> + infinitive</td>
+          </tr>
+          <tr>
+            <td class="cond-name c-second">Second<span>present · unreal</span></td>
+            <td>if + <input class="blank" id="r-15" data-answer="past simple|past" placeholder="???"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button></td>
+            <td>would + <input class="blank" id="r-16" data-answer="infinitive|bare infinitive|verb" placeholder="???"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button></td>
+          </tr>
+          <tr>
+            <td class="cond-name c-third">Third<span>past · unreal</span></td>
+            <td>if + <input class="blank" id="r-17" data-answer="past perfect" placeholder="???"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button></td>
+            <td>would <input class="blank" id="r-18" data-answer="have" placeholder="???"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button> + past participle</td>
+          </tr>
+          <tr>
+            <td class="cond-name c-mixed">Mixed<span>past cause · present result</span></td>
+            <td>if + <input class="blank" id="r-19" data-answer="past perfect" placeholder="???"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button></td>
+            <td>would + <input class="blank" id="r-20" data-answer="infinitive|bare infinitive|verb" placeholder="???"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button> <em>(the result is now)</em></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="trap-note" style="margin-top:16px;">
+        <b>⚠ In the exam.</b>
+        Never <em>will</em> or <em>would</em> inside the if-clause ·
+        in the second conditional use <em>were</em> for every person (<em>If I <b>were</b> you…</em>) ·
+        <em>could</em> and <em>might</em> can replace <em>would</em> when the result is possible rather than certain.
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="checkBlanks('t2-rule');checkGaps('t2-rule')">Check everything ✓</button>
+        <button class="btn btn-ghost"   onclick="resetBlanks('t2-rule');resetGaps('t2-rule')">Try again</button>
+      </div>
+    </div>
+
+    <!-- TASK 3: fact → conditional -->
+    <div class="exercise">
+      <div class="exercise-label">Task 3 — Fact → Conditional</div>
+      <h3 class="big-instr">✍️ Rewrite each fact as a conditional.</h3>
+      <p class="lead-instr">
+        Run the three questions, and flip positive and negative. The last three are <b>mixed</b>.
+      </p>
+
+      <div class="fact-item">
+        <div class="fact-head"><span class="gap-num">1</span><p class="fact-text">I don't have her number, so I can't call her.</p></div>
+        <div class="fact-body">
+          <textarea class="free-write" id="fw-c1" placeholder="If…" rows="2"></textarea>
+          <details class="model"><summary>Model answer</summary><div class="model-body">If I <b>had</b> her number, I <b>could call</b> her. <em>— present + unreal → second</em></div></details>
+        </div>
+      </div>
+
+      <div class="fact-item">
+        <div class="fact-head"><span class="gap-num">2</span><p class="fact-text">It's raining, so we're staying in this evening.</p></div>
+        <div class="fact-body">
+          <textarea class="free-write" id="fw-c2" placeholder="If…" rows="2"></textarea>
+          <details class="model"><summary>Model answer</summary><div class="model-body">If it <b>weren't raining</b>, we <b>would go</b> out this evening. <em>— present + unreal → second</em></div></details>
+        </div>
+      </div>
+
+      <div class="fact-item">
+        <div class="fact-head"><span class="gap-num">3</span><p class="fact-text">She didn't set an alarm, so she missed the bus.</p></div>
+        <div class="fact-body">
+          <textarea class="free-write" id="fw-c3" placeholder="If…" rows="2"></textarea>
+          <details class="model"><summary>Model answer</summary><div class="model-body">If she <b>had set</b> an alarm, she <b>wouldn't have missed</b> the bus. <em>— past + unreal → third</em></div></details>
+        </div>
+      </div>
+
+      <div class="fact-item">
+        <div class="fact-head"><span class="gap-num">4</span><p class="fact-text">He ate three portions of ice cream, so he felt sick all evening.</p></div>
+        <div class="fact-body">
+          <textarea class="free-write" id="fw-c4" placeholder="If…" rows="2"></textarea>
+          <details class="model"><summary>Model answer</summary><div class="model-body">If he <b>hadn't eaten</b> three portions of ice cream, he <b>wouldn't have felt</b> sick. <em>— past + unreal → third</em></div></details>
+        </div>
+      </div>
+
+      <div class="fact-item">
+        <div class="fact-head"><span class="gap-num">5</span><p class="fact-text">We didn't book in advance, so we didn't get tickets for the concert.</p></div>
+        <div class="fact-body">
+          <textarea class="free-write" id="fw-c5" placeholder="If…" rows="2"></textarea>
+          <details class="model"><summary>Model answer</summary><div class="model-body">If we <b>had booked</b> in advance, we <b>would have got</b> tickets for the concert. <em>— past + unreal → third</em></div></details>
+        </div>
+      </div>
+
+      <div class="fact-item">
+        <div class="fact-head"><span class="gap-num">6</span><p class="fact-text">I didn't revise the vocabulary, so I don't know these words now.<span class="fact-tag">mixed</span></p></div>
+        <div class="fact-body">
+          <textarea class="free-write" id="fw-c6" placeholder="If…" rows="2"></textarea>
+          <details class="model"><summary>Model answer</summary><div class="model-body">If I <b>had revised</b> the vocabulary, I <b>would know</b> these words now. <em>— past cause + present result → mixed</em></div></details>
+        </div>
+      </div>
+
+      <div class="fact-item">
+        <div class="fact-head"><span class="gap-num">7</span><p class="fact-text">She moved to Spain five years ago, so she speaks Spanish fluently.<span class="fact-tag">mixed</span></p></div>
+        <div class="fact-body">
+          <textarea class="free-write" id="fw-c7" placeholder="If…" rows="2"></textarea>
+          <details class="model"><summary>Model answer</summary><div class="model-body">If she <b>hadn't moved</b> to Spain, she <b>wouldn't speak</b> Spanish fluently. <em>— past cause + present result → mixed</em></div></details>
+        </div>
+      </div>
+
+      <div class="fact-item">
+        <div class="fact-head"><span class="gap-num">8</span><p class="fact-text">They didn't take the earlier train, so they're still stuck at the station.<span class="fact-tag">mixed</span></p></div>
+        <div class="fact-body">
+          <textarea class="free-write" id="fw-c8" placeholder="If…" rows="2"></textarea>
+          <details class="model"><summary>Model answer</summary><div class="model-body">If they <b>had taken</b> the earlier train, they <b>wouldn't be</b> stuck at the station now. <em>— past cause + present result → mixed</em></div></details>
+        </div>
+      </div>
+    </div>
+
+    <!-- TASK 4: conditional linkers (book exercises 6 & 7) -->
+    <div class="exercise" id="t4-linkers">
+      <div class="exercise-label">Task 4 — Book Exercises 6 &amp; 7</div>
+      <h3 class="big-instr">🧷 unless · as long as · provided/providing (that) · in case</h3>
+      <p class="lead-instr">
+        Four linkers that do the work of <em>if</em> — none of them the same. Work out what each means,
+        then choose between them.
+      </p>
+
+      <div class="sub-head">6 · Look at the sentences and match the words in bold to the words and expressions in a–c.</div>
+
+      <div class="src-sentences">
+        <div class="src-row"><span class="gap-num">1</span><p>A fracture of the leg would be lethal <b>unless</b> you received adequate medical treatment.</p></div>
+        <div class="src-row"><span class="gap-num">2</span><p>You would need to be careful <b>in case</b> you took too much medicine.</p></div>
+        <div class="src-row"><span class="gap-num">3</span><p><b>Provided/Providing (that)</b> you had these natural resources, you'd have the beginning of a medicine cabinet.</p></div>
+        <div class="src-row"><span class="gap-num">4</span><p><b>As long as</b> you had clean water, you'd be okay.</p></div>
+      </div>
+
+      <div class="mean-row">
+        <span class="mean-letter">a</span>
+        <span class="mean-gloss"><em>if … not, except if</em>:</span>
+        <input class="blank" id="lk-a" data-answer="unless" placeholder="???"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button>
+      </div>
+      <div class="mean-row">
+        <span class="mean-letter">b</span>
+        <span class="mean-gloss"><em>if, only if</em>:</span>
+        <input class="blank" id="lk-b1" data-answer="provided|providing|provided that|providing that|provided/providing|provided (that)|providing (that)|provided/providing (that)|as long as" placeholder="???"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button>
+        <span class="mean-amp">,</span>
+        <input class="blank" id="lk-b2" data-answer="as long as|provided|providing|provided that|providing that|provided/providing|provided (that)|providing (that)|provided/providing (that)" placeholder="???"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button>
+      </div>
+      <div class="mean-row">
+        <span class="mean-letter">c</span>
+        <span class="mean-gloss"><em>because maybe</em>:</span>
+        <input class="blank" id="lk-c" data-answer="in case" placeholder="???"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button>
+      </div>
+
+      <div class="test-line" style="margin-top:14px;">
+        ⚠️ <b>in case</b> is not <em>if</em>. <em>I'll take an umbrella <b>in case</b> it rains</em> = I take it now, in advance.
+        <em>…<b>if</b> it rains</em> = only once it starts. After <b>in case</b>, present tense for the future — never <em>will</em>.
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="checkBlanks('t4-linkers')">Check ✓</button>
+        <button class="btn btn-ghost"   onclick="resetBlanks('t4-linkers')">Try again</button>
+      </div>
+
+      <div class="sub-head" style="margin-top:26px;">7 · Choose the correct alternative.</div>
+
+      <div class="gap-list">
+        <div class="gap-row"><span class="gap-num">1</span><p class="gap-text">We'll have a picnic <span class="word-choice" id="l7-1" data-answer="as long as"><button class="word-choice-btn" data-val="as long as" onclick="selectGap(this)">as long as</button><button class="word-choice-btn" data-val="unless" onclick="selectGap(this)">unless</button></span> it's sunny.</p></div>
+        <div class="gap-row"><span class="gap-num">2</span><p class="gap-text">I wouldn't go to her party <span class="word-choice" id="l7-2" data-answer="unless"><button class="word-choice-btn" data-val="provided that" onclick="selectGap(this)">provided that</button><button class="word-choice-btn" data-val="unless" onclick="selectGap(this)">unless</button></span> she invited me.</p></div>
+        <div class="gap-row"><span class="gap-num">3</span><p class="gap-text">My mum will work overtime <span class="word-choice" id="l7-3" data-answer="as long as"><button class="word-choice-btn" data-val="as long as" onclick="selectGap(this)">as long as</button><button class="word-choice-btn" data-val="unless" onclick="selectGap(this)">unless</button></span> they pay her.</p></div>
+        <div class="gap-row"><span class="gap-num">4</span><p class="gap-text">You can't come in <span class="word-choice" id="l7-4" data-answer="unless"><button class="word-choice-btn" data-val="as long as" onclick="selectGap(this)">as long as</button><button class="word-choice-btn" data-val="unless" onclick="selectGap(this)">unless</button></span> you have an invitation.</p></div>
+        <div class="gap-row"><span class="gap-num">5</span><p class="gap-text">Take some sweets <span class="word-choice" id="l7-5" data-answer="in case"><button class="word-choice-btn" data-val="in case" onclick="selectGap(this)">in case</button><button class="word-choice-btn" data-val="providing that" onclick="selectGap(this)">providing that</button></span> you start coughing.</p></div>
+        <div class="gap-row"><span class="gap-num">6</span><p class="gap-text">You can go out with your friends <span class="word-choice" id="l7-6" data-answer="providing"><button class="word-choice-btn" data-val="in case" onclick="selectGap(this)">in case</button><button class="word-choice-btn" data-val="providing" onclick="selectGap(this)">providing</button></span> you come back before 11 pm.</p></div>
+        <div class="gap-row"><span class="gap-num">7</span><p class="gap-text">I'll make you a sandwich now <span class="word-choice" id="l7-7" data-answer="in case"><button class="word-choice-btn" data-val="as long as" onclick="selectGap(this)">as long as</button><button class="word-choice-btn" data-val="in case" onclick="selectGap(this)">in case</button></span> you feel hungry later.</p></div>
+        <div class="gap-row"><span class="gap-num">8</span><p class="gap-text">I don't care about money <span class="word-choice" id="l7-8" data-answer="as long as"><button class="word-choice-btn" data-val="as long as" onclick="selectGap(this)">as long as</button><button class="word-choice-btn" data-val="unless" onclick="selectGap(this)">unless</button></span> I'm fit and healthy.</p></div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="checkGaps('t4-linkers')">Check ✓</button>
+        <button class="btn btn-ghost"   onclick="resetGaps('t4-linkers')">Try again</button>
+      </div>
+    </div>
+
+    <!-- TASK 5: conditional key word transformations (book exercise 8) -->
+    <div class="exercise" id="t5-kw">
+      <div class="exercise-label">Task 5 — Book Exercise 8</div>
+      <h3 class="big-instr">🔗 Conditional transformations.</h3>
+      <p class="lead-instr">
+        Complete the second sentence so that it has a similar meaning to the first, using the word given.
+        <b>Do not change the word given.</b> Use between <b>two and five words</b>.
+      </p>
+      <table class="kw-table">
+        <tbody>
+          <tr>
+            <td class="kw-num">1</td>
+            <td>
+              It's obvious that you won't get better unless you take your medicine.
+              <span class="kw-given">if</span>
+              It's obvious that <input class="blank" id="kw2-1" data-answer="if you don't take|if you do not take" placeholder="???"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button> your medicine, you won't get better.
+            </td>
+          </tr>
+          <tr>
+            <td class="kw-num">2</td>
+            <td>
+              I'll help you, but only if you listen carefully to me.
+              <span class="kw-given">long</span>
+              I'll help you <input class="blank" id="kw2-2" data-answer="as long as you listen|so long as you listen" placeholder="???"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button> carefully to me.
+            </td>
+          </tr>
+          <tr>
+            <td class="kw-num">3</td>
+            <td>
+              If you don't enjoy hospital dramas, don't watch it.
+              <span class="kw-given">unless</span>
+              Don't watch it <input class="blank" id="kw2-3" data-answer="unless you enjoy|unless you enjoy watching|unless you like" placeholder="???"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button> hospital dramas.
+            </td>
+          </tr>
+          <tr>
+            <td class="kw-num">4</td>
+            <td>
+              Don't speak in a loud voice and you can stay with the patient.
+              <span class="kw-given">provided</span>
+              You can stay with the patient <input class="blank" id="kw2-4" data-answer="provided you speak|provided that you speak" placeholder="???"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button> quietly.
+            </td>
+          </tr>
+          <tr>
+            <td class="kw-num">5</td>
+            <td>
+              I want to become a doctor but my marks aren't good enough.
+              <span class="kw-given">if</span>
+              I'd become a doctor <input class="blank" id="kw2-5" data-answer="if my marks were good" placeholder="???"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button> enough.
+            </td>
+          </tr>
+          <tr>
+            <td class="kw-num">6</td>
+            <td>
+              I'll take an extra pen because this one might run out.
+              <span class="kw-given">case</span>
+              I'll take an extra pen <input class="blank" id="kw2-6" data-answer="in case this one runs|in case it runs|in case this pen runs" placeholder="???"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button> out.
+            </td>
+          </tr>
+          <tr>
+            <td class="kw-num">7</td>
+            <td>
+              I won't miss class providing I feel better tomorrow.
+              <span class="kw-given">as</span>
+              I'll come <input class="blank" id="kw2-7" data-answer="as long as" placeholder="???"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button> I feel better tomorrow.
+            </td>
+          </tr>
+          <tr>
+            <td class="kw-num">8</td>
+            <td>
+              Personally, I think you should complain.
+              <span class="kw-given">would</span>
+              I <input class="blank" id="kw2-8" data-answer="would complain if i were|would complain if i was|'d complain if i were" placeholder="???"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button> you.
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="checkBlanks('t5-kw')">Check ✓</button>
+        <button class="btn btn-ghost"   onclick="resetBlanks('t5-kw')">Try again</button>
+      </div>
+    </div>
+
+    <!-- EXTRA (starred) TASK: key word transformation (Task 176) -->
+    <div class="exercise extra-task" id="t6-kw">
+      <div class="exercise-label label-extra">✱ Extra Task — Task 176</div>
+      <h3 class="big-instr">🔁 Key word transformations.</h3>
+      <p class="extra-note">✱ Not conditionals — extra practice if there's time.</p>
+      <p class="lead-instr">
+        Complete the second sentence so that it has a similar meaning to the first, using the word given.
+        <b>Do not change the word given.</b> Use from <b>two to five words</b>.
+      </p>
+
+      <table class="kw-table">
+        <tbody>
+          <tr>
+            <td class="kw-num">1</td>
+            <td>
+              She often went abroad on holiday before she had a baby.
+              <span class="kw-given">would</span>
+              She <input class="blank" id="kw-1" data-answer="would often go|would go" placeholder="???"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button> abroad on holiday before she had a baby.
+            </td>
+          </tr>
+          <tr>
+            <td class="kw-num">2</td>
+            <td>
+              I can't wait to see your new car.
+              <span class="kw-given">forward</span>
+              I'm really <input class="blank" id="kw-2" data-answer="looking forward to seeing" placeholder="???"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button> your new car.
+            </td>
+          </tr>
+          <tr>
+            <td class="kw-num">3</td>
+            <td>
+              It's impossible for me not to laugh when he starts cracking jokes.
+              <span class="kw-given">help</span>
+              I can't <input class="blank" id="kw-3" data-answer="help laughing" placeholder="???"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button> when he starts cracking jokes.
+            </td>
+          </tr>
+          <tr>
+            <td class="kw-num">4</td>
+            <td>
+              I really don't want to work as a cleaner.
+              <span class="kw-given">feel</span>
+              I really don't <input class="blank" id="kw-4" data-answer="feel like working" placeholder="???"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button> as a cleaner.
+            </td>
+          </tr>
+          <tr>
+            <td class="kw-num">5</td>
+            <td>
+              This football match will probably attract a lot of people.
+              <span class="kw-given">likely</span>
+              This football match <input class="blank" id="kw-5" data-answer="is likely to attract" placeholder="???"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button> a lot of people.
+            </td>
+          </tr>
+          <tr>
+            <td class="kw-num">6</td>
+            <td>
+              It was the picture that interested me most at the exhibition.
+              <span class="kw-given">found</span>
+              I <input class="blank" id="kw-6" data-answer="found the picture the most|found the picture the most interesting" placeholder="???"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button> interesting part of the exhibition.
+            </td>
+          </tr>
+          <tr>
+            <td class="kw-num">7</td>
+            <td>
+              I very rarely go to the cinema at weekends.
+              <span class="kw-given">hardly</span>
+              I <input class="blank" id="kw-7" data-answer="hardly ever go to" placeholder="???"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button> the cinema at weekends.
+            </td>
+          </tr>
+          <tr>
+            <td class="kw-num">8</td>
+            <td>
+              After I graduate, I'd like to become a teacher.
+              <span class="kw-given">ambition</span>
+              It <input class="blank" id="kw-8" data-answer="is my ambition to become|is my ambition to be" placeholder="???"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button> a teacher after I graduate.
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="checkBlanks('t6-kw')">Check ✓</button>
+        <button class="btn btn-ghost"   onclick="resetBlanks('t6-kw')">Try again</button>
+      </div>
+    </div>
+
+  </div><!-- /tab-p2 -->
+
+  <!-- ══════════════════════════════════════════════════════
+       PART 3 — CULTURE  (content to be added)
+  ══════════════════════════════════════════════════════ -->
+  <div class="tab-content" id="tab-p3">
+
+    <div class="exercise" id="ex-culture">
+      <div class="exercise-label">Culture Test — British History</div>
+      <h3 class="big-instr">🇬🇧 Match the picture to the event.</h3>
+      <p class="lead-instr">
+        Click a picture, then its event below. A correct pair locks in green.
+      </p>
+
+      <div class="pic-match">
+        <div class="match-col pic-grid" data-side="left">
+          <figure class="match-item pic-card" data-pair="1" onclick="selectMatch(this,'ex-culture')">
+            <span class="pic-num">1</span>
+            <img class="pic-img" src="images/culture/01-stonehenge.jpg" alt="Picture 1" loading="lazy">
+          </figure>
+          <figure class="match-item pic-card" data-pair="2" onclick="selectMatch(this,'ex-culture')">
+            <span class="pic-num">2</span>
+            <img class="pic-img" src="images/culture/02-boudica.jpg" alt="Picture 2" loading="lazy">
+          </figure>
+          <figure class="match-item pic-card" data-pair="3" onclick="selectMatch(this,'ex-culture')">
+            <span class="pic-num">3</span>
+            <img class="pic-img" src="images/culture/03-hadrians-wall.jpg" alt="Picture 3" loading="lazy">
+          </figure>
+          <figure class="match-item pic-card" data-pair="4" onclick="selectMatch(this,'ex-culture')">
+            <span class="pic-num">4</span>
+            <img class="pic-img" src="images/culture/04-hastings.jpg" alt="Picture 4" loading="lazy">
+          </figure>
+          <figure class="match-item pic-card" data-pair="5" onclick="selectMatch(this,'ex-culture')">
+            <span class="pic-num">5</span>
+            <img class="pic-img" src="images/culture/05-magna-carta.jpg" alt="Picture 5" loading="lazy">
+          </figure>
+          <figure class="match-item pic-card" data-pair="6" onclick="selectMatch(this,'ex-culture')">
+            <span class="pic-num">6</span>
+            <img class="pic-img" src="images/culture/06-black-death.jpg" alt="Picture 6" loading="lazy">
+          </figure>
+          <figure class="match-item pic-card" data-pair="7" onclick="selectMatch(this,'ex-culture')">
+            <span class="pic-num">7</span>
+            <img class="pic-img" src="images/culture/07-bosworth.jpg" alt="Picture 7" loading="lazy">
+          </figure>
+          <figure class="match-item pic-card" data-pair="8" onclick="selectMatch(this,'ex-culture')">
+            <span class="pic-num">8</span>
+            <img class="pic-img" src="images/culture/08-henry-viii.jpg" alt="Picture 8" loading="lazy">
+          </figure>
+          <figure class="match-item pic-card" data-pair="9" onclick="selectMatch(this,'ex-culture')">
+            <span class="pic-num">9</span>
+            <img class="pic-img" src="images/culture/09-armada.jpg" alt="Picture 9" loading="lazy">
+          </figure>
+          <figure class="match-item pic-card" data-pair="10" onclick="selectMatch(this,'ex-culture')">
+            <span class="pic-num">10</span>
+            <img class="pic-img" src="images/culture/10-gunpowder-plot.jpg" alt="Picture 10" loading="lazy">
+          </figure>
+          <figure class="match-item pic-card" data-pair="11" onclick="selectMatch(this,'ex-culture')">
+            <span class="pic-num">11</span>
+            <img class="pic-img" src="images/culture/11-charles-i.jpg" alt="Picture 11" loading="lazy">
+          </figure>
+          <figure class="match-item pic-card" data-pair="12" onclick="selectMatch(this,'ex-culture')">
+            <span class="pic-num">12</span>
+            <img class="pic-img" src="images/culture/12-great-fire.jpg" alt="Picture 12" loading="lazy">
+          </figure>
+          <figure class="match-item pic-card" data-pair="13" onclick="selectMatch(this,'ex-culture')">
+            <span class="pic-num">13</span>
+            <img class="pic-img" src="images/culture/13-trafalgar.jpg" alt="Picture 13" loading="lazy">
+          </figure>
+          <figure class="match-item pic-card" data-pair="14" onclick="selectMatch(this,'ex-culture')">
+            <span class="pic-num">14</span>
+            <img class="pic-img" src="images/culture/14-nightingale.jpg" alt="Picture 14" loading="lazy">
+          </figure>
+          <figure class="match-item pic-card" data-pair="15" onclick="selectMatch(this,'ex-culture')">
+            <span class="pic-num">15</span>
+            <img class="pic-img" src="images/culture/15-blitz.jpg" alt="Picture 15" loading="lazy">
+          </figure>
+        </div>
+
+        <div class="match-col chip-bank" data-side="right">
+          <div class="match-item event-chip" data-pair="9" onclick="selectMatch(this,'ex-culture')">Defeat of the Spanish Armada — Elizabeth I</div>
+          <div class="match-item event-chip" data-pair="3" onclick="selectMatch(this,'ex-culture')">Hadrian's Wall begun</div>
+          <div class="match-item event-chip" data-pair="14" onclick="selectMatch(this,'ex-culture')">Florence Nightingale in the Crimea</div>
+          <div class="match-item event-chip" data-pair="6" onclick="selectMatch(this,'ex-culture')">The Black Death</div>
+          <div class="match-item event-chip" data-pair="1" onclick="selectMatch(this,'ex-culture')">Stonehenge built</div>
+          <div class="match-item event-chip" data-pair="11" onclick="selectMatch(this,'ex-culture')">Execution of Charles I</div>
+          <div class="match-item event-chip" data-pair="7" onclick="selectMatch(this,'ex-culture')">Bosworth — Richard III</div>
+          <div class="match-item event-chip" data-pair="15" onclick="selectMatch(this,'ex-culture')">The Blitz / Battle of Britain</div>
+          <div class="match-item event-chip" data-pair="4" onclick="selectMatch(this,'ex-culture')">Battle of Hastings — Harold</div>
+          <div class="match-item event-chip" data-pair="12" onclick="selectMatch(this,'ex-culture')">The Great Fire of London</div>
+          <div class="match-item event-chip" data-pair="2" onclick="selectMatch(this,'ex-culture')">Boudica's revolt</div>
+          <div class="match-item event-chip" data-pair="10" onclick="selectMatch(this,'ex-culture')">The Gunpowder Plot</div>
+          <div class="match-item event-chip" data-pair="5" onclick="selectMatch(this,'ex-culture')">Magna Carta — King John</div>
+          <div class="match-item event-chip" data-pair="13" onclick="selectMatch(this,'ex-culture')">Trafalgar — Nelson</div>
+          <div class="match-item event-chip" data-pair="8" onclick="selectMatch(this,'ex-culture')">Henry VIII breaks with Rome</div>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-ghost" onclick="resetMatchEx('ex-culture')">Reset</button>
+      </div>
+    </div>
+
+  </div><!-- /tab-p3 -->
+
+  <!-- ══════════════════════════════════════════════════════
+       HOMEWORK  (content to be added)
+  ══════════════════════════════════════════════════════ -->
+  <div class="tab-content" id="tab-hw">
+
+    <div class="exercise">
+      <div class="exercise-label">Homework</div>
+      <div class="soon">
+        <span class="soon-emoji">📝</span>
+        <p style="font-weight:600; color:var(--text);">Homework to be added.</p>
+      </div>
+    </div>
+
+  </div><!-- /tab-hw -->
+
+</div><!-- /container -->
+
+<div class="save-indicator" id="saveIndicator">✓ Saved</div>
+
+<script>
+const LESSON_KEY = 'lesson-04';
+let data = {};
+try { data = JSON.parse(localStorage.getItem(LESSON_KEY)) || {}; } catch(e) {}
+
+function save(patch) {
+  Object.assign(data, patch);
+  localStorage.setItem(LESSON_KEY, JSON.stringify(data));
+  flashSaved();
+}
+let saveTimer;
+function flashSaved() {
+  const el = document.getElementById('saveIndicator');
+  el.classList.add('show');
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(() => el.classList.remove('show'), 1600);
+}
+
+// ── TABS ──
+function switchTab(name, btn) {
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  btn.classList.add('active');
+  save({ activeTab: name });
+}
+
+// ── AUTOSAVE for .blank and .free-write ──
+function setupAutosave() {
+  document.querySelectorAll('.blank, .free-write').forEach(el => {
+    if (data[el.id] !== undefined) el.value = data[el.id];
+    el.addEventListener('input', () => {
+      save({ [el.id]: el.value });
+      const cc = document.getElementById('cc-' + el.id);
+      if (cc) cc.textContent = el.value.length + ' characters';
+    });
+    const cc = document.getElementById('cc-' + el.id);
+    if (cc) cc.textContent = (el.value || '').length + ' characters';
+  });
+  if (data.activeTab) {
+    const btn = document.querySelector('.tab-btn[onclick*="' + data.activeTab + '"]');
+    if (btn) switchTab(data.activeTab, btn);
+  }
+}
+
+// ── FILL IN THE BLANKS ──
+// data-case="strict" keeps capital letters significant (stress patterns: Oo != oO)
+function markBlank(inp) {
+  const strict = inp.dataset.case === 'strict';
+  const norm = v => strict ? v.trim() : v.trim().toLowerCase().replace(/\s+/g, ' ');
+  const val = norm(inp.value);
+  const answers = (inp.dataset.answer || '').split('|').map(norm);
+  const loose = inp.dataset.mode === 'contains';   // key word is enough
+  const btn = inp.nextElementSibling;
+  const hasBtn = btn && btn.classList && btn.classList.contains('check-one');
+  inp.classList.remove('correct','wrong');
+  if (hasBtn) { btn.classList.remove('ok','no'); btn.textContent = '✓'; }
+  if (!val) return;
+  const ok = loose ? answers.some(a => a && val.includes(a)) : answers.includes(val);
+  inp.classList.add(ok ? 'correct' : 'wrong');
+  if (hasBtn) { btn.classList.add(ok ? 'ok' : 'no'); btn.textContent = ok ? '✓' : '✕'; }
+}
+
+// One answer at a time — the little ✓ next to each gap
+function checkOne(btn) {
+  const inp = btn.previousElementSibling;
+  if (inp && inp.classList.contains('blank')) markBlank(inp);
+}
+
+function checkBlanks(containerId) {
+  const sel = containerId ? '#' + containerId + ' .blank' : '.blank';
+  document.querySelectorAll(sel).forEach(markBlank);
+}
+function resetBlanks(containerId) {
+  const sel = containerId ? '#' + containerId + ' .blank' : '.blank';
+  document.querySelectorAll(sel).forEach(inp => {
+    inp.value = ''; inp.classList.remove('correct','wrong');
+    const btn = inp.nextElementSibling;
+    if (btn && btn.classList && btn.classList.contains('check-one')) {
+      btn.classList.remove('ok','no'); btn.textContent = '✓';
+    }
+    save({ [inp.id]: '' });
+  });
+}
+
+// ── MATCHING ──
+const matchState = {};
+function selectMatch(el, exId) {
+  const side = el.closest('.match-col').dataset.side;
+  if (!matchState[exId]) matchState[exId] = { selected:{left:null,right:null}, matched:new Set() };
+  const state = matchState[exId];
+  if (el.classList.contains('matched')) return;
+  el.closest('.match-col').querySelectorAll('.match-item').forEach(i => i.classList.remove('selected'));
+  el.classList.add('selected');
+  state.selected[side] = el;
+  const other = side === 'left' ? 'right' : 'left';
+  if (state.selected[other]) {
+    const a = state.selected['left'], b = state.selected['right'];
+    if (a.dataset.pair === b.dataset.pair) {
+      a.classList.remove('selected'); a.classList.add('matched','locked');
+      b.classList.remove('selected'); b.classList.add('matched','locked');
+      state.matched.add(a.dataset.pair);
+      save({ ['match-' + exId]: [...state.matched] });
+    } else {
+      [a,b].forEach(x => x.classList.add('shake'));
+      setTimeout(() => [a,b].forEach(x => x.classList.remove('selected','shake')), 400);
+    }
+    state.selected = { left:null, right:null };
+  }
+}
+function resetMatchEx(exId) {
+  document.querySelectorAll('#' + exId + ' .match-item')
+    .forEach(el => el.classList.remove('matched','locked','selected','shake'));
+  matchState[exId] = { selected:{left:null,right:null}, matched:new Set() };
+  save({ ['match-' + exId]: [] });
+}
+function restoreAllMatches() {
+  ['ex-cond-match','ex-culture'].forEach(exId => {
+    matchState[exId] = { selected:{left:null,right:null}, matched:new Set() };
+    (data['match-' + exId] || []).forEach(pair => {
+      document.querySelectorAll('#' + exId + ' .match-item[data-pair="' + pair + '"]')
+        .forEach(el => el.classList.add('matched','locked'));
+      matchState[exId].matched.add(pair);
+    });
+  });
+}
+
+// ── WORD-CHOICE BUTTONS (real / unreal) ──
+function selectGap(btn) {
+  const group = btn.closest('.word-choice');
+  group.querySelectorAll('.word-choice-btn').forEach(b => b.classList.remove('selected','correct','wrong'));
+  btn.classList.add('selected');
+  save({ [group.id]: btn.dataset.val });
+}
+function checkGaps(containerId) {
+  document.querySelectorAll('#' + containerId + ' .word-choice').forEach(group => {
+    const correct  = group.dataset.answer;
+    const selected = group.querySelector('.word-choice-btn.selected');
+    group.querySelectorAll('.word-choice-btn').forEach(b => b.classList.remove('correct','wrong'));
+    if (!selected) return;
+    if (selected.dataset.val === correct) {
+      selected.classList.add('correct');
+    } else {
+      selected.classList.add('wrong');
+      group.querySelectorAll('.word-choice-btn').forEach(b => {
+        if (b.dataset.val === correct) b.classList.add('correct');
+      });
+    }
+  });
+}
+function resetGaps(containerId) {
+  document.querySelectorAll('#' + containerId + ' .word-choice').forEach(group => {
+    group.querySelectorAll('.word-choice-btn').forEach(b => b.classList.remove('selected','correct','wrong'));
+    save({ [group.id]: '' });
+  });
+}
+function restoreGaps() {
+  document.querySelectorAll('.word-choice').forEach(group => {
+    const saved = data[group.id];
+    if (saved) group.querySelectorAll('.word-choice-btn').forEach(b => {
+      if (b.dataset.val === saved) b.classList.add('selected');
+    });
+  });
+}
+
+// ── PHRASE BANK (speaking task) ──
+function togglePhrase(el) {
+  el.classList.toggle('used');
+  const bank = el.closest('.phrase-bank');
+  const used = [...bank.querySelectorAll('.phrase-chip.used')].map(c => c.dataset.p);
+  const out = document.getElementById(bank.dataset.count);
+  if (out) out.textContent = used.length;
+  save({ ['phrases-' + bank.id]: used });
+}
+function restorePhrases() {
+  document.querySelectorAll('.phrase-bank').forEach(bank => {
+    const saved = data['phrases-' + bank.id] || [];
+    bank.querySelectorAll('.phrase-chip').forEach(c => {
+      if (saved.includes(c.dataset.p)) c.classList.add('used');
+    });
+    const out = document.getElementById(bank.dataset.count);
+    if (out) out.textContent = bank.querySelectorAll('.phrase-chip.used').length;
+  });
+}
+
+// ── ONE-MINUTE TIMER (speaking task) ──
+let tLeft = 120, tInt = null;
+function tRender() {
+  const el = document.getElementById('timerClock');
+  if (!el) return;
+  const m = Math.floor(tLeft / 60), s = tLeft % 60;
+  el.textContent = m + ':' + String(s).padStart(2, '0');
+  el.classList.toggle('over', tLeft === 0);
+}
+function timerStart() {
+  if (tInt || tLeft === 0) return;
+  tInt = setInterval(() => {
+    if (tLeft > 0) tLeft--;
+    tRender();
+    if (tLeft === 0) { clearInterval(tInt); tInt = null; }
+  }, 1000);
+}
+function timerPause() { clearInterval(tInt); tInt = null; }
+function timerReset() { clearInterval(tInt); tInt = null; tLeft = 120; tRender(); }
+
+// ── INIT ──
+setupAutosave();
+restoreGaps();
+restoreAllMatches();
+restorePhrases();
+tRender();
+</script>
+
+</body>
+</html>
