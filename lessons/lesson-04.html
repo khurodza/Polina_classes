@@ -57,6 +57,13 @@
     .gap-row:nth-child(4n)   .gap-num { color:var(--accent-dk); }
     .gap-text { flex:1; min-width:0; line-height:2; font-size:1.02rem; }
     .gap-text .blank { min-width:96px; }
+    /* homework */
+    .hw-box { display:flex; flex-wrap:wrap; gap:8px; padding:14px 16px; margin-bottom:18px; background:rgba(201,160,48,.14); border-left:3px solid var(--accent-dk); border-radius:10px; }
+    .hw-box span { background:#fff; border:1px solid var(--border); border-radius:6px; padding:2px 10px; font-size:.92rem; cursor:pointer; user-select:none; transition:opacity .15s; }
+    .hw-box span:hover { border-color:var(--primary); }
+    .hw-box span.used { text-decoration:line-through; opacity:.45; }
+    #hw2 .gap-text u { text-decoration:underline; text-decoration-color:var(--primary); text-decoration-thickness:2px; text-underline-offset:3px; font-weight:600; }
+    #hw2 .gap-text .blank { min-width:200px; }
 
     /* ── rule box ── */
     .rule-box { background:linear-gradient(135deg,#FDF5EC,#F0E8D4); border:2px solid var(--border); border-radius:var(--radius); padding:20px 24px; margin-bottom:20px; }
@@ -1136,15 +1143,108 @@
   </div><!-- /tab-p3 -->
 
   <!-- ══════════════════════════════════════════════════════
-       HOMEWORK  (content to be added)
+       HOMEWORK — prepositional phrases
   ══════════════════════════════════════════════════════ -->
   <div class="tab-content" id="tab-hw">
 
-    <div class="exercise">
-      <div class="exercise-label">Homework</div>
-      <div class="soon">
-        <span class="soon-emoji">📝</span>
-        <p style="font-weight:600; color:var(--text);">Homework to be added.</p>
+    <!-- HW TASK 1: gap-fill — prepositions -->
+    <div class="exercise" id="hw1">
+      <div class="exercise-label">Homework · Task 1 — Fill in the gaps</div>
+      <h3 class="big-instr">✏️ Which preposition is missing?</h3>
+      <p class="lead-instr">
+        Complete each sentence with <b>one</b> preposition. All twelve phrases are from this lesson.
+      </p>
+
+      <div class="gap-list">
+        <div class="gap-row"><span class="gap-num">1</span><p class="gap-text">My grandmother still knows dozens of poems <input class="blank" id="hw1-1" data-answer="by"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button> heart, although she learned them sixty years ago.</p></div>
+        <div class="gap-row"><span class="gap-num">2</span><p class="gap-text"><input class="blank" id="hw1-2" data-answer="at"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button> first I found the course too demanding, but by October I had caught up with the others.</p></div>
+        <div class="gap-row"><span class="gap-num">3</span><p class="gap-text">The delay was caused <input class="blank" id="hw1-3" data-answer="by"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button> a signal failure just outside the station.</p></div>
+        <div class="gap-row"><span class="gap-num">4</span><p class="gap-text">Teenagers' sleep patterns differ <input class="blank" id="hw1-4" data-answer="from"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button> those of adults, which is why early lessons feel so hard.</p></div>
+        <div class="gap-row"><span class="gap-num">5</span><p class="gap-text">I'm sure she broke the vase <input class="blank" id="hw1-5" data-answer="on"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button> purpose — she had been arguing with her brother all morning.</p></div>
+        <div class="gap-row"><span class="gap-num">6</span><p class="gap-text">Apart <input class="blank" id="hw1-6" data-answer="from"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button> the ending, which felt a bit rushed, the novel was very well written.</p></div>
+        <div class="gap-row"><span class="gap-num">7</span><p class="gap-text">The manager wasn't satisfied <input class="blank" id="hw1-7" data-answer="with"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button> the results and asked the whole team to start again.</p></div>
+        <div class="gap-row"><span class="gap-num">8</span><p class="gap-text">I'll be back <input class="blank" id="hw1-8" data-answer="in"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button> a while — keep an eye on the soup and don't let it boil over.</p></div>
+        <div class="gap-row"><span class="gap-num">9</span><p class="gap-text">He's remarkably good <input class="blank" id="hw1-9" data-answer="at"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button> remembering faces, but hopeless with names.</p></div>
+        <div class="gap-row"><span class="gap-num">10</span><p class="gap-text">The town is famous <input class="blank" id="hw1-10" data-answer="for"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button> its cheese, which is sold all over the country.</p></div>
+        <div class="gap-row"><span class="gap-num">11</span><p class="gap-text">The guests have been complaining <input class="blank" id="hw1-11" data-answer="about"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button> the noise from the building site next door.</p></div>
+        <div class="gap-row"><span class="gap-num">12</span><p class="gap-text">My parents are worried <input class="blank" id="hw1-12" data-answer="about"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button> how much time I spend online.</p></div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="checkBlanks('hw1')">Check ✓</button>
+        <button class="btn btn-ghost"   onclick="resetBlanks('hw1')">Try again</button>
+      </div>
+    </div>
+
+    <!-- HW TASK 2: replace the simple words with a phrase from the box -->
+    <div class="exercise" id="hw2">
+      <div class="exercise-label">Homework · Task 2 — Say it better</div>
+      <h3 class="big-instr">🔁 Replace the <u>underlined</u> words</h3>
+      <p class="lead-instr">
+        Swap the <u>underlined</u> part for a phrase from the box so the
+        meaning stays the same. Type the phrase in the gap — you may need to change the verb form or the
+        word order slightly. Each phrase is used <b>once</b>.
+      </p>
+
+      <div class="hw-box" id="hw2-box" title="Click a phrase to cross it out">
+        <span onclick="toggleHwBox(this)">in advance</span><span onclick="toggleHwBox(this)">surprised at</span><span onclick="toggleHwBox(this)">benefit from</span><span onclick="toggleHwBox(this)">on time</span>
+        <span onclick="toggleHwBox(this)">familiar with</span><span onclick="toggleHwBox(this)">in the midst of</span><span onclick="toggleHwBox(this)">by chance</span><span onclick="toggleHwBox(this)">for a while</span>
+        <span onclick="toggleHwBox(this)">uncertain about</span><span onclick="toggleHwBox(this)">suffer from</span><span onclick="toggleHwBox(this)">compared with</span><span onclick="toggleHwBox(this)">for the first time</span>
+      </div>
+
+      <div class="gap-list">
+        <div class="gap-row"><span class="gap-num">1</span><div class="gap-text">We met in the corridor <u>accidentally</u> — neither of us had planned to be there.<br>
+          <input class="blank" id="hw2-1" data-answer="by chance" placeholder="phrase…"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button>
+          <details class="model"><summary>Full sentence</summary><div class="model-body">We met in the corridor <b>by chance</b> — neither of us had planned to be there.</div></details></div></div>
+
+        <div class="gap-row"><span class="gap-num">2</span><div class="gap-text">Thousands of people <u>have</u> hay fever every summer.<br>
+          <input class="blank" id="hw2-2" data-answer="suffer from" placeholder="phrase…"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button>
+          <details class="model"><summary>Full sentence</summary><div class="model-body">Thousands of people <b>suffer from</b> hay fever every summer.</div></details></div></div>
+
+        <div class="gap-row"><span class="gap-num">3</span><div class="gap-text">Small shops <u>will get a lot out of</u> the new car park.<br>
+          <input class="blank" id="hw2-3" data-answer="will benefit from|benefit from" placeholder="phrase…"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button>
+          <details class="model"><summary>Full sentence</summary><div class="model-body">Small shops <b>will benefit from</b> the new car park.</div></details></div></div>
+
+        <div class="gap-row"><span class="gap-num">4</span><div class="gap-text">I'm not <u>used to</u> this part of town, so I might get lost.<br>
+          <input class="blank" id="hw2-4" data-answer="familiar with" placeholder="phrase…"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button>
+          <details class="model"><summary>Full sentence</summary><div class="model-body">I'm not <b>familiar with</b> this part of town, so I might get lost.</div></details></div></div>
+
+        <div class="gap-row"><span class="gap-num">5</span><div class="gap-text"><u>Next to</u> his older brother, Tom seems rather quiet.<br>
+          <input class="blank" id="hw2-5" data-answer="compared with|compared to" placeholder="phrase…"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button>
+          <details class="model"><summary>Full sentence</summary><div class="model-body"><b>Compared with</b> his older brother, Tom seems rather quiet.</div></details></div></div>
+
+        <div class="gap-row"><span class="gap-num">6</span><div class="gap-text">I'm still <u>not sure about</u> which university to apply to.<br>
+          <input class="blank" id="hw2-6" data-answer="uncertain about" placeholder="phrase…"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button>
+          <details class="model"><summary>Full sentence</summary><div class="model-body">I'm still <b>uncertain about</b> which university to apply to.</div></details></div></div>
+
+        <div class="gap-row"><span class="gap-num">7</span><div class="gap-text">Last spring I visited London, <u>which I had never done before</u>.<br>
+          <input class="blank" id="hw2-7" data-answer="for the first time" placeholder="phrase…"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button>
+          <details class="model"><summary>Full sentence</summary><div class="model-body">Last spring I visited London <b>for the first time</b>.</div></details></div></div>
+
+        <div class="gap-row"><span class="gap-num">8</span><div class="gap-text">Can you look after the dog <u>for a bit</u> while I pop to the shops?<br>
+          <input class="blank" id="hw2-8" data-answer="for a while" placeholder="phrase…"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button>
+          <details class="model"><summary>Full sentence</summary><div class="model-body">Can you look after the dog <b>for a while</b> while I pop to the shops?</div></details></div></div>
+
+        <div class="gap-row"><span class="gap-num">9</span><div class="gap-text">We were <u>amazed by</u> how quickly the puppy learned to sit.<br>
+          <input class="blank" id="hw2-9" data-answer="surprised at" placeholder="phrase…"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button>
+          <details class="model"><summary>Full sentence</summary><div class="model-body">We were <b>surprised at</b> how quickly the puppy learned to sit.</div></details></div></div>
+
+        <div class="gap-row"><span class="gap-num">10</span><div class="gap-text">The train arrived <u>punctually</u>, so we didn't miss our connection.<br>
+          <input class="blank" id="hw2-10" data-answer="on time" placeholder="phrase…"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button>
+          <details class="model"><summary>Full sentence</summary><div class="model-body">The train arrived <b>on time</b>, so we didn't miss our connection.</div></details></div></div>
+
+        <div class="gap-row"><span class="gap-num">11</span><div class="gap-text"><u>In the middle of</u> all the preparations, the power went off.<br>
+          <input class="blank" id="hw2-11" data-answer="in the midst of" placeholder="phrase…"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button>
+          <details class="model"><summary>Full sentence</summary><div class="model-body"><b>In the midst of</b> all the preparations, the power went off.</div></details></div></div>
+
+        <div class="gap-row"><span class="gap-num">12</span><div class="gap-text">You have to pay for the trip <u>beforehand</u> — cash on the day is not accepted.<br>
+          <input class="blank" id="hw2-12" data-answer="in advance" placeholder="phrase…"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button>
+          <details class="model"><summary>Full sentence</summary><div class="model-body">You have to pay for the trip <b>in advance</b> — cash on the day is not accepted.</div></details></div></div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="checkBlanks('hw2')">Check ✓</button>
+        <button class="btn btn-ghost"   onclick="resetBlanks('hw2')">Try again</button>
       </div>
     </div>
 
@@ -1339,6 +1439,20 @@ function restorePhrases() {
   });
 }
 
+// Homework word box — click a phrase to cross it out
+function toggleHwBox(el) {
+  el.classList.toggle('used');
+  const box = el.closest('.hw-box');
+  const used = [...box.querySelectorAll('span.used')].map(c => c.textContent);
+  save({ ['hwbox-' + box.id]: used });
+}
+function restoreHwBox() {
+  document.querySelectorAll('.hw-box').forEach(box => {
+    const saved = data['hwbox-' + box.id] || [];
+    box.querySelectorAll('span').forEach(c => { if (saved.includes(c.textContent)) c.classList.add('used'); });
+  });
+}
+
 // ── ONE-MINUTE TIMER (speaking task) ──
 let tLeft = 120, tInt = null;
 function tRender() {
@@ -1364,6 +1478,7 @@ setupAutosave();
 restoreGaps();
 restoreAllMatches();
 restorePhrases();
+restoreHwBox();
 tRender();
 </script>
 
