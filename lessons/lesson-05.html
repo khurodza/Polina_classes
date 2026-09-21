@@ -1,0 +1,1034 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lesson 5 – Colour Idioms</title>
+  <link rel="stylesheet" href="../style.css">
+  <style>
+    /* ── instructions ── */
+    .exercise h3.big-instr {
+      font-family:'Fraunces',Georgia,serif;
+      font-size:1.5rem; font-weight:700; line-height:1.3;
+      color:var(--primary); margin-bottom:10px;
+    }
+    .lead-instr {
+      font-size:1.02rem; line-height:1.7; color:var(--text);
+      border-left:4px solid var(--accent); padding-left:16px; margin-bottom:6px;
+    }
+    .lead-instr b { color:var(--primary-dk); }
+    @media(max-width:560px){ .exercise h3.big-instr { font-size:1.25rem; } }
+
+    /* ── single-gap check button ── */
+    .check-one {
+      margin-left:7px; width:27px; height:27px; padding:0; border-radius:50%;
+      border:2px solid var(--border); background:transparent; color:var(--muted);
+      font-family:inherit; font-size:.82rem; line-height:1; cursor:pointer;
+      vertical-align:middle; transition:border-color .2s,color .2s,background .2s;
+    }
+    .check-one:hover { border-color:var(--primary); color:var(--primary); background:rgba(212,87,42,.06); }
+    .check-one.ok { border-color:var(--green); background:var(--green); color:#fff; }
+    .check-one.no { border-color:var(--red);   background:var(--red);   color:#fff; }
+
+    /* ── numbered rows ── */
+    .gap-num { flex:0 0 27px; height:27px; margin-top:3px; display:flex; align-items:center; justify-content:center; border-radius:50%; background:var(--bg); color:var(--primary); font-size:.82rem; font-weight:800; }
+
+    /* ── warm-up crossword ── */
+    .cw-wrap { display:grid; grid-template-columns:auto 1fr; gap:26px; align-items:start; }
+    .cw-grid { display:flex; flex-direction:column; gap:4px; }
+    .cw-row { display:flex; align-items:center; gap:4px; }
+    .cw-num { width:26px; text-align:right; margin-right:6px; font-weight:800; font-size:.85rem; color:var(--primary); }
+    .cw-cell { width:38px; height:38px; padding:0; text-align:center; text-transform:uppercase; font-family:'DM Sans',sans-serif; font-weight:700; font-size:1.1rem; border:2px solid var(--border); border-radius:6px; background:#fff; color:var(--text); caret-color:var(--primary); }
+    .cw-cell:focus { outline:none; border-color:var(--primary); box-shadow:0 0 0 3px rgba(212,87,42,.14); }
+    .cw-row.correct .cw-cell { border-color:var(--green); background:rgba(91,140,69,.10); color:var(--green); }
+    .cw-row.wrong   .cw-cell { border-color:var(--red);   background:rgba(200,64,64,.07); }
+    .cw-clues { margin:0; padding:0; list-style:none; font-size:.98rem; line-height:1.6; }
+    .cw-clues li { padding:7px 0; border-bottom:1px dashed var(--border); }
+    .cw-clues li:last-child { border-bottom:none; }
+    .cw-clues b { display:inline-block; min-width:24px; color:var(--primary); }
+    .cw-len { color:var(--muted); font-size:.85rem; }
+    @media(max-width:640px){ .cw-wrap { grid-template-columns:1fr; } .cw-cell { width:32px; height:32px; font-size:1rem; } }
+
+    /* ── Task 1: the organising principle ── */
+    .principle { font-size:1.05rem; line-height:1.8; background:linear-gradient(135deg,#FDF5EC,#F0E8D4); border:2px solid var(--border); border-radius:var(--radius); padding:20px 24px; margin-bottom:20px; }
+    .principle b { color:var(--primary-dk); }
+    .colour-cols { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; }
+    .colour-col { border-radius:14px; padding:16px 16px 12px; border:2px solid transparent; background:#fff; }
+    .colour-name { font-family:'Fraunces',Georgia,serif; font-weight:800; font-size:1.35rem; letter-spacing:.5px; display:flex; align-items:center; gap:10px; }
+    .colour-name::before { content:''; width:22px; height:22px; border-radius:50%; border:2px solid rgba(0,0,0,.12); }
+    .colour-theme { font-size:.88rem; color:var(--muted); margin:4px 0 12px; line-height:1.5; }
+    .colour-col ul { list-style:none; padding:0; margin:0; }
+    .colour-col li { padding:6px 0; border-top:1px dashed var(--border); font-size:.97rem; }
+    .colour-col li em { color:var(--muted); font-size:.85rem; font-style:italic; }
+    .col-red   { border-color:#E0503C; background:#FDF1EE; } .col-red   .colour-name { color:#B3301E; } .col-red   .colour-name::before { background:#E0503C; }
+    .col-blue  { border-color:#3E6FB5; background:#EEF3FB; } .col-blue  .colour-name { color:#2A4E86; } .col-blue  .colour-name::before { background:#3E6FB5; }
+    .col-black { border-color:#3B3B3B; background:#F1EFEC; } .col-black .colour-name { color:#222; }    .col-black .colour-name::before { background:#2B2B2B; }
+    .col-white { border-color:#C9C4B8; background:#FFFFFF; } .col-white .colour-name { color:#7A7264; } .col-white .colour-name::before { background:#fff; }
+    .odd-strip { margin-top:16px; padding:14px 16px; background:rgba(201,160,48,.14); border-left:3px solid var(--accent-dk); border-radius:10px; font-size:.94rem; line-height:1.9; }
+    .odd-strip b { color:var(--accent-dk); text-transform:uppercase; letter-spacing:.8px; font-size:.78rem; }
+    .odd-strip em { font-style:normal; background:#fff; border:1px solid var(--border); border-radius:6px; padding:2px 8px; margin:0 2px; display:inline-block; }
+    @media(max-width:900px){ .colour-cols { grid-template-columns:1fr 1fr; } }
+    @media(max-width:520px){ .colour-cols { grid-template-columns:1fr; } }
+
+    /* ── Task 2: guess the meaning ── */
+    .guess-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+    .guess-card { background:#fff; border:2px solid var(--border); border-radius:14px; padding:16px 18px; }
+    .guess-idiom { font-family:'Fraunces',Georgia,serif; font-size:1.3rem; font-weight:700; margin-bottom:4px; }
+    .guess-hint { font-size:.85rem; color:var(--muted); margin-bottom:8px; font-style:italic; }
+    details.model { margin-top:8px; }
+    details.model summary { cursor:pointer; font-size:.86rem; color:var(--primary); font-weight:700; list-style:none; display:inline-block; }
+    details.model summary::-webkit-details-marker { display:none; }
+    details.model summary::before { content:'💡 '; }
+    details.model summary:hover { text-decoration:underline; }
+    .model-body p { margin:0 0 6px; }
+    .model-body p:last-child { margin-bottom:0; }
+    .model-body { margin-top:6px; padding:10px 14px; background:var(--bg); border-radius:10px; font-size:.95rem; line-height:1.7; }
+    @media(max-width:620px){ .guess-grid { grid-template-columns:1fr; } }
+
+    /* ── Task 3: matching (Task 18) ── */
+    .match-item .m-key { display:inline-block; min-width:22px; font-weight:800; color:var(--primary); margin-right:6px; }
+    .match-item.matched .m-key { color:inherit; }
+
+    /* ── Task 4: story with gaps ── */
+    .story-box { background:linear-gradient(135deg,#FDF5EC,#F3EAD9); border:2px solid var(--border); border-radius:var(--radius); padding:22px 26px; margin-bottom:6px; }
+    .story-title { font-family:'Fraunces',Georgia,serif; font-weight:700; font-size:1.35rem; color:var(--primary-dk); margin-bottom:12px; }
+    .story-text p { margin:0 0 14px; font-size:1.02rem; line-height:2.2; }
+    .story-text p:last-child { margin-bottom:0; }
+    .story-text .blank { min-width:190px; }
+    .st-gap { white-space:nowrap; }
+    .st-letter { font-weight:800; color:var(--primary); }
+    .hw-box { display:flex; flex-wrap:wrap; gap:8px; padding:14px 16px; margin-bottom:18px; background:rgba(201,160,48,.14); border-left:3px solid var(--accent-dk); border-radius:10px; }
+    .hw-box span { background:#fff; border:1px solid var(--border); border-radius:6px; padding:2px 10px; font-size:.92rem; cursor:pointer; user-select:none; transition:opacity .15s; }
+    .hw-box span:hover { border-color:var(--primary); }
+    .hw-box span.used { text-decoration:line-through; opacity:.45; }
+
+    /* ── Task 5: speaking ── */
+    .sub-head { font-family:'Fraunces',Georgia,serif; font-weight:700; font-size:1.05rem; color:var(--text); margin:6px 0 12px; padding-bottom:7px; border-bottom:2px solid var(--border); }
+    .support-q { display:flex; gap:12px; align-items:flex-start; padding:9px 0; }
+    .support-q .gap-num { background:#fff; }
+    .support-q p { margin:0; line-height:1.7; }
+    .support-q b { color:var(--primary-dk); }
+    .topic-card { background:linear-gradient(135deg,#FDF5EC,#F0E8D4); border:2px solid var(--border); border-radius:var(--radius); padding:18px 22px; margin:8px 0 16px; }
+    .topic-label { font-size:.72rem; text-transform:uppercase; letter-spacing:1.5px; font-weight:800; color:var(--primary); }
+    .topic-card h4 { font-family:'Fraunces',Georgia,serif; font-size:1.3rem; line-height:1.35; margin:6px 0 0; }
+    .timer-box { display:flex; align-items:center; gap:12px; flex-wrap:wrap; background:#fff; border:2px solid var(--border); border-radius:var(--radius); padding:12px 16px; margin:14px 0 18px; }
+    .timer-clock { font-family:'Fraunces',Georgia,serif; font-size:1.5rem; font-weight:700; color:var(--primary); min-width:76px; letter-spacing:.04em; }
+    .timer-clock.over { color:var(--red); }
+    .timer-hint { color:var(--muted); font-size:.85rem; flex:1; min-width:140px; }
+    .btn-mini { padding:6px 14px; font-size:.84rem; border-radius:99px; border:2px solid var(--border); background:transparent; color:var(--muted); cursor:pointer; font-weight:600; font-family:inherit; }
+    .btn-mini:hover { border-color:var(--primary); color:var(--primary); }
+    .phrase-bank { display:flex; flex-wrap:wrap; gap:8px; margin:12px 0 6px; }
+    .phrase-chip { padding:6px 14px; border:2px solid var(--border); border-radius:100px; background:#fff; font-size:.92rem; cursor:pointer; font-family:inherit; color:var(--text); transition:background .15s,border-color .15s,color .15s; }
+    .phrase-chip:hover { border-color:var(--primary); color:var(--primary); }
+    .phrase-chip.used { background:var(--green); border-color:var(--green); color:#fff; }
+    .phrase-count { font-size:.9rem; color:var(--muted); }
+    .phrase-count b { color:var(--primary); font-size:1.05rem; }
+
+    /* ── Part 2: I wish (moved from lesson 4) ── */
+    .test-line { margin-top:14px; padding:11px 15px; background:rgba(201,160,48,.14); border-left:4px solid var(--accent-dk); border-radius:10px; font-size:.94rem; line-height:1.75; }
+    .fact-item { padding:16px 0; border-bottom:1px dashed var(--border); }
+    .fact-item:last-of-type { border-bottom:none; }
+    .fact-head { display:flex; gap:14px; align-items:flex-start; }
+    .fact-text { flex:1; min-width:0; font-weight:600; line-height:1.7; margin:0; }
+    .fact-body { margin-left:41px; }
+    .fact-body .free-write { margin-top:8px; }
+    @media(max-width:560px){ .fact-body { margin-left:0; } }
+    .src-sentences { background:var(--bg); border:1.5px solid var(--border); border-radius:12px; padding:12px 16px; margin-bottom:16px; }
+    .src-row { display:flex; gap:12px; align-items:flex-start; padding:7px 0; }
+    .src-row p { margin:0; font-size:.97rem; line-height:1.65; }
+    .src-row b { color:var(--primary-dk); }
+    .src-row .gap-num { margin-top:2px; background:#fff; }
+    .ct-box { background:linear-gradient(135deg,#EEF3FB,#E3ECF7); border:2px solid var(--border); border-radius:var(--radius); padding:18px 22px; margin-bottom:6px; }
+    .ct-tag { display:inline-block; background:var(--primary); color:#fff; font-size:.72rem; font-weight:800; letter-spacing:.8px; text-transform:uppercase; padding:3px 10px; border-radius:100px; margin-bottom:8px; }
+    .ct-title { font-family:'Fraunces',Georgia,serif; font-weight:700; font-size:1.15rem; color:var(--primary-dk); margin-bottom:8px; }
+    .ct-text { margin:0; font-size:1rem; line-height:2.3; }
+    .ct-text .blank { min-width:170px; }
+    .ct-gap { white-space:nowrap; }
+    .ct-letter { font-weight:800; color:var(--primary); }
+    .ct-verb { color:var(--muted); font-style:italic; font-size:.92rem; }
+    /* I wish — discovery questions + blog cloze */
+    .wq-row { display:flex; gap:14px; align-items:flex-start; padding:10px 2px; border-bottom:1px dashed var(--border); }
+    .wq-row:last-child { border-bottom:none; }
+    .wq-body { flex:1; min-width:0; }
+    .wq-q { margin:0 0 8px; font-size:.98rem; line-height:1.6; }
+    .blog-box { padding:0; overflow:hidden; background:#fff; }
+    .blog-bar { display:flex; align-items:center; gap:16px; background:#1F3A5F; color:#fff; padding:10px 18px; }
+    .blog-logo { font-family:'Fraunces',Georgia,serif; font-weight:700; font-size:1.2rem; letter-spacing:1px; }
+    .blog-logo em { font-style:italic; font-weight:400; }
+    .blog-new { background:#5FAE4E; font-size:.8rem; font-weight:700; padding:3px 12px; border-radius:100px; }
+    .blog-head { display:flex; justify-content:space-between; align-items:baseline; padding:14px 22px 0; }
+    .blog-head .ct-title { color:#5FAE4E; margin:0; }
+    .blog-date { font-size:.85rem; color:var(--muted); font-style:italic; }
+    .blog-box .ct-text { padding:8px 22px 18px; }
+    .blog-box .ct-text .blank { min-width:110px; }
+
+    /* ── Part 3: who wrote it ── */
+    .quote-item { padding:16px 0; border-bottom:1px dashed var(--border); }
+    .quote-item:last-of-type { border-bottom:none; }
+    .quote-head { display:flex; gap:14px; align-items:flex-start; }
+    .quote-text { flex:1; min-width:0; margin:0; padding:14px 18px; background:#fff; border-left:4px solid var(--accent); border-radius:0 12px 12px 0; font-family:'Fraunces',Georgia,serif; font-size:1.02rem; line-height:1.75; color:var(--text); }
+    .quote-body { margin:12px 0 0 41px; }
+    .word-choice { display:inline-flex; flex-wrap:wrap; border:2px solid var(--border); border-radius:8px; overflow:hidden; margin:0 4px; vertical-align:middle; background:#fff; }
+    .word-choice-btn { padding:7px 15px; cursor:pointer; border:none; background:transparent; font-size:.9rem; font-weight:600; color:var(--muted); font-family:inherit; transition:background .15s,color .15s; }
+    .word-choice-btn:hover { background:var(--bg); color:var(--text); }
+    .word-choice-btn.selected { background:var(--primary); color:#fff; }
+    .word-choice-btn.correct  { background:var(--green); color:#fff; }
+    .word-choice-btn.wrong    { background:var(--red);   color:#fff; }
+    .author-choice { margin:0; }
+    .author-choice .word-choice-btn { border-right:1px solid var(--border); }
+    .author-choice .word-choice-btn:last-child { border-right:none; }
+    @media(max-width:560px){ .quote-body { margin-left:0; } .author-choice { display:flex; flex-direction:column; } .author-choice .word-choice-btn { border-right:none; border-bottom:1px solid var(--border); text-align:left; } .author-choice .word-choice-btn:last-child { border-bottom:none; } }
+
+    /* ── placeholder ── */
+    .soon { text-align:center; padding:46px 24px; color:var(--muted); }
+    .soon-emoji { font-size:2.4rem; display:block; margin-bottom:10px; }
+  </style>
+</head>
+<body>
+
+<header class="site-header">
+  <h1>Lesson 5 — Colour Idioms</h1>
+  <a class="back-link" href="../index.html">← All Lessons</a>
+</header>
+
+<div class="container">
+
+  <div class="lesson-meta">
+    <h2>Colour Idioms</h2>
+    <p>📅 21 September 2026 &nbsp;·&nbsp; Lesson 5</p>
+  </div>
+
+  <div class="tab-bar">
+    <button class="tab-btn active" onclick="switchTab('p1',this)">Part 1 · Colour Idioms</button>
+    <button class="tab-btn"        onclick="switchTab('p2',this)">Part 2 · I wish</button>
+    <button class="tab-btn"        onclick="switchTab('p3',this)">Part 3 · Culture</button>
+    <button class="tab-btn"        onclick="switchTab('hw',this)">📝 Homework</button>
+  </div>
+  <div class="tab-scallop"></div>
+
+  <!-- ══════════════════════════════════════════════════════
+       PART 1 — COLOUR IDIOMS
+  ══════════════════════════════════════════════════════ -->
+  <div class="tab-content active" id="tab-p1">
+
+    <!-- TASK 1: the organising principle -->
+    <div class="exercise" id="t1-principle">
+      <div class="exercise-label">Task 1 — The Organising Principle</div>
+      <h3 class="big-instr">🎨 Learn them by colour, not alphabetically.</h3>
+
+      <div class="principle">
+        The olympiad corpus builds whole tasks on <b>one colour</b>, so learn the idioms by colour, not alphabetically.
+        <b>Red</b> = anger, danger, debt and bureaucracy. <b>Blue</b> = aristocracy, sadness, the police.
+        <b>Black</b> = formality and disgrace. <b>White</b> = surrender and uselessness.
+        That mapping makes fifteen items behave like four.
+      </div>
+
+      <div class="colour-cols">
+        <div class="colour-col col-red">
+          <div class="colour-name">RED</div>
+          <div class="colour-theme">anger · danger · debt · bureaucracy</div>
+          <ul>
+            <li>see red</li>
+            <li>in the red</li>
+            <li>red tape</li>
+            <li>a red letter day <em>— the odd one: good news</em></li>
+          </ul>
+        </div>
+        <div class="colour-col col-blue">
+          <div class="colour-name">BLUE</div>
+          <div class="colour-theme">aristocracy · sadness · the police</div>
+          <ul>
+            <li>a blue blood</li>
+            <li>feeling blue / the blues</li>
+            <li>the thin blue line</li>
+            <li>once in a blue moon <em>— the odd one: rarity</em></li>
+          </ul>
+        </div>
+        <div class="colour-col col-black">
+          <div class="colour-name">BLACK</div>
+          <div class="colour-theme">formality · disgrace</div>
+          <ul>
+            <li>black tie</li>
+            <li>a black eye</li>
+            <li>paint a black picture</li>
+            <li>the black sheep</li>
+          </ul>
+        </div>
+        <div class="colour-col col-white">
+          <div class="colour-name">WHITE</div>
+          <div class="colour-theme">surrender · uselessness</div>
+          <ul>
+            <li>a white flag</li>
+            <li>a white elephant</li>
+            <li>a white lie <em>— small and harmless</em></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="odd-strip">
+        <b>The leftovers — not a family, just learn them:</b><br>
+        <em>pass with flying colours</em><em>colourless</em><em>greens</em><em>yellow</em><em>pinko</em><em>the silver screen</em>
+      </div>
+    </div>
+
+    <!-- TASK 2: guess the meaning -->
+    <div class="exercise" id="t2-guess">
+      <div class="exercise-label">Task 2 — Guess</div>
+      <h3 class="big-instr">🤔 What do you think these mean?</h3>
+      <p class="lead-instr">
+        Use the colour map above. Say your guess out loud — <b>then</b> open the answer.
+      </p>
+
+      <div class="guess-grid">
+        <div class="guess-card">
+          <div class="guess-idiom">black tie</div>
+          <div class="guess-hint">black = formality</div>
+          <details class="model"><summary>Reveal</summary><div class="model-body"><b>Very formal evening dress</b> — a dinner jacket for men, a long dress for women. Seen on invitations: <em>Dress code: black tie.</em></div></details>
+        </div>
+        <div class="guess-card">
+          <div class="guess-idiom">feeling blue</div>
+          <div class="guess-hint">blue = sadness</div>
+          <details class="model"><summary>Reveal</summary><div class="model-body"><b>Feeling sad or low</b>, usually for no big reason. <em>She's been feeling blue since her best friend moved away.</em> The noun is <em>the blues</em>.</div></details>
+        </div>
+        <div class="guess-card">
+          <div class="guess-idiom">in the red</div>
+          <div class="guess-hint">red = debt</div>
+          <details class="model"><summary>Reveal</summary><div class="model-body"><b>Owing money; in debt</b> — from the red ink accountants used for losses. <em>The club has been in the red for two seasons.</em> Opposite: <em>in the black</em>.</div></details>
+        </div>
+        <div class="guess-card">
+          <div class="guess-idiom">a white flag</div>
+          <div class="guess-hint">white = surrender</div>
+          <details class="model"><summary>Reveal</summary><div class="model-body"><b>A sign that you give up</b> — from the battlefield signal for surrender. <em>After an hour of arguing, Dad raised the white flag and let us stay up.</em></div></details>
+        </div>
+      </div>
+    </div>
+
+    <!-- TASK 3: matching (olympiad corpus Task 18) -->
+    <div class="exercise" id="t3-match">
+      <div class="exercise-label">Task 3 — Task 18</div>
+      <h3 class="big-instr">🔗 Match the words or phrases with their definitions.</h3>
+      <p class="lead-instr">
+        Click an idiom on the left, then its definition on the right. All fifteen — start with the colours you already know.
+      </p>
+
+      <div class="match-grid">
+        <div class="match-col" data-side="left">
+          <div class="match-item" data-pair="1"  onclick="selectMatch(this,'t3-match')"><span class="m-key">1</span>a blue blood</div>
+          <div class="match-item" data-pair="2"  onclick="selectMatch(this,'t3-match')"><span class="m-key">2</span>a red letter day</div>
+          <div class="match-item" data-pair="3"  onclick="selectMatch(this,'t3-match')"><span class="m-key">3</span>black eye</div>
+          <div class="match-item" data-pair="4"  onclick="selectMatch(this,'t3-match')"><span class="m-key">4</span>black tie</div>
+          <div class="match-item" data-pair="5"  onclick="selectMatch(this,'t3-match')"><span class="m-key">5</span>colorless</div>
+          <div class="match-item" data-pair="6"  onclick="selectMatch(this,'t3-match')"><span class="m-key">6</span>greens</div>
+          <div class="match-item" data-pair="7"  onclick="selectMatch(this,'t3-match')"><span class="m-key">7</span>once in a blue moon</div>
+          <div class="match-item" data-pair="8"  onclick="selectMatch(this,'t3-match')"><span class="m-key">8</span>paint a black picture</div>
+          <div class="match-item" data-pair="9"  onclick="selectMatch(this,'t3-match')"><span class="m-key">9</span>pinko</div>
+          <div class="match-item" data-pair="10" onclick="selectMatch(this,'t3-match')"><span class="m-key">10</span>see red</div>
+          <div class="match-item" data-pair="11" onclick="selectMatch(this,'t3-match')"><span class="m-key">11</span>the blues</div>
+          <div class="match-item" data-pair="12" onclick="selectMatch(this,'t3-match')"><span class="m-key">12</span>the silver screen</div>
+          <div class="match-item" data-pair="13" onclick="selectMatch(this,'t3-match')"><span class="m-key">13</span>the thin blue line</div>
+          <div class="match-item" data-pair="14" onclick="selectMatch(this,'t3-match')"><span class="m-key">14</span>to pass with flying colors</div>
+          <div class="match-item" data-pair="15" onclick="selectMatch(this,'t3-match')"><span class="m-key">15</span>yellow</div>
+        </div>
+        <div class="match-col" data-side="right">
+          <div class="match-item" data-pair="4"  onclick="selectMatch(this,'t3-match')"><span class="m-key">A</span>clothes for very formal occasions</div>
+          <div class="match-item" data-pair="8"  onclick="selectMatch(this,'t3-match')"><span class="m-key">B</span>to describe a situation as extremely bad</div>
+          <div class="match-item" data-pair="13" onclick="selectMatch(this,'t3-match')"><span class="m-key">C</span>the police</div>
+          <div class="match-item" data-pair="1"  onclick="selectMatch(this,'t3-match')"><span class="m-key">D</span>an aristocratic person</div>
+          <div class="match-item" data-pair="14" onclick="selectMatch(this,'t3-match')"><span class="m-key">E</span>to do very well</div>
+          <div class="match-item" data-pair="15" onclick="selectMatch(this,'t3-match')"><span class="m-key">F</span>cowardly</div>
+          <div class="match-item" data-pair="11" onclick="selectMatch(this,'t3-match')"><span class="m-key">G</span>sadness</div>
+          <div class="match-item" data-pair="5"  onclick="selectMatch(this,'t3-match')"><span class="m-key">H</span>boring</div>
+          <div class="match-item" data-pair="10" onclick="selectMatch(this,'t3-match')"><span class="m-key">I</span>become very angry</div>
+          <div class="match-item" data-pair="2"  onclick="selectMatch(this,'t3-match')"><span class="m-key">J</span>a special day</div>
+          <div class="match-item" data-pair="9"  onclick="selectMatch(this,'t3-match')"><span class="m-key">K</span>communist</div>
+          <div class="match-item" data-pair="3"  onclick="selectMatch(this,'t3-match')"><span class="m-key">L</span>an area of skin around the eye that is dark because of fighting</div>
+          <div class="match-item" data-pair="12" onclick="selectMatch(this,'t3-match')"><span class="m-key">M</span>the movies</div>
+          <div class="match-item" data-pair="6"  onclick="selectMatch(this,'t3-match')"><span class="m-key">N</span>vegetables</div>
+          <div class="match-item" data-pair="7"  onclick="selectMatch(this,'t3-match')"><span class="m-key">O</span>infrequently</div>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-ghost" onclick="resetMatchEx('t3-match')">Reset</button>
+      </div>
+    </div>
+
+    <!-- TASK 4: story with gaps -->
+    <div class="exercise" id="t4-story">
+      <div class="exercise-label">Task 4 — Idioms in Context</div>
+      <h3 class="big-instr">📖 Complete the story.</h3>
+      <p class="lead-instr">
+        Six gaps, nine idioms — <b>three are not needed</b>. Click an option to cross it out once you've used it.
+      </p>
+
+      <div class="hw-box" id="t4-box" title="Click a phrase to cross it out">
+        <span onclick="toggleHwBox(this)">the blues</span>
+        <span onclick="toggleHwBox(this)">black tie</span>
+        <span onclick="toggleHwBox(this)">with flying colours</span>
+        <span onclick="toggleHwBox(this)">a white flag</span>
+        <span onclick="toggleHwBox(this)">in the red</span>
+        <span onclick="toggleHwBox(this)">saw red</span>
+        <span onclick="toggleHwBox(this)">a blue blood</span>
+        <span onclick="toggleHwBox(this)">once in a blue moon</span>
+        <span onclick="toggleHwBox(this)">a red letter day</span>
+      </div>
+
+      <div class="story-box">
+        <div class="story-title">The Last Dinner at Harrowgate</div>
+        <div class="story-text">
+          <p>
+            The invitation said <span class="st-gap"><span class="st-letter">(1)</span> <input class="blank" id="st-1" data-answer="black tie"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button></span>, which was how Eleanor knew the Ashcombes were desperate.
+            Nobody dresses for dinner when the money is fine. Everyone in the village had heard the rumours: the estate had been
+            <span class="st-gap"><span class="st-letter">(2)</span> <input class="blank" id="st-2" data-answer="in the red"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button></span> for three years, and the bank had stopped pretending to be patient.
+          </p>
+          <p>
+            Her father polished his shoes twice. He visited Harrowgate <span class="st-gap"><span class="st-letter">(3)</span> <input class="blank" id="st-3" data-answer="once in a blue moon"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button></span>, and only when summoned,
+            so the evening was, in its odd way, <span class="st-gap"><span class="st-letter">(4)</span> <input class="blank" id="st-4" data-answer="a red letter day|a red-letter day"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button></span> for him.
+            Eleanor watched him at the long table, nodding while Lord Ashcombe talked about horses, and she saw the exact moment he
+            <span class="st-gap"><span class="st-letter">(5)</span> <input class="blank" id="st-5" data-answer="saw red"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button></span>: the old man had called the new road "a favour to the peasants".
+            Her father put down his glass very gently.
+          </p>
+          <p>
+            But it was Lady Ashcombe who ended it. She rose, looked around the silent table, and said, quite calmly, "We are selling."
+            It was <span class="st-gap"><span class="st-letter">(6)</span> <input class="blank" id="st-6" data-answer="a white flag"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button></span>, and everyone at the table knew it.
+          </p>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="checkBlanks('t4-story')">Check ✓</button>
+        <button class="btn btn-ghost"   onclick="resetBlanks('t4-story')">Try again</button>
+      </div>
+    </div>
+
+    <!-- TASK 5: speaking -->
+    <div class="exercise" id="t5-speak">
+      <div class="exercise-label">Task 5 — Speaking</div>
+      <h3 class="big-instr">🎤 Say it in colour.</h3>
+      <p class="lead-instr">
+        Two rounds. <b>Round 1</b> — quick answers, one idiom each. <b>Round 2</b> — a two-minute story with at least five idioms.
+      </p>
+
+      <div class="sub-head">Round 1 · Quick fire — answer in one or two sentences, using the idiom in bold</div>
+      <div class="support-q"><span class="gap-num">1</span><p>What makes you <b>see red</b>? Give a real example from the last month.</p></div>
+      <div class="support-q"><span class="gap-num">2</span><p>What's something you do only <b>once in a blue moon</b> — and why so rarely?</p></div>
+      <div class="support-q"><span class="gap-num">3</span><p>Describe your last <b>red letter day</b>. What made it special?</p></div>
+      <div class="support-q"><span class="gap-num">4</span><p>When did you last <b>raise the white flag</b> in an argument? Were you right to?</p></div>
+      <div class="support-q"><span class="gap-num">5</span><p>Think of a film or book: who is <b>the black sheep</b> of the family, and how do the others treat them?</p></div>
+      <div class="support-q"><span class="gap-num">6</span><p>What do you do when you're <b>feeling blue</b>? Does it work?</p></div>
+      <div class="support-q"><span class="gap-num">7</span><p>Have you ever told <b>a white lie</b> to protect someone's feelings? What was it?</p></div>
+
+      <div class="sub-head" style="margin-top:26px;">Round 2 · Long turn</div>
+
+      <div class="topic-card">
+        <span class="topic-label">Your topic</span>
+        <h4>A day that started as a red letter day and ended as a black one. True or invented.</h4>
+      </div>
+
+      <div class="support-q"><span class="gap-num">1</span><p>Set the scene: what was the occasion, and why were you looking forward to it?</p></div>
+      <div class="support-q"><span class="gap-num">2</span><p>What went wrong — who made you see red, and did anybody end up with a black eye (literally or not)?</p></div>
+      <div class="support-q"><span class="gap-num">3</span><p>How did it end — did someone raise a white flag, tell a white lie, or paint a black picture of the whole thing?</p></div>
+
+      <div class="timer-box">
+        <span class="timer-clock" id="timerClock">2:00</span>
+        <span class="timer-hint">Start the clock and don't stop talking until it hits 0:00.</span>
+        <button class="btn-mini" onclick="timerStart()">▶ Start</button>
+        <button class="btn-mini" onclick="timerPause()">⏸ Pause</button>
+        <button class="btn-mini" onclick="timerReset()">↺ Reset</button>
+      </div>
+
+      <p style="font-weight:600; margin-bottom:4px;">Idiom bank — tap what you manage to use:</p>
+      <div class="phrase-bank" id="bank-speak" data-count="bankCount">
+        <button class="phrase-chip" data-p="see red" onclick="togglePhrase(this)">see red</button>
+        <button class="phrase-chip" data-p="a red letter day" onclick="togglePhrase(this)">a red letter day</button>
+        <button class="phrase-chip" data-p="in the red" onclick="togglePhrase(this)">in the red</button>
+        <button class="phrase-chip" data-p="red tape" onclick="togglePhrase(this)">red tape</button>
+        <button class="phrase-chip" data-p="feeling blue" onclick="togglePhrase(this)">feeling blue</button>
+        <button class="phrase-chip" data-p="once in a blue moon" onclick="togglePhrase(this)">once in a blue moon</button>
+        <button class="phrase-chip" data-p="a blue blood" onclick="togglePhrase(this)">a blue blood</button>
+        <button class="phrase-chip" data-p="the thin blue line" onclick="togglePhrase(this)">the thin blue line</button>
+        <button class="phrase-chip" data-p="black tie" onclick="togglePhrase(this)">black tie</button>
+        <button class="phrase-chip" data-p="a black eye" onclick="togglePhrase(this)">a black eye</button>
+        <button class="phrase-chip" data-p="paint a black picture" onclick="togglePhrase(this)">paint a black picture</button>
+        <button class="phrase-chip" data-p="the black sheep" onclick="togglePhrase(this)">the black sheep</button>
+        <button class="phrase-chip" data-p="a white flag" onclick="togglePhrase(this)">a white flag</button>
+        <button class="phrase-chip" data-p="a white elephant" onclick="togglePhrase(this)">a white elephant</button>
+        <button class="phrase-chip" data-p="a white lie" onclick="togglePhrase(this)">a white lie</button>
+        <button class="phrase-chip" data-p="with flying colours" onclick="togglePhrase(this)">with flying colours</button>
+      </div>
+      <p class="phrase-count">Used: <b id="bankCount">0</b> / 5 needed</p>
+
+      <textarea class="free-write" id="fw-speak-notes" placeholder="Notes before you speak — three or four key words only, not full sentences…" rows="3" style="margin-top:14px;"></textarea>
+      <div class="char-count" id="cc-fw-speak-notes">0 characters</div>
+    </div>
+
+  </div><!-- /tab-p1 -->
+
+  <!-- ══════════════════════════════════════════════════════
+       PART 2 — I WISH / IF ONLY
+  ══════════════════════════════════════════════════════ -->
+  <div class="tab-content" id="tab-p2">
+
+    <!-- TASK 1: discover the rule (book exercise 5) -->
+    <div class="exercise" id="w5">
+      <div class="exercise-label">Task 1 — Book Exercise 5</div>
+      <h3 class="big-instr">🔍 Look at these sentences and answer the questions.</h3>
+
+      <div class="src-sentences">
+        <div class="src-row"><span class="gap-num">a</span><p><b>I wish/If only</b> I<b>'d learnt</b> to swim properly when I was a kid.</p></div>
+        <div class="src-row"><span class="gap-num">b</span><p><b>I wish/If only</b> I <b>was/were</b> taller.</p></div>
+        <div class="src-row"><span class="gap-num">c</span><p><b>I wish/If only</b> people <b>wouldn't</b> make fun of my favourite sport.</p></div>
+      </div>
+
+      <div class="wq-list">
+        <div class="wq-row"><span class="gap-num">1</span><div class="wq-body"><p class="wq-q">What tense appears after <em>I wish/If only</em> in sentence <b>a</b>?</p><span class="word-choice" id="w5-1" data-answer="past perfect"><button class="word-choice-btn" data-val="present simple" onclick="selectGap(this)">present simple</button><button class="word-choice-btn" data-val="past simple" onclick="selectGap(this)">past simple</button><button class="word-choice-btn" data-val="past perfect" onclick="selectGap(this)">past perfect</button></span></div></div>
+        <div class="wq-row"><span class="gap-num">2</span><div class="wq-body"><p class="wq-q">Does this sentence talk about a present or past situation that we would like to be different?</p><span class="word-choice" id="w5-2" data-answer="past"><button class="word-choice-btn" data-val="present" onclick="selectGap(this)">present</button><button class="word-choice-btn" data-val="past" onclick="selectGap(this)">past</button></span></div></div>
+        <div class="wq-row"><span class="gap-num">3</span><div class="wq-body"><p class="wq-q">What tense appears after <em>I wish/If only</em> in sentence <b>b</b>?</p><span class="word-choice" id="w5-3" data-answer="past simple"><button class="word-choice-btn" data-val="present simple" onclick="selectGap(this)">present simple</button><button class="word-choice-btn" data-val="past simple" onclick="selectGap(this)">past simple</button><button class="word-choice-btn" data-val="past perfect" onclick="selectGap(this)">past perfect</button></span></div></div>
+        <div class="wq-row"><span class="gap-num">4</span><div class="wq-body"><p class="wq-q">Does this sentence talk about an imaginary wish for a present or past situation?</p><span class="word-choice" id="w5-4" data-answer="present"><button class="word-choice-btn" data-val="present" onclick="selectGap(this)">present</button><button class="word-choice-btn" data-val="past" onclick="selectGap(this)">past</button></span></div></div>
+        <div class="wq-row"><span class="gap-num">5</span><div class="wq-body"><p class="wq-q">What verb form appears after <em>I wish/If only</em> in sentence <b>c</b>?</p><span class="word-choice" id="w5-5" data-answer="would + infinitive"><button class="word-choice-btn" data-val="past simple" onclick="selectGap(this)">past simple</button><button class="word-choice-btn" data-val="would + infinitive" onclick="selectGap(this)">would + infinitive</button><button class="word-choice-btn" data-val="past perfect" onclick="selectGap(this)">past perfect</button></span></div></div>
+        <div class="wq-row"><span class="gap-num">6</span><div class="wq-body"><p class="wq-q">Do we use sentence <b>c</b> to talk about habitual behaviour that we like, or that we want to criticise and change?</p><span class="word-choice" id="w5-6" data-answer="want to criticise and change"><button class="word-choice-btn" data-val="like" onclick="selectGap(this)">like</button><button class="word-choice-btn" data-val="want to criticise and change" onclick="selectGap(this)">want to criticise and change</button></span></div></div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="checkGaps('w5')">Check ✓</button>
+        <button class="btn btn-ghost"   onclick="resetGaps('w5')">Try again</button>
+      </div>
+
+      <div class="test-line" style="margin-top:14px;">
+        📐 <b>wish / if only + past simple</b> → a present situation you'd like to be different ·
+        <b>+ past perfect</b> → a past regret ·
+        <b>+ would</b> → somebody else's annoying habit you want to change. <em>If only</em> is a stronger, more emotional <em>I wish</em>.
+      </div>
+    </div>
+
+    <!-- TASK 2: correct verb form (book exercise 6) -->
+    <div class="exercise" id="w6">
+      <div class="exercise-label">Task 2 — Book Exercise 6</div>
+      <h3 class="big-instr">✏️ Complete the sentences with the correct form of the verb given.</h3>
+
+      <div class="gap-list">
+        <div class="gap-row"><span class="gap-num">1</span><p class="gap-text">If only I <input class="blank" id="w6-1" data-answer="had"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button> <span class="ct-verb">(have)</span> a motorbike! I'd ride it every day.</p></div>
+        <div class="gap-row"><span class="gap-num">2</span><p class="gap-text">If only he <input class="blank" id="w6-2" data-answer="wouldn't shout|would not shout|didn't shout|did not shout"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button> <span class="ct-verb">(not shout)</span>. I can't concentrate with the noise he makes.</p></div>
+        <div class="gap-row"><span class="gap-num">3</span><p class="gap-text">I wish we <input class="blank" id="w6-3" data-answer="hadn't bought|had not bought"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button> <span class="ct-verb">(not buy)</span> tickets for the concert. I've just found out we've got an exam the morning after!</p></div>
+        <div class="gap-row"><span class="gap-num">4</span><p class="gap-text">I wish I <input class="blank" id="w6-4" data-answer="had gone|'d gone"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button> <span class="ct-verb">(go)</span> skiing yesterday. They say the conditions were perfect.</p></div>
+        <div class="gap-row"><span class="gap-num">5</span><p class="gap-text">If only I <input class="blank" id="w6-5" data-answer="was|were"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button> <span class="ct-verb">(be)</span> 18 already. I'd be able to vote.</p></div>
+        <div class="gap-row"><span class="gap-num">6</span><p class="gap-text">I wish you <input class="blank" id="w6-6" data-answer="would clean|'d clean"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button> <span class="ct-verb">(clean)</span> the kitchen after using it.</p></div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="checkBlanks('w6')">Check ✓</button>
+        <button class="btn btn-ghost"   onclick="resetBlanks('w6')">Try again</button>
+      </div>
+    </div>
+
+    <!-- TASK 3: open cloze blog (book exercise 7) -->
+    <div class="exercise" id="w7">
+      <div class="exercise-label">Task 3 — Book Exercise 7</div>
+      <h3 class="big-instr">📝 Complete the text with one word in each gap.</h3>
+      <p class="lead-instr">Everything from this lesson turns up here — wishes, conditionals and the four linkers.</p>
+
+      <div class="ct-box blog-box">
+        <div class="blog-bar"><span class="blog-logo"><em>My</em>BLOG</span><span class="blog-new">New posts</span></div>
+        <div class="blog-head"><span class="ct-title">Study versus Sport</span><span class="blog-date">22nd August</span></div>
+        <p class="ct-text">
+          If <span class="ct-gap"><span class="ct-letter">(a)</span> <input class="blank" id="bl-a" data-answer="only"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button></span> I had more time to do sport this year. I'm in my last year of school and I have lots of exams and assignments.
+          I <span class="ct-gap"><span class="ct-letter">(b)</span> <input class="blank" id="bl-b" data-answer="wish"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button></span> I didn't have so many! I used to be in the school basketball team but I stopped. I wish I <span class="ct-gap"><span class="ct-letter">(c)</span> <input class="blank" id="bl-c" data-answer="hadn't|had not"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button></span> given it up.
+          But if I <span class="ct-gap"><span class="ct-letter">(d)</span> <input class="blank" id="bl-d" data-answer="had"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button></span> continued playing, I <span class="ct-gap"><span class="ct-letter">(e)</span> <input class="blank" id="bl-e" data-answer="would|'d|might"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button></span> have spent far too much time on matches and training,
+          although I still go running and swimming occasionally. I think that as <span class="ct-gap"><span class="ct-letter">(f)</span> <input class="blank" id="bl-f" data-answer="long"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button></span> as you get some exercise from time to time,
+          you can stay more or less fit. I always do sport at least once at the weekend <span class="ct-gap"><span class="ct-letter">(g)</span> <input class="blank" id="bl-g" data-answer="unless"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button></span> it's absolutely impossible
+          because of homework and revision. I'm always careful with what I eat, too, and I try to avoid eating too much junk food
+          <span class="ct-gap"><span class="ct-letter">(h)</span> <input class="blank" id="bl-h" data-answer="in"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button></span> case I put on a lot of weight. Provided <span class="ct-gap"><span class="ct-letter">(i)</span> <input class="blank" id="bl-i" data-answer="that"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button></span> you have a balanced diet, you should be able to keep
+          <span class="ct-gap"><span class="ct-letter">(j)</span> <input class="blank" id="bl-j" data-answer="in"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button></span> shape quite easily. The problem is that my mum is always buying me my favourite cakes. I wish she
+          <span class="ct-gap"><span class="ct-letter">(k)</span> <input class="blank" id="bl-k" data-answer="wouldn't|didn't|would not|did not"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button></span> do that because I find it difficult to resist them! Anyway, providing I take <span class="ct-gap"><span class="ct-letter">(l)</span> <input class="blank" id="bl-l" data-answer="up"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button></span> sport again
+          next year, I'm sure I <span class="ct-gap"><span class="ct-letter">(m)</span> <input class="blank" id="bl-m" data-answer="will|'ll"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button></span> be as fit <span class="ct-gap"><span class="ct-letter">(n)</span> <input class="blank" id="bl-n" data-answer="as"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button></span> I was before.
+        </p>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="checkBlanks('w7')">Check ✓</button>
+        <button class="btn btn-ghost"   onclick="resetBlanks('w7')">Try again</button>
+      </div>
+    </div>
+
+    <!-- TASK 4: three true sentences (book exercise 8) -->
+    <div class="exercise" id="w8">
+      <div class="exercise-label">Task 4 — Book Exercise 8</div>
+      <h3 class="big-instr">✍️ Write three true sentences with <em>I wish</em>.</h3>
+
+      <div class="fact-item">
+        <div class="fact-head"><span class="gap-num">1</span><p class="fact-text">A present situation that you would like to be different.</p></div>
+        <div class="fact-body">
+          <textarea class="free-write" id="fw-w1" placeholder="I wish I…" rows="2"></textarea>
+          <details class="model"><summary>Pattern</summary><div class="model-body">I wish + <b>past simple</b> — <em>I wish I <b>lived</b> closer to school.</em></div></details>
+        </div>
+      </div>
+
+      <div class="fact-item">
+        <div class="fact-head"><span class="gap-num">2</span><p class="fact-text">A past situation you regret.</p></div>
+        <div class="fact-body">
+          <textarea class="free-write" id="fw-w2" placeholder="I wish I had…" rows="2"></textarea>
+          <details class="model"><summary>Pattern</summary><div class="model-body">I wish + <b>past perfect</b> — <em>I wish I <b>had started</b> revising earlier.</em></div></details>
+        </div>
+      </div>
+
+      <div class="fact-item">
+        <div class="fact-head"><span class="gap-num">3</span><p class="fact-text">Somebody who does something that you would like to change.</p></div>
+        <div class="fact-body">
+          <textarea class="free-write" id="fw-w3" placeholder="I wish … would…" rows="2"></textarea>
+          <details class="model"><summary>Pattern</summary><div class="model-body">I wish + somebody + <b>would</b> — <em>I wish my brother <b>wouldn't borrow</b> my headphones without asking.</em></div></details>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /tab-p2 -->
+
+  <!-- ══════════════════════════════════════════════════════
+       PART 3 — CULTURE (Task 301: who wrote it)
+  ══════════════════════════════════════════════════════ -->
+  <div class="tab-content" id="tab-p3">
+
+    <div class="exercise" id="t-authors">
+      <div class="exercise-label">Culture — Authors &amp; Works</div>
+      <h3 class="big-instr">🖋️ Match the author to their best-known works.</h3>
+      <p class="lead-instr">
+        Five names you'll meet again and again in olympiad culture tasks. Click a name, then the pair of titles.
+      </p>
+
+      <div class="match-grid">
+        <div class="match-col" data-side="left">
+          <div class="match-item" data-pair="1" onclick="selectMatch(this,'t-authors')">Virginia Woolf</div>
+          <div class="match-item" data-pair="2" onclick="selectMatch(this,'t-authors')">Oscar Wilde</div>
+          <div class="match-item" data-pair="3" onclick="selectMatch(this,'t-authors')">Thomas Hardy</div>
+          <div class="match-item" data-pair="4" onclick="selectMatch(this,'t-authors')">Charlotte Brontë</div>
+          <div class="match-item" data-pair="5" onclick="selectMatch(this,'t-authors')">Charles Dickens</div>
+        </div>
+        <div class="match-col" data-side="right">
+          <div class="match-item" data-pair="3" onclick="selectMatch(this,'t-authors')"><em>Tess of the d’Urbervilles</em> · <em>Far from the Madding Crowd</em></div>
+          <div class="match-item" data-pair="5" onclick="selectMatch(this,'t-authors')"><em>Oliver Twist</em> · <em>Great Expectations</em></div>
+          <div class="match-item" data-pair="1" onclick="selectMatch(this,'t-authors')"><em>Mrs Dalloway</em> · <em>To the Lighthouse</em></div>
+          <div class="match-item" data-pair="4" onclick="selectMatch(this,'t-authors')"><em>Jane Eyre</em> · <em>Villette</em></div>
+          <div class="match-item" data-pair="2" onclick="selectMatch(this,'t-authors')"><em>The Picture of Dorian Gray</em> · <em>The Importance of Being Earnest</em></div>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-ghost" onclick="resetMatchEx('t-authors')">Reset</button>
+      </div>
+
+      <details class="model" style="margin-top:14px;"><summary>Key facts — open after matching</summary>
+        <div class="model-body">
+          <p><b>Charles Dickens</b> (1812–1870) — the great Victorian novelist of London's poor; also <em>A Christmas Carol</em>, <em>David Copperfield</em>.</p>
+          <p><b>Charlotte Brontë</b> (1816–1855) — eldest of the three Brontë sisters of Haworth, Yorkshire; published <em>Jane Eyre</em> as “Currer Bell”.</p>
+          <p><b>Thomas Hardy</b> (1840–1928) — set his tragic rural novels in “Wessex”, his fictional version of Dorset; also <em>Jude the Obscure</em>.</p>
+          <p><b>Oscar Wilde</b> (1854–1900) — Irish wit and playwright, famous for epigrams; also <em>The Canterville Ghost</em>, <em>Lady Windermere's Fan</em>.</p>
+          <p><b>Virginia Woolf</b> (1882–1941) — modernist, stream of consciousness, central figure of the Bloomsbury Group; also <em>Orlando</em>, <em>A Room of One's Own</em>.</p>
+        </div>
+      </details>
+    </div>
+
+    <div class="exercise" id="t301">
+      <div class="exercise-label">Culture — Task 301</div>
+      <h3 class="big-instr">📚 Who wrote it?</h3>
+      <p class="lead-instr">
+        Read each extract and choose the author. Look for clues: a name, a place, the period, the voice.
+      </p>
+
+      <div class="quote-item">
+        <div class="quote-head"><span class="gap-num">1</span><blockquote class="quote-text">“Good-morning to you, Clarissa!” said Hugh, rather extravagantly, for they had known each other as children. “Where are you off to?”<br>“I love walking in London,” said Mrs. Dalloway. “Really it’s better than walking in the country.”</blockquote></div>
+        <div class="quote-body">
+          <span class="word-choice author-choice" id="au-1" data-answer="Virginia Woolf"><button class="word-choice-btn" data-val="Virginia Woolf" onclick="selectGap(this)">Virginia Woolf</button><button class="word-choice-btn" data-val="Oscar Wilde" onclick="selectGap(this)">Oscar Wilde</button><button class="word-choice-btn" data-val="Thomas Hardy" onclick="selectGap(this)">Thomas Hardy</button><button class="word-choice-btn" data-val="Charlotte Brontë" onclick="selectGap(this)">Charlotte Brontë</button><button class="word-choice-btn" data-val="Charles Dickens" onclick="selectGap(this)">Charles Dickens</button></span>
+          <details class="model"><summary>Which book?</summary><div class="model-body"><em>Mrs Dalloway</em> (1925). Clarissa Dalloway walks through London to buy flowers for her party — the whole novel takes place in one June day.</div></details>
+        </div>
+      </div>
+
+      <div class="quote-item">
+        <div class="quote-head"><span class="gap-num">2</span><blockquote class="quote-text">“My lord,” answered the minister, “I will take the furniture and the ghost at a valuation. I have come from a modern country, where we have everything that money can buy; and with all our spry young fellows painting the old world red, and carrying off your best actors and prima-donnas, I reckon that if there were such a thing as a ghost in Europe, we’d have it at home in a very short time in one of our public museums, or on the road as a show.”</blockquote></div>
+        <div class="quote-body">
+          <span class="word-choice author-choice" id="au-2" data-answer="Oscar Wilde"><button class="word-choice-btn" data-val="Virginia Woolf" onclick="selectGap(this)">Virginia Woolf</button><button class="word-choice-btn" data-val="Oscar Wilde" onclick="selectGap(this)">Oscar Wilde</button><button class="word-choice-btn" data-val="Thomas Hardy" onclick="selectGap(this)">Thomas Hardy</button><button class="word-choice-btn" data-val="Charlotte Brontë" onclick="selectGap(this)">Charlotte Brontë</button><button class="word-choice-btn" data-val="Charles Dickens" onclick="selectGap(this)">Charles Dickens</button></span>
+          <details class="model"><summary>Which book?</summary><div class="model-body"><em>The Canterville Ghost</em> (1887). A brash American family buys an English country house and refuses to be frightened by its resident ghost.</div></details>
+        </div>
+      </div>
+
+      <div class="quote-item">
+        <div class="quote-head"><span class="gap-num">3</span><blockquote class="quote-text">The young man, thus invited, glanced them over, and attempted some discrimination; but, as the group were all so new to him, he could not very well exercise it. He took almost the first that came to hand, which was not the speaker, as she had expected; nor did it happen to be Tess Durbeyfield. Pedigree, ancestral skeletons, monumental record, the d’Urberville lineaments, did not help Tess in her life’s battle as yet, even to the extent of attracting to her a dancing-partner over the heads of the commonest peasantry. So much for Norman blood unaided by Victorian lucre.</blockquote></div>
+        <div class="quote-body">
+          <span class="word-choice author-choice" id="au-3" data-answer="Thomas Hardy"><button class="word-choice-btn" data-val="Virginia Woolf" onclick="selectGap(this)">Virginia Woolf</button><button class="word-choice-btn" data-val="Oscar Wilde" onclick="selectGap(this)">Oscar Wilde</button><button class="word-choice-btn" data-val="Thomas Hardy" onclick="selectGap(this)">Thomas Hardy</button><button class="word-choice-btn" data-val="Charlotte Brontë" onclick="selectGap(this)">Charlotte Brontë</button><button class="word-choice-btn" data-val="Charles Dickens" onclick="selectGap(this)">Charles Dickens</button></span>
+          <details class="model"><summary>Which book?</summary><div class="model-body"><em>Tess of the d’Urbervilles</em> (1891). Tess, a poor country girl, learns her family descends from the noble d’Urbervilles — and it brings her nothing but trouble.</div></details>
+        </div>
+      </div>
+
+      <div class="quote-item">
+        <div class="quote-head"><span class="gap-num">4</span><blockquote class="quote-text">Although I am not disposed to maintain that the being born in a workhouse, is in itself the most fortunate and enviable circumstance that can possibly befall a human being, I do mean to say that in this particular instance, it was the best thing for Oliver Twist that could by possibility have occurred. The fact is, that there was considerable difficulty in inducing Oliver to take upon himself the office of respiration,—a troublesome practice, but one which custom has rendered necessary to our easy existence; and for some time he lay gasping on a little flock mattress, rather unequally poised between this world and the next: the balance being decidedly in favour of the latter.</blockquote></div>
+        <div class="quote-body">
+          <span class="word-choice author-choice" id="au-4" data-answer="Charles Dickens"><button class="word-choice-btn" data-val="Virginia Woolf" onclick="selectGap(this)">Virginia Woolf</button><button class="word-choice-btn" data-val="Oscar Wilde" onclick="selectGap(this)">Oscar Wilde</button><button class="word-choice-btn" data-val="Thomas Hardy" onclick="selectGap(this)">Thomas Hardy</button><button class="word-choice-btn" data-val="Charlotte Brontë" onclick="selectGap(this)">Charlotte Brontë</button><button class="word-choice-btn" data-val="Charles Dickens" onclick="selectGap(this)">Charles Dickens</button></span>
+          <details class="model"><summary>Which book?</summary><div class="model-body"><em>Oliver Twist</em> (1838). An orphan is born in a workhouse and ends up in the criminal underworld of Victorian London.</div></details>
+        </div>
+      </div>
+
+      <div class="quote-item">
+        <div class="quote-head"><span class="gap-num">5</span><blockquote class="quote-text">“She has screamed out on purpose,” declared Abbot, in some disgust. “And what a scream! If she had been in great pain one would have excused it, but she only wanted to bring us all here: I know her naughty tricks.”<br>“What is all this?” demanded another voice peremptorily; and Mrs. Reed came along the corridor, her cap flying wide, her gown rustling stormily. “Abbot and Bessie, I believe I gave orders that Jane Eyre should be left in the red-room till I came to herself.”<br>“Miss Jane screamed so loud, ma’am,” pleaded Bessie.</blockquote></div>
+        <div class="quote-body">
+          <span class="word-choice author-choice" id="au-5" data-answer="Charlotte Brontë"><button class="word-choice-btn" data-val="Virginia Woolf" onclick="selectGap(this)">Virginia Woolf</button><button class="word-choice-btn" data-val="Oscar Wilde" onclick="selectGap(this)">Oscar Wilde</button><button class="word-choice-btn" data-val="Thomas Hardy" onclick="selectGap(this)">Thomas Hardy</button><button class="word-choice-btn" data-val="Charlotte Brontë" onclick="selectGap(this)">Charlotte Brontë</button><button class="word-choice-btn" data-val="Charles Dickens" onclick="selectGap(this)">Charles Dickens</button></span>
+          <details class="model"><summary>Which book?</summary><div class="model-body"><em>Jane Eyre</em> (1847). Ten-year-old Jane is locked in the red-room by her cruel aunt, Mrs Reed — the scene that opens her story.</div></details>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="checkGaps('t301')">Check ✓</button>
+        <button class="btn btn-ghost"   onclick="resetGaps('t301')">Try again</button>
+      </div>
+    </div>
+
+  </div><!-- /tab-p3 -->
+
+  <!-- ══════════════════════════════════════════════════════
+       HOMEWORK — colour idioms (Task 24)
+  ══════════════════════════════════════════════════════ -->
+  <div class="tab-content" id="tab-hw">
+
+    <!-- HW TASK 1: matching (olympiad corpus Task 24) -->
+    <div class="exercise" id="hw-match">
+      <div class="exercise-label">Homework · Task 1 — Task 24</div>
+      <h3 class="big-instr">🔗 Match the words or phrases with their definitions.</h3>
+      <p class="lead-instr">
+        Click an idiom on the left, then its definition on the right. Use the colour map from Task 1 — most of these follow it.
+      </p>
+
+      <div class="match-grid">
+        <div class="match-col" data-side="left">
+          <div class="match-item" data-pair="1" onclick="selectMatch(this,'hw-match')"><span class="m-key">1</span>a black sheep</div>
+          <div class="match-item" data-pair="2" onclick="selectMatch(this,'hw-match')"><span class="m-key">2</span>a golden parachute</div>
+          <div class="match-item" data-pair="3" onclick="selectMatch(this,'hw-match')"><span class="m-key">3</span>a red herring</div>
+          <div class="match-item" data-pair="4" onclick="selectMatch(this,'hw-match')"><span class="m-key">4</span>a white elephant</div>
+          <div class="match-item" data-pair="5" onclick="selectMatch(this,'hw-match')"><span class="m-key">5</span>a white flag</div>
+          <div class="match-item" data-pair="6" onclick="selectMatch(this,'hw-match')"><span class="m-key">6</span>grey matter</div>
+          <div class="match-item" data-pair="7" onclick="selectMatch(this,'hw-match')"><span class="m-key">7</span>grey nomads</div>
+          <div class="match-item" data-pair="8" onclick="selectMatch(this,'hw-match')"><span class="m-key">8</span>in the red</div>
+          <div class="match-item" data-pair="9" onclick="selectMatch(this,'hw-match')"><span class="m-key">9</span>like a red flag to a bull</div>
+          <div class="match-item" data-pair="10" onclick="selectMatch(this,'hw-match')"><span class="m-key">10</span>off-color</div>
+          <div class="match-item" data-pair="11" onclick="selectMatch(this,'hw-match')"><span class="m-key">11</span>red tape</div>
+          <div class="match-item" data-pair="12" onclick="selectMatch(this,'hw-match')"><span class="m-key">12</span>the Purple Heart</div>
+          <div class="match-item" data-pair="13" onclick="selectMatch(this,'hw-match')"><span class="m-key">13</span>to get a pink slip</div>
+          <div class="match-item" data-pair="14" onclick="selectMatch(this,'hw-match')"><span class="m-key">14</span>to turn the air blue</div>
+          <div class="match-item" data-pair="15" onclick="selectMatch(this,'hw-match')"><span class="m-key">15</span>true blue</div>
+        </div>
+        <div class="match-col" data-side="right">
+          <div class="match-item" data-pair="4" onclick="selectMatch(this,'hw-match')"><span class="m-key">A</span>an expensive, useless thing</div>
+          <div class="match-item" data-pair="6" onclick="selectMatch(this,'hw-match')"><span class="m-key">B</span>the brain</div>
+          <div class="match-item" data-pair="8" onclick="selectMatch(this,'hw-match')"><span class="m-key">C</span>owing money</div>
+          <div class="match-item" data-pair="9" onclick="selectMatch(this,'hw-match')"><span class="m-key">D</span>provoking</div>
+          <div class="match-item" data-pair="14" onclick="selectMatch(this,'hw-match')"><span class="m-key">E</span>to swear a lot</div>
+          <div class="match-item" data-pair="1" onclick="selectMatch(this,'hw-match')"><span class="m-key">F</span>the outcast</div>
+          <div class="match-item" data-pair="11" onclick="selectMatch(this,'hw-match')"><span class="m-key">G</span>excessive bureaucracy</div>
+          <div class="match-item" data-pair="12" onclick="selectMatch(this,'hw-match')"><span class="m-key">H</span>a U.S. military honor badge</div>
+          <div class="match-item" data-pair="13" onclick="selectMatch(this,'hw-match')"><span class="m-key">I</span>to be fired</div>
+          <div class="match-item" data-pair="15" onclick="selectMatch(this,'hw-match')"><span class="m-key">J</span>faithful</div>
+          <div class="match-item" data-pair="2" onclick="selectMatch(this,'hw-match')"><span class="m-key">K</span>money given to an executive leaving a company</div>
+          <div class="match-item" data-pair="7" onclick="selectMatch(this,'hw-match')"><span class="m-key">L</span>retirees who travel around the country</div>
+          <div class="match-item" data-pair="10" onclick="selectMatch(this,'hw-match')"><span class="m-key">M</span>inappropriate</div>
+          <div class="match-item" data-pair="5" onclick="selectMatch(this,'hw-match')"><span class="m-key">N</span>surrender</div>
+          <div class="match-item" data-pair="3" onclick="selectMatch(this,'hw-match')"><span class="m-key">O</span>a false clue</div>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-ghost" onclick="resetMatchEx('hw-match')">Reset</button>
+      </div>
+    </div>
+
+    <!-- HW TASK 2: crossword (olympiad corpus Task 26) -->
+    <div class="exercise" id="hw-cw">
+      <div class="exercise-label">Homework · Task 2 — Task 26</div>
+      <h3 class="big-instr">🧩 Complete the crossword.</h3>
+      <p class="lead-instr">
+        Every answer is a colour <b>or</b> the missing word of a colour idiom from this lesson.
+      </p>
+
+      <div class="cw-wrap">
+        <div class="cw-grid">
+        <div class="cw-row" data-answer="RED"><span class="cw-num">1</span><input class="cw-cell" id="cw-1-1" maxlength="1" autocomplete="off" oninput="cwAdvance(this)" onkeydown="cwKey(event,this)"><input class="cw-cell" id="cw-1-2" maxlength="1" autocomplete="off" oninput="cwAdvance(this)" onkeydown="cwKey(event,this)"><input class="cw-cell" id="cw-1-3" maxlength="1" autocomplete="off" oninput="cwAdvance(this)" onkeydown="cwKey(event,this)"></div>
+        <div class="cw-row" data-answer="TIE"><span class="cw-num">2</span><input class="cw-cell" id="cw-2-1" maxlength="1" autocomplete="off" oninput="cwAdvance(this)" onkeydown="cwKey(event,this)"><input class="cw-cell" id="cw-2-2" maxlength="1" autocomplete="off" oninput="cwAdvance(this)" onkeydown="cwKey(event,this)"><input class="cw-cell" id="cw-2-3" maxlength="1" autocomplete="off" oninput="cwAdvance(this)" onkeydown="cwKey(event,this)"></div>
+        <div class="cw-row" data-answer="BLUE"><span class="cw-num">3</span><input class="cw-cell" id="cw-3-1" maxlength="1" autocomplete="off" oninput="cwAdvance(this)" onkeydown="cwKey(event,this)"><input class="cw-cell" id="cw-3-2" maxlength="1" autocomplete="off" oninput="cwAdvance(this)" onkeydown="cwKey(event,this)"><input class="cw-cell" id="cw-3-3" maxlength="1" autocomplete="off" oninput="cwAdvance(this)" onkeydown="cwKey(event,this)"><input class="cw-cell" id="cw-3-4" maxlength="1" autocomplete="off" oninput="cwAdvance(this)" onkeydown="cwKey(event,this)"></div>
+        <div class="cw-row" data-answer="TAPE"><span class="cw-num">4</span><input class="cw-cell" id="cw-4-1" maxlength="1" autocomplete="off" oninput="cwAdvance(this)" onkeydown="cwKey(event,this)"><input class="cw-cell" id="cw-4-2" maxlength="1" autocomplete="off" oninput="cwAdvance(this)" onkeydown="cwKey(event,this)"><input class="cw-cell" id="cw-4-3" maxlength="1" autocomplete="off" oninput="cwAdvance(this)" onkeydown="cwKey(event,this)"><input class="cw-cell" id="cw-4-4" maxlength="1" autocomplete="off" oninput="cwAdvance(this)" onkeydown="cwKey(event,this)"></div>
+        <div class="cw-row" data-answer="FLAG"><span class="cw-num">5</span><input class="cw-cell" id="cw-5-1" maxlength="1" autocomplete="off" oninput="cwAdvance(this)" onkeydown="cwKey(event,this)"><input class="cw-cell" id="cw-5-2" maxlength="1" autocomplete="off" oninput="cwAdvance(this)" onkeydown="cwKey(event,this)"><input class="cw-cell" id="cw-5-3" maxlength="1" autocomplete="off" oninput="cwAdvance(this)" onkeydown="cwKey(event,this)"><input class="cw-cell" id="cw-5-4" maxlength="1" autocomplete="off" oninput="cwAdvance(this)" onkeydown="cwKey(event,this)"></div>
+        <div class="cw-row" data-answer="PINK"><span class="cw-num">6</span><input class="cw-cell" id="cw-6-1" maxlength="1" autocomplete="off" oninput="cwAdvance(this)" onkeydown="cwKey(event,this)"><input class="cw-cell" id="cw-6-2" maxlength="1" autocomplete="off" oninput="cwAdvance(this)" onkeydown="cwKey(event,this)"><input class="cw-cell" id="cw-6-3" maxlength="1" autocomplete="off" oninput="cwAdvance(this)" onkeydown="cwKey(event,this)"><input class="cw-cell" id="cw-6-4" maxlength="1" autocomplete="off" oninput="cwAdvance(this)" onkeydown="cwKey(event,this)"></div>
+        <div class="cw-row" data-answer="GREY"><span class="cw-num">7</span><input class="cw-cell" id="cw-7-1" maxlength="1" autocomplete="off" oninput="cwAdvance(this)" onkeydown="cwKey(event,this)"><input class="cw-cell" id="cw-7-2" maxlength="1" autocomplete="off" oninput="cwAdvance(this)" onkeydown="cwKey(event,this)"><input class="cw-cell" id="cw-7-3" maxlength="1" autocomplete="off" oninput="cwAdvance(this)" onkeydown="cwKey(event,this)"><input class="cw-cell" id="cw-7-4" maxlength="1" autocomplete="off" oninput="cwAdvance(this)" onkeydown="cwKey(event,this)"></div>
+        <div class="cw-row" data-answer="BLOOD"><span class="cw-num">8</span><input class="cw-cell" id="cw-8-1" maxlength="1" autocomplete="off" oninput="cwAdvance(this)" onkeydown="cwKey(event,this)"><input class="cw-cell" id="cw-8-2" maxlength="1" autocomplete="off" oninput="cwAdvance(this)" onkeydown="cwKey(event,this)"><input class="cw-cell" id="cw-8-3" maxlength="1" autocomplete="off" oninput="cwAdvance(this)" onkeydown="cwKey(event,this)"><input class="cw-cell" id="cw-8-4" maxlength="1" autocomplete="off" oninput="cwAdvance(this)" onkeydown="cwKey(event,this)"><input class="cw-cell" id="cw-8-5" maxlength="1" autocomplete="off" oninput="cwAdvance(this)" onkeydown="cwKey(event,this)"></div>
+        <div class="cw-row" data-answer="YELLOW"><span class="cw-num">9</span><input class="cw-cell" id="cw-9-1" maxlength="1" autocomplete="off" oninput="cwAdvance(this)" onkeydown="cwKey(event,this)"><input class="cw-cell" id="cw-9-2" maxlength="1" autocomplete="off" oninput="cwAdvance(this)" onkeydown="cwKey(event,this)"><input class="cw-cell" id="cw-9-3" maxlength="1" autocomplete="off" oninput="cwAdvance(this)" onkeydown="cwKey(event,this)"><input class="cw-cell" id="cw-9-4" maxlength="1" autocomplete="off" oninput="cwAdvance(this)" onkeydown="cwKey(event,this)"><input class="cw-cell" id="cw-9-5" maxlength="1" autocomplete="off" oninput="cwAdvance(this)" onkeydown="cwKey(event,this)"><input class="cw-cell" id="cw-9-6" maxlength="1" autocomplete="off" oninput="cwAdvance(this)" onkeydown="cwKey(event,this)"></div>
+        <div class="cw-row" data-answer="SILVER"><span class="cw-num">10</span><input class="cw-cell" id="cw-10-1" maxlength="1" autocomplete="off" oninput="cwAdvance(this)" onkeydown="cwKey(event,this)"><input class="cw-cell" id="cw-10-2" maxlength="1" autocomplete="off" oninput="cwAdvance(this)" onkeydown="cwKey(event,this)"><input class="cw-cell" id="cw-10-3" maxlength="1" autocomplete="off" oninput="cwAdvance(this)" onkeydown="cwKey(event,this)"><input class="cw-cell" id="cw-10-4" maxlength="1" autocomplete="off" oninput="cwAdvance(this)" onkeydown="cwKey(event,this)"><input class="cw-cell" id="cw-10-5" maxlength="1" autocomplete="off" oninput="cwAdvance(this)" onkeydown="cwKey(event,this)"><input class="cw-cell" id="cw-10-6" maxlength="1" autocomplete="off" oninput="cwAdvance(this)" onkeydown="cwKey(event,this)"></div>
+        </div>
+        <ol class="cw-clues">
+        <li><b>1</b> You see this colour when you are furious — and a company is “in” it when it owes money. <span class="cw-len">(3)</span></li>
+        <li><b>2</b> Black ___: the dress code for a very formal dinner. <span class="cw-len">(3)</span></li>
+        <li><b>3</b> The colour of sadness, aristocrats and the police. <span class="cw-len">(4)</span></li>
+        <li><b>4</b> Red ___: endless forms, stamps and bureaucracy. <span class="cw-len">(4)</span></li>
+        <li><b>5</b> You raise a white one when you give up. <span class="cw-len">(4)</span></li>
+        <li><b>6</b> To get a ___ slip = to be fired. <span class="cw-len">(4)</span></li>
+        <li><b>7</b> ___ matter: the brain. British spelling. <span class="cw-len">(4)</span></li>
+        <li><b>8</b> A blue ___: a member of an aristocratic family. <span class="cw-len">(5)</span></li>
+        <li><b>9</b> Cowardly — one colour, one word. <span class="cw-len">(6)</span></li>
+        <li><b>10</b> The ___ screen: the cinema. <span class="cw-len">(6)</span></li>
+        </ol>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="checkCrossword('hw-cw')">Check ✓</button>
+        <button class="btn btn-ghost"   onclick="resetCrossword('hw-cw')">Try again</button>
+      </div>
+    </div>
+
+  </div><!-- /tab-hw -->
+
+</div><!-- /container -->
+
+<div class="save-indicator" id="saveIndicator">✓ Saved</div>
+
+<script>
+const LESSON_KEY = 'lesson-05';
+let data = {};
+try { data = JSON.parse(localStorage.getItem(LESSON_KEY)) || {}; } catch(e) {}
+
+function save(patch) {
+  Object.assign(data, patch);
+  localStorage.setItem(LESSON_KEY, JSON.stringify(data));
+  flashSaved();
+}
+let saveTimer;
+function flashSaved() {
+  const el = document.getElementById('saveIndicator');
+  el.classList.add('show');
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(() => el.classList.remove('show'), 1600);
+}
+
+// ── TABS ──
+function switchTab(name, btn) {
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  btn.classList.add('active');
+  save({ activeTab: name });
+}
+
+// ── AUTOSAVE (inputs + textareas) ──
+function setupAutosave() {
+  document.querySelectorAll('.blank, .free-write, .cw-cell').forEach(el => {
+    if (data[el.id] !== undefined) el.value = data[el.id];
+    el.addEventListener('input', () => {
+      save({ [el.id]: el.value });
+      const cc = document.getElementById('cc-' + el.id);
+      if (cc) cc.textContent = el.value.length + ' characters';
+    });
+    const cc = document.getElementById('cc-' + el.id);
+    if (cc) cc.textContent = (el.value || '').length + ' characters';
+  });
+  if (data.activeTab) {
+    const btn = document.querySelector('.tab-btn[onclick*="' + data.activeTab + '"]');
+    if (btn) switchTab(data.activeTab, btn);
+  }
+}
+
+// ── FILL IN THE BLANKS ──
+function markBlank(inp) {
+  const strict = inp.dataset.case === 'strict';
+  const norm = v => strict ? v.trim() : v.trim().toLowerCase().replace(/\s+/g, ' ');
+  const val = norm(inp.value);
+  const answers = (inp.dataset.answer || '').split('|').map(norm);
+  const loose = inp.dataset.mode === 'contains';
+  const btn = inp.nextElementSibling;
+  const hasBtn = btn && btn.classList && btn.classList.contains('check-one');
+  inp.classList.remove('correct','wrong');
+  if (hasBtn) { btn.classList.remove('ok','no'); btn.textContent = '✓'; }
+  if (!val) return;
+  const ok = loose ? answers.some(a => a && val.includes(a)) : answers.includes(val);
+  inp.classList.add(ok ? 'correct' : 'wrong');
+  if (hasBtn) { btn.classList.add(ok ? 'ok' : 'no'); btn.textContent = ok ? '✓' : '✕'; }
+}
+function checkOne(btn) {
+  const inp = btn.previousElementSibling;
+  if (inp && inp.classList.contains('blank')) markBlank(inp);
+}
+function checkBlanks(containerId) {
+  const sel = containerId ? '#' + containerId + ' .blank' : '.blank';
+  document.querySelectorAll(sel).forEach(markBlank);
+}
+function resetBlanks(containerId) {
+  const sel = containerId ? '#' + containerId + ' .blank' : '.blank';
+  document.querySelectorAll(sel).forEach(inp => {
+    inp.value = ''; inp.classList.remove('correct','wrong');
+    const btn = inp.nextElementSibling;
+    if (btn && btn.classList && btn.classList.contains('check-one')) {
+      btn.classList.remove('ok','no'); btn.textContent = '✓';
+    }
+    save({ [inp.id]: '' });
+  });
+}
+
+// ── WORD-CHOICE BUTTONS ──
+function selectGap(btn) {
+  const group = btn.closest('.word-choice');
+  group.querySelectorAll('.word-choice-btn').forEach(b => b.classList.remove('selected','correct','wrong'));
+  btn.classList.add('selected');
+  save({ [group.id]: btn.dataset.val });
+}
+function checkGaps(containerId) {
+  document.querySelectorAll('#' + containerId + ' .word-choice').forEach(group => {
+    const correct  = group.dataset.answer;
+    const selected = group.querySelector('.word-choice-btn.selected');
+    group.querySelectorAll('.word-choice-btn').forEach(b => b.classList.remove('correct','wrong'));
+    if (!selected) return;
+    if (selected.dataset.val === correct) {
+      selected.classList.add('correct');
+    } else {
+      selected.classList.add('wrong');
+      group.querySelectorAll('.word-choice-btn').forEach(b => { if (b.dataset.val === correct) b.classList.add('correct'); });
+    }
+  });
+}
+function resetGaps(containerId) {
+  document.querySelectorAll('#' + containerId + ' .word-choice').forEach(group => {
+    group.querySelectorAll('.word-choice-btn').forEach(b => b.classList.remove('selected','correct','wrong'));
+    save({ [group.id]: '' });
+  });
+}
+function restoreGaps() {
+  document.querySelectorAll('.word-choice').forEach(group => {
+    const v = data[group.id];
+    if (!v) return;
+    group.querySelectorAll('.word-choice-btn').forEach(b => { if (b.dataset.val === v) b.classList.add('selected'); });
+  });
+}
+
+// ── CROSSWORD ──
+function cwAdvance(cell) {
+  cell.value = cell.value.replace(/[^a-z]/i,'').toUpperCase();
+  cell.closest('.cw-row').classList.remove('correct','wrong');
+  if (cell.value) {
+    const next = cell.nextElementSibling;
+    if (next && next.classList.contains('cw-cell')) next.focus();
+  }
+}
+function cwKey(e, cell) {
+  if (e.key === 'Backspace' && !cell.value) {
+    const prev = cell.previousElementSibling;
+    if (prev && prev.classList.contains('cw-cell')) { prev.focus(); prev.value = ''; save({ [prev.id]: '' }); e.preventDefault(); }
+  }
+}
+function checkCrossword(exId) {
+  document.querySelectorAll('#' + exId + ' .cw-row').forEach(row => {
+    const word = [...row.querySelectorAll('.cw-cell')].map(c => c.value.toUpperCase()).join('');
+    row.classList.remove('correct','wrong');
+    if (!word) return;
+    row.classList.add(word === row.dataset.answer ? 'correct' : 'wrong');
+  });
+}
+function resetCrossword(exId) {
+  document.querySelectorAll('#' + exId + ' .cw-row').forEach(row => {
+    row.classList.remove('correct','wrong');
+    row.querySelectorAll('.cw-cell').forEach(c => { c.value = ''; save({ [c.id]: '' }); });
+  });
+}
+
+// ── MATCHING ──
+const matchState = {};
+function selectMatch(el, exId) {
+  const side = el.closest('.match-col').dataset.side;
+  if (!matchState[exId]) matchState[exId] = { selected:{left:null,right:null}, matched:new Set() };
+  const state = matchState[exId];
+  if (el.classList.contains('matched')) return;
+  el.closest('.match-col').querySelectorAll('.match-item').forEach(i => i.classList.remove('selected'));
+  el.classList.add('selected');
+  state.selected[side] = el;
+  const other = side === 'left' ? 'right' : 'left';
+  if (state.selected[other]) {
+    const a = state.selected['left'], b = state.selected['right'];
+    if (a.dataset.pair === b.dataset.pair) {
+      a.classList.remove('selected'); a.classList.add('matched','locked');
+      b.classList.remove('selected'); b.classList.add('matched','locked');
+      state.matched.add(a.dataset.pair);
+      save({ ['match-' + exId]: [...state.matched] });
+    } else {
+      [a,b].forEach(x => x.classList.add('shake'));
+      setTimeout(() => [a,b].forEach(x => x.classList.remove('selected','shake')), 400);
+    }
+    state.selected = { left:null, right:null };
+  }
+}
+function resetMatchEx(exId) {
+  document.querySelectorAll('#' + exId + ' .match-item')
+    .forEach(el => el.classList.remove('matched','locked','selected','shake'));
+  matchState[exId] = { selected:{left:null,right:null}, matched:new Set() };
+  save({ ['match-' + exId]: [] });
+}
+function restoreAllMatches() {
+  document.querySelectorAll('.match-grid').forEach(grid => {
+    const exId = grid.closest('.exercise').id;
+    matchState[exId] = { selected:{left:null,right:null}, matched:new Set() };
+    (data['match-' + exId] || []).forEach(pair => {
+      document.querySelectorAll('#' + exId + ' .match-item[data-pair="' + pair + '"]')
+        .forEach(el => el.classList.add('matched','locked'));
+      matchState[exId].matched.add(pair);
+    });
+  });
+}
+
+// ── WORD BOX: click a phrase to cross it out ──
+function toggleHwBox(el) {
+  el.classList.toggle('used');
+  const box = el.closest('.hw-box');
+  const used = [...box.querySelectorAll('span.used')].map(c => c.textContent);
+  save({ ['hwbox-' + box.id]: used });
+}
+function restoreHwBox() {
+  document.querySelectorAll('.hw-box').forEach(box => {
+    const saved = data['hwbox-' + box.id] || [];
+    box.querySelectorAll('span').forEach(c => { if (saved.includes(c.textContent)) c.classList.add('used'); });
+  });
+}
+
+// ── PHRASE BANK (speaking) ──
+function togglePhrase(el) {
+  el.classList.toggle('used');
+  const bank = el.closest('.phrase-bank');
+  const used = [...bank.querySelectorAll('.phrase-chip.used')].map(c => c.dataset.p);
+  const out = document.getElementById(bank.dataset.count);
+  if (out) out.textContent = used.length;
+  save({ ['phrases-' + bank.id]: used });
+}
+function restorePhrases() {
+  document.querySelectorAll('.phrase-bank').forEach(bank => {
+    const saved = data['phrases-' + bank.id] || [];
+    bank.querySelectorAll('.phrase-chip').forEach(c => { if (saved.includes(c.dataset.p)) c.classList.add('used'); });
+    const out = document.getElementById(bank.dataset.count);
+    if (out) out.textContent = bank.querySelectorAll('.phrase-chip.used').length;
+  });
+}
+
+// ── TWO-MINUTE TIMER (speaking) ──
+let tLeft = 120, tInt = null;
+function tRender() {
+  const el = document.getElementById('timerClock');
+  if (!el) return;
+  const m = Math.floor(tLeft / 60), s = tLeft % 60;
+  el.textContent = m + ':' + String(s).padStart(2, '0');
+  el.classList.toggle('over', tLeft === 0);
+}
+function timerStart() {
+  if (tInt || tLeft === 0) return;
+  tInt = setInterval(() => {
+    if (tLeft > 0) tLeft--;
+    tRender();
+    if (tLeft === 0) { clearInterval(tInt); tInt = null; }
+  }, 1000);
+}
+function timerPause() { clearInterval(tInt); tInt = null; }
+function timerReset() { clearInterval(tInt); tInt = null; tLeft = 120; tRender(); }
+
+setupAutosave();
+restoreGaps();
+restoreAllMatches();
+restoreHwBox();
+restorePhrases();
+</script>
+</body>
+</html>
