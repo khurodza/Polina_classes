@@ -86,8 +86,24 @@
     @media(max-width:620px){ .guess-grid { grid-template-columns:1fr; } }
 
     /* ── Task 3: matching (Task 18) ── */
+    .match-item.slid { animation:slideIn .45s ease; }
+    @keyframes slideIn { from { transform:translateY(-6px); opacity:.4; } to { transform:none; opacity:1; } }
     .match-item .m-key { display:inline-block; min-width:22px; font-weight:800; color:var(--primary); margin-right:6px; }
     .match-item.matched .m-key { color:inherit; }
+
+    .answer-key { margin-top:14px; }
+    .answer-key summary { cursor:pointer; display:inline-block; list-style:none; padding:7px 16px; border:2px solid var(--border); border-radius:100px; font-size:.9rem; font-weight:700; color:var(--primary); background:#fff; }
+    .answer-key summary::-webkit-details-marker { display:none; }
+    .answer-key summary:hover { border-color:var(--primary); }
+    .answer-key[open] summary { background:var(--primary); color:#fff; border-color:var(--primary); }
+    .key-table { width:100%; border-collapse:collapse; margin-top:12px; background:#fff; font-size:.95rem; }
+    .key-table th { text-align:left; font-size:.75rem; text-transform:uppercase; letter-spacing:.8px; color:var(--muted); padding:8px 10px; border-bottom:2px solid var(--border); }
+    .key-table td { padding:8px 10px; border-bottom:1px dashed var(--border); vertical-align:top; line-height:1.5; }
+    .key-table tr:last-child td { border-bottom:none; }
+    .key-num { width:30px; color:var(--muted); font-weight:700; }
+    .key-idiom { font-weight:700; white-space:nowrap; }
+    .key-letter { width:30px; font-weight:800; color:var(--primary); }
+    @media(max-width:560px){ .key-idiom { white-space:normal; } }
 
     /* ── Task 4: story with gaps ── */
     .story-box { background:linear-gradient(135deg,#FDF5EC,#F3EAD9); border:2px solid var(--border); border-radius:var(--radius); padding:22px 26px; margin-bottom:6px; }
@@ -351,6 +367,30 @@
       <div class="btn-row">
         <button class="btn btn-ghost" onclick="resetMatchEx('t3-match')">Reset</button>
       </div>
+
+      <details class="answer-key">
+        <summary>🔑 Answer key</summary>
+        <table class="key-table">
+          <thead><tr><th>#</th><th>Idiom</th><th></th><th>Definition</th></tr></thead>
+          <tbody>
+            <tr><td class="key-num">1</td><td class="key-idiom">a blue blood</td><td class="key-letter">D</td><td>an aristocratic person</td></tr>
+            <tr><td class="key-num">2</td><td class="key-idiom">a red letter day</td><td class="key-letter">J</td><td>a special day</td></tr>
+            <tr><td class="key-num">3</td><td class="key-idiom">black eye</td><td class="key-letter">L</td><td>an area of skin around the eye that is dark because of fighting</td></tr>
+            <tr><td class="key-num">4</td><td class="key-idiom">black tie</td><td class="key-letter">A</td><td>clothes for very formal occasions</td></tr>
+            <tr><td class="key-num">5</td><td class="key-idiom">colorless</td><td class="key-letter">H</td><td>boring</td></tr>
+            <tr><td class="key-num">6</td><td class="key-idiom">greens</td><td class="key-letter">N</td><td>vegetables</td></tr>
+            <tr><td class="key-num">7</td><td class="key-idiom">once in a blue moon</td><td class="key-letter">O</td><td>infrequently</td></tr>
+            <tr><td class="key-num">8</td><td class="key-idiom">paint a black picture</td><td class="key-letter">B</td><td>to describe a situation as extremely bad</td></tr>
+            <tr><td class="key-num">9</td><td class="key-idiom">pinko</td><td class="key-letter">K</td><td>communist</td></tr>
+            <tr><td class="key-num">10</td><td class="key-idiom">see red</td><td class="key-letter">I</td><td>become very angry</td></tr>
+            <tr><td class="key-num">11</td><td class="key-idiom">the blues</td><td class="key-letter">G</td><td>sadness</td></tr>
+            <tr><td class="key-num">12</td><td class="key-idiom">the silver screen</td><td class="key-letter">M</td><td>the movies</td></tr>
+            <tr><td class="key-num">13</td><td class="key-idiom">the thin blue line</td><td class="key-letter">C</td><td>the police</td></tr>
+            <tr><td class="key-num">14</td><td class="key-idiom">to pass with flying colors</td><td class="key-letter">E</td><td>to do very well</td></tr>
+            <tr><td class="key-num">15</td><td class="key-idiom">yellow</td><td class="key-letter">F</td><td>cowardly</td></tr>
+          </tbody>
+        </table>
+      </details>
     </div>
 
     <!-- TASK 4: story with gaps -->
@@ -694,7 +734,7 @@
         Click an idiom on the left, then its definition on the right. Use the colour map from Task 1 — most of these follow it.
       </p>
 
-      <div class="match-grid">
+      <div class="match-grid" data-align="true">
         <div class="match-col" data-side="left">
           <div class="match-item" data-pair="1" onclick="selectMatch(this,'hw-match')"><span class="m-key">1</span>a black sheep</div>
           <div class="match-item" data-pair="2" onclick="selectMatch(this,'hw-match')"><span class="m-key">2</span>a golden parachute</div>
@@ -877,12 +917,7 @@ function checkGaps(containerId) {
     const selected = group.querySelector('.word-choice-btn.selected');
     group.querySelectorAll('.word-choice-btn').forEach(b => b.classList.remove('correct','wrong'));
     if (!selected) return;
-    if (selected.dataset.val === correct) {
-      selected.classList.add('correct');
-    } else {
-      selected.classList.add('wrong');
-      group.querySelectorAll('.word-choice-btn').forEach(b => { if (b.dataset.val === correct) b.classList.add('correct'); });
-    }
+    selected.classList.add(selected.dataset.val === correct ? 'correct' : 'wrong');
   });
 }
 function resetGaps(containerId) {
@@ -947,6 +982,7 @@ function selectMatch(el, exId) {
       b.classList.remove('selected'); b.classList.add('matched','locked');
       state.matched.add(a.dataset.pair);
       save({ ['match-' + exId]: [...state.matched] });
+      alignPair(a, b);
     } else {
       [a,b].forEach(x => x.classList.add('shake'));
       setTimeout(() => [a,b].forEach(x => x.classList.remove('selected','shake')), 400);
@@ -954,9 +990,32 @@ function selectMatch(el, exId) {
     state.selected = { left:null, right:null };
   }
 }
+// On grids with data-align, a matched right-hand item swaps places so it sits level with its partner
+function swapNodes(x, y) {
+  if (x === y) return;
+  const marker = document.createElement('div');
+  x.parentNode.insertBefore(marker, x);
+  y.parentNode.insertBefore(x, y);
+  marker.parentNode.insertBefore(y, marker);
+  marker.remove();
+}
+function alignPair(left, right) {
+  const grid = left.closest('.match-grid');
+  if (!grid || !grid.dataset.align) return;
+  const leftCol  = grid.querySelector('.match-col[data-side="left"]');
+  const rightCol = grid.querySelector('.match-col[data-side="right"]');
+  const idx = [...leftCol.children].indexOf(left);
+  const target = rightCol.children[idx];
+  if (target && target !== right) {
+    swapNodes(right, target);
+    right.classList.add('slid'); setTimeout(() => right.classList.remove('slid'), 450);
+  }
+}
 function resetMatchEx(exId) {
   document.querySelectorAll('#' + exId + ' .match-item')
     .forEach(el => el.classList.remove('matched','locked','selected','shake'));
+  const rightCol = document.querySelector('#' + exId + ' .match-grid[data-align] .match-col[data-side="right"]');
+  if (rightCol) [...rightCol.children].sort((x, y) => x.dataset.orig - y.dataset.orig).forEach(el => rightCol.appendChild(el));
   matchState[exId] = { selected:{left:null,right:null}, matched:new Set() };
   save({ ['match-' + exId]: [] });
 }
@@ -964,10 +1023,15 @@ function restoreAllMatches() {
   document.querySelectorAll('.match-grid').forEach(grid => {
     const exId = grid.closest('.exercise').id;
     matchState[exId] = { selected:{left:null,right:null}, matched:new Set() };
+    const rightCol = grid.querySelector('.match-col[data-side="right"]');
+    [...rightCol.children].forEach((el, i) => el.dataset.orig = i);
     (data['match-' + exId] || []).forEach(pair => {
-      document.querySelectorAll('#' + exId + ' .match-item[data-pair="' + pair + '"]')
-        .forEach(el => el.classList.add('matched','locked'));
+      const els = document.querySelectorAll('#' + exId + ' .match-item[data-pair="' + pair + '"]');
+      els.forEach(el => el.classList.add('matched','locked'));
       matchState[exId].matched.add(pair);
+      const left  = grid.querySelector('.match-col[data-side="left"]  .match-item[data-pair="' + pair + '"]');
+      const right = grid.querySelector('.match-col[data-side="right"] .match-item[data-pair="' + pair + '"]');
+      if (left && right) alignPair(left, right);
     });
   });
 }
