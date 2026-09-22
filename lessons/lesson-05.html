@@ -49,6 +49,12 @@
     .cw-len { color:var(--muted); font-size:.85rem; }
     @media(max-width:640px){ .cw-wrap { grid-template-columns:1fr; } .cw-cell { width:32px; height:32px; font-size:1rem; } }
 
+    .gap-row { display:flex; gap:14px; align-items:flex-start; padding:12px 2px; border-bottom:1px dashed var(--border); }
+    .gap-row:last-child { border-bottom:none; }
+    .gap-text { flex:1; min-width:0; line-height:2; font-size:1.02rem; margin:0; }
+    .gap-text .blank { min-width:170px; }
+    #hw-gaps .gap-text .blank { min-width:110px; }
+
     /* ── Task 1: the organising principle ── */
     .principle { font-size:1.05rem; line-height:1.8; background:linear-gradient(135deg,#FDF5EC,#F0E8D4); border:2px solid var(--border); border-radius:var(--radius); padding:20px 24px; margin-bottom:20px; }
     .principle b { color:var(--primary-dk); }
@@ -178,6 +184,13 @@
     .blog-box .ct-text { padding:8px 22px 18px; }
     .blog-box .ct-text .blank { min-width:110px; }
 
+    .ct-photo { float:right; width:190px; margin:-4px 0 10px 22px; }
+    .ct-photo img { display:block; width:100%; border-radius:50%; aspect-ratio:1/1; object-fit:cover; object-position:50% 20%; border:4px solid #fff; box-shadow:0 4px 14px rgba(0,0,0,.15); }
+    .ct-photo figcaption { text-align:center; font-size:.8rem; color:var(--muted); font-style:italic; margin-top:6px; }
+    .ct-box::after { content:''; display:block; clear:both; }
+    @media(max-width:560px){ .ct-photo { float:none; margin:0 auto 12px; } }
+    .ct-box::after { content:''; display:block; clear:both; }
+
     /* ── Part 3: who wrote it ── */
     .quote-item { padding:16px 0; border-bottom:1px dashed var(--border); }
     .quote-item:last-of-type { border-bottom:none; }
@@ -194,6 +207,50 @@
     .author-choice .word-choice-btn { border-right:1px solid var(--border); }
     .author-choice .word-choice-btn:last-child { border-right:none; }
     @media(max-width:560px){ .quote-body { margin-left:0; } .author-choice { display:flex; flex-direction:column; } .author-choice .word-choice-btn { border-right:none; border-bottom:1px solid var(--border); text-align:left; } .author-choice .word-choice-btn:last-child { border-bottom:none; } }
+
+    /* ── Part 4: intonation ── */
+    .into-legend { display:flex; flex-wrap:wrap; gap:10px 26px; margin:10px 0 18px; font-size:.95rem; color:var(--muted); }
+    .into-card { border:2px solid; border-radius:var(--radius); padding:20px 24px; margin-bottom:18px; }
+    .into-head { display:flex; align-items:center; gap:16px; margin-bottom:10px; flex-wrap:wrap; }
+    .into-headtext { flex:1; min-width:160px; }
+    .into-arrow { font-size:2.1rem; font-weight:800; line-height:1; width:62px; height:62px; flex:0 0 62px; display:flex; align-items:center; justify-content:center; border-radius:18px; color:#fff; box-shadow:0 4px 12px rgba(0,0,0,.12); }
+    .into-title { font-family:'Fraunces',Georgia,serif; font-weight:800; font-size:1.45rem; line-height:1.2; }
+    .use-chips { display:flex; flex-wrap:wrap; gap:6px; margin-top:6px; }
+    .use-chip { font-size:.78rem; font-weight:700; padding:3px 10px; border-radius:100px; background:#fff; border:1.5px solid; }
+    .pitch-line { width:96px; flex:0 0 96px; }
+    .pitch-line svg { width:100%; height:auto; display:block; }
+    .pitch-line path { fill:none; stroke-width:5; stroke-linecap:round; }
+    .into-note { margin:0 0 6px; line-height:1.7; font-size:1rem; background:rgba(255,255,255,.65); border-radius:12px; padding:12px 16px; }
+    .into-group { margin-top:14px; }
+    .into-gtitle { font-size:.8rem; font-weight:800; text-transform:uppercase; letter-spacing:1px; margin-bottom:6px; }
+    .into-group ul { list-style:none; padding:0; margin:0; display:grid; grid-template-columns:1fr 1fr; gap:6px 18px; }
+    .into-group li { background:#fff; border-radius:10px; padding:8px 12px; line-height:1.7; font-size:1rem; }
+    .pw { display:inline-block; padding:0 7px 0 4px; border-radius:7px; font-weight:700; }
+    .pw .ar { font-weight:900; margin-right:3px; }
+    .pw-f { background:#FDDCD6; color:#9E2A17; }
+    .pw-r { background:#DCE7F7; color:#23477F; }
+    .into-fall     { border-color:#E0503C; background:linear-gradient(135deg,#FFF3F0,#FDE3DE); }
+    .into-fall .into-arrow { background:linear-gradient(135deg,#E0503C,#B3301E); }
+    .into-fall .into-title, .into-fall .into-gtitle { color:#9E2A17; }
+    .into-fall .use-chip { border-color:#E0503C; color:#9E2A17; }
+    .into-fall .pitch-line path { stroke:#E0503C; }
+    .into-rise     { border-color:#3E6FB5; background:linear-gradient(135deg,#F0F5FD,#DFE9F8); }
+    .into-rise .into-arrow { background:linear-gradient(135deg,#4F83CC,#2A4E86); }
+    .into-rise .into-title, .into-rise .into-gtitle { color:#23477F; }
+    .into-rise .use-chip { border-color:#3E6FB5; color:#23477F; }
+    .into-rise .pitch-line path { stroke:#3E6FB5; }
+    .into-flat     { border-color:#B8B2A6; background:linear-gradient(135deg,#F7F5F1,#ECE8E1); }
+    .into-flat .into-arrow { background:linear-gradient(135deg,#9A927F,#6E6759); }
+    .into-flat .into-title { color:#5E574A; }
+    .into-flat .use-chip { border-color:#B8B2A6; color:#5E574A; }
+    .into-flat .pitch-line path { stroke:#9A927F; stroke-dasharray:6 6; }
+    .into-risefall { border-color:#C9A030; background:linear-gradient(135deg,#FFF8E6,#F7EAC4); }
+    .into-risefall .into-arrow { background:linear-gradient(135deg,#D9AE3A,#A67F16); font-size:1.5rem; }
+    .into-risefall .into-title, .into-risefall .into-gtitle { color:#7F6110; }
+    .into-risefall .use-chip { border-color:#C9A030; color:#7F6110; }
+    .into-risefall .pitch-line path { stroke:#C9A030; }
+    #in-aloud .src-row p { font-size:1.05rem; line-height:1.9; }
+    @media(max-width:620px){ .into-group ul { grid-template-columns:1fr; } .pitch-line { display:none; } }
 
     /* ── placeholder ── */
     .soon { text-align:center; padding:46px 24px; color:var(--muted); }
@@ -218,6 +275,7 @@
     <button class="tab-btn active" onclick="switchTab('p1',this)">Part 1 · Colour Idioms</button>
     <button class="tab-btn"        onclick="switchTab('p2',this)">Part 2 · I wish</button>
     <button class="tab-btn"        onclick="switchTab('p3',this)">Part 3 · Culture</button>
+    <button class="tab-btn"        onclick="switchTab('p4',this)">Part 4 · Intonation</button>
     <button class="tab-btn"        onclick="switchTab('hw',this)">📝 Homework</button>
   </div>
   <div class="tab-scallop"></div>
@@ -722,6 +780,172 @@
   </div><!-- /tab-p3 -->
 
   <!-- ══════════════════════════════════════════════════════
+       PART 4 — INTONATION
+  ══════════════════════════════════════════════════════ -->
+  <div class="tab-content" id="tab-p4">
+
+    <!-- TASK 1: the patterns -->
+    <div class="exercise" id="in-ref">
+      <div class="exercise-label">Task 1 — The Patterns</div>
+      <h3 class="big-instr">🎵 Four intonation patterns.</h3>
+      <p class="lead-instr">
+        The voice moves on the <b>highlighted word</b>. Read every example aloud and <b>exaggerate</b> the movement the first time — then do it naturally.
+      </p>
+
+      <div class="into-legend">
+        <span><mark class="pw pw-f"><span class="ar">↘</span>word</mark> voice goes <b>down</b> here</span>
+        <span><mark class="pw pw-r"><span class="ar">↗</span>word</mark> voice goes <b>up</b> here</span>
+      </div>
+
+      <div class="into-card into-fall">
+        <div class="into-head">
+          <span class="into-arrow">↘</span>
+          <div class="into-headtext">
+            <div class="into-title">Falling</div>
+            <div class="use-chips"><span class="use-chip">statements</span><span class="use-chip">commands</span><span class="use-chip">Wh- questions</span></div>
+          </div>
+          <span class="pitch-line"><svg viewBox="0 0 64 36" aria-hidden="true"><path d="M4 8 C 24 8, 36 10, 60 30" /></svg></span>
+        </div>
+        <p class="into-note"><b>The default.</b> The voice drops on the last important word. It sounds calm, neutral and <em>finished</em> — you'll hear it at the end of most sentences in everyday talk.</p>
+          <div class="into-group"><div class="into-gtitle">💬 Statements</div><ul>
+            <li>I like your <mark class="pw pw-f"><span class="ar">↘</span>haircut</mark>.</li>
+            <li>We moved to New <mark class="pw pw-f"><span class="ar">↘</span>York</mark>.</li>
+            <li>They have three <mark class="pw pw-f"><span class="ar">↘</span>cats</mark>.</li>
+            <li>He was born in <mark class="pw pw-f"><span class="ar">↘</span>September</mark>.</li>
+          </ul></div>
+          <div class="into-group"><div class="into-gtitle">❗ Commands</div><ul>
+            <li>Go to your <mark class="pw pw-f"><span class="ar">↘</span>room</mark>.</li>
+            <li>Bring me my <mark class="pw pw-f"><span class="ar">↘</span>keys</mark>.</li>
+            <li>Open the <mark class="pw pw-f"><span class="ar">↘</span>door</mark>.</li>
+            <li>Help me carry this <mark class="pw pw-f"><span class="ar">↘</span>upstairs</mark>.</li>
+          </ul></div>
+          <div class="into-group"><div class="into-gtitle">❓ Wh- questions</div><ul>
+            <li>Who is that <mark class="pw pw-f"><span class="ar">↘</span>man</mark>?</li>
+            <li>What is your <mark class="pw pw-f"><span class="ar">↘</span>name</mark>?</li>
+            <li>When will you be <mark class="pw pw-f"><span class="ar">↘</span>home</mark>?</li>
+            <li>Where are you <mark class="pw pw-f"><span class="ar">↘</span>going</mark>?</li>
+            <li>Why does he look <mark class="pw pw-f"><span class="ar">↘</span>sad</mark>?</li>
+            <li>How are you <mark class="pw pw-f"><span class="ar">↘</span>feeling</mark>?</li>
+          </ul></div>
+      </div>
+
+      <div class="into-card into-rise">
+        <div class="into-head">
+          <span class="into-arrow">↗</span>
+          <div class="into-headtext">
+            <div class="into-title">Rising</div>
+            <div class="use-chips"><span class="use-chip">yes/no questions</span><span class="use-chip">tag questions</span></div>
+          </div>
+          <span class="pitch-line"><svg viewBox="0 0 64 36" aria-hidden="true"><path d="M4 30 C 24 30, 36 28, 60 6" /></svg></span>
+        </div>
+        <p class="into-note"><b>“Your turn.”</b> The voice goes up at the end and stays hanging — it invites the other person to answer.</p>
+          <div class="into-group"><div class="into-gtitle">🙋 Yes/No questions</div><ul>
+            <li>Are you a <mark class="pw pw-r"><span class="ar">↗</span>Gemini</mark>?</li>
+            <li>Do you want to watch a <mark class="pw pw-r"><span class="ar">↗</span>film</mark>?</li>
+            <li>Is he your <mark class="pw pw-r"><span class="ar">↗</span>friend</mark>?</li>
+            <li>May I use the <mark class="pw pw-r"><span class="ar">↗</span>bathroom</mark>?</li>
+          </ul></div>
+          <div class="into-group"><div class="into-gtitle">🏷️ Tag questions</div><ul>
+            <li>We studied English together, <mark class="pw pw-r"><span class="ar">↗</span>didn’t</mark> we?</li>
+            <li>You want to go to the park, <mark class="pw pw-r"><span class="ar">↗</span>don’t</mark> you?</li>
+            <li>The weather is so nice, <mark class="pw pw-r"><span class="ar">↗</span>isn’t</mark> it?</li>
+            <li>He likes bowling, <mark class="pw pw-r"><span class="ar">↗</span>doesn’t</mark> he?</li>
+          </ul></div>
+      </div>
+
+      <div class="into-card into-flat">
+        <div class="into-head">
+          <span class="into-arrow">→</span>
+          <div class="into-headtext">
+            <div class="into-title">Flat</div>
+            <div class="use-chips"><span class="use-chip">“monotone”</span><span class="use-chip">avoid it</span></div>
+          </div>
+          <span class="pitch-line"><svg viewBox="0 0 64 36" aria-hidden="true"><path d="M4 18 L 60 18" /></svg></span>
+        </div>
+        <p class="into-note"><b>The robot voice.</b> The pitch doesn't move at all. English speakers don't do this in real conversation — it sounds bored or mechanical. If you're told you sound flat, make your voice <em>move</em>.</p>
+      </div>
+
+      <div class="into-card into-risefall">
+        <div class="into-head">
+          <span class="into-arrow">↗↘</span>
+          <div class="into-headtext">
+            <div class="into-title">Rise-fall</div>
+            <div class="use-chips"><span class="use-chip">either / or</span><span class="use-chip">lists</span><span class="use-chip">if-sentences</span></div>
+          </div>
+          <span class="pitch-line"><svg viewBox="0 0 64 36" aria-hidden="true"><path d="M4 26 C 18 26, 24 8, 32 8 C 40 8, 46 30, 60 30" /></svg></span>
+        </div>
+        <p class="into-note"><b>Up, then down.</b> The rise says <em>“there's more coming”</em>; the fall says <em>“and that's all.”</em> Two arrows, one sentence.</p>
+          <div class="into-group"><div class="into-gtitle">⚖️ Either / or</div><ul>
+            <li>You can have either <mark class="pw pw-r"><span class="ar">↗</span>the</mark> fish or <mark class="pw pw-f"><span class="ar">↘</span>the</mark> beef.</li>
+            <li>Do you want to go <mark class="pw pw-r"><span class="ar">↗</span>hiking</mark> or <mark class="pw pw-f"><span class="ar">↘</span>fishing</mark>?</li>
+            <li>Is she <mark class="pw pw-r"><span class="ar">↗</span>a</mark> student or <mark class="pw pw-f"><span class="ar">↘</span>a</mark> teacher?</li>
+            <li>Is the football game on <mark class="pw pw-r"><span class="ar">↗</span>Saturday</mark> or <mark class="pw pw-f"><span class="ar">↘</span>Sunday</mark>?</li>
+          </ul></div>
+          <div class="into-group"><div class="into-gtitle">📋 Lists</div><ul>
+            <li>I have <mark class="pw pw-r"><span class="ar">↗</span>three</mark> books, two pencils, one ruler, and <mark class="pw pw-f"><span class="ar">↘</span>one</mark> eraser.</li>
+            <li>I like <mark class="pw pw-r"><span class="ar">↗</span>swimming</mark>, dancing, and <mark class="pw pw-f"><span class="ar">↘</span>playing</mark> tennis.</li>
+            <li>The apartment includes <mark class="pw pw-r"><span class="ar">↗</span>two</mark> bedrooms, two bathrooms, and <mark class="pw pw-f"><span class="ar">↘</span>a</mark> kitchen.</li>
+            <li>He ate <mark class="pw pw-r"><span class="ar">↗</span>breakfast</mark>, lunch, and <mark class="pw pw-f"><span class="ar">↘</span>dinner</mark>.</li>
+          </ul></div>
+          <div class="into-group"><div class="into-gtitle">🔀 Conditionals</div><ul>
+            <li>If you have any <mark class="pw pw-r"><span class="ar">↗</span>questions</mark>, feel free to give me a <mark class="pw pw-f"><span class="ar">↘</span>call</mark>.</li>
+            <li>If you keep having <mark class="pw pw-r"><span class="ar">↗</span>pain</mark>, put ice on <mark class="pw pw-f"><span class="ar">↘</span>it</mark>.</li>
+            <li>If you’re <mark class="pw pw-r"><span class="ar">↗</span>happy</mark>, I’m <mark class="pw pw-f"><span class="ar">↘</span>happy</mark>.</li>
+            <li>If he wants to <mark class="pw pw-r"><span class="ar">↗</span>come</mark>, he needs to start <mark class="pw pw-f"><span class="ar">↘</span>packing</mark>.</li>
+          </ul></div>
+      </div>
+    </div>
+
+    <!-- TASK 2: which pattern? -->
+    <div class="exercise" id="in-quiz">
+      <div class="exercise-label">Task 2 — Which Pattern?</div>
+      <h3 class="big-instr">🧭 Choose the pattern, then say the sentence.</h3>
+      <p class="lead-instr">
+        Decide first, check, then read each one aloud with that intonation.
+      </p>
+
+      <div class="wq-list">
+        <div class="wq-row"><span class="gap-num">1</span><div class="wq-body"><p class="wq-q">Where did you put the keys?</p><span class="word-choice" id="in-1" data-answer="fall"><button class="word-choice-btn" data-val="fall" onclick="selectGap(this)">↘ falling</button><button class="word-choice-btn" data-val="rise" onclick="selectGap(this)">↗ rising</button><button class="word-choice-btn" data-val="risefall" onclick="selectGap(this)">↗↘ rise-fall</button></span></div></div>
+        <div class="wq-row"><span class="gap-num">2</span><div class="wq-body"><p class="wq-q">Have you seen my phone?</p><span class="word-choice" id="in-2" data-answer="rise"><button class="word-choice-btn" data-val="fall" onclick="selectGap(this)">↘ falling</button><button class="word-choice-btn" data-val="rise" onclick="selectGap(this)">↗ rising</button><button class="word-choice-btn" data-val="risefall" onclick="selectGap(this)">↗↘ rise-fall</button></span></div></div>
+        <div class="wq-row"><span class="gap-num">3</span><div class="wq-body"><p class="wq-q">Would you like tea or coffee?</p><span class="word-choice" id="in-3" data-answer="risefall"><button class="word-choice-btn" data-val="fall" onclick="selectGap(this)">↘ falling</button><button class="word-choice-btn" data-val="rise" onclick="selectGap(this)">↗ rising</button><button class="word-choice-btn" data-val="risefall" onclick="selectGap(this)">↗↘ rise-fall</button></span></div></div>
+        <div class="wq-row"><span class="gap-num">4</span><div class="wq-body"><p class="wq-q">Close the window.</p><span class="word-choice" id="in-4" data-answer="fall"><button class="word-choice-btn" data-val="fall" onclick="selectGap(this)">↘ falling</button><button class="word-choice-btn" data-val="rise" onclick="selectGap(this)">↗ rising</button><button class="word-choice-btn" data-val="risefall" onclick="selectGap(this)">↗↘ rise-fall</button></span></div></div>
+        <div class="wq-row"><span class="gap-num">5</span><div class="wq-body"><p class="wq-q">She’s from Canada, isn’t she?</p><span class="word-choice" id="in-5" data-answer="rise"><button class="word-choice-btn" data-val="fall" onclick="selectGap(this)">↘ falling</button><button class="word-choice-btn" data-val="rise" onclick="selectGap(this)">↗ rising</button><button class="word-choice-btn" data-val="risefall" onclick="selectGap(this)">↗↘ rise-fall</button></span></div></div>
+        <div class="wq-row"><span class="gap-num">6</span><div class="wq-body"><p class="wq-q">I bought apples, bread, milk and eggs.</p><span class="word-choice" id="in-6" data-answer="risefall"><button class="word-choice-btn" data-val="fall" onclick="selectGap(this)">↘ falling</button><button class="word-choice-btn" data-val="rise" onclick="selectGap(this)">↗ rising</button><button class="word-choice-btn" data-val="risefall" onclick="selectGap(this)">↗↘ rise-fall</button></span></div></div>
+        <div class="wq-row"><span class="gap-num">7</span><div class="wq-body"><p class="wq-q">Why is he so late?</p><span class="word-choice" id="in-7" data-answer="fall"><button class="word-choice-btn" data-val="fall" onclick="selectGap(this)">↘ falling</button><button class="word-choice-btn" data-val="rise" onclick="selectGap(this)">↗ rising</button><button class="word-choice-btn" data-val="risefall" onclick="selectGap(this)">↗↘ rise-fall</button></span></div></div>
+        <div class="wq-row"><span class="gap-num">8</span><div class="wq-body"><p class="wq-q">If it rains, we’ll stay at home.</p><span class="word-choice" id="in-8" data-answer="risefall"><button class="word-choice-btn" data-val="fall" onclick="selectGap(this)">↘ falling</button><button class="word-choice-btn" data-val="rise" onclick="selectGap(this)">↗ rising</button><button class="word-choice-btn" data-val="risefall" onclick="selectGap(this)">↗↘ rise-fall</button></span></div></div>
+        <div class="wq-row"><span class="gap-num">9</span><div class="wq-body"><p class="wq-q">Is this seat taken?</p><span class="word-choice" id="in-9" data-answer="rise"><button class="word-choice-btn" data-val="fall" onclick="selectGap(this)">↘ falling</button><button class="word-choice-btn" data-val="rise" onclick="selectGap(this)">↗ rising</button><button class="word-choice-btn" data-val="risefall" onclick="selectGap(this)">↗↘ rise-fall</button></span></div></div>
+        <div class="wq-row"><span class="gap-num">10</span><div class="wq-body"><p class="wq-q">We’re moving to Bristol.</p><span class="word-choice" id="in-10" data-answer="fall"><button class="word-choice-btn" data-val="fall" onclick="selectGap(this)">↘ falling</button><button class="word-choice-btn" data-val="rise" onclick="selectGap(this)">↗ rising</button><button class="word-choice-btn" data-val="risefall" onclick="selectGap(this)">↗↘ rise-fall</button></span></div></div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="checkGaps('in-quiz')">Check ✓</button>
+        <button class="btn btn-ghost"   onclick="resetGaps('in-quiz')">Try again</button>
+      </div>
+    </div>
+
+    <!-- TASK 3: read aloud with the lesson's idioms -->
+    <div class="exercise" id="in-aloud">
+      <div class="exercise-label">Task 3 — Say It Aloud</div>
+      <h3 class="big-instr">🗣️ Colour idioms, marked up.</h3>
+      <p class="lead-instr">
+        Read each line following the arrows. Then cover the arrows and read it again from memory.
+      </p>
+
+      <div class="src-sentences">
+        <div class="src-row"><span class="gap-num">1</span><p>Dress code: <mark class="pw pw-r"><span class="ar">↗</span>black</mark> tie or <mark class="pw pw-f"><span class="ar">↘</span>smart</mark> casual?</p></div>
+        <div class="src-row"><span class="gap-num">2</span><p>If the estate is still <mark class="pw pw-r"><span class="ar">↗</span>in</mark> the red, they’ll have to <mark class="pw pw-f"><span class="ar">↘</span>sell</mark>.</p></div>
+        <div class="src-row"><span class="gap-num">3</span><p>Seeing Mum <mark class="pw pw-r"><span class="ar">↗</span>saw</mark> red, we all <mark class="pw pw-f"><span class="ar">↘</span>went</mark> quiet.</p></div>
+        <div class="src-row"><span class="gap-num">4</span><p>You only call me once in a blue <mark class="pw pw-f"><span class="ar">↘</span>moon</mark>.</p></div>
+        <div class="src-row"><span class="gap-num">5</span><p>It was a real red letter <mark class="pw pw-f"><span class="ar">↘</span>day</mark>.</p></div>
+        <div class="src-row"><span class="gap-num">6</span><p>He’s the black sheep of the family, <mark class="pw pw-r"><span class="ar">↗</span>isn’t</mark> he?</p></div>
+        <div class="src-row"><span class="gap-num">7</span><p>Are you <mark class="pw pw-r"><span class="ar">↗</span>feeling</mark> blue?</p></div>
+        <div class="src-row"><span class="gap-num">8</span><p>She raised a <mark class="pw pw-r"><span class="ar">↗</span>white</mark> flag, apologised, and <mark class="pw pw-f"><span class="ar">↘</span>went</mark> home.</p></div>
+      </div>
+    </div>
+
+  </div><!-- /tab-p4 -->
+
+  <!-- ══════════════════════════════════════════════════════
        HOMEWORK — colour idioms (Task 24)
   ══════════════════════════════════════════════════════ -->
   <div class="tab-content" id="tab-hw">
@@ -814,6 +1038,107 @@
       <div class="btn-row">
         <button class="btn btn-primary" onclick="checkCrossword('hw-cw')">Check ✓</button>
         <button class="btn btn-ghost"   onclick="resetCrossword('hw-cw')">Try again</button>
+      </div>
+    </div>
+
+    <!-- HW TASK 3: mixed conditionals in a text (book exercise 4, moved from lesson 4) -->
+    <div class="exercise" id="hw-text">
+      <div class="exercise-label">Homework · Task 3 — Book Exercise 4</div>
+      <h3 class="big-instr">🏀 Zero, first, second or third?</h3>
+      <p class="lead-instr">
+        Complete the text by putting the verbs in the correct form of the <b>zero, first, second or third</b> conditional.
+        Read the whole sentence first — the other half tells you which type you need.
+      </p>
+
+      <div class="ct-box">
+        <figure class="ct-photo">
+          <img src="images/naismith.jpg" alt="James Naismith holding an early basketball">
+          <figcaption>James Naismith (1861–1939)</figcaption>
+        </figure>
+        <div class="ct-tag">Culture exchange</div>
+        <div class="ct-title">Sport in the US 2</div>
+        <p class="ct-text">
+          The world would be a sadder place for many people if basketball <span class="ct-gap"><span class="ct-letter">(a)</span> <input class="blank" id="ct-a" data-answer="didn't exist|did not exist"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button></span> <span class="ct-verb">(not exist)</span>.
+          If you do some research into the origins of the sport, you <span class="ct-gap"><span class="ct-letter">(b)</span> <input class="blank" id="ct-b" data-answer="will see|'ll see"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button></span> <span class="ct-verb">(see)</span> that it was the invention of one man.
+          That's right. If it <span class="ct-gap"><span class="ct-letter">(c)</span> <input class="blank" id="ct-c" data-answer="hadn't been|had not been"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button></span> <span class="ct-verb">(not be)</span> for James Naismith (1861–1939), basketball would never have existed.
+          Naismith was a Canadian PE teacher who worked in the US. If Naismith <span class="ct-gap"><span class="ct-letter">(d)</span> <input class="blank" id="ct-d" data-answer="had had|'d had"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button></span> <span class="ct-verb">(have)</span> a different profession,
+          I imagine he wouldn't have thought up this new sport. His director gave him 14 days to create a new indoor sport.
+          It had to be indoors because the weather was bad in the winter where they lived. Of course, if you play indoors,
+          you <span class="ct-gap"><span class="ct-letter">(e)</span> <input class="blank" id="ct-e" data-answer="don't get|do not get"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button></span> <span class="ct-verb">(not get)</span> cold or wet. The director also wanted the sport to be non-aggressive.
+          If he hadn't told Naismith this, perhaps Naismith <span class="ct-gap"><span class="ct-letter">(f)</span> <input class="blank" id="ct-f" data-answer="wouldn't have made|would not have made|might not have made"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button></span> <span class="ct-verb">(not make)</span> basketball a non-contact sport.
+          Naismith's original baskets were wooden fruit baskets which didn't have a hole. If we <span class="ct-gap"><span class="ct-letter">(g)</span> <input class="blank" id="ct-g" data-answer="had"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button></span> <span class="ct-verb">(have)</span> the same baskets today,
+          we would need a ladder to get the ball back every time a player scored! If basketball hadn't become so popular,
+          maybe people <span class="ct-gap"><span class="ct-letter">(h)</span> <input class="blank" id="ct-h" data-answer="would have forgotten|would've forgotten|'d have forgotten|might have forgotten"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button></span> <span class="ct-verb">(forget)</span> about James Naismith a long time ago.
+          But it's thanks to him that one of the world's most popular sports exists.
+        </p>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="checkBlanks('hw-text')">Check ✓</button>
+        <button class="btn btn-ghost"   onclick="resetBlanks('hw-text')">Try again</button>
+      </div>
+    </div>
+
+    <!-- HW TASK 4: recycling lesson 4 phrases -->
+    <div class="exercise" id="hw-rc">
+      <div class="exercise-label">Homework · Task 4 — Recycling</div>
+      <h3 class="big-instr">♻️ Eight phrases from last lesson.</h3>
+      <p class="lead-instr">
+        Complete each sentence with a phrase from the box. Each one is used <b>once</b> — click it to cross it out.
+      </p>
+
+      <div class="hw-box" id="rc-box" title="Click a phrase to cross it out">
+        <span onclick="toggleHwBox(this)">on purpose</span>
+        <span onclick="toggleHwBox(this)">compared with</span>
+        <span onclick="toggleHwBox(this)">by chance</span>
+        <span onclick="toggleHwBox(this)">in the midst of</span>
+        <span onclick="toggleHwBox(this)">suffer from</span>
+        <span onclick="toggleHwBox(this)">for a while</span>
+        <span onclick="toggleHwBox(this)">by heart</span>
+        <span onclick="toggleHwBox(this)">differ from</span>
+      </div>
+
+      <div class="gap-list">
+        <div class="gap-row"><span class="gap-num">1</span><p class="gap-text">I found the café <input class="blank" id="rc-1" data-answer="by chance"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button> — I took a wrong turn and there it was.</p></div>
+        <div class="gap-row"><span class="gap-num">2</span><p class="gap-text">Thousands of teenagers <input class="blank" id="rc-2" data-answer="suffer from"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button> hay fever every spring.</p></div>
+        <div class="gap-row"><span class="gap-num">3</span><p class="gap-text">Actors have to learn hundreds of lines <input class="blank" id="rc-3" data-answer="by heart"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button>.</p></div>
+        <div class="gap-row"><span class="gap-num">4</span><p class="gap-text">He didn’t break the window <input class="blank" id="rc-4" data-answer="on purpose"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button>; the ball just slipped out of his hand.</p></div>
+        <div class="gap-row"><span class="gap-num">5</span><p class="gap-text">British schools <input class="blank" id="rc-5" data-answer="differ from"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button> American ones in several ways, starting with the uniform.</p></div>
+        <div class="gap-row"><span class="gap-num">6</span><p class="gap-text">The phone rang <input class="blank" id="rc-6" data-answer="in the midst of"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button> the exam, and everyone looked up.</p></div>
+        <div class="gap-row"><span class="gap-num">7</span><p class="gap-text">Can you wait here <input class="blank" id="rc-7" data-answer="for a while"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button>? The doctor is running late.</p></div>
+        <div class="gap-row"><span class="gap-num">8</span><p class="gap-text"><input class="blank" id="rc-8" data-answer="compared with|compared to"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button> last year, this winter has been surprisingly mild.</p></div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="checkBlanks('hw-rc')">Check ✓</button>
+        <button class="btn btn-ghost"   onclick="resetBlanks('hw-rc')">Try again</button>
+      </div>
+    </div>
+
+    <!-- HW TASK 5: complete the idioms -->
+    <div class="exercise" id="hw-gaps">
+      <div class="exercise-label">Homework · Task 5 — Complete the Idiom</div>
+      <h3 class="big-instr">🎨 Which colour is missing?</h3>
+      <p class="lead-instr">
+        The <b>colour</b> is missing from each idiom. The ten you'll meet most often — no word box this time.
+      </p>
+
+      <div class="gap-list">
+        <div class="gap-row"><span class="gap-num">1</span><p class="gap-text">He saw <input class="blank" id="ig-1" data-answer="red"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button> when he saw the scratch on his new bike.</p></div>
+        <div class="gap-row"><span class="gap-num">2</span><p class="gap-text">We only eat out once in a <input class="blank" id="ig-2" data-answer="blue"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button> moon.</p></div>
+        <div class="gap-row"><span class="gap-num">3</span><p class="gap-text">My uncle is the <input class="blank" id="ig-3" data-answer="black"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button> sheep of the family — he ran away to join a circus.</p></div>
+        <div class="gap-row"><span class="gap-num">4</span><p class="gap-text">I told a <input class="blank" id="ig-4" data-answer="white"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button> lie and said I loved the jumper.</p></div>
+        <div class="gap-row"><span class="gap-num">5</span><p class="gap-text">Getting the visa took months because of all the <input class="blank" id="ig-5" data-answer="red"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button> tape.</p></div>
+        <div class="gap-row"><span class="gap-num">6</span><p class="gap-text">The shop has been in the <input class="blank" id="ig-6" data-answer="red"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button> since the new supermarket opened.</p></div>
+        <div class="gap-row"><span class="gap-num">7</span><p class="gap-text">The invitation says <input class="blank" id="ig-7" data-answer="black"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button> tie, so I need to hire a dinner jacket.</p></div>
+        <div class="gap-row"><span class="gap-num">8</span><p class="gap-text">After an hour of arguing, Dad raised the <input class="blank" id="ig-8" data-answer="white"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button> flag and let us stay up late.</p></div>
+        <div class="gap-row"><span class="gap-num">9</span><p class="gap-text">The day the letter from Oxford arrived was a real <input class="blank" id="ig-9" data-answer="red"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button> letter day.</p></div>
+        <div class="gap-row"><span class="gap-num">10</span><p class="gap-text">He’s been feeling <input class="blank" id="ig-10" data-answer="blue"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button> since his best friend moved abroad.</p></div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="checkBlanks('hw-gaps')">Check ✓</button>
+        <button class="btn btn-ghost"   onclick="resetBlanks('hw-gaps')">Try again</button>
       </div>
     </div>
 
