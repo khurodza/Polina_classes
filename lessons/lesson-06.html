@@ -192,6 +192,26 @@
     .q-inputs .src-row { align-items:center; }
     .q-inputs .free-write { min-height:0; padding:9px 12px; }
 
+    /* ── Part 3: culture ── */
+    .cent-body { display:flex; align-items:center; justify-content:space-between; gap:10px 16px; flex-wrap:wrap; }
+    .cent-body .wq-q { margin:0; font-weight:600; }
+    .key-table td.key-letter { width:auto; white-space:nowrap; }
+    .pic-match { display:flex; flex-direction:column; gap:18px; }
+    .pic-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; }
+    .pic-card.match-item { position:relative; padding:0; margin:0; border-radius:12px; overflow:hidden; background:#fff; border:2.5px solid var(--border); }
+    .pic-card.match-item:hover:not(.locked) { border-color:var(--primary); }
+    .pic-card.match-item.selected { border-color:var(--primary); box-shadow:0 0 0 3px rgba(212,87,42,.18); }
+    .pic-card.match-item.matched  { border-color:var(--green); box-shadow:0 0 0 3px rgba(91,140,69,.18); }
+    .pic-card.match-item.matched .pic-img { opacity:.72; }
+    .pic-img { width:100%; height:150px; object-fit:cover; display:block; background:var(--bg); }
+    .pic-num { position:absolute; top:7px; left:7px; z-index:2; width:26px; height:26px; border-radius:50%; background:rgba(44,32,16,.76); color:#fff; font-weight:800; font-size:.82rem; display:flex; align-items:center; justify-content:center; }
+    .pic-card.match-item.matched .pic-num { background:var(--green); }
+    .chip-bank { display:flex; flex-direction:row; flex-wrap:wrap; gap:9px; }
+    .event-chip.match-item { flex:0 1 auto; padding:9px 15px; border-radius:100px; font-size:.93rem; text-align:left; }
+    .pic-credit { font-size:.78rem; color:var(--muted); margin:10px 0 0; }
+    @media(max-width:700px){ .pic-grid { grid-template-columns:repeat(3,1fr); } .pic-img { height:110px; } }
+    @media(max-width:480px){ .pic-grid { grid-template-columns:repeat(2,1fr); } }
+
     /* ── placeholder ── */
     .soon { text-align:center; padding:46px 24px; color:var(--muted); }
     .soon-emoji { font-size:2.4rem; display:block; margin-bottom:10px; }
@@ -1015,13 +1035,134 @@
   </div><!-- /tab-p2 -->
 
   <!-- ══════════════════════════════════════════════════════
-       PART 3 — CULTURE  (waiting for the list of events)
+       PART 3 — CULTURE: EARLY AMERICAN HISTORY
   ══════════════════════════════════════════════════════ -->
   <div class="tab-content" id="tab-p3">
-    <div class="exercise">
-      <div class="exercise-label">Culture</div>
-      <div class="soon"><span class="soon-emoji">🏛️</span>Coming soon.</div>
+
+    <!-- TASK 1: event → century -->
+    <div class="exercise" id="cu-cent">
+      <div class="exercise-label">Culture — Task 1</div>
+      <h3 class="big-instr">🇺🇸 Which century is each event from?</h3>
+      <p class="lead-instr">
+        Eleven moments from early American history. Choose the century for each one — remember, the <b>1700s</b> are the <b>18th</b> century.
+      </p>
+
+      <div class="wq-list">
+        <div class="wq-row"><span class="gap-num">1</span><div class="wq-body cent-body"><p class="wq-q">Columbus reaches the Americas</p><span class="word-choice" id="cen-1" data-answer="15th"><button class="word-choice-btn" data-val="15th" onclick="selectGap(this)">15th</button><button class="word-choice-btn" data-val="16th" onclick="selectGap(this)">16th</button><button class="word-choice-btn" data-val="17th" onclick="selectGap(this)">17th</button><button class="word-choice-btn" data-val="18th" onclick="selectGap(this)">18th</button><button class="word-choice-btn" data-val="19th" onclick="selectGap(this)">19th</button></span></div></div>
+        <div class="wq-row"><span class="gap-num">2</span><div class="wq-body cent-body"><p class="wq-q">Jamestown founded</p><span class="word-choice" id="cen-2" data-answer="17th"><button class="word-choice-btn" data-val="15th" onclick="selectGap(this)">15th</button><button class="word-choice-btn" data-val="16th" onclick="selectGap(this)">16th</button><button class="word-choice-btn" data-val="17th" onclick="selectGap(this)">17th</button><button class="word-choice-btn" data-val="18th" onclick="selectGap(this)">18th</button><button class="word-choice-btn" data-val="19th" onclick="selectGap(this)">19th</button></span></div></div>
+        <div class="wq-row"><span class="gap-num">3</span><div class="wq-body cent-body"><p class="wq-q">The Mayflower and the Pilgrim Fathers</p><span class="word-choice" id="cen-3" data-answer="17th"><button class="word-choice-btn" data-val="15th" onclick="selectGap(this)">15th</button><button class="word-choice-btn" data-val="16th" onclick="selectGap(this)">16th</button><button class="word-choice-btn" data-val="17th" onclick="selectGap(this)">17th</button><button class="word-choice-btn" data-val="18th" onclick="selectGap(this)">18th</button><button class="word-choice-btn" data-val="19th" onclick="selectGap(this)">19th</button></span></div></div>
+        <div class="wq-row"><span class="gap-num">4</span><div class="wq-body cent-body"><p class="wq-q">The first Thanksgiving</p><span class="word-choice" id="cen-4" data-answer="17th"><button class="word-choice-btn" data-val="15th" onclick="selectGap(this)">15th</button><button class="word-choice-btn" data-val="16th" onclick="selectGap(this)">16th</button><button class="word-choice-btn" data-val="17th" onclick="selectGap(this)">17th</button><button class="word-choice-btn" data-val="18th" onclick="selectGap(this)">18th</button><button class="word-choice-btn" data-val="19th" onclick="selectGap(this)">19th</button></span></div></div>
+        <div class="wq-row"><span class="gap-num">5</span><div class="wq-body cent-body"><p class="wq-q">Salem witch trials</p><span class="word-choice" id="cen-5" data-answer="17th"><button class="word-choice-btn" data-val="15th" onclick="selectGap(this)">15th</button><button class="word-choice-btn" data-val="16th" onclick="selectGap(this)">16th</button><button class="word-choice-btn" data-val="17th" onclick="selectGap(this)">17th</button><button class="word-choice-btn" data-val="18th" onclick="selectGap(this)">18th</button><button class="word-choice-btn" data-val="19th" onclick="selectGap(this)">19th</button></span></div></div>
+        <div class="wq-row"><span class="gap-num">6</span><div class="wq-body cent-body"><p class="wq-q">Boston Massacre</p><span class="word-choice" id="cen-6" data-answer="18th"><button class="word-choice-btn" data-val="15th" onclick="selectGap(this)">15th</button><button class="word-choice-btn" data-val="16th" onclick="selectGap(this)">16th</button><button class="word-choice-btn" data-val="17th" onclick="selectGap(this)">17th</button><button class="word-choice-btn" data-val="18th" onclick="selectGap(this)">18th</button><button class="word-choice-btn" data-val="19th" onclick="selectGap(this)">19th</button></span></div></div>
+        <div class="wq-row"><span class="gap-num">7</span><div class="wq-body cent-body"><p class="wq-q">Boston Tea Party</p><span class="word-choice" id="cen-7" data-answer="18th"><button class="word-choice-btn" data-val="15th" onclick="selectGap(this)">15th</button><button class="word-choice-btn" data-val="16th" onclick="selectGap(this)">16th</button><button class="word-choice-btn" data-val="17th" onclick="selectGap(this)">17th</button><button class="word-choice-btn" data-val="18th" onclick="selectGap(this)">18th</button><button class="word-choice-btn" data-val="19th" onclick="selectGap(this)">19th</button></span></div></div>
+        <div class="wq-row"><span class="gap-num">8</span><div class="wq-body cent-body"><p class="wq-q">Declaration of Independence</p><span class="word-choice" id="cen-8" data-answer="18th"><button class="word-choice-btn" data-val="15th" onclick="selectGap(this)">15th</button><button class="word-choice-btn" data-val="16th" onclick="selectGap(this)">16th</button><button class="word-choice-btn" data-val="17th" onclick="selectGap(this)">17th</button><button class="word-choice-btn" data-val="18th" onclick="selectGap(this)">18th</button><button class="word-choice-btn" data-val="19th" onclick="selectGap(this)">19th</button></span></div></div>
+        <div class="wq-row"><span class="gap-num">9</span><div class="wq-body cent-body"><p class="wq-q">Washington crossing the Delaware</p><span class="word-choice" id="cen-9" data-answer="18th"><button class="word-choice-btn" data-val="15th" onclick="selectGap(this)">15th</button><button class="word-choice-btn" data-val="16th" onclick="selectGap(this)">16th</button><button class="word-choice-btn" data-val="17th" onclick="selectGap(this)">17th</button><button class="word-choice-btn" data-val="18th" onclick="selectGap(this)">18th</button><button class="word-choice-btn" data-val="19th" onclick="selectGap(this)">19th</button></span></div></div>
+        <div class="wq-row"><span class="gap-num">10</span><div class="wq-body cent-body"><p class="wq-q">The Constitution signed</p><span class="word-choice" id="cen-10" data-answer="18th"><button class="word-choice-btn" data-val="15th" onclick="selectGap(this)">15th</button><button class="word-choice-btn" data-val="16th" onclick="selectGap(this)">16th</button><button class="word-choice-btn" data-val="17th" onclick="selectGap(this)">17th</button><button class="word-choice-btn" data-val="18th" onclick="selectGap(this)">18th</button><button class="word-choice-btn" data-val="19th" onclick="selectGap(this)">19th</button></span></div></div>
+        <div class="wq-row"><span class="gap-num">11</span><div class="wq-body cent-body"><p class="wq-q">Louisiana Purchase</p><span class="word-choice" id="cen-11" data-answer="19th"><button class="word-choice-btn" data-val="15th" onclick="selectGap(this)">15th</button><button class="word-choice-btn" data-val="16th" onclick="selectGap(this)">16th</button><button class="word-choice-btn" data-val="17th" onclick="selectGap(this)">17th</button><button class="word-choice-btn" data-val="18th" onclick="selectGap(this)">18th</button><button class="word-choice-btn" data-val="19th" onclick="selectGap(this)">19th</button></span></div></div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="checkGaps('cu-cent')">Check ✓</button>
+        <button class="btn btn-ghost"   onclick="resetGaps('cu-cent')">Try again</button>
+      </div>
+
+      <details class="answer-key">
+        <summary>🔑 Answers with years</summary>
+        <table class="key-table">
+          <tbody>
+            <tr><td class="key-num">1</td><td class="key-idiom">Columbus reaches the Americas</td><td class="key-letter">1492</td><td>15th century</td></tr>
+            <tr><td class="key-num">2</td><td class="key-idiom">Jamestown founded</td><td class="key-letter">1607</td><td>17th century</td></tr>
+            <tr><td class="key-num">3</td><td class="key-idiom">The Mayflower and the Pilgrim Fathers</td><td class="key-letter">1620</td><td>17th century</td></tr>
+            <tr><td class="key-num">4</td><td class="key-idiom">The first Thanksgiving</td><td class="key-letter">1621</td><td>17th century</td></tr>
+            <tr><td class="key-num">5</td><td class="key-idiom">Salem witch trials</td><td class="key-letter">1692</td><td>17th century</td></tr>
+            <tr><td class="key-num">6</td><td class="key-idiom">Boston Massacre</td><td class="key-letter">1770</td><td>18th century</td></tr>
+            <tr><td class="key-num">7</td><td class="key-idiom">Boston Tea Party</td><td class="key-letter">1773</td><td>18th century</td></tr>
+            <tr><td class="key-num">8</td><td class="key-idiom">Declaration of Independence</td><td class="key-letter">1776</td><td>18th century</td></tr>
+            <tr><td class="key-num">9</td><td class="key-idiom">Washington crossing the Delaware</td><td class="key-letter">1776</td><td>18th century</td></tr>
+            <tr><td class="key-num">10</td><td class="key-idiom">The Constitution signed</td><td class="key-letter">1787</td><td>18th century</td></tr>
+            <tr><td class="key-num">11</td><td class="key-idiom">Louisiana Purchase</td><td class="key-letter">1803</td><td>19th century</td></tr>
+          </tbody>
+        </table>
+      </details>
     </div>
+
+    <!-- TASK 2: picture → event -->
+    <div class="exercise" id="cu-pics">
+      <div class="exercise-label">Culture — Task 2</div>
+      <h3 class="big-instr">🖼️ Match the picture to the event.</h3>
+      <p class="lead-instr">
+        Click a picture, then its event below. A correct pair locks in green.
+      </p>
+
+      <div class="match-grid pic-match">
+        <div class="match-col pic-grid" data-side="left">
+          <figure class="match-item pic-card" data-pair="7" onclick="selectMatch(this,'cu-pics')">
+            <span class="pic-num">1</span>
+            <img class="pic-img" src="images/usa/07-tea-party.jpg" alt="Picture 1" loading="lazy">
+          </figure>
+          <figure class="match-item pic-card" data-pair="3" onclick="selectMatch(this,'cu-pics')">
+            <span class="pic-num">2</span>
+            <img class="pic-img" src="images/usa/03-mayflower.jpg" alt="Picture 2" loading="lazy">
+          </figure>
+          <figure class="match-item pic-card" data-pair="10" onclick="selectMatch(this,'cu-pics')">
+            <span class="pic-num">3</span>
+            <img class="pic-img" src="images/usa/10-constitution.jpg" alt="Picture 3" loading="lazy">
+          </figure>
+          <figure class="match-item pic-card" data-pair="1" onclick="selectMatch(this,'cu-pics')">
+            <span class="pic-num">4</span>
+            <img class="pic-img" src="images/usa/01-columbus.jpg" alt="Picture 4" loading="lazy">
+          </figure>
+          <figure class="match-item pic-card" data-pair="5" onclick="selectMatch(this,'cu-pics')">
+            <span class="pic-num">5</span>
+            <img class="pic-img" src="images/usa/05-salem.jpg" alt="Picture 5" loading="lazy">
+          </figure>
+          <figure class="match-item pic-card" data-pair="9" onclick="selectMatch(this,'cu-pics')">
+            <span class="pic-num">6</span>
+            <img class="pic-img" src="images/usa/09-delaware.jpg" alt="Picture 6" loading="lazy">
+          </figure>
+          <figure class="match-item pic-card" data-pair="2" onclick="selectMatch(this,'cu-pics')">
+            <span class="pic-num">7</span>
+            <img class="pic-img" src="images/usa/02-jamestown.jpg" alt="Picture 7" loading="lazy">
+          </figure>
+          <figure class="match-item pic-card" data-pair="11" onclick="selectMatch(this,'cu-pics')">
+            <span class="pic-num">8</span>
+            <img class="pic-img" src="images/usa/11-louisiana.png" alt="Picture 8" loading="lazy">
+          </figure>
+          <figure class="match-item pic-card" data-pair="4" onclick="selectMatch(this,'cu-pics')">
+            <span class="pic-num">9</span>
+            <img class="pic-img" src="images/usa/04-thanksgiving.jpg" alt="Picture 9" loading="lazy">
+          </figure>
+          <figure class="match-item pic-card" data-pair="8" onclick="selectMatch(this,'cu-pics')">
+            <span class="pic-num">10</span>
+            <img class="pic-img" src="images/usa/08-declaration.jpg" alt="Picture 10" loading="lazy">
+          </figure>
+          <figure class="match-item pic-card" data-pair="6" onclick="selectMatch(this,'cu-pics')">
+            <span class="pic-num">11</span>
+            <img class="pic-img" src="images/usa/06-boston-massacre.jpg" alt="Picture 11" loading="lazy">
+          </figure>
+        </div>
+
+        <div class="match-col chip-bank" data-side="right">
+          <div class="match-item event-chip" data-pair="4" onclick="selectMatch(this,'cu-pics')">The first Thanksgiving</div>
+          <div class="match-item event-chip" data-pair="9" onclick="selectMatch(this,'cu-pics')">Washington crossing the Delaware</div>
+          <div class="match-item event-chip" data-pair="1" onclick="selectMatch(this,'cu-pics')">Columbus reaches the Americas</div>
+          <div class="match-item event-chip" data-pair="6" onclick="selectMatch(this,'cu-pics')">Boston Massacre</div>
+          <div class="match-item event-chip" data-pair="11" onclick="selectMatch(this,'cu-pics')">Louisiana Purchase</div>
+          <div class="match-item event-chip" data-pair="3" onclick="selectMatch(this,'cu-pics')">The Mayflower and the Pilgrim Fathers</div>
+          <div class="match-item event-chip" data-pair="8" onclick="selectMatch(this,'cu-pics')">Declaration of Independence</div>
+          <div class="match-item event-chip" data-pair="2" onclick="selectMatch(this,'cu-pics')">Jamestown founded</div>
+          <div class="match-item event-chip" data-pair="10" onclick="selectMatch(this,'cu-pics')">The Constitution signed</div>
+          <div class="match-item event-chip" data-pair="5" onclick="selectMatch(this,'cu-pics')">Salem witch trials</div>
+          <div class="match-item event-chip" data-pair="7" onclick="selectMatch(this,'cu-pics')">Boston Tea Party</div>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-ghost" onclick="resetMatchEx('cu-pics')">Reset</button>
+      </div>
+      <p class="pic-credit">Pictures: Wikimedia Commons.</p>
+    </div>
+
   </div><!-- /tab-p3 -->
 
   <!-- ══════════════════════════════════════════════════════
