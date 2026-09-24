@@ -1,0 +1,1366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lesson 6 – Idioms &amp; Reported Speech</title>
+  <link rel="stylesheet" href="../style.css">
+  <style>
+    /* ── instructions ── */
+    .exercise h3.big-instr {
+      font-family:'Fraunces',Georgia,serif;
+      font-size:1.5rem; font-weight:700; line-height:1.3;
+      color:var(--primary); margin-bottom:10px;
+    }
+    .lead-instr {
+      font-size:1.02rem; line-height:1.7; color:var(--text);
+      border-left:4px solid var(--accent); padding-left:16px; margin-bottom:6px;
+    }
+    .lead-instr b { color:var(--primary-dk); }
+    @media(max-width:560px){ .exercise h3.big-instr { font-size:1.25rem; } }
+
+    /* ── single-gap check button ── */
+    .check-one {
+      margin-left:7px; width:27px; height:27px; padding:0; border-radius:50%;
+      border:2px solid var(--border); background:transparent; color:var(--muted);
+      font-family:inherit; font-size:.82rem; line-height:1; cursor:pointer;
+      vertical-align:middle; transition:border-color .2s,color .2s,background .2s;
+    }
+    .check-one:hover { border-color:var(--primary); color:var(--primary); background:rgba(212,87,42,.06); }
+    .check-one.ok { border-color:var(--green); background:var(--green); color:#fff; }
+    .check-one.no { border-color:var(--red);   background:var(--red);   color:#fff; }
+
+    /* ── numbered rows ── */
+    .gap-num { flex:0 0 27px; height:27px; margin-top:3px; display:flex; align-items:center; justify-content:center; border-radius:50%; background:var(--bg); color:var(--primary); font-size:.82rem; font-weight:800; }
+    .gap-row { display:flex; gap:14px; align-items:flex-start; padding:12px 2px; border-bottom:1px dashed var(--border); }
+    .gap-row:last-child { border-bottom:none; }
+    .gap-text { flex:1; min-width:0; line-height:2; font-size:1.02rem; margin:0; }
+    .gap-text .blank { min-width:190px; }
+    .gap-text .blank.short { min-width:90px; width:90px; }
+
+    /* ── Task 1: idiom families ── */
+    .idiom-groups { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; align-items:start; }
+    .idiom-group { border-radius:14px; padding:16px 16px 10px; border:2px solid transparent; }
+    .grp-name { font-family:'Fraunces',Georgia,serif; font-weight:800; font-size:1.35rem; letter-spacing:.5px; display:flex; align-items:center; gap:10px; }
+    .grp-emoji { font-size:1.3rem; }
+    .grp-theme { font-size:.88rem; color:var(--muted); margin:4px 0 10px; line-height:1.5; }
+    .idiom-group ul { list-style:none; padding:0; margin:0; }
+    .idiom-row { padding:9px 0; border-top:1px dashed var(--border); }
+    .idiom-phrase { font-weight:700; font-size:1rem; }
+    .idiom-meaning { font-size:.92rem; line-height:1.5; margin-top:2px; }
+    .idiom-ex { font-size:.87rem; font-style:italic; color:var(--muted); line-height:1.5; margin-top:3px; }
+    .grp-body    { border-color:#D4572A; background:#FDF1EC; } .grp-body .grp-name    { color:#A8401C; }
+    .grp-animals { border-color:#5B8C45; background:#F0F6EC; } .grp-animals .grp-name { color:#3F6B2E; }
+    .grp-down    { border-color:#5F8EC4; background:#EEF3FB; } .grp-down .grp-name    { color:#2A4E86; }
+    @media(max-width:900px){ .idiom-groups { grid-template-columns:1fr 1fr; } }
+    @media(max-width:600px){ .idiom-groups { grid-template-columns:1fr; } }
+
+    /* ── matching where each correct pair sits on one row ── */
+    .match-grid.rows { grid-auto-flow:row dense; row-gap:8px; }
+    .match-grid.rows > .match-col { display:contents; }
+    .match-grid.rows > .match-col[data-side="left"]  > .match-item { grid-column:1; }
+    .match-grid.rows > .match-col[data-side="right"] > .match-item { grid-column:2; }
+    .match-grid.rows .match-item { display:flex; align-items:center; }
+    .match-item.slid { animation:slideIn .45s ease; }
+    @keyframes slideIn { from { transform:translateY(-6px); opacity:.4; } to { transform:none; opacity:1; } }
+    .match-item .m-key { display:inline-block; flex:0 0 auto; min-width:22px; font-weight:800; color:var(--primary); margin-right:6px; }
+    .match-item.matched .m-key { color:inherit; }
+
+    .answer-key { margin-top:14px; }
+    .answer-key summary { cursor:pointer; display:inline-block; list-style:none; padding:7px 16px; border:2px solid var(--border); border-radius:100px; font-size:.9rem; font-weight:700; color:var(--primary); background:#fff; }
+    .answer-key summary::-webkit-details-marker { display:none; }
+    .answer-key summary:hover { border-color:var(--primary); }
+    .answer-key[open] summary { background:var(--primary); color:#fff; border-color:var(--primary); }
+    .key-table { width:100%; border-collapse:collapse; margin-top:12px; background:#fff; font-size:.95rem; }
+    .key-table td { padding:8px 10px; border-bottom:1px dashed var(--border); vertical-align:top; line-height:1.5; }
+    .key-table tr:last-child td { border-bottom:none; }
+    .key-num { width:30px; color:var(--muted); font-weight:700; }
+    .key-idiom { font-weight:700; }
+    .key-letter { width:30px; font-weight:800; color:var(--primary); }
+
+    /* ── crossword ── */
+    .cw-wrap { display:grid; grid-template-columns:auto 1fr; gap:26px; align-items:start; }
+    .cw-grid { display:flex; flex-direction:column; gap:4px; }
+    .cw-row { display:flex; align-items:center; gap:4px; }
+    .cw-num { width:26px; text-align:right; margin-right:6px; font-weight:800; font-size:.85rem; color:var(--primary); }
+    .cw-cell { width:38px; height:38px; padding:0; text-align:center; text-transform:uppercase; font-family:'DM Sans',sans-serif; font-weight:700; font-size:1.1rem; border:2px solid var(--border); border-radius:6px; background:#fff; color:var(--text); caret-color:var(--primary); }
+    .cw-cell:focus { outline:none; border-color:var(--primary); box-shadow:0 0 0 3px rgba(212,87,42,.14); }
+    .cw-row.correct .cw-cell { border-color:var(--green); background:rgba(91,140,69,.10); color:var(--green); }
+    .cw-row.wrong   .cw-cell { border-color:var(--red);   background:rgba(200,64,64,.07); }
+    .cw-clues { margin:0; padding:0; list-style:none; font-size:.98rem; line-height:1.6; }
+    .cw-clues li { padding:7px 0; border-bottom:1px dashed var(--border); }
+    .cw-clues li:last-child { border-bottom:none; }
+    .cw-clues b { display:inline-block; min-width:24px; color:var(--primary); }
+    .cw-len { color:var(--muted); font-size:.85rem; }
+    @media(max-width:640px){ .cw-wrap { grid-template-columns:1fr; } .cw-cell { width:32px; height:32px; font-size:1rem; } }
+
+    /* ── word box ── */
+    .hw-box { display:flex; flex-wrap:wrap; gap:8px; padding:14px 16px; margin-bottom:18px; background:rgba(201,160,48,.14); border-left:3px solid var(--accent-dk); border-radius:10px; }
+    .hw-box span { background:#fff; border:1px solid var(--border); border-radius:6px; padding:2px 10px; font-size:.92rem; cursor:pointer; user-select:none; transition:opacity .15s; }
+    .hw-box span:hover { border-color:var(--primary); }
+    .hw-box span.used { text-decoration:line-through; opacity:.45; }
+
+    /* ── describing people ── */
+    .sub-head { font-family:'Fraunces',Georgia,serif; font-weight:700; font-size:1.05rem; color:var(--text); margin:6px 0 12px; padding-bottom:7px; border-bottom:2px solid var(--border); }
+    .person-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-top:16px; }
+    .person-card { background:linear-gradient(135deg,#FDF5EC,#F0E8D4); border:2px solid var(--border); border-radius:var(--radius); padding:16px 18px; }
+    .person-label { font-size:.72rem; text-transform:uppercase; letter-spacing:1.5px; font-weight:800; color:var(--primary); }
+    .person-card h4 { font-family:'Fraunces',Georgia,serif; font-size:1.15rem; margin:4px 0 10px; }
+    .person-card .free-write { min-height:150px; background:#fff; }
+    @media(max-width:900px){ .person-grid { grid-template-columns:1fr; } }
+    .phrase-bank { display:flex; flex-wrap:wrap; gap:8px; margin:12px 0 6px; }
+    .phrase-chip { padding:6px 14px; border:2px solid var(--border); border-radius:100px; background:#fff; font-size:.92rem; cursor:pointer; font-family:inherit; color:var(--text); transition:background .15s,border-color .15s,color .15s; }
+    .phrase-chip:hover { border-color:var(--primary); color:var(--primary); }
+    .phrase-chip.used { background:var(--green); border-color:var(--green); color:#fff; }
+    .phrase-count { font-size:.9rem; color:var(--muted); }
+    .phrase-count b { color:var(--primary); font-size:1.05rem; }
+
+    /* ── reveal boxes ── */
+    details.model { margin-top:8px; }
+    details.model summary { cursor:pointer; font-size:.86rem; color:var(--primary); font-weight:700; list-style:none; display:inline-block; }
+    details.model summary::-webkit-details-marker { display:none; }
+    details.model summary::before { content:'💡 '; }
+    details.model summary:hover { text-decoration:underline; }
+    .model-body { margin-top:6px; padding:10px 14px; background:var(--bg); border-radius:10px; font-size:.95rem; line-height:1.7; }
+    .model-body p { margin:0 0 6px; }
+    .model-body p:last-child { margin-bottom:0; }
+
+    /* ── Part 2: reported speech ── */
+    .flip-box { background:linear-gradient(135deg,#C4337A,#E8743B); color:#fff; border-radius:var(--radius); padding:16px 20px 18px; margin-bottom:6px; }
+    .flip-title { font-family:'Fraunces',Georgia,serif; font-size:1.3rem; font-weight:700; }
+    .flip-sub { font-size:.95rem; opacity:.9; margin-bottom:10px; }
+    .flip-box video { width:100%; display:block; border-radius:10px; background:#000; }
+    .test-line { margin-top:14px; padding:11px 15px; background:rgba(201,160,48,.14); border-left:4px solid var(--accent-dk); border-radius:10px; font-size:.94rem; line-height:1.75; }
+    .test-line p { margin:0 0 4px; }
+    .test-line p:last-child { margin:0; }
+    .src-sentences { background:var(--bg); border:1.5px solid var(--border); border-radius:12px; padding:12px 16px; margin-bottom:16px; }
+    .src-row { display:flex; gap:12px; align-items:flex-start; padding:6px 0; }
+    .src-row p { margin:0; font-size:.97rem; line-height:1.65; }
+    .src-row .gap-num { margin-top:2px; background:#fff; flex-basis:32px; }
+    .src-row.pair-end { padding-bottom:12px; margin-bottom:6px; border-bottom:1px dashed var(--border); }
+    .src-row.pair-end:last-child { border-bottom:none; margin-bottom:0; padding-bottom:6px; }
+    .fact-item { padding:14px 0; border-bottom:1px dashed var(--border); }
+    .fact-item:last-of-type { border-bottom:none; }
+    .fact-head { display:flex; gap:14px; align-items:flex-start; }
+    .fact-text { flex:1; min-width:0; font-weight:600; line-height:1.7; margin:0; }
+    .fact-body { margin-left:41px; }
+    .fact-body .free-write { margin-top:8px; }
+    .free-write.short { min-height:0; }
+    .rs1-questions .src-row p { font-weight:600; line-height:1.7; }
+    .answer-key .model-body { margin-top:10px; }
+    .sv-slot { color:var(--muted); font-weight:500; font-style:italic; }
+    @media(max-width:560px){ .fact-body { margin-left:0; } }
+    .shift-grid { display:grid; grid-template-columns:1fr 1fr; gap:4px 28px; }
+    .shift-row { display:flex; align-items:center; gap:10px; padding:8px 0; border-bottom:1px dashed var(--border); flex-wrap:wrap; }
+    .shift-from { min-width:92px; font-weight:700; color:var(--primary-dk); }
+    .shift-arrow { color:var(--muted); }
+    .shift-to .blank { min-width:150px; width:150px; }
+    @media(max-width:620px){ .shift-grid { grid-template-columns:1fr; } }
+    .rep-item { padding:14px 0; border-bottom:1px dashed var(--border); }
+    .rep-item:last-of-type { border-bottom:none; }
+    .rep-direct { margin:0; font-weight:600; line-height:1.7; }
+    .rep-line { margin:8px 0 0 41px; display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+    .rep-lead { font-weight:700; color:var(--primary-dk); }
+    .rep-line .blank.rep-blank { flex:1; min-width:240px; }
+    .rep-item details.model { margin-left:41px; }
+    @media(max-width:560px){ .rep-line, .rep-item details.model { margin-left:0; } }
+    .wq-row { display:flex; gap:14px; align-items:flex-start; padding:10px 2px; border-bottom:1px dashed var(--border); }
+    .wq-row:last-child { border-bottom:none; }
+    .wq-body { flex:1; min-width:0; }
+    .wq-q { margin:0 0 8px; font-size:.98rem; line-height:1.6; }
+    .word-choice { display:inline-flex; flex-wrap:wrap; border:2px solid var(--border); border-radius:8px; overflow:hidden; vertical-align:middle; background:#fff; }
+    .word-choice-btn { padding:7px 15px; cursor:pointer; border:none; border-right:1px solid var(--border); background:transparent; font-size:.9rem; font-weight:600; color:var(--muted); font-family:inherit; transition:background .15s,color .15s; }
+    .word-choice-btn:last-child { border-right:none; }
+    .word-choice-btn:hover { background:var(--bg); color:var(--text); }
+    .word-choice-btn.selected { background:var(--primary); color:#fff; }
+    .word-choice-btn.correct  { background:var(--green); color:#fff; }
+    .word-choice-btn.wrong    { background:var(--red);   color:#fff; }
+    .dlg-wrap { display:grid; grid-template-columns:1fr 220px; gap:22px; align-items:start; }
+    .dlg-photo img { width:100%; display:block; border-radius:12px; box-shadow:0 4px 14px rgba(0,0,0,.15); }
+    .dlg-photo figcaption { font-size:.78rem; color:var(--muted); font-style:italic; margin-top:6px; text-align:center; }
+    .dlg-row { padding:12px 0; border-bottom:1px dashed var(--border); }
+    .dlg-row:last-child { border-bottom:none; }
+    .dlg-line { font-size:1rem; line-height:1.65; margin-bottom:6px; }
+    .dlg-who { font-weight:800; }
+    .who-olivia { color:#C4337A; }
+    .who-tom { color:#2A4E86; }
+    @media(max-width:760px){ .dlg-wrap { grid-template-columns:1fr; } .dlg-photo { max-width:220px; margin:0 auto; order:-1; } }
+    .use-it { border:2px solid #5F8EC4; border-radius:var(--radius); padding:18px 20px; background:#F3F7FC; }
+    .use-tag { display:inline-block; background:#5F8EC4; color:#fff; font-size:.78rem; font-weight:800; padding:3px 12px; border-radius:100px; margin-bottom:8px; }
+    .hand-note { font-family:'Caveat','Segoe Print','Bradley Hand',cursive; font-size:1.25rem; color:#2A7F8C; line-height:1.4; margin:10px 0 4px; }
+    .q-inputs { display:flex; flex-direction:column; gap:8px; margin:12px 0 16px; }
+    .q-inputs .src-row { align-items:center; }
+    .q-inputs .free-write { min-height:0; padding:9px 12px; }
+
+    /* ── placeholder ── */
+    .soon { text-align:center; padding:46px 24px; color:var(--muted); }
+    .soon-emoji { font-size:2.4rem; display:block; margin-bottom:10px; }
+  </style>
+</head>
+<body>
+
+<header class="site-header">
+  <h1>Lesson 6 — Idioms &amp; Reported Speech</h1>
+  <a class="back-link" href="../index.html">← All Lessons</a>
+</header>
+
+<div class="container">
+
+  <div class="lesson-meta">
+    <h2>Body, Animal &amp; Down Idioms · Reported Speech</h2>
+    <p>📅 24 September 2026 &nbsp;·&nbsp; Lesson 6</p>
+  </div>
+
+  <div class="tab-bar">
+    <button class="tab-btn active" onclick="switchTab('p1',this)">Part 1 · Idioms</button>
+    <button class="tab-btn"        onclick="switchTab('p2',this)">Part 2 · Reported Speech</button>
+    <button class="tab-btn"        onclick="switchTab('p3',this)">Part 3 · Culture</button>
+    <button class="tab-btn"        onclick="switchTab('hw',this)">📝 Homework</button>
+  </div>
+  <div class="tab-scallop"></div>
+
+  <!-- ══════════════════════════════════════════════════════
+       PART 1 — IDIOMS: BODY, ANIMALS, DOWN
+  ══════════════════════════════════════════════════════ -->
+  <div class="tab-content active" id="tab-p1">
+
+    <!-- WARM-UP: make/do/give/put/get/take (lessons 1–2) -->
+    <div class="exercise" id="warmup">
+      <div class="exercise-label">Warm-up — Make, Do, Give, Put, Get or Take?</div>
+      <h3 class="big-instr">🔥 Choose the correct verb.</h3>
+      <p class="lead-instr">
+        Ten collocations from Lessons 1 and 2.
+      </p>
+
+      <div class="mc-q">
+        <div class="mc-qnum">1</div>
+        <div class="mc-qbody">
+          <p class="mc-qtext">I&#x27;m so sorry — I&#x27;ve <span class="mc-slot">___</span> a terrible mess of the kitchen. I&#x27;ll clean it up now.</p>
+          <div class="mc-options chips" data-correct="b">
+            <label class="mc-option"><input type="radio" name="wu1" value="a"><span class="mc-bullet">A</span> done</label>
+            <label class="mc-option"><input type="radio" name="wu1" value="b"><span class="mc-bullet">B</span> made</label>
+            <label class="mc-option"><input type="radio" name="wu1" value="c"><span class="mc-bullet">C</span> got</label>
+            <label class="mc-option"><input type="radio" name="wu1" value="d"><span class="mc-bullet">D</span> put</label>
+          </div>
+        </div>
+      </div>
+      <div class="mc-q">
+        <div class="mc-qnum">2</div>
+        <div class="mc-qbody">
+          <p class="mc-qtext">My grandma always <span class="mc-slot">___</span> pity on stray cats and feeds them in her garden.</p>
+          <div class="mc-options chips" data-correct="c">
+            <label class="mc-option"><input type="radio" name="wu2" value="a"><span class="mc-bullet">A</span> gives</label>
+            <label class="mc-option"><input type="radio" name="wu2" value="b"><span class="mc-bullet">B</span> makes</label>
+            <label class="mc-option"><input type="radio" name="wu2" value="c"><span class="mc-bullet">C</span> takes</label>
+            <label class="mc-option"><input type="radio" name="wu2" value="d"><span class="mc-bullet">D</span> puts</label>
+          </div>
+        </div>
+      </div>
+      <div class="mc-q">
+        <div class="mc-qnum">3</div>
+        <div class="mc-qbody">
+          <p class="mc-qtext">We need to <span class="mc-slot">___</span> rid of the old sofa before the new one arrives.</p>
+          <div class="mc-options chips" data-correct="d">
+            <label class="mc-option"><input type="radio" name="wu3" value="a"><span class="mc-bullet">A</span> take</label>
+            <label class="mc-option"><input type="radio" name="wu3" value="b"><span class="mc-bullet">B</span> put</label>
+            <label class="mc-option"><input type="radio" name="wu3" value="c"><span class="mc-bullet">C</span> make</label>
+            <label class="mc-option"><input type="radio" name="wu3" value="d"><span class="mc-bullet">D</span> get</label>
+          </div>
+        </div>
+      </div>
+      <div class="mc-q">
+        <div class="mc-qnum">4</div>
+        <div class="mc-qbody">
+          <p class="mc-qtext">If you want to pass, you&#x27;ll have to <span class="mc-slot">___</span> more of an effort.</p>
+          <div class="mc-options chips" data-correct="b">
+            <label class="mc-option"><input type="radio" name="wu4" value="a"><span class="mc-bullet">A</span> do</label>
+            <label class="mc-option"><input type="radio" name="wu4" value="b"><span class="mc-bullet">B</span> make</label>
+            <label class="mc-option"><input type="radio" name="wu4" value="c"><span class="mc-bullet">C</span> take</label>
+            <label class="mc-option"><input type="radio" name="wu4" value="d"><span class="mc-bullet">D</span> get</label>
+          </div>
+        </div>
+      </div>
+      <div class="mc-q">
+        <div class="mc-qnum">5</div>
+        <div class="mc-qbody">
+          <p class="mc-qtext">She <span class="mc-slot">___</span> a deep sigh and turned over the exam paper.</p>
+          <div class="mc-options chips" data-correct="c">
+            <label class="mc-option"><input type="radio" name="wu5" value="a"><span class="mc-bullet">A</span> took</label>
+            <label class="mc-option"><input type="radio" name="wu5" value="b"><span class="mc-bullet">B</span> made</label>
+            <label class="mc-option"><input type="radio" name="wu5" value="c"><span class="mc-bullet">C</span> gave</label>
+            <label class="mc-option"><input type="radio" name="wu5" value="d"><span class="mc-bullet">D</span> did</label>
+          </div>
+        </div>
+      </div>
+      <div class="mc-q">
+        <div class="mc-qnum">6</div>
+        <div class="mc-qbody">
+          <p class="mc-qtext">Could you <span class="mc-slot">___</span> me a favour and feed my fish while I&#x27;m away?</p>
+          <div class="mc-options chips" data-correct="a">
+            <label class="mc-option"><input type="radio" name="wu6" value="a"><span class="mc-bullet">A</span> do</label>
+            <label class="mc-option"><input type="radio" name="wu6" value="b"><span class="mc-bullet">B</span> make</label>
+            <label class="mc-option"><input type="radio" name="wu6" value="c"><span class="mc-bullet">C</span> give</label>
+            <label class="mc-option"><input type="radio" name="wu6" value="d"><span class="mc-bullet">D</span> take</label>
+          </div>
+        </div>
+      </div>
+      <div class="mc-q">
+        <div class="mc-qnum">7</div>
+        <div class="mc-qbody">
+          <p class="mc-qtext">Stop <span class="mc-slot">___</span> so much pressure on yourself — it&#x27;s only a practice test.</p>
+          <div class="mc-options chips" data-correct="a">
+            <label class="mc-option"><input type="radio" name="wu7" value="a"><span class="mc-bullet">A</span> putting</label>
+            <label class="mc-option"><input type="radio" name="wu7" value="b"><span class="mc-bullet">B</span> making</label>
+            <label class="mc-option"><input type="radio" name="wu7" value="c"><span class="mc-bullet">C</span> giving</label>
+            <label class="mc-option"><input type="radio" name="wu7" value="d"><span class="mc-bullet">D</span> taking</label>
+          </div>
+        </div>
+      </div>
+      <div class="mc-q">
+        <div class="mc-qnum">8</div>
+        <div class="mc-qbody">
+          <p class="mc-qtext">Before you buy a new phone, <span class="mc-slot">___</span> some research and compare prices.</p>
+          <div class="mc-options chips" data-correct="b">
+            <label class="mc-option"><input type="radio" name="wu8" value="a"><span class="mc-bullet">A</span> make</label>
+            <label class="mc-option"><input type="radio" name="wu8" value="b"><span class="mc-bullet">B</span> do</label>
+            <label class="mc-option"><input type="radio" name="wu8" value="c"><span class="mc-bullet">C</span> take</label>
+            <label class="mc-option"><input type="radio" name="wu8" value="d"><span class="mc-bullet">D</span> get</label>
+          </div>
+        </div>
+      </div>
+      <div class="mc-q">
+        <div class="mc-qnum">9</div>
+        <div class="mc-qbody">
+          <p class="mc-qtext">It took me months to <span class="mc-slot">___</span> used to getting up at six every morning.</p>
+          <div class="mc-options chips" data-correct="d">
+            <label class="mc-option"><input type="radio" name="wu9" value="a"><span class="mc-bullet">A</span> take</label>
+            <label class="mc-option"><input type="radio" name="wu9" value="b"><span class="mc-bullet">B</span> make</label>
+            <label class="mc-option"><input type="radio" name="wu9" value="c"><span class="mc-bullet">C</span> do</label>
+            <label class="mc-option"><input type="radio" name="wu9" value="d"><span class="mc-bullet">D</span> get</label>
+          </div>
+        </div>
+      </div>
+      <div class="mc-q">
+        <div class="mc-qnum">10</div>
+        <div class="mc-qbody">
+          <p class="mc-qtext">The nurse <span class="mc-slot">___</span> my temperature and told me to stay in bed for two days.</p>
+          <div class="mc-options chips" data-correct="c">
+            <label class="mc-option"><input type="radio" name="wu10" value="a"><span class="mc-bullet">A</span> gave</label>
+            <label class="mc-option"><input type="radio" name="wu10" value="b"><span class="mc-bullet">B</span> made</label>
+            <label class="mc-option"><input type="radio" name="wu10" value="c"><span class="mc-bullet">C</span> took</label>
+            <label class="mc-option"><input type="radio" name="wu10" value="d"><span class="mc-bullet">D</span> got</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="checkMCIn('warmup')">Check ✓</button>
+        <button class="btn btn-ghost"   onclick="resetMCIn('warmup')">Try again</button>
+      </div>
+    </div>
+
+    <!-- TASK 1: presentation -->
+    <div class="exercise" id="t1-idioms">
+      <div class="exercise-label">Task 1 — Three Families of Idioms</div>
+      <h3 class="big-instr">🧠 Body, animals and DOWN.</h3>
+      <p class="lead-instr">
+        Read each idiom and its example aloud.
+      </p>
+
+      <div class="idiom-groups">
+        <div class="idiom-group grp-body">
+          <div class="grp-name"><span class="grp-emoji">🖐️</span>BODY</div>
+          <div class="grp-theme">arms, legs, noses, thumbs — your body describes money, jokes and clumsiness</div>
+          <ul>
+            <li class="idiom-row">
+              <div class="idiom-phrase">hit the nail on the head</div>
+              <div class="idiom-meaning">to say exactly the right thing; to describe a problem perfectly</div>
+              <div class="idiom-ex">You hit the nail on the head — we lose because we never practise.</div>
+            </li>
+            <li class="idiom-row">
+              <div class="idiom-phrase">cost an arm and a leg</div>
+              <div class="idiom-meaning">to be very expensive</div>
+              <div class="idiom-ex">Those new trainers cost an arm and a leg.</div>
+            </li>
+            <li class="idiom-row">
+              <div class="idiom-phrase">get out of hand</div>
+              <div class="idiom-meaning">to become impossible to control</div>
+              <div class="idiom-ex">The party got out of hand when fifty strangers turned up.</div>
+            </li>
+            <li class="idiom-row">
+              <div class="idiom-phrase">pull someone’s leg</div>
+              <div class="idiom-meaning">to joke with someone by telling them something untrue</div>
+              <div class="idiom-ex">Relax, I’m pulling your leg — the test is next week.</div>
+            </li>
+            <li class="idiom-row">
+              <div class="idiom-phrase">break a leg!</div>
+              <div class="idiom-meaning">good luck! (said before a performance)</div>
+              <div class="idiom-ex">“It’s my first concert tonight.” — “Break a leg!”</div>
+            </li>
+            <li class="idiom-row">
+              <div class="idiom-phrase">be all thumbs</div>
+              <div class="idiom-meaning">to be clumsy with your hands</div>
+              <div class="idiom-ex">I’m all thumbs when it comes to sewing.</div>
+            </li>
+            <li class="idiom-row">
+              <div class="idiom-phrase">pay through the nose</div>
+              <div class="idiom-meaning">to pay far too much for something</div>
+              <div class="idiom-ex">We paid through the nose for tickets at the door.</div>
+            </li>
+            <li class="idiom-row">
+              <div class="idiom-phrase">get cold feet</div>
+              <div class="idiom-meaning">to become nervous and change your mind just before something important</div>
+              <div class="idiom-ex">He got cold feet and didn’t go on stage.</div>
+            </li>
+            <li class="idiom-row">
+              <div class="idiom-phrase">see eye to eye</div>
+              <div class="idiom-meaning">to agree with someone</div>
+              <div class="idiom-ex">My sister and I don’t see eye to eye about music.</div>
+            </li>
+          </ul>
+        </div>
+        <div class="idiom-group grp-animals">
+          <div class="grp-name"><span class="grp-emoji">🐾</span>ANIMALS</div>
+          <div class="grp-theme">animals behave badly — secrets escape, searches fail, the weather goes wild</div>
+          <ul>
+            <li class="idiom-row">
+              <div class="idiom-phrase">it’s raining cats and dogs</div>
+              <div class="idiom-meaning">it’s raining very heavily</div>
+              <div class="idiom-ex">Take an umbrella — it’s raining cats and dogs.</div>
+            </li>
+            <li class="idiom-row">
+              <div class="idiom-phrase">the elephant in the room</div>
+              <div class="idiom-meaning">an obvious problem that everyone avoids talking about</div>
+              <div class="idiom-ex">His bad marks were the elephant in the room at dinner.</div>
+            </li>
+            <li class="idiom-row">
+              <div class="idiom-phrase">let the cat out of the bag</div>
+              <div class="idiom-meaning">to tell a secret by accident</div>
+              <div class="idiom-ex">Mia let the cat out of the bag about the surprise party.</div>
+            </li>
+            <li class="idiom-row">
+              <div class="idiom-phrase">a wild goose chase</div>
+              <div class="idiom-meaning">a long, hopeless search for something you will never find</div>
+              <div class="idiom-ex">Looking for that shop was a wild goose chase — it closed years ago.</div>
+            </li>
+            <li class="idiom-row">
+              <div class="idiom-phrase">a lame duck</div>
+              <div class="idiom-meaning">a person or organisation that is weak and can’t manage without help; a leader whose time in office is ending</div>
+              <div class="idiom-ex">The club has become a lame duck since its best players left.</div>
+            </li>
+            <li class="idiom-row">
+              <div class="idiom-phrase">the black sheep</div>
+              <div class="idiom-meaning">the member of a family who is different or causes trouble — a colour idiom too!</div>
+              <div class="idiom-ex">My uncle is the black sheep of the family.</div>
+            </li>
+            <li class="idiom-row">
+              <div class="idiom-phrase">when pigs fly</div>
+              <div class="idiom-meaning">never — it will never happen</div>
+              <div class="idiom-ex">“Will he tidy his room?” — “Yes, when pigs fly.”</div>
+            </li>
+          </ul>
+        </div>
+        <div class="idiom-group grp-down">
+          <div class="grp-name"><span class="grp-emoji">⬇️</span>DOWN</div>
+          <div class="grp-theme">down = sad, wasted — or down to the basics</div>
+          <ul>
+            <li class="idiom-row">
+              <div class="idiom-phrase">be down in the dumps</div>
+              <div class="idiom-meaning">to feel sad and low</div>
+              <div class="idiom-ex">She’s been down in the dumps since her team lost.</div>
+            </li>
+            <li class="idiom-row">
+              <div class="idiom-phrase">go down the drain</div>
+              <div class="idiom-meaning">to be wasted; to be lost completely</div>
+              <div class="idiom-ex">All that work went down the drain when my laptop crashed.</div>
+            </li>
+            <li class="idiom-row">
+              <div class="idiom-phrase">get down to brass tacks</div>
+              <div class="idiom-meaning">to start talking about the most important, practical facts</div>
+              <div class="idiom-ex">Enough chatting — let’s get down to brass tacks.</div>
+            </li>
+            <li class="idiom-row">
+              <div class="idiom-phrase">down to earth</div>
+              <div class="idiom-meaning">practical, sensible and friendly; not proud</div>
+              <div class="idiom-ex">For a famous actor, she’s really down to earth.</div>
+            </li>
+            <li class="idiom-row">
+              <div class="idiom-phrase">let someone down</div>
+              <div class="idiom-meaning">to disappoint someone by not doing what they hoped</div>
+              <div class="idiom-ex">I promised to help, and I won’t let you down.</div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- EX 1: matching (olympiad corpus Task 9) -->
+    <div class="exercise" id="ex1-match">
+      <div class="exercise-label">Exercise 1 — Task 9</div>
+      <h3 class="big-instr">🔗 Match the following phrases with their definitions.</h3>
+      <p class="lead-instr">
+        Click a phrase on the left, then its definition on the right. A correct definition moves up so it sits <b>next to its phrase</b>.
+      </p>
+
+      <div class="match-grid rows" data-align="true">
+        <div class="match-col" data-side="left">
+          <div class="match-item" data-pair="1" onclick="selectMatch(this,'ex1-match')"><span class="m-key">1</span>a finger in every pie</div>
+          <div class="match-item" data-pair="2" onclick="selectMatch(this,'ex1-match')"><span class="m-key">2</span>all mouth and no trousers</div>
+          <div class="match-item" data-pair="3" onclick="selectMatch(this,'ex1-match')"><span class="m-key">3</span>all over (someone’s) face</div>
+          <div class="match-item" data-pair="4" onclick="selectMatch(this,'ex1-match')"><span class="m-key">4</span>all thumbs</div>
+          <div class="match-item" data-pair="5" onclick="selectMatch(this,'ex1-match')"><span class="m-key">5</span>Break a leg!</div>
+          <div class="match-item" data-pair="6" onclick="selectMatch(this,'ex1-match')"><span class="m-key">6</span>get (your) eye in</div>
+          <div class="match-item" data-pair="7" onclick="selectMatch(this,'ex1-match')"><span class="m-key">7</span>get one’s fingers burned</div>
+          <div class="match-item" data-pair="8" onclick="selectMatch(this,'ex1-match')"><span class="m-key">8</span>have two left feet</div>
+          <div class="match-item" data-pair="9" onclick="selectMatch(this,'ex1-match')"><span class="m-key">9</span>in the country of the blind, the one-eyed man is king</div>
+          <div class="match-item" data-pair="10" onclick="selectMatch(this,'ex1-match')"><span class="m-key">10</span>on the long finger</div>
+        </div>
+        <div class="match-col" data-side="right">
+          <div class="match-item" data-pair="4" onclick="selectMatch(this,'ex1-match')"><span class="m-key">A</span>very awkward</div>
+          <div class="match-item" data-pair="6" onclick="selectMatch(this,'ex1-match')"><span class="m-key">B</span>to become very good at a sport</div>
+          <div class="match-item" data-pair="7" onclick="selectMatch(this,'ex1-match')"><span class="m-key">C</span>to be punished</div>
+          <div class="match-item" data-pair="1" onclick="selectMatch(this,'ex1-match')"><span class="m-key">D</span>involved in different activities; too powerful</div>
+          <div class="match-item" data-pair="9" onclick="selectMatch(this,'ex1-match')"><span class="m-key">E</span>when people with few skills can be successful just because others have none at all</div>
+          <div class="match-item" data-pair="3" onclick="selectMatch(this,'ex1-match')"><span class="m-key">F</span>showing your emotions and thoughts by your expression</div>
+          <div class="match-item" data-pair="10" onclick="selectMatch(this,'ex1-match')"><span class="m-key">G</span>being postponed</div>
+          <div class="match-item" data-pair="5" onclick="selectMatch(this,'ex1-match')"><span class="m-key">H</span>when you wish someone good luck</div>
+          <div class="match-item" data-pair="2" onclick="selectMatch(this,'ex1-match')"><span class="m-key">I</span>full of boastful talk</div>
+          <div class="match-item" data-pair="8" onclick="selectMatch(this,'ex1-match')"><span class="m-key">J</span>to move awkwardly when dancing</div>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-ghost" onclick="resetMatchEx('ex1-match')">Reset</button>
+      </div>
+
+      <details class="answer-key">
+        <summary>🔑 Answer key</summary>
+        <table class="key-table">
+          <tbody>
+            <tr><td class="key-num">1</td><td class="key-idiom">a finger in every pie</td><td class="key-letter">D</td><td>involved in different activities; too powerful</td></tr>
+            <tr><td class="key-num">2</td><td class="key-idiom">all mouth and no trousers</td><td class="key-letter">I</td><td>full of boastful talk</td></tr>
+            <tr><td class="key-num">3</td><td class="key-idiom">all over (someone’s) face</td><td class="key-letter">F</td><td>showing your emotions and thoughts by your expression</td></tr>
+            <tr><td class="key-num">4</td><td class="key-idiom">all thumbs</td><td class="key-letter">A</td><td>very awkward</td></tr>
+            <tr><td class="key-num">5</td><td class="key-idiom">Break a leg!</td><td class="key-letter">H</td><td>when you wish someone good luck</td></tr>
+            <tr><td class="key-num">6</td><td class="key-idiom">get (your) eye in</td><td class="key-letter">B</td><td>to become very good at a sport</td></tr>
+            <tr><td class="key-num">7</td><td class="key-idiom">get one’s fingers burned</td><td class="key-letter">C</td><td>to be punished</td></tr>
+            <tr><td class="key-num">8</td><td class="key-idiom">have two left feet</td><td class="key-letter">J</td><td>to move awkwardly when dancing</td></tr>
+            <tr><td class="key-num">9</td><td class="key-idiom">in the country of the blind, the one-eyed man is king</td><td class="key-letter">E</td><td>when people with few skills can be successful just because others have none at all</td></tr>
+            <tr><td class="key-num">10</td><td class="key-idiom">on the long finger</td><td class="key-letter">G</td><td>being postponed</td></tr>
+          </tbody>
+        </table>
+      </details>
+    </div>
+
+    <!-- EX 2: crossword (olympiad corpus Task 26) -->
+    <div class="exercise" id="ex2-cw">
+      <div class="exercise-label">Exercise 2 — Task 26</div>
+      <h3 class="big-instr">🧩 Complete the crossword.</h3>
+      <p class="lead-instr">
+        Every answer is a <b>part of the body</b>. Two of them are the same word.
+      </p>
+
+      <div class="cw-wrap">
+        <div class="cw-grid">
+        <div class="cw-row" data-answer="LEG"><span class="cw-num">1</span><input class="cw-cell" id="cw-1-1" maxlength="1" autocomplete="off" oninput="cwAdvance(this)" onkeydown="cwKey(event,this)"><input class="cw-cell" id="cw-1-2" maxlength="1" autocomplete="off" oninput="cwAdvance(this)" onkeydown="cwKey(event,this)"><input class="cw-cell" id="cw-1-3" maxlength="1" autocomplete="off" oninput="cwAdvance(this)" onkeydown="cwKey(event,this)"></div>
+        <div class="cw-row" data-answer="LEG"><span class="cw-num">2</span><input class="cw-cell" id="cw-2-1" maxlength="1" autocomplete="off" oninput="cwAdvance(this)" onkeydown="cwKey(event,this)"><input class="cw-cell" id="cw-2-2" maxlength="1" autocomplete="off" oninput="cwAdvance(this)" onkeydown="cwKey(event,this)"><input class="cw-cell" id="cw-2-3" maxlength="1" autocomplete="off" oninput="cwAdvance(this)" onkeydown="cwKey(event,this)"></div>
+        <div class="cw-row" data-answer="BACK"><span class="cw-num">3</span><input class="cw-cell" id="cw-3-1" maxlength="1" autocomplete="off" oninput="cwAdvance(this)" onkeydown="cwKey(event,this)"><input class="cw-cell" id="cw-3-2" maxlength="1" autocomplete="off" oninput="cwAdvance(this)" onkeydown="cwKey(event,this)"><input class="cw-cell" id="cw-3-3" maxlength="1" autocomplete="off" oninput="cwAdvance(this)" onkeydown="cwKey(event,this)"><input class="cw-cell" id="cw-3-4" maxlength="1" autocomplete="off" oninput="cwAdvance(this)" onkeydown="cwKey(event,this)"></div>
+        <div class="cw-row" data-answer="NOSE"><span class="cw-num">4</span><input class="cw-cell" id="cw-4-1" maxlength="1" autocomplete="off" oninput="cwAdvance(this)" onkeydown="cwKey(event,this)"><input class="cw-cell" id="cw-4-2" maxlength="1" autocomplete="off" oninput="cwAdvance(this)" onkeydown="cwKey(event,this)"><input class="cw-cell" id="cw-4-3" maxlength="1" autocomplete="off" oninput="cwAdvance(this)" onkeydown="cwKey(event,this)"><input class="cw-cell" id="cw-4-4" maxlength="1" autocomplete="off" oninput="cwAdvance(this)" onkeydown="cwKey(event,this)"></div>
+        <div class="cw-row" data-answer="NECK"><span class="cw-num">5</span><input class="cw-cell" id="cw-5-1" maxlength="1" autocomplete="off" oninput="cwAdvance(this)" onkeydown="cwKey(event,this)"><input class="cw-cell" id="cw-5-2" maxlength="1" autocomplete="off" oninput="cwAdvance(this)" onkeydown="cwKey(event,this)"><input class="cw-cell" id="cw-5-3" maxlength="1" autocomplete="off" oninput="cwAdvance(this)" onkeydown="cwKey(event,this)"><input class="cw-cell" id="cw-5-4" maxlength="1" autocomplete="off" oninput="cwAdvance(this)" onkeydown="cwKey(event,this)"></div>
+        <div class="cw-row" data-answer="HEAD"><span class="cw-num">6</span><input class="cw-cell" id="cw-6-1" maxlength="1" autocomplete="off" oninput="cwAdvance(this)" onkeydown="cwKey(event,this)"><input class="cw-cell" id="cw-6-2" maxlength="1" autocomplete="off" oninput="cwAdvance(this)" onkeydown="cwKey(event,this)"><input class="cw-cell" id="cw-6-3" maxlength="1" autocomplete="off" oninput="cwAdvance(this)" onkeydown="cwKey(event,this)"><input class="cw-cell" id="cw-6-4" maxlength="1" autocomplete="off" oninput="cwAdvance(this)" onkeydown="cwKey(event,this)"></div>
+        <div class="cw-row" data-answer="TOES"><span class="cw-num">7</span><input class="cw-cell" id="cw-7-1" maxlength="1" autocomplete="off" oninput="cwAdvance(this)" onkeydown="cwKey(event,this)"><input class="cw-cell" id="cw-7-2" maxlength="1" autocomplete="off" oninput="cwAdvance(this)" onkeydown="cwKey(event,this)"><input class="cw-cell" id="cw-7-3" maxlength="1" autocomplete="off" oninput="cwAdvance(this)" onkeydown="cwKey(event,this)"><input class="cw-cell" id="cw-7-4" maxlength="1" autocomplete="off" oninput="cwAdvance(this)" onkeydown="cwKey(event,this)"></div>
+        <div class="cw-row" data-answer="MOUTH"><span class="cw-num">8</span><input class="cw-cell" id="cw-8-1" maxlength="1" autocomplete="off" oninput="cwAdvance(this)" onkeydown="cwKey(event,this)"><input class="cw-cell" id="cw-8-2" maxlength="1" autocomplete="off" oninput="cwAdvance(this)" onkeydown="cwKey(event,this)"><input class="cw-cell" id="cw-8-3" maxlength="1" autocomplete="off" oninput="cwAdvance(this)" onkeydown="cwKey(event,this)"><input class="cw-cell" id="cw-8-4" maxlength="1" autocomplete="off" oninput="cwAdvance(this)" onkeydown="cwKey(event,this)"><input class="cw-cell" id="cw-8-5" maxlength="1" autocomplete="off" oninput="cwAdvance(this)" onkeydown="cwKey(event,this)"></div>
+        <div class="cw-row" data-answer="THUMBS"><span class="cw-num">9</span><input class="cw-cell" id="cw-9-1" maxlength="1" autocomplete="off" oninput="cwAdvance(this)" onkeydown="cwKey(event,this)"><input class="cw-cell" id="cw-9-2" maxlength="1" autocomplete="off" oninput="cwAdvance(this)" onkeydown="cwKey(event,this)"><input class="cw-cell" id="cw-9-3" maxlength="1" autocomplete="off" oninput="cwAdvance(this)" onkeydown="cwKey(event,this)"><input class="cw-cell" id="cw-9-4" maxlength="1" autocomplete="off" oninput="cwAdvance(this)" onkeydown="cwKey(event,this)"><input class="cw-cell" id="cw-9-5" maxlength="1" autocomplete="off" oninput="cwAdvance(this)" onkeydown="cwKey(event,this)"><input class="cw-cell" id="cw-9-6" maxlength="1" autocomplete="off" oninput="cwAdvance(this)" onkeydown="cwKey(event,this)"></div>
+        <div class="cw-row" data-answer="FINGER"><span class="cw-num">10</span><input class="cw-cell" id="cw-10-1" maxlength="1" autocomplete="off" oninput="cwAdvance(this)" onkeydown="cwKey(event,this)"><input class="cw-cell" id="cw-10-2" maxlength="1" autocomplete="off" oninput="cwAdvance(this)" onkeydown="cwKey(event,this)"><input class="cw-cell" id="cw-10-3" maxlength="1" autocomplete="off" oninput="cwAdvance(this)" onkeydown="cwKey(event,this)"><input class="cw-cell" id="cw-10-4" maxlength="1" autocomplete="off" oninput="cwAdvance(this)" onkeydown="cwKey(event,this)"><input class="cw-cell" id="cw-10-5" maxlength="1" autocomplete="off" oninput="cwAdvance(this)" onkeydown="cwKey(event,this)"><input class="cw-cell" id="cw-10-6" maxlength="1" autocomplete="off" oninput="cwAdvance(this)" onkeydown="cwKey(event,this)"></div>
+        </div>
+        <ol class="cw-clues">
+        <li><b>1</b> “PULL SOMEONE’S ___” / fool somebody <span class="cw-len">(3)</span></li>
+        <li><b>2</b> “SHAKE A ___” / hurry <span class="cw-len">(3)</span></li>
+        <li><b>3</b> “GET OFF SOMEONE’S ___” / stop bothering somebody <span class="cw-len">(4)</span></li>
+        <li><b>4</b> “PAY THROUGH THE ___” / pay too much <span class="cw-len">(4)</span></li>
+        <li><b>5</b> “PUT YOUR ___ ON THE LINE” / risk <span class="cw-len">(4)</span></li>
+        <li><b>6</b> “___ FAKE” / fake movement <span class="cw-len">(4)</span></li>
+        <li><b>7</b> “STEP ON SOMEONE’S ___” / compete <span class="cw-len">(4)</span></li>
+        <li><b>8</b> “FROM THE HORSE’S ___” / from a trustworthy source <span class="cw-len">(5)</span></li>
+        <li><b>9</b> “ALL ___” / clumsy <span class="cw-len">(6)</span></li>
+        <li><b>10</b> “FAT ___” / press the wrong button (using a keyboard) <span class="cw-len">(6)</span></li>
+        </ol>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="checkCrossword('ex2-cw')">Check ✓</button>
+        <button class="btn btn-ghost"   onclick="resetCrossword('ex2-cw')">Try again</button>
+      </div>
+    </div>
+
+    <!-- EX 3: describe three people -->
+    <div class="exercise" id="ex3-people">
+      <div class="exercise-label">Exercise 3 — Three People</div>
+      <h3 class="big-instr">👥 Describe three people you know.</h3>
+      <p class="lead-instr">
+        Use <b>at least two idioms</b> from this lesson for each person, and give a real example of what they do. Write notes first, then tell your teacher about them.
+      </p>
+
+      <p style="font-weight:600; margin:14px 0 4px;">Idiom bank — tap each one you use:</p>
+      <div class="phrase-bank" id="bank-people" data-count="peopleCount">
+        <button class="phrase-chip" data-p="all thumbs" onclick="togglePhrase(this)">all thumbs</button>
+        <button class="phrase-chip" data-p="two left feet" onclick="togglePhrase(this)">two left feet</button>
+        <button class="phrase-chip" data-p="a finger in every pie" onclick="togglePhrase(this)">a finger in every pie</button>
+        <button class="phrase-chip" data-p="all mouth and no trousers" onclick="togglePhrase(this)">all mouth and no trousers</button>
+        <button class="phrase-chip" data-p="pull someone’s leg" onclick="togglePhrase(this)">pull someone’s leg</button>
+        <button class="phrase-chip" data-p="hit the nail on the head" onclick="togglePhrase(this)">hit the nail on the head</button>
+        <button class="phrase-chip" data-p="get cold feet" onclick="togglePhrase(this)">get cold feet</button>
+        <button class="phrase-chip" data-p="see eye to eye" onclick="togglePhrase(this)">see eye to eye</button>
+        <button class="phrase-chip" data-p="the black sheep" onclick="togglePhrase(this)">the black sheep</button>
+        <button class="phrase-chip" data-p="a lame duck" onclick="togglePhrase(this)">a lame duck</button>
+        <button class="phrase-chip" data-p="let the cat out of the bag" onclick="togglePhrase(this)">let the cat out of the bag</button>
+        <button class="phrase-chip" data-p="down in the dumps" onclick="togglePhrase(this)">down in the dumps</button>
+        <button class="phrase-chip" data-p="down to earth" onclick="togglePhrase(this)">down to earth</button>
+        <button class="phrase-chip" data-p="let someone down" onclick="togglePhrase(this)">let someone down</button>
+        <button class="phrase-chip" data-p="get down to brass tacks" onclick="togglePhrase(this)">get down to brass tacks</button>
+      </div>
+      <p class="phrase-count">Used: <b id="peopleCount">0</b> / 6 needed</p>
+
+      <div class="person-grid">
+        <div class="person-card">
+          <span class="person-label">Person 1</span>
+          <h4>Someone in your family</h4>
+          <textarea class="free-write" id="fw-person-1" placeholder="My … is all thumbs — last week he…"></textarea>
+        </div>
+        <div class="person-card">
+          <span class="person-label">Person 2</span>
+          <h4>A friend or classmate</h4>
+          <textarea class="free-write" id="fw-person-2" placeholder="My friend … has a finger in every pie…"></textarea>
+        </div>
+        <div class="person-card">
+          <span class="person-label">Person 3</span>
+          <h4>A teacher, coach or neighbour</h4>
+          <textarea class="free-write" id="fw-person-3" placeholder="Our coach is really down to earth…"></textarea>
+        </div>
+      </div>
+
+      <details class="model" style="margin-top:14px;"><summary>Example</summary>
+        <div class="model-body">My uncle Misha is the black sheep of our family, but he's really down to earth. He's also all thumbs — last summer he tried to fix our fence and it fell down the next day. He loves pulling my leg: once he told me our cat could speak French, and I believed him!</div>
+      </details>
+    </div>
+
+    <!-- EX 4: colour idioms recycled -->
+    <div class="exercise" id="ex4-mix">
+      <div class="exercise-label">Exercise 4 — Colours Come Back</div>
+      <h3 class="big-instr">🎨 Colour, body or animal?</h3>
+      <p class="lead-instr">
+        Complete each sentence with an idiom from the box. Four are <b>colour idioms</b> from Lesson 5, four are from today, and <b>two are not needed</b>. Click one to cross it out.
+      </p>
+
+      <div class="hw-box" id="mix-box" title="Click a phrase to cross it out">
+        <span onclick="toggleHwBox(this)">the black sheep</span>
+        <span onclick="toggleHwBox(this)">saw red</span>
+        <span onclick="toggleHwBox(this)">a white lie</span>
+        <span onclick="toggleHwBox(this)">red tape</span>
+        <span onclick="toggleHwBox(this)">once in a blue moon</span>
+        <span onclick="toggleHwBox(this)">cost an arm and a leg</span>
+        <span onclick="toggleHwBox(this)">pulling your leg</span>
+        <span onclick="toggleHwBox(this)">let the cat out of the bag</span>
+        <span onclick="toggleHwBox(this)">the elephant in the room</span>
+        <span onclick="toggleHwBox(this)">all thumbs</span>
+      </div>
+
+      <div class="gap-list">
+        <div class="gap-row"><span class="gap-num">1</span><p class="gap-text">The concert tickets <input class="blank" id="mx-1" data-answer="cost an arm and a leg"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button>, but for a huge fan like me it was a real red letter day.</p></div>
+        <div class="gap-row"><span class="gap-num">2</span><p class="gap-text">When my little brother let the cat out of the bag about the broken vase, Mum <input class="blank" id="mx-2" data-answer="saw red"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button>.</p></div>
+        <div class="gap-row"><span class="gap-num">3</span><p class="gap-text">I told Grandma <input class="blank" id="mx-3" data-answer="a white lie"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button> and said I loved her cabbage soup — the truth would have hurt her feelings.</p></div>
+        <div class="gap-row"><span class="gap-num">4</span><p class="gap-text">Getting the visa took five months because of all the <input class="blank" id="mx-4" data-answer="red tape"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button> — it was a wild goose chase from one office to another.</p></div>
+        <div class="gap-row"><span class="gap-num">5</span><p class="gap-text">Nobody at dinner mentioned Dad losing his job. It was <input class="blank" id="mx-5" data-answer="the elephant in the room"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button>, and we all felt blue for the rest of the evening.</p></div>
+        <div class="gap-row"><span class="gap-num">6</span><p class="gap-text">Relax, there’s no test tomorrow — I’m just <input class="blank" id="mx-6" data-answer="pulling your leg"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button>!</p></div>
+        <div class="gap-row"><span class="gap-num">7</span><p class="gap-text">Mia <input class="blank" id="mx-7" data-answer="let the cat out of the bag"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button> about the surprise party, so Tom’s red letter day wasn’t a surprise at all.</p></div>
+        <div class="gap-row"><span class="gap-num">8</span><p class="gap-text">My cousin has always been <input class="blank" id="mx-8" data-answer="the black sheep"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button> of the family — but he’s the only one who has never been in the red.</p></div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="checkBlanks('ex4-mix')">Check ✓</button>
+        <button class="btn btn-ghost"   onclick="resetBlanks('ex4-mix')">Try again</button>
+      </div>
+    </div>
+
+  </div><!-- /tab-p1 -->
+
+  <!-- ══════════════════════════════════════════════════════
+       PART 2 — REPORTED SPEECH (Gateway B2, Unit 7)
+  ══════════════════════════════════════════════════════ -->
+  <div class="tab-content" id="tab-p2">
+
+    <!-- flipped classroom video -->
+    <div class="exercise" id="rs-video">
+      <div class="exercise-label">Flipped Classroom Video</div>
+      <div class="flip-box">
+        <div class="flip-title">▶ Watch the Grammar Presentation video</div>
+        <div class="flip-sub">Reported speech — statements and questions. Watch it before you start the exercises.</div>
+        <video controls preload="metadata">
+          <source src="video/reported-speech-flipped.mp4" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
+      </div>
+    </div>
+
+    <!-- EX 1: statements — discover the rules -->
+    <div class="exercise" id="rs1">
+      <div class="exercise-label">Exercise 1 — Reported Speech: Statements</div>
+      <h3 class="big-instr">🔍 Look at the sentences and answer the questions below.</h3>
+
+      <div class="src-sentences">
+        <div class="src-row"><span class="gap-num">1a</span><p>She said: ‘I’m on the lookout for something to read.’</p></div>
+        <div class="src-row pair-end"><span class="gap-num">1b</span><p>She said that she was on the lookout for something to read.</p></div>
+        <div class="src-row"><span class="gap-num">2a</span><p>He told the journalist: ‘It was the challenge of writing a story that could be read between two stations.’</p></div>
+        <div class="src-row pair-end"><span class="gap-num">2b</span><p>He told the journalist that it had been the challenge of writing a story that could be read between two stations.</p></div>
+        <div class="src-row"><span class="gap-num">3a</span><p>She said: ‘I’ll try this story on my teenage kids.’</p></div>
+        <div class="src-row pair-end"><span class="gap-num">3b</span><p>She said she would try that story on her teenage kids.</p></div>
+      </div>
+
+      <div class="rs1-questions">
+        <div class="src-row"><span class="gap-num">a</span><p>How do tenses usually change when we go from direct to reported speech?</p></div>
+        <div class="src-row"><span class="gap-num">b</span><p>What do you think <em>could, would, should, might</em>, the past perfect, infinitives and gerunds all have in common when they go from direct to reported speech?</p></div>
+        <div class="src-row"><span class="gap-num">c</span><p>Do you think tenses change when the reporting verb is in the present or present perfect (e.g. <em>He says, He has said</em>)?</p></div>
+        <div class="src-row"><span class="gap-num">d</span><p>Apart from the tense, what words change when we put sentence 3a into reported speech?</p></div>
+        <div class="src-row"><span class="gap-num">e</span><p>What is the difference between <em>say</em> and <em>tell</em>?</p></div>
+        <div class="src-row"><span class="gap-num">f</span><p>Do we always need to use <em>that</em> after <em>say</em> or <em>tell</em>?</p></div>
+      </div>
+
+      <details class="answer-key">
+        <summary>🔑 Answers</summary>
+        <div class="model-body">
+          <p><b>a</b> They usually go <b>one step back</b> into the past: present simple → past simple, present continuous → past continuous, past simple / present perfect → past perfect, <em>will</em> → <em>would</em>, <em>can</em> → <em>could</em>. <em>I’m on the lookout</em> → <em>she was on the lookout</em>.</p>
+          <p><b>b</b> They <b>don’t change</b>. There is nowhere further back for them to go.</p>
+          <p><b>c</b> <b>No.</b> <em>James says he loves listening to hip-hop.</em> — the situation is still true now, so the tense stays.</p>
+          <p><b>d</b> The <b>pronouns and possessives</b> (<em>I</em> → <em>she</em>, <em>my</em> → <em>her</em>) and <b>this</b> → <b>that</b>.</p>
+          <p><b>e</b> <b>tell</b> needs a person straight after it: <em>He told <u>the journalist</u> that…</em> <b>say</b> doesn’t: <em>She said that…</em> (or <em>said <u>to</u> me</em>).</p>
+          <p><b>f</b> <b>No</b> — <em>that</em> is optional. <em>She said (that) she would try that story.</em></p>
+        </div>
+      </details>
+
+    </div>
+
+    <!-- EX 2: time and place words -->
+    <div class="exercise" id="rs2">
+      <div class="exercise-label">Exercise 2 — Words That Change</div>
+      <h3 class="big-instr">🕰️ How do these words change when they go from direct to reported speech?</h3>
+
+      <div class="shift-grid">
+          <div class="shift-row"><span class="shift-from">a week ago</span><span class="shift-arrow">→</span><span class="shift-to"><input class="blank" id="rs2-1" data-answer="a week before|a week earlier|the week before"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button></span></div>
+          <div class="shift-row"><span class="shift-from">here</span><span class="shift-arrow">→</span><span class="shift-to"><input class="blank" id="rs2-2" data-answer="there"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button></span></div>
+          <div class="shift-row"><span class="shift-from">last month</span><span class="shift-arrow">→</span><span class="shift-to"><input class="blank" id="rs2-3" data-answer="the month before|the previous month"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button></span></div>
+          <div class="shift-row"><span class="shift-from">next year</span><span class="shift-arrow">→</span><span class="shift-to"><input class="blank" id="rs2-4" data-answer="the year after|the following year|the next year"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button></span></div>
+          <div class="shift-row"><span class="shift-from">now</span><span class="shift-arrow">→</span><span class="shift-to"><input class="blank" id="rs2-5" data-answer="then|at that time|at that moment"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button></span></div>
+          <div class="shift-row"><span class="shift-from">these</span><span class="shift-arrow">→</span><span class="shift-to"><input class="blank" id="rs2-6" data-answer="those"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button></span></div>
+          <div class="shift-row"><span class="shift-from">this</span><span class="shift-arrow">→</span><span class="shift-to"><input class="blank" id="rs2-7" data-answer="that"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button></span></div>
+          <div class="shift-row"><span class="shift-from">today</span><span class="shift-arrow">→</span><span class="shift-to"><input class="blank" id="rs2-8" data-answer="that day"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button></span></div>
+          <div class="shift-row"><span class="shift-from">tomorrow</span><span class="shift-arrow">→</span><span class="shift-to"><input class="blank" id="rs2-9" data-answer="the next day|the following day|the day after"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button></span></div>
+          <div class="shift-row"><span class="shift-from">tonight</span><span class="shift-arrow">→</span><span class="shift-to"><input class="blank" id="rs2-10" data-answer="that night"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button></span></div>
+          <div class="shift-row"><span class="shift-from">yesterday</span><span class="shift-arrow">→</span><span class="shift-to"><input class="blank" id="rs2-11" data-answer="the day before|the previous day"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button></span></div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="checkBlanks('rs2')">Check ✓</button>
+        <button class="btn btn-ghost"   onclick="resetBlanks('rs2')">Try again</button>
+      </div>
+    </div>
+
+    <!-- EX 3: said or told -->
+    <div class="exercise" id="rs3">
+      <div class="exercise-label">Exercise 3 — Said or Told?</div>
+      <h3 class="big-instr">✏️ Complete the sentences with <em>said</em> or <em>told</em>.</h3>
+
+      <div class="gap-list">
+        <div class="gap-row"><span class="gap-num">1</span><p class="gap-text">She <input class="blank short" id="rs3-1" data-answer="told"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button> me she might buy tickets for the gig that weekend.</p></div>
+        <div class="gap-row"><span class="gap-num">2</span><p class="gap-text">They <input class="blank short" id="rs3-2" data-answer="said"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button> they’d been waiting there for ages.</p></div>
+        <div class="gap-row"><span class="gap-num">3</span><p class="gap-text">She <input class="blank short" id="rs3-3" data-answer="said"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button> she hadn’t seen the film the day before.</p></div>
+        <div class="gap-row"><span class="gap-num">4</span><p class="gap-text">They <input class="blank short" id="rs3-4" data-answer="said"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button> the lyrics of their songs weren’t very important.</p></div>
+        <div class="gap-row"><span class="gap-num">5</span><p class="gap-text">We <input class="blank short" id="rs3-5" data-answer="told"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button> Amy that we’d go to the concert with her that night.</p></div>
+        <div class="gap-row"><span class="gap-num">6</span><p class="gap-text">He <input class="blank short" id="rs3-6" data-answer="told"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button> her the music festival was the following month.</p></div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="checkBlanks('rs3')">Check ✓</button>
+        <button class="btn btn-ghost"   onclick="resetBlanks('rs3')">Try again</button>
+      </div>
+    </div>
+
+    <!-- EX 4: back to direct speech -->
+    <div class="exercise" id="rs4">
+      <div class="exercise-label">Exercise 4 — Back to Direct Speech</div>
+      <h3 class="big-instr">💬 Write the sentences in Exercise 3 in direct speech.</h3>
+      <p class="lead-instr">Work backwards: move the tenses <b>forward</b> and change <em>that weekend</em>, <em>there</em> and <em>the day before</em> back.</p>
+
+        <div class="fact-item">
+          <div class="fact-head"><span class="gap-num">1</span><p class="fact-text">She <span class="sv-slot">said / told</span> me she might buy tickets for the gig that weekend.</p></div>
+          <div class="fact-body">
+            <textarea class="free-write short" id="fw-rs4-1" placeholder="‘…’" rows="1"></textarea>
+            <details class="model"><summary>Model</summary><div class="model-body">‘I might buy tickets for the gig this weekend.’</div></details>
+          </div>
+        </div>
+        <div class="fact-item">
+          <div class="fact-head"><span class="gap-num">2</span><p class="fact-text">They <span class="sv-slot">said / told</span> they’d been waiting there for ages.</p></div>
+          <div class="fact-body">
+            <textarea class="free-write short" id="fw-rs4-2" placeholder="‘…’" rows="1"></textarea>
+            <details class="model"><summary>Model</summary><div class="model-body">‘We’ve been waiting here for ages.’</div></details>
+          </div>
+        </div>
+        <div class="fact-item">
+          <div class="fact-head"><span class="gap-num">3</span><p class="fact-text">She <span class="sv-slot">said / told</span> she hadn’t seen the film the day before.</p></div>
+          <div class="fact-body">
+            <textarea class="free-write short" id="fw-rs4-3" placeholder="‘…’" rows="1"></textarea>
+            <details class="model"><summary>Model</summary><div class="model-body">‘I didn’t see the film yesterday.’ / ‘I haven’t seen the film.’</div></details>
+          </div>
+        </div>
+        <div class="fact-item">
+          <div class="fact-head"><span class="gap-num">4</span><p class="fact-text">They <span class="sv-slot">said / told</span> the lyrics of their songs weren’t very important.</p></div>
+          <div class="fact-body">
+            <textarea class="free-write short" id="fw-rs4-4" placeholder="‘…’" rows="1"></textarea>
+            <details class="model"><summary>Model</summary><div class="model-body">‘The lyrics of our songs aren’t very important.’</div></details>
+          </div>
+        </div>
+        <div class="fact-item">
+          <div class="fact-head"><span class="gap-num">5</span><p class="fact-text">We <span class="sv-slot">said / told</span> Amy that we’d go to the concert with her that night.</p></div>
+          <div class="fact-body">
+            <textarea class="free-write short" id="fw-rs4-5" placeholder="‘…’" rows="1"></textarea>
+            <details class="model"><summary>Model</summary><div class="model-body">‘We’ll go to the concert with you tonight, Amy.’</div></details>
+          </div>
+        </div>
+        <div class="fact-item">
+          <div class="fact-head"><span class="gap-num">6</span><p class="fact-text">He <span class="sv-slot">said / told</span> her the music festival was the following month.</p></div>
+          <div class="fact-body">
+            <textarea class="free-write short" id="fw-rs4-6" placeholder="‘…’" rows="1"></textarea>
+            <details class="model"><summary>Model</summary><div class="model-body">‘The music festival is next month.’</div></details>
+          </div>
+        </div>
+    </div>
+
+    <!-- EX 5: direct → reported -->
+    <div class="exercise" id="rs5">
+      <div class="exercise-label">Exercise 5 — Direct → Reported</div>
+      <h3 class="big-instr">🔁 Put the sentences in direct speech into reported speech.</h3>
+      <p class="lead-instr">Finish each sentence. <em>that</em> is optional, and you can leave out the full stop.</p>
+
+        <div class="rep-item">
+          <div class="fact-head"><span class="gap-num">1</span><p class="rep-direct">‘These papers are yours, Oliver.’</p></div>
+          <p class="rep-line"><span class="rep-lead">Angela told</span> <input class="blank rep-blank" id="rs5-1" data-answer="Oliver [that ]those papers were his"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button></p>
+          <details class="model"><summary>Show answer</summary><div class="model-body">Angela told Oliver (that) those papers were his.</div></details>
+        </div>
+        <div class="rep-item">
+          <div class="fact-head"><span class="gap-num">2</span><p class="rep-direct">‘I’m going to start writing a short story next week.’</p></div>
+          <p class="rep-line"><span class="rep-lead">Simon said</span> <input class="blank rep-blank" id="rs5-2" data-answer="[that ]he was going to start writing a short story {the following week/the next week/the week after}"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button></p>
+          <details class="model"><summary>Show answer</summary><div class="model-body">Simon said (that) he was going to start writing a short story the following week.</div></details>
+        </div>
+        <div class="rep-item">
+          <div class="fact-head"><span class="gap-num">3</span><p class="rep-direct">‘The crowd went mad when I played this song last night.’</p></div>
+          <p class="rep-line"><span class="rep-lead">Mikey said</span> <input class="blank rep-blank" id="rs5-3" data-answer="[that ]the crowd {had gone/went} mad when he {had played/played} {that/the} song {the night before/the previous night}"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button></p>
+          <details class="model"><summary>Show answer</summary><div class="model-body">Mikey said (that) the crowd had gone mad when he had played that song the night before.</div></details>
+        </div>
+        <div class="rep-item">
+          <div class="fact-head"><span class="gap-num">4</span><p class="rep-direct">‘I might see you tomorrow but I’ll tell you tonight, Ella.’</p></div>
+          <p class="rep-line"><span class="rep-lead">Dan told</span> <input class="blank rep-blank" id="rs5-4" data-answer="Ella [that ]he might see her {the next day/the following day/the day after} but {he would/he’d} tell her that night"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button></p>
+          <details class="model"><summary>Show answer</summary><div class="model-body">Dan told Ella (that) he might see her the next day but he would tell her that night.</div></details>
+        </div>
+        <div class="rep-item">
+          <div class="fact-head"><span class="gap-num">5</span><p class="rep-direct">‘I love listening to hip-hop records.’</p></div>
+          <p class="rep-line"><span class="rep-lead">James says</span> <input class="blank rep-blank" id="rs5-5" data-answer="[that ]he loves listening to {hip-hop/hip hop} records"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button></p>
+          <details class="model"><summary>Show answer</summary><div class="model-body">James says (that) he loves listening to hip-hop records. <em>— present reporting verb, so no change!</em></div></details>
+        </div>
+        <div class="rep-item">
+          <div class="fact-head"><span class="gap-num">6</span><p class="rep-direct">‘We must finish this before we can leave, Luke.’</p></div>
+          <p class="rep-line"><span class="rep-lead">Jenny told</span> <input class="blank rep-blank" id="rs5-6" data-answer="Luke [that ]they {had to/must} finish {that/it} before they could leave"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button></p>
+          <details class="model"><summary>Show answer</summary><div class="model-body">Jenny told Luke (that) they had to finish that before they could leave.</div></details>
+        </div>
+
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="checkBlanks('rs5')">Check ✓</button>
+        <button class="btn btn-ghost"   onclick="resetBlanks('rs5')">Try again</button>
+      </div>
+    </div>
+
+    <!-- EX 6: famous people -->
+    <div class="exercise" id="rs6">
+      <div class="exercise-label">Exercise 6</div>
+      <h3 class="big-instr">⭐ What have famous people said recently?</h3>
+      <p class="lead-instr">
+        <b>6a</b> Using reported speech, write down five things that famous people have said recently. They can be actors, singers, sports stars, etc.<br>
+        <b>6b</b> 🗣️ <b>Speaking</b> — tell your teacher two interesting things you wrote down.
+      </p>
+      <div class="q-inputs">
+        <div class="src-row"><span class="gap-num">1</span><textarea class="free-write" id="fw-rs6-1" rows="1" placeholder="… said that …"></textarea></div>
+        <div class="src-row"><span class="gap-num">2</span><textarea class="free-write" id="fw-rs6-2" rows="1" placeholder="… told reporters that …"></textarea></div>
+        <div class="src-row"><span class="gap-num">3</span><textarea class="free-write" id="fw-rs6-3" rows="1" placeholder=""></textarea></div>
+        <div class="src-row"><span class="gap-num">4</span><textarea class="free-write" id="fw-rs6-4" rows="1" placeholder=""></textarea></div>
+        <div class="src-row"><span class="gap-num">5</span><textarea class="free-write" id="fw-rs6-5" rows="1" placeholder=""></textarea></div>
+      </div>
+    </div>
+
+    <!-- EX 7: questions — discover the rules -->
+    <div class="exercise" id="rs7">
+      <div class="exercise-label">Exercise 7 — Reported Speech: Questions</div>
+      <h3 class="big-instr">🔍 Look at the sentences and answer the questions below.</h3>
+
+      <div class="src-sentences">
+          <div class="src-row"><span class="gap-num">1a</span><p>‘Why have you stopped reading novels?’</p></div>
+          <div class="src-row pair-end"><span class="gap-num">1b</span><p>The journalist asked Paresh why he had stopped reading novels.</p></div>
+          <div class="src-row"><span class="gap-num">2a</span><p>‘Have you read any novels this year?’</p></div>
+          <div class="src-row pair-end"><span class="gap-num">2b</span><p>They asked people if they had read any novels that year.</p></div>
+          <div class="src-row"><span class="gap-num">3a</span><p>‘Will you read the short story you’ve just printed out?’</p></div>
+          <div class="src-row pair-end"><span class="gap-num">3b</span><p>He wondered whether I would read the short story I had just printed out.</p></div>
+          <div class="src-row"><span class="gap-num">4a</span><p>‘Do you prefer reading or playing online games?’</p></div>
+          <div class="src-row pair-end"><span class="gap-num">4b</span><p>They wanted to know whether we preferred reading or playing online games.</p></div>
+      </div>
+
+      <div class="wq-list">
+        <div class="wq-row"><span class="gap-num">a</span><div class="wq-body"><p class="wq-q">Do tenses and pronouns change in reported questions in the same way as in reported statements?</p><span class="word-choice" id="rs7-a" data-answer="yes"><button class="word-choice-btn" data-val="yes" onclick="selectGap(this)">yes</button><button class="word-choice-btn" data-val="no" onclick="selectGap(this)">no</button></span></div></div>
+        <div class="wq-row"><span class="gap-num">b</span><div class="wq-body"><p class="wq-q">Do we use the auxiliary verb <em>do</em> in reported questions?</p><span class="word-choice" id="rs7-b" data-answer="no"><button class="word-choice-btn" data-val="yes" onclick="selectGap(this)">yes</button><button class="word-choice-btn" data-val="no" onclick="selectGap(this)">no</button></span></div></div>
+        <div class="wq-row"><span class="gap-num">c</span><div class="wq-body"><p class="wq-q">Do we put the subject before the verb in reported questions?</p><span class="word-choice" id="rs7-c" data-answer="yes"><button class="word-choice-btn" data-val="yes" onclick="selectGap(this)">yes</button><button class="word-choice-btn" data-val="no" onclick="selectGap(this)">no</button></span></div></div>
+        <div class="wq-row"><span class="gap-num">d</span><div class="wq-body"><p class="wq-q">Do we use question marks in reported questions?</p><span class="word-choice" id="rs7-d" data-answer="no"><button class="word-choice-btn" data-val="yes" onclick="selectGap(this)">yes</button><button class="word-choice-btn" data-val="no" onclick="selectGap(this)">no</button></span></div></div>
+        <div class="wq-row"><span class="gap-num">e</span><div class="wq-body"><p class="wq-q">What words do we use with questions that do not begin with a question word?</p><span class="word-choice" id="rs7-e" data-answer="if / whether"><button class="word-choice-btn" data-val="that" onclick="selectGap(this)">that</button><button class="word-choice-btn" data-val="if / whether" onclick="selectGap(this)">if / whether</button><button class="word-choice-btn" data-val="do / did" onclick="selectGap(this)">do / did</button></span></div></div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="checkGaps('rs7')">Check ✓</button>
+        <button class="btn btn-ghost"   onclick="resetGaps('rs7')">Try again</button>
+      </div>
+
+      <div class="test-line">
+        📐 <b>Check it.</b> Reported questions use <b>statement word order</b> (subject + verb), <b>no</b> <em>do/does/did</em> and <b>no</b> question mark.
+        Yes/no questions take <b>if</b> or <b>whether</b>: <em>‘Are you tired?’ → She asked if I was tired.</em>
+      </div>
+    </div>
+
+    <!-- EX 8: report the conversation -->
+    <div class="exercise" id="rs8">
+      <div class="exercise-label">Exercise 8 — Report the Conversation</div>
+      <h3 class="big-instr">🎬 Report the conversation using <em>said</em>, <em>told</em>, <em>asked</em> and <em>wanted to know</em>.</h3>
+
+      <div class="dlg-wrap">
+        <div class="dlg-list">
+          <div class="dlg-row">
+            <div class="dlg-line"><span class="dlg-who who-olivia">Olivia:</span> Have you ever seen a famous actor in person?</div>
+            <textarea class="free-write short" id="fw-rs8-1" placeholder="Report it…" rows="1"></textarea>
+            <details class="model"><summary>Model</summary><div class="model-body">Olivia asked Tom if he had ever seen a famous actor in person.</div></details>
+          </div>
+          <div class="dlg-row">
+            <div class="dlg-line"><span class="dlg-who who-tom">Tom:</span> Yes, I have. I saw Zendaya last year.</div>
+            <textarea class="free-write short" id="fw-rs8-2" placeholder="Report it…" rows="1"></textarea>
+            <details class="model"><summary>Model</summary><div class="model-body">Tom said that he had. He told her he had seen Zendaya the year before.</div></details>
+          </div>
+          <div class="dlg-row">
+            <div class="dlg-line"><span class="dlg-who who-olivia">Olivia:</span> Where did you see her?</div>
+            <textarea class="free-write short" id="fw-rs8-3" placeholder="Report it…" rows="1"></textarea>
+            <details class="model"><summary>Model</summary><div class="model-body">Olivia wanted to know where he had seen her.</div></details>
+          </div>
+          <div class="dlg-row">
+            <div class="dlg-line"><span class="dlg-who who-tom">Tom:</span> I was in France. There was a film festival near where we were staying.</div>
+            <textarea class="free-write short" id="fw-rs8-4" placeholder="Report it…" rows="1"></textarea>
+            <details class="model"><summary>Model</summary><div class="model-body">Tom said he had been in France. He told her there had been a film festival near where they had been staying.</div></details>
+          </div>
+          <div class="dlg-row">
+            <div class="dlg-line"><span class="dlg-who who-olivia">Olivia:</span> Do you always go to France in the summer?</div>
+            <textarea class="free-write short" id="fw-rs8-5" placeholder="Report it…" rows="1"></textarea>
+            <details class="model"><summary>Model</summary><div class="model-body">Olivia asked him if he always went to France in the summer.</div></details>
+          </div>
+          <div class="dlg-row">
+            <div class="dlg-line"><span class="dlg-who who-tom">Tom:</span> Yes, we usually go because my grandparents are French.</div>
+            <textarea class="free-write short" id="fw-rs8-6" placeholder="Report it…" rows="1"></textarea>
+            <details class="model"><summary>Model</summary><div class="model-body">Tom said they usually went because his grandparents were French.</div></details>
+          </div>
+          <div class="dlg-row">
+            <div class="dlg-line"><span class="dlg-who who-olivia">Olivia:</span> We’re probably going to Hollywood next summer. My dad’s got a friend who lives in California.</div>
+            <textarea class="free-write short" id="fw-rs8-7" placeholder="Report it…" rows="1"></textarea>
+            <details class="model"><summary>Model</summary><div class="model-body">Olivia told him they were probably going to Hollywood the following summer. She said her dad had a friend who lived in California.</div></details>
+          </div>
+          <div class="dlg-row">
+            <div class="dlg-line"><span class="dlg-who who-tom">Tom:</span> You’re so lucky! I’d love to visit the Walk of Fame one day. Can I come with you?!</div>
+            <textarea class="free-write short" id="fw-rs8-8" placeholder="Report it…" rows="1"></textarea>
+            <details class="model"><summary>Model</summary><div class="model-body">Tom told her she was so lucky. He said he would love to visit the Walk of Fame one day and asked if he could go with her.</div></details>
+          </div>
+          <div class="dlg-row">
+            <div class="dlg-line"><span class="dlg-who who-olivia">Olivia:</span> I’ll ask my dad if it’s OK!</div>
+            <textarea class="free-write short" id="fw-rs8-9" placeholder="Report it…" rows="1"></textarea>
+            <details class="model"><summary>Model</summary><div class="model-body">Olivia said she would ask her dad if it was OK.</div></details>
+          </div>
+        </div>
+        <figure class="dlg-photo">
+          <img src="images/zendaya.jpg" alt="Zendaya on the red carpet">
+          <figcaption>Zendaya · photo: Philip Romano, Wikimedia Commons</figcaption>
+        </figure>
+      </div>
+    </div>
+
+    <!-- EX 9: use it... don't lose it -->
+    <div class="exercise" id="rs9">
+      <div class="exercise-label">Exercise 9 — Use it… don’t lose it!</div>
+      <div class="use-it">
+        <span class="use-tag">🗣️ Speaking</span>
+        <h3 class="big-instr" style="margin-bottom:6px;">Write five questions about films or series.</h3>
+        <p class="lead-instr">Ask your teacher (and friends or family at home) your questions and note their answers. Then write a report about some of the questions you asked and the answers you got.</p>
+
+        <div class="q-inputs">
+          <div class="src-row"><span class="gap-num">1</span><textarea class="free-write" id="fw-rs9-q1" rows="1" placeholder="Do you prefer watching films or series?"></textarea></div>
+          <div class="src-row"><span class="gap-num">2</span><textarea class="free-write" id="fw-rs9-q2" rows="1"></textarea></div>
+          <div class="src-row"><span class="gap-num">3</span><textarea class="free-write" id="fw-rs9-q3" rows="1"></textarea></div>
+          <div class="src-row"><span class="gap-num">4</span><textarea class="free-write" id="fw-rs9-q4" rows="1"></textarea></div>
+          <div class="src-row"><span class="gap-num">5</span><textarea class="free-write" id="fw-rs9-q5" rows="1"></textarea></div>
+        </div>
+
+        <div class="sub-head">Your report</div>
+        <p class="hand-note">I asked people whether they preferred watching films or series. Three people told me they preferred films but the rest said they liked series more.</p>
+        <textarea class="free-write" id="fw-rs9-report" rows="6" placeholder="I asked people whether…"></textarea>
+        <div class="char-count" id="cc-fw-rs9-report">0 characters</div>
+      </div>
+    </div>
+
+  </div><!-- /tab-p2 -->
+
+  <!-- ══════════════════════════════════════════════════════
+       PART 3 — CULTURE  (waiting for the list of events)
+  ══════════════════════════════════════════════════════ -->
+  <div class="tab-content" id="tab-p3">
+    <div class="exercise">
+      <div class="exercise-label">Culture</div>
+      <div class="soon"><span class="soon-emoji">🏛️</span>Coming soon.</div>
+    </div>
+  </div><!-- /tab-p3 -->
+
+  <!-- ══════════════════════════════════════════════════════
+       HOMEWORK — no tasks yet
+  ══════════════════════════════════════════════════════ -->
+  <div class="tab-content" id="tab-hw">
+    <div class="exercise">
+      <div class="exercise-label">Homework</div>
+      <div class="soon"><span class="soon-emoji">📝</span>No homework yet.</div>
+    </div>
+  </div><!-- /tab-hw -->
+
+</div><!-- /container -->
+
+<div class="save-indicator" id="saveIndicator">✓ Saved</div>
+
+<script>
+const LESSON_KEY = 'lesson-06';
+let data = {};
+try { data = JSON.parse(localStorage.getItem(LESSON_KEY)) || {}; } catch(e) {}
+
+function save(patch) {
+  Object.assign(data, patch);
+  localStorage.setItem(LESSON_KEY, JSON.stringify(data));
+  flashSaved();
+}
+let saveTimer;
+function flashSaved() {
+  const el = document.getElementById('saveIndicator');
+  el.classList.add('show');
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(() => el.classList.remove('show'), 1600);
+}
+
+// ── TABS ──
+function switchTab(name, btn) {
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  btn.classList.add('active');
+  save({ activeTab: name });
+}
+
+// ── AUTOSAVE (inputs + textareas) ──
+function setupAutosave() {
+  document.querySelectorAll('.blank, .free-write, .cw-cell').forEach(el => {
+    if (data[el.id] !== undefined) el.value = data[el.id];
+    el.addEventListener('input', () => {
+      save({ [el.id]: el.value });
+      const cc = document.getElementById('cc-' + el.id);
+      if (cc) cc.textContent = el.value.length + ' characters';
+    });
+    const cc = document.getElementById('cc-' + el.id);
+    if (cc) cc.textContent = (el.value || '').length + ' characters';
+  });
+  if (data.activeTab) {
+    const btn = document.querySelector('.tab-btn[onclick*="' + data.activeTab + '"]');
+    if (btn) switchTab(data.activeTab, btn);
+  }
+}
+
+// ── FILL IN THE BLANKS ──
+function markBlank(inp) {
+  const strict = inp.dataset.case === 'strict';
+  const norm = v => strict ? v.trim() : v.toLowerCase().replace(/[‘’]/g, "'").replace(/[.,!?]/g, '').replace(/\s+/g, ' ').trim();
+  const val = norm(inp.value);
+  const answers = expandAnswers(inp.dataset.answer || '').map(norm);
+  const loose = inp.dataset.mode === 'contains';
+  const btn = inp.nextElementSibling;
+  const hasBtn = btn && btn.classList && btn.classList.contains('check-one');
+  inp.classList.remove('correct','wrong');
+  if (hasBtn) { btn.classList.remove('ok','no'); btn.textContent = '✓'; }
+  if (!val) return;
+  const ok = loose ? answers.some(a => a && val.includes(a)) : answers.includes(val);
+  inp.classList.add(ok ? 'correct' : 'wrong');
+  if (hasBtn) { btn.classList.add(ok ? 'ok' : 'no'); btn.textContent = ok ? '✓' : '✕'; }
+}
+function checkOne(btn) {
+  const inp = btn.previousElementSibling;
+  if (inp && inp.classList.contains('blank')) markBlank(inp);
+}
+function checkBlanks(containerId) {
+  const sel = containerId ? '#' + containerId + ' .blank' : '.blank';
+  document.querySelectorAll(sel).forEach(markBlank);
+}
+function resetBlanks(containerId) {
+  const sel = containerId ? '#' + containerId + ' .blank' : '.blank';
+  document.querySelectorAll(sel).forEach(inp => {
+    inp.value = ''; inp.classList.remove('correct','wrong');
+    const btn = inp.nextElementSibling;
+    if (btn && btn.classList && btn.classList.contains('check-one')) {
+      btn.classList.remove('ok','no'); btn.textContent = '✓';
+    }
+    save({ [inp.id]: '' });
+  });
+}
+
+// Answer syntax: "a|b" = either answer, "[that ]" = optional words, "{had gone/went}" = pick one
+function expandAnswers(spec) {
+  const expand = s => {
+    const m = s.match(/\[([^\]]*)\]|\{([^}]*)\}/);
+    if (!m) return [s];
+    const pre = s.slice(0, m.index), post = s.slice(m.index + m[0].length);
+    const opts = m[1] !== undefined ? [m[1], ''] : m[2].split('/');
+    return opts.flatMap(o => expand(pre + o + post));
+  };
+  return spec.split('|').flatMap(expand);
+}
+
+// ── MULTIPLE CHOICE ──
+function optionText(label) {
+  const clone = label.cloneNode(true);
+  const bullet = clone.querySelector('.mc-bullet');
+  if (bullet) bullet.remove();
+  return clone.textContent.trim();
+}
+// Mirror the chosen option into the sentence's blank
+function syncSlot(group, state) {
+  const q = group.closest('.mc-q');
+  const slot = q && q.querySelector('.mc-slot');
+  if (!slot) return;
+  const selected = group.querySelector('.mc-option.selected');
+  slot.textContent = selected ? optionText(selected) : '___';
+  slot.classList.remove('correct','wrong');
+  if (state) slot.classList.add(state);
+}
+document.querySelectorAll('.mc-option').forEach(label => {
+  label.addEventListener('click', () => {
+    const group = label.closest('.mc-options');
+    group.querySelectorAll('.mc-option').forEach(l => l.classList.remove('selected','correct','wrong'));
+    label.classList.add('selected');
+    syncSlot(group);
+    save({ ['mc-' + label.querySelector('input').name]: label.querySelector('input').value });
+  });
+});
+function restoreMC() {
+  document.querySelectorAll('.mc-options').forEach(group => {
+    group.querySelectorAll('.mc-option').forEach(label => {
+      const saved = data['mc-' + label.querySelector('input').name];
+      if (saved && saved === label.querySelector('input').value) label.classList.add('selected');
+    });
+    syncSlot(group);
+  });
+}
+function checkMCIn(containerId) {
+  document.querySelectorAll('#' + containerId + ' .mc-options').forEach(group => {
+    const correct = group.dataset.correct;
+    const selected = group.querySelector('.mc-option.selected');
+    group.querySelectorAll('.mc-option').forEach(l => l.classList.remove('correct','wrong'));
+    if (!selected) return;
+    const ok = selected.querySelector('input').value === correct;
+    selected.classList.add(ok ? 'correct' : 'wrong');
+    if (!ok) group.querySelectorAll('.mc-option').forEach(l => {
+      if (l.querySelector('input').value === correct) l.classList.add('correct');
+    });
+    syncSlot(group, ok ? 'correct' : 'wrong');
+  });
+}
+function resetMCIn(containerId) {
+  document.querySelectorAll('#' + containerId + ' .mc-options').forEach(group => {
+    group.querySelectorAll('.mc-option').forEach(l => {
+      l.classList.remove('selected','correct','wrong');
+      save({ ['mc-' + l.querySelector('input').name]: '' });
+    });
+    syncSlot(group);
+  });
+}
+
+// ── WORD-CHOICE BUTTONS ──
+function selectGap(btn) {
+  const group = btn.closest('.word-choice');
+  group.querySelectorAll('.word-choice-btn').forEach(b => b.classList.remove('selected','correct','wrong'));
+  btn.classList.add('selected');
+  save({ [group.id]: btn.dataset.val });
+}
+function checkGaps(containerId) {
+  document.querySelectorAll('#' + containerId + ' .word-choice').forEach(group => {
+    const correct  = group.dataset.answer;
+    const selected = group.querySelector('.word-choice-btn.selected');
+    group.querySelectorAll('.word-choice-btn').forEach(b => b.classList.remove('correct','wrong'));
+    if (!selected) return;
+    selected.classList.add(selected.dataset.val === correct ? 'correct' : 'wrong');
+  });
+}
+function resetGaps(containerId) {
+  document.querySelectorAll('#' + containerId + ' .word-choice').forEach(group => {
+    group.querySelectorAll('.word-choice-btn').forEach(b => b.classList.remove('selected','correct','wrong'));
+    save({ [group.id]: '' });
+  });
+}
+function restoreGaps() {
+  document.querySelectorAll('.word-choice').forEach(group => {
+    const v = data[group.id];
+    if (!v) return;
+    group.querySelectorAll('.word-choice-btn').forEach(b => { if (b.dataset.val === v) b.classList.add('selected'); });
+  });
+}
+
+// ── CROSSWORD ──
+function cwAdvance(cell) {
+  cell.value = cell.value.replace(/[^a-z]/i,'').toUpperCase();
+  cell.closest('.cw-row').classList.remove('correct','wrong');
+  if (cell.value) {
+    const next = cell.nextElementSibling;
+    if (next && next.classList.contains('cw-cell')) next.focus();
+  }
+}
+function cwKey(e, cell) {
+  if (e.key === 'Backspace' && !cell.value) {
+    const prev = cell.previousElementSibling;
+    if (prev && prev.classList.contains('cw-cell')) { prev.focus(); prev.value = ''; save({ [prev.id]: '' }); e.preventDefault(); }
+  }
+}
+function checkCrossword(exId) {
+  document.querySelectorAll('#' + exId + ' .cw-row').forEach(row => {
+    const word = [...row.querySelectorAll('.cw-cell')].map(c => c.value.toUpperCase()).join('');
+    row.classList.remove('correct','wrong');
+    if (!word) return;
+    row.classList.add(word === row.dataset.answer ? 'correct' : 'wrong');
+  });
+}
+function resetCrossword(exId) {
+  document.querySelectorAll('#' + exId + ' .cw-row').forEach(row => {
+    row.classList.remove('correct','wrong');
+    row.querySelectorAll('.cw-cell').forEach(c => { c.value = ''; save({ [c.id]: '' }); });
+  });
+}
+
+// ── MATCHING ──
+const matchState = {};
+function selectMatch(el, exId) {
+  const side = el.closest('.match-col').dataset.side;
+  if (!matchState[exId]) matchState[exId] = { selected:{left:null,right:null}, matched:new Set() };
+  const state = matchState[exId];
+  if (el.classList.contains('matched')) return;
+  el.closest('.match-col').querySelectorAll('.match-item').forEach(i => i.classList.remove('selected'));
+  el.classList.add('selected');
+  state.selected[side] = el;
+  const other = side === 'left' ? 'right' : 'left';
+  if (state.selected[other]) {
+    const a = state.selected['left'], b = state.selected['right'];
+    if (a.dataset.pair === b.dataset.pair) {
+      a.classList.remove('selected'); a.classList.add('matched','locked');
+      b.classList.remove('selected'); b.classList.add('matched','locked');
+      state.matched.add(a.dataset.pair);
+      save({ ['match-' + exId]: [...state.matched] });
+      alignPair(a, b);
+    } else {
+      [a,b].forEach(x => x.classList.add('shake'));
+      setTimeout(() => [a,b].forEach(x => x.classList.remove('selected','shake')), 400);
+    }
+    state.selected = { left:null, right:null };
+  }
+}
+// On grids with data-align, a matched right-hand item swaps places so it sits level with its partner
+function swapNodes(x, y) {
+  if (x === y) return;
+  const marker = document.createElement('div');
+  x.parentNode.insertBefore(marker, x);
+  y.parentNode.insertBefore(x, y);
+  marker.parentNode.insertBefore(y, marker);
+  marker.remove();
+}
+function alignPair(left, right) {
+  const grid = left.closest('.match-grid');
+  if (!grid || !grid.dataset.align) return;
+  const leftCol  = grid.querySelector('.match-col[data-side="left"]');
+  const rightCol = grid.querySelector('.match-col[data-side="right"]');
+  const idx = [...leftCol.children].indexOf(left);
+  const target = rightCol.children[idx];
+  if (target && target !== right) {
+    swapNodes(right, target);
+    right.classList.add('slid'); setTimeout(() => right.classList.remove('slid'), 450);
+  }
+}
+function resetMatchEx(exId) {
+  document.querySelectorAll('#' + exId + ' .match-item')
+    .forEach(el => el.classList.remove('matched','locked','selected','shake'));
+  const rightCol = document.querySelector('#' + exId + ' .match-grid[data-align] .match-col[data-side="right"]');
+  if (rightCol) [...rightCol.children].sort((x, y) => x.dataset.orig - y.dataset.orig).forEach(el => rightCol.appendChild(el));
+  matchState[exId] = { selected:{left:null,right:null}, matched:new Set() };
+  save({ ['match-' + exId]: [] });
+}
+function restoreAllMatches() {
+  document.querySelectorAll('.match-grid').forEach(grid => {
+    const exId = grid.closest('.exercise').id;
+    matchState[exId] = { selected:{left:null,right:null}, matched:new Set() };
+    const rightCol = grid.querySelector('.match-col[data-side="right"]');
+    [...rightCol.children].forEach((el, i) => el.dataset.orig = i);
+    (data['match-' + exId] || []).forEach(pair => {
+      const els = document.querySelectorAll('#' + exId + ' .match-item[data-pair="' + pair + '"]');
+      els.forEach(el => el.classList.add('matched','locked'));
+      matchState[exId].matched.add(pair);
+      const left  = grid.querySelector('.match-col[data-side="left"]  .match-item[data-pair="' + pair + '"]');
+      const right = grid.querySelector('.match-col[data-side="right"] .match-item[data-pair="' + pair + '"]');
+      if (left && right) alignPair(left, right);
+    });
+  });
+}
+
+// ── WORD BOX: click a phrase to cross it out ──
+function toggleHwBox(el) {
+  el.classList.toggle('used');
+  const box = el.closest('.hw-box');
+  const used = [...box.querySelectorAll('span.used')].map(c => c.textContent);
+  save({ ['hwbox-' + box.id]: used });
+}
+function restoreHwBox() {
+  document.querySelectorAll('.hw-box').forEach(box => {
+    const saved = data['hwbox-' + box.id] || [];
+    box.querySelectorAll('span').forEach(c => { if (saved.includes(c.textContent)) c.classList.add('used'); });
+  });
+}
+
+// ── PHRASE BANK (speaking) ──
+function togglePhrase(el) {
+  el.classList.toggle('used');
+  const bank = el.closest('.phrase-bank');
+  const used = [...bank.querySelectorAll('.phrase-chip.used')].map(c => c.dataset.p);
+  const out = document.getElementById(bank.dataset.count);
+  if (out) out.textContent = used.length;
+  save({ ['phrases-' + bank.id]: used });
+}
+function restorePhrases() {
+  document.querySelectorAll('.phrase-bank').forEach(bank => {
+    const saved = data['phrases-' + bank.id] || [];
+    bank.querySelectorAll('.phrase-chip').forEach(c => { if (saved.includes(c.dataset.p)) c.classList.add('used'); });
+    const out = document.getElementById(bank.dataset.count);
+    if (out) out.textContent = bank.querySelectorAll('.phrase-chip.used').length;
+  });
+}
+
+setupAutosave();
+restoreGaps();
+restoreAllMatches();
+restoreHwBox();
+restorePhrases();
+restoreMC();
+</script>
+
+</body>
+</html>
