@@ -314,6 +314,21 @@
     @keyframes eq { 0%,100% { height: 4px; } 50% { height: 14px; } }
     @media (max-width: 520px) { .pl-replay { display: none; } .player { gap: 10px; padding: 10px 12px; } }
 
+    /* send-to-teacher box */
+    .send-box {
+      margin-top: 26px; padding: 18px 20px; border-radius: var(--radius);
+      background: rgba(91,140,69,.08); border: 2px solid rgba(91,140,69,.35);
+    }
+    .send-box h4 { font-family: 'Fraunces', Georgia, serif; font-size: 1.1rem; color: var(--green); margin-bottom: 4px; }
+    .send-box p { color: var(--muted); line-height: 1.6; font-size: .93rem; }
+    .send-msg { margin-top: 10px; font-weight: 600; color: var(--green); min-height: 1.2em; }
+    #reportText {
+      display: none; width: 100%; height: 220px; margin-top: 10px; padding: 12px;
+      font: .85rem/1.5 ui-monospace, Menlo, monospace; border-radius: 10px;
+      border: 2px solid var(--border); background: var(--card); color: var(--text);
+    }
+    #reportText.show { display: block; }
+
     .tab-btn:nth-child(5).active { background: var(--green); border-color: var(--green); }
   </style>
 </head>
@@ -1181,6 +1196,18 @@
           </div>
         </details>
 
+        <div class="send-box">
+          <h4>📤 Send your results to your teacher</h4>
+          <p>This makes a short report with your score and every answer you gave, so your teacher can
+            go through your mistakes with you.</p>
+          <div class="btn-row" style="margin-top:10px;">
+            <button class="btn btn-primary" onclick="shareReport()">📤 Send my results</button>
+            <button class="btn btn-ghost" onclick="copyReport()">📋 Copy report</button>
+          </div>
+          <div class="send-msg" id="sendMsg"></div>
+          <textarea id="reportText" readonly></textarea>
+        </div>
+
         <div class="btn-row">
           <button class="btn btn-danger" onclick="restartPaper()">Clear everything and start again</button>
         </div>
@@ -1447,7 +1474,9 @@ function mark(el, paint) {
     const need = +el.dataset.need;
     let hits = 0;
     el.querySelectorAll('.chip').forEach(c => {
-      const isC = correct.includes(c.dataset.v), on = c.classList.contains('on');
+      const isC = correct.includes(c.dataset.v);
+      // after marking, a chosen chip is shown as .ok / .no instead of .on
+      const on = c.classList.contains('on') || c.classList.contains('ok') || c.classList.contains('no');
       if (on && isC) hits++;
       if (paint) {
         if (on) { c.classList.remove('on'); c.classList.add(isC ? 'ok' : 'no'); }
@@ -1562,6 +1591,90 @@ function submitPaper() {
   lockAll();
   showResult(markEverything());
 }
+// ── REPORT FOR THE TEACHER ─────────────────────────────────────
+// what the student answered vs. the key, for one answer control
+function describe(el) {
+  if (el.tagName === 'SELECT')
+    return { given: el.value || '—', key: el.dataset.answer, ok: el.value === el.dataset.answer };
+  if (el.classList.contains('mc-options')) {
+    const sel = el.querySelector('.mc-option.selected');
+    const v = sel ? sel.querySelector('input').value : '—';
+    return { given: v, key: el.dataset.correct, ok: v === el.dataset.correct };
+  }
+  if (el.classList.contains('pick')) {
+    const picked = [...el.querySelectorAll('.chip.on, .chip.ok, .chip.no')].map(c => c.dataset.v);
+    const key = el.dataset.correct.split(',');
+    const ok = picked.length === key.length && picked.every(v => key.includes(v));
+    return { given: picked.join(', ') || '—', key: key.join(', '), ok };
+  }
+  if (el.classList.contains('builder')) {
+    const v = el._value();
+    const answers = el.dataset.answer.split('|');
+    return { given: v || '—', key: answers[0], ok: answers.some(a => a.toLowerCase() === v.toLowerCase()) };
+  }
+  return { given: '?', key: '?', ok: false };
+}
+function buildReport() {
+  let name = '';
+  try { name = localStorage.getItem('studentName') || ''; } catch(e) {}
+  const perTask = {};
+  TASKS.forEach(t => { perTask[t.dataset.task] = taskScore(t, false); });
+  const total = Object.values(perTask).reduce((a, b) => a + b, 0);
+  const L = [];
+  L.push('Lesson 7 — Высшая проба demo (9–10)');
+  if (name) L.push('Student: ' + name);
+  L.push('Date: ' + new Date().toLocaleString('ru-RU'));
+  L.push('TOTAL: ' + total + ' / 100');
+  SECTIONS.forEach(s => {
+    const got = TASKS.filter(t => t.dataset.sec === s.id).reduce((a, t) => a + perTask[t.dataset.task], 0);
+    L.push('  ' + s.label + ': ' + got + ' / ' + s.max);
+  });
+  const lost = TASKS.filter(t => perTask[t.dataset.task] < +t.dataset.points);
+  L.push('');
+  L.push(lost.length ? 'MISTAKES (✗ = student’s answer → correct answer)' : 'No mistakes — full marks! 🎉');
+  lost.forEach(t => {
+    L.push('');
+    L.push('Задание ' + t.dataset.task + ' — ' + perTask[t.dataset.task] + ' / ' + t.dataset.points);
+    const parts = [...t.querySelectorAll('.ans')];
+    parts.forEach((el, i) => {
+      const d = describe(el);
+      const n = parts.length > 1 ? (i + 1) + ') ' : '';
+      L.push('  ' + n + (d.ok ? '✓ ' + d.given : '✗ ' + d.given + '  →  ' + d.key));
+    });
+  });
+  L.push('');
+  L.push('All answers in brief:');
+  TASKS.forEach(t => {
+    const parts = [...t.querySelectorAll('.ans')].map(describe);
+    L.push('  ' + t.dataset.task + '. ' + parts.map(d => (d.ok ? '' : '✗') + d.given).join(' | '));
+  });
+  return L.join('\n');
+}
+function showReportBox(msg) {
+  const ta = document.getElementById('reportText');
+  ta.value = buildReport(); ta.classList.add('show');
+  document.getElementById('sendMsg').textContent = msg || '';
+  return ta;
+}
+async function copyReport() {
+  const ta = showReportBox();
+  try {
+    await navigator.clipboard.writeText(ta.value);
+    document.getElementById('sendMsg').textContent = '✓ Copied! Now paste it into your chat with your teacher.';
+  } catch (e) {
+    ta.focus(); ta.select();
+    document.getElementById('sendMsg').textContent = 'Select all the text below, copy it and send it to your teacher.';
+  }
+}
+async function shareReport() {
+  const text = buildReport();
+  if (navigator.share) {
+    try { await navigator.share({ title: 'My olympiad demo results', text }); showReportBox('✓ Sent!'); return; }
+    catch (e) { if (e.name === 'AbortError') return; }
+  }
+  copyReport();   // computers without a share menu: copy instead
+}
+
 function restartPaper() {
   if (!confirm('This clears every answer and your score. Start the whole paper again?')) return;
   try { localStorage.removeItem(LESSON_KEY); } catch(e) {}
