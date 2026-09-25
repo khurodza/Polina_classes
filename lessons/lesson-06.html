@@ -192,6 +192,20 @@
     .q-inputs .src-row { align-items:center; }
     .q-inputs .free-write { min-height:0; padding:9px 12px; }
 
+    /* ── reported speech rule tables ── */
+    .rule-tables { display:grid; grid-template-columns:3fr 2fr; gap:22px; align-items:start; margin-top:12px; }
+    .rule-table { width:100%; border-collapse:collapse; background:#fff; font-size:.98rem; }
+    .rule-table caption { font-family:'Fraunces',Georgia,serif; font-weight:800; font-size:1.3rem; text-align:left; padding-bottom:8px; letter-spacing:.5px; text-transform:uppercase; }
+    .rule-table th { color:#fff; padding:8px 12px; font-size:.9rem; text-align:center; }
+    .rule-table .th-direct { background:#D43A57; }
+    .rule-table .th-reported { background:#3E8EDE; }
+    .rule-table td { padding:7px 12px; text-align:center; border:1px solid var(--border); line-height:1.5; }
+    .rule-table td:first-child { font-weight:700; color:var(--primary-dk); }
+    @media(max-width:700px){ .rule-tables { grid-template-columns:1fr; } }
+    .prac-line { margin:6px 0 0 41px; }
+    .prac-line .blank.prac { min-width:110px; width:160px; }
+    @media(max-width:560px){ .prac-line { margin-left:0; } }
+
     /* ── Part 3: culture ── */
     .cent-body { display:flex; align-items:center; justify-content:space-between; gap:10px 16px; flex-wrap:wrap; }
     .cent-body .wq-q { margin:0; font-weight:600; }
@@ -781,6 +795,99 @@
       <div class="btn-row">
         <button class="btn btn-primary" onclick="checkBlanks('rs2')">Check ✓</button>
         <button class="btn btn-ghost"   onclick="resetBlanks('rs2')">Try again</button>
+      </div>
+    </div>
+
+    <!-- RULE: place, time and tense changes -->
+    <div class="exercise" id="rs-rule">
+      <div class="exercise-label">Rule — Place, Time &amp; Tense Change</div>
+      <h3 class="big-instr">📐 What changes in reported speech?</h3>
+      <p class="lead-instr">When we report words later, or somewhere else, the <b>place and time words</b> move too. Modal verbs change like this:</p>
+
+      <div class="rule-tables">
+        <table class="rule-table">
+          <caption>Place &amp; Time</caption>
+          <thead><tr><th class="th-direct">Direct Speech</th><th class="th-reported">Reported Speech</th></tr></thead>
+          <tbody>
+            <tr><td>today</td><td>that day</td></tr>
+            <tr><td>now</td><td>then / at the moment</td></tr>
+            <tr><td>yesterday</td><td>the day before</td></tr>
+            <tr><td>… days ago</td><td>… days before</td></tr>
+            <tr><td>last week</td><td>the week before</td></tr>
+            <tr><td>next year</td><td>the following year</td></tr>
+            <tr><td>tomorrow</td><td>the next day<br>the following day</td></tr>
+            <tr><td>here</td><td>there</td></tr>
+            <tr><td>this</td><td>that</td></tr>
+            <tr><td>these</td><td>those</td></tr>
+            <tr><td>ago</td><td>previously / before</td></tr>
+            <tr><td>tonight</td><td>that night</td></tr>
+          </tbody>
+        </table>
+        <table class="rule-table">
+          <caption>Tense Change</caption>
+          <thead><tr><th class="th-direct">Direct Speech</th><th class="th-reported">Reported Speech</th></tr></thead>
+          <tbody>
+            <tr><td>will</td><td>would</td></tr>
+            <tr><td>can</td><td>could</td></tr>
+            <tr><td>must / have to</td><td>must <i>or</i> had to</td></tr>
+            <tr><td>may / might</td><td>might</td></tr>
+            <tr><td>should</td><td>should</td></tr>
+            <tr><td>ought to</td><td>ought to</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- PRACTICE: transitions -->
+    <div class="exercise" id="rs-prac">
+      <div class="exercise-label">Practice — Make the Changes</div>
+      <h3 class="big-instr">🔄 Complete the reported sentences.</h3>
+      <p class="lead-instr">Use the tables above. Each gap needs a <b>modal verb</b> or a <b>place / time word</b>.</p>
+
+        <div class="rep-item">
+          <div class="fact-head"><span class="gap-num">1</span><p class="rep-direct">‘I can meet you here tomorrow.’</p></div>
+          <p class="gap-text prac-line">He said he <input class="blank prac" id="pr-1-1" data-answer="could"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button> meet me <input class="blank prac" id="pr-1-2" data-answer="there"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button> <input class="blank prac" id="pr-1-3" data-answer="the next day|the following day|the day after"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button>.</p>
+        </div>
+        <div class="rep-item">
+          <div class="fact-head"><span class="gap-num">2</span><p class="rep-direct">‘We must finish these posters today.’</p></div>
+          <p class="gap-text prac-line">She said they <input class="blank prac" id="pr-2-1" data-answer="had to|must"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button> finish <input class="blank prac" id="pr-2-2" data-answer="those"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button> posters <input class="blank prac" id="pr-2-3" data-answer="that day"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button>.</p>
+        </div>
+        <div class="rep-item">
+          <div class="fact-head"><span class="gap-num">3</span><p class="rep-direct">‘I saw this film three days ago.’</p></div>
+          <p class="gap-text prac-line">Tom said he had seen <input class="blank prac" id="pr-3-1" data-answer="that"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button> film three days <input class="blank prac" id="pr-3-2" data-answer="before|earlier|previously"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button>.</p>
+        </div>
+        <div class="rep-item">
+          <div class="fact-head"><span class="gap-num">4</span><p class="rep-direct">‘I may be late tonight.’</p></div>
+          <p class="gap-text prac-line">Mum said she <input class="blank prac" id="pr-4-1" data-answer="might"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button> be late <input class="blank prac" id="pr-4-2" data-answer="that night"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button>.</p>
+        </div>
+        <div class="rep-item">
+          <div class="fact-head"><span class="gap-num">5</span><p class="rep-direct">‘You should revise now.’</p></div>
+          <p class="gap-text prac-line">The teacher said I <input class="blank prac" id="pr-5-1" data-answer="should"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button> revise <input class="blank prac" id="pr-5-2" data-answer="then|at the moment|at that moment"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button>.</p>
+        </div>
+        <div class="rep-item">
+          <div class="fact-head"><span class="gap-num">6</span><p class="rep-direct">‘We will move to Spain next year.’</p></div>
+          <p class="gap-text prac-line">They said they <input class="blank prac" id="pr-6-1" data-answer="would"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button> move to Spain <input class="blank prac" id="pr-6-2" data-answer="the following year|the next year|the year after"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button>.</p>
+        </div>
+        <div class="rep-item">
+          <div class="fact-head"><span class="gap-num">7</span><p class="rep-direct">‘I have to see the dentist this week.’</p></div>
+          <p class="gap-text prac-line">Anna said she <input class="blank prac" id="pr-7-1" data-answer="had to"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button> see the dentist <input class="blank prac" id="pr-7-2" data-answer="that week"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button>.</p>
+        </div>
+        <div class="rep-item">
+          <div class="fact-head"><span class="gap-num">8</span><p class="rep-direct">‘I lost my keys yesterday.’</p></div>
+          <p class="gap-text prac-line">He told me he had lost his keys <input class="blank prac" id="pr-8-1" data-answer="the day before|the previous day"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button>.</p>
+        </div>
+        <div class="rep-item">
+          <div class="fact-head"><span class="gap-num">9</span><p class="rep-direct">‘You ought to tell her the truth.’</p></div>
+          <p class="gap-text prac-line">Dad said I <input class="blank prac" id="pr-9-1" data-answer="ought to"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button> tell her the truth.</p>
+        </div>
+        <div class="rep-item">
+          <div class="fact-head"><span class="gap-num">10</span><p class="rep-direct">‘I started a new school last week.’</p></div>
+          <p class="gap-text prac-line">My cousin said she had started a new school <input class="blank prac" id="pr-10-1" data-answer="the week before|the previous week"><button class="check-one" onclick="checkOne(this)" title="Check this answer">✓</button>.</p>
+        </div>
+
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="checkBlanks('rs-prac')">Check ✓</button>
+        <button class="btn btn-ghost"   onclick="resetBlanks('rs-prac')">Try again</button>
       </div>
     </div>
 

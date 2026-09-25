@@ -1,0 +1,1601 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lesson 7 – Высшая проба Demo (9–10)</title>
+  <link rel="stylesheet" href="../style.css">
+  <style>
+    /* ── exam-specific bits (same look as the lesson 3 mock) ───── */
+    .exam-banner {
+      background: rgba(212,87,42,.08);
+      border: 2px dashed var(--primary);
+      border-radius: var(--radius);
+      padding: 16px 20px;
+      margin-bottom: 22px;
+      text-align: center;
+    }
+    .exam-banner strong { color: var(--primary); font-size: 1.05rem; }
+    .exam-banner p { margin: 6px 0 0; color: var(--muted); font-size: .92rem; line-height: 1.6; }
+
+    .progress-wrap {
+      position: sticky; top: 0; z-index: 30;
+      background: var(--bg);
+      padding: 12px 0 14px;
+      margin-bottom: 8px;
+      border-bottom: 1px solid var(--border);
+    }
+    .progress-top {
+      display: flex; justify-content: space-between; align-items: center;
+      gap: 12px; flex-wrap: wrap; margin-bottom: 8px;
+    }
+    .progress-label { font-weight: 600; font-size: .92rem; }
+    .progress-label span { color: var(--primary); }
+    .progress-bar { height: 10px; border-radius: 99px; background: var(--border); overflow: hidden; }
+    .progress-fill {
+      height: 100%; width: 0%; border-radius: 99px;
+      background: linear-gradient(90deg, var(--primary), var(--accent-dk));
+      transition: width .3s ease;
+    }
+
+    .section-head {
+      text-align: center;
+      border-bottom: 3px double var(--border);
+      padding-bottom: 14px;
+      margin-bottom: 22px;
+    }
+    .section-head h2 {
+      font-family: 'Fraunces', Georgia, serif;
+      font-size: 1.6rem; letter-spacing: .12em; text-transform: uppercase;
+      color: var(--primary);
+    }
+    .section-head .sh-meta { color: var(--muted); font-size: .9rem; margin-top: 4px; }
+
+    .task-num {
+      display: inline-block;
+      font-weight: 700; color: var(--accent-dk);
+      background: rgba(201,160,48,.15);
+      padding: 3px 12px; border-radius: 99px;
+      font-size: .85rem; margin-bottom: 10px;
+    }
+    .orig-instr {
+      font-weight: 600;
+      border-left: 3px solid var(--border);
+      padding-left: 14px; margin: 0 0 18px;
+      line-height: 1.7; font-size: .98rem;
+    }
+    .demo-note {
+      display: inline-block; font-size: .84rem; color: var(--blue);
+      background: rgba(95,142,196,.10); border-radius: 8px;
+      padding: 5px 12px; margin: -6px 0 16px; line-height: 1.55;
+    }
+
+    /* timer */
+    .timer-box {
+      display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+      background: var(--card); border: 2px solid var(--border);
+      border-radius: var(--radius); padding: 12px 16px; margin-bottom: 20px;
+    }
+    .timer-clock {
+      font-family: 'Fraunces', Georgia, serif;
+      font-size: 1.5rem; font-weight: 700; color: var(--primary);
+      min-width: 82px; letter-spacing: .04em;
+    }
+    .timer-clock.over { color: var(--red); }
+    .timer-hint { color: var(--muted); font-size: .85rem; flex: 1; min-width: 140px; }
+    .btn-mini {
+      padding: 6px 14px; font-size: .84rem; border-radius: 99px;
+      border: 2px solid var(--border); background: transparent;
+      color: var(--muted); cursor: pointer; font-weight: 600;
+    }
+    .btn-mini:hover { border-color: var(--primary); color: var(--primary); }
+
+    /* MC cards */
+    .q-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+    @media (max-width: 760px) { .q-grid { grid-template-columns: 1fr; } }
+    .q-card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 18px 20px 20px;
+      display: flex; flex-direction: column; gap: 11px;
+    }
+    .q-text { font-weight: 600; line-height: 1.55; }
+    .mc-options.stack { grid-template-columns: 1fr; gap: 8px; margin-top: auto; }
+    .mc-options.stack .mc-option { padding: 11px 15px; font-size: .98rem; }
+
+    /* matching layout */
+    .exam-select {
+      font: inherit; font-weight: 700; text-align: center;
+      padding: 8px 10px; border-radius: 10px;
+      border: 2px solid var(--border); background: var(--card);
+      color: var(--text); cursor: pointer; min-width: 74px;
+    }
+    .exam-select:focus { border-color: var(--primary); outline: none; }
+    .exam-select.correct { border-color: var(--green); color: var(--green); background: rgba(91,140,69,.08); }
+    .exam-select.wrong   { border-color: var(--red);   color: var(--red);   background: rgba(200,64,64,.06); }
+    .exam-select:disabled { cursor: default; opacity: 1; }
+
+    .pair-grid { display: grid; grid-template-columns: 3fr 2fr; gap: 22px; align-items: start; }
+    @media (max-width: 720px) { .pair-grid { grid-template-columns: 1fr; } }
+    .opt-box {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: var(--radius); overflow: hidden;
+    }
+    .opt-row { display: flex; border-bottom: 1px solid var(--border); }
+    .opt-row:last-child { border-bottom: none; }
+    .opt-letter {
+      flex: 0 0 46px; display: flex; align-items: center; justify-content: center;
+      font-weight: 700; color: var(--accent-dk); background: rgba(201,160,48,.10);
+      border-right: 1px solid var(--border);
+    }
+    .opt-body { padding: 10px 14px; line-height: 1.6; }
+    .answer-row {
+      display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+      padding: 10px 0; border-bottom: 1px dashed var(--border);
+    }
+    .answer-row:last-child { border-bottom: none; }
+    .answer-row .ar-num {
+      font-family: 'Fraunces', Georgia, serif; font-weight: 700;
+      color: var(--primary); min-width: 26px;
+    }
+    .answer-row .ar-txt { flex: 1; min-width: 200px; line-height: 1.65; }
+    .ipa { font-family: 'Charis SIL', 'Doulos SIL', 'Lucida Sans Unicode', 'Arial Unicode MS', sans-serif; }
+
+    /* the correct answer, revealed only after submitting */
+    .key {
+      display: none; margin-left: 4px; font-size: .85rem;
+      font-weight: 700; color: var(--green);
+      background: rgba(91,140,69,.10); padding: 2px 9px; border-radius: 6px;
+    }
+    body.revealed .key:not(:empty) { display: inline-block; }
+
+    /* pick-the-words / pick-the-sentences */
+    .pick { line-height: 2.5; font-size: 1.02rem; text-align: left; }
+    .pick.items { display: flex; flex-direction: column; gap: 8px; line-height: 1.5; }
+    .pick.list  { display: flex; flex-wrap: wrap; gap: 8px; line-height: 1.5; }
+    .chip {
+      display: inline-block; padding: 3px 8px; margin: 0 1px;
+      border-radius: 8px; border: 2px solid transparent;
+      cursor: pointer; transition: all .15s; user-select: none;
+    }
+    .pick.list .chip, .pick.items .chip {
+      border-color: var(--border); background: var(--card); padding: 9px 15px;
+    }
+    .chip:hover { border-color: var(--primary); }
+    .chip.on { background: var(--primary); border-color: var(--primary); color: #fff; }
+    .chip.ok { background: var(--green); border-color: var(--green); color: #fff; }
+    .chip.no { background: rgba(200,64,64,.10); border-color: var(--red); color: var(--red); }
+    .chip.miss { border-color: var(--green); border-style: dashed; color: var(--green); }
+    .pick-count { font-size: .85rem; color: var(--muted); margin-top: 8px; }
+    .passage-box {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 16px 20px;
+    }
+
+    /* build-the-phrase */
+    .build-item { padding: 14px 0; border-bottom: 1px dashed var(--border); }
+    .build-item:last-child { border-bottom: none; }
+    .build-line { line-height: 2.2; font-size: 1.02rem; }
+    .build-slot {
+      display: inline-flex; flex-wrap: wrap; gap: 5px; align-items: center;
+      min-width: 220px; min-height: 38px; padding: 3px 8px; margin: 0 4px;
+      border-bottom: 2px solid var(--primary); vertical-align: middle;
+    }
+    .build-slot.correct { border-color: var(--green); }
+    .build-slot.wrong   { border-color: var(--red); }
+    .tile {
+      font: inherit; font-size: .95rem; font-weight: 600;
+      padding: 5px 12px; border-radius: 9px; cursor: pointer;
+      border: 2px solid var(--border); background: var(--card); color: var(--text);
+    }
+    .tile:hover { border-color: var(--primary); }
+    .tile.placed { background: rgba(212,87,42,.10); border-color: var(--primary); }
+    .tile.used { visibility: hidden; }
+    .tile b { color: var(--accent-dk); margin-right: 4px; }
+    .tile-bank { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 10px; }
+    .tile:disabled { cursor: default; }
+
+    /* pictures for Задание 27 */
+    .pic-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 16px; }
+    .pic-card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: var(--radius); overflow: hidden;
+      display: flex; flex-direction: column;
+    }
+    .pic-card img { width: 100%; height: 190px; object-fit: cover; display: block; }
+    .pic-foot { display: flex; align-items: center; gap: 10px; padding: 10px 14px; flex-wrap: wrap; }
+    .pic-foot .ar-num { font-family: 'Fraunces', Georgia, serif; font-weight: 700; color: var(--primary); }
+
+    .dialogue p { margin-bottom: 6px; line-height: 1.7; }
+    .tone { color: var(--primary); font-weight: 700; }
+
+    /* results */
+    .locked-card {
+      text-align: center; background: var(--card);
+      border: 2px dashed var(--border); border-radius: var(--radius);
+      padding: 46px 26px;
+    }
+    .locked-card .lock-ico { font-size: 3rem; }
+    .locked-card h3 { font-family: 'Fraunces', Georgia, serif; font-size: 1.4rem; margin: 10px 0 6px; }
+    .locked-card p { color: var(--muted); line-height: 1.7; }
+    .todo-list { list-style: none; margin: 18px auto 0; max-width: 420px; text-align: left; }
+    .todo-list li {
+      display: flex; justify-content: space-between; gap: 10px;
+      padding: 9px 0; border-bottom: 1px dashed var(--border); font-size: .94rem;
+    }
+    .todo-list li.done { color: var(--green); }
+    .todo-list li b { font-variant-numeric: tabular-nums; }
+    .todo-list small { display: block; color: var(--muted); font-size: .8rem; }
+
+    .score-hero { text-align: center; padding: 10px 0 4px; }
+    .score-big {
+      font-family: 'Fraunces', Georgia, serif;
+      font-size: 3.6rem; font-weight: 700; color: var(--primary); line-height: 1;
+    }
+    .score-big small { font-size: 1.4rem; color: var(--muted); font-weight: 400; }
+    .score-verdict { font-size: 1.05rem; margin-top: 8px; color: var(--muted); }
+    .score-rows { margin-top: 26px; }
+    .score-row { margin-bottom: 18px; }
+    .score-row-top {
+      display: flex; justify-content: space-between;
+      font-weight: 600; font-size: .95rem; margin-bottom: 6px;
+    }
+    .score-track { height: 12px; border-radius: 99px; background: var(--border); overflow: hidden; }
+    .score-meter { height: 100%; border-radius: 99px; width: 0; transition: width .6s ease; }
+    .m1 { background: var(--primary); }
+    .m2 { background: var(--blue); }
+    .m3 { background: var(--accent-dk); }
+    .m4 { background: var(--rose); }
+
+    .task-table { display: grid; grid-template-columns: repeat(auto-fill, minmax(92px, 1fr)); gap: 8px; margin-top: 10px; }
+    .tt-cell {
+      border: 2px solid var(--border); border-radius: 10px; padding: 6px 8px;
+      text-align: center; font-size: .82rem; background: var(--card);
+    }
+    .tt-cell b { display: block; font-size: 1rem; font-variant-numeric: tabular-nums; }
+    .tt-cell.full { border-color: var(--green); color: var(--green); }
+    .tt-cell.part { border-color: var(--accent-dk); color: var(--accent-dk); }
+    .tt-cell.zero { border-color: var(--red); color: var(--red); }
+    .tt-sec { font-weight: 700; margin: 20px 0 4px; font-size: .92rem; }
+
+    .script-box { line-height: 1.8; font-size: .95rem; }
+    .script-box p { margin-bottom: 6px; }
+
+    /* custom audio player */
+    .player {
+      display: flex; align-items: center; gap: 14px;
+      background: linear-gradient(135deg, rgba(212,87,42,.09), rgba(201,160,48,.10));
+      border: 2px solid rgba(212,87,42,.25); border-radius: 18px;
+      padding: 12px 16px; margin: 0 0 18px;
+    }
+    .pl-btn {
+      flex: 0 0 52px; width: 52px; height: 52px; border-radius: 50%; border: none;
+      background: var(--primary); color: #fff; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 4px 12px rgba(212,87,42,.35);
+      transition: transform .15s, background .15s;
+    }
+    .pl-btn:hover { transform: scale(1.07); background: var(--primary-dk); }
+    .pl-btn svg { width: 22px; height: 22px; fill: currentColor; }
+    .pl-btn .i-pause { display: none; }
+    .player.playing .pl-btn .i-play  { display: none; }
+    .player.playing .pl-btn .i-pause { display: block; }
+    .pl-main { flex: 1; min-width: 0; }
+    .pl-top { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 8px; }
+    .pl-label { font-weight: 700; font-size: .9rem; color: var(--primary-dk); display: flex; align-items: center; gap: 8px; }
+    .pl-time { font-size: .82rem; color: var(--muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
+    .pl-track {
+      position: relative; height: 8px; border-radius: 99px;
+      background: rgba(44,32,16,.10); cursor: pointer;
+    }
+    .pl-fill {
+      position: absolute; inset: 0 auto 0 0; width: 0; border-radius: 99px;
+      background: linear-gradient(90deg, var(--primary), var(--accent-dk));
+    }
+    .pl-knob {
+      position: absolute; top: 50%; left: 0; width: 16px; height: 16px; margin: -8px 0 0 -8px;
+      border-radius: 50%; background: #fff; border: 3px solid var(--primary);
+      box-shadow: 0 1px 4px rgba(0,0,0,.2); transition: transform .15s;
+    }
+    .pl-track:hover .pl-knob { transform: scale(1.2); }
+    .pl-replay {
+      flex: 0 0 36px; width: 36px; height: 36px; border-radius: 50%;
+      border: 2px solid var(--border); background: var(--card); color: var(--muted);
+      cursor: pointer; font-size: 1.05rem; line-height: 1;
+    }
+    .pl-replay:hover { border-color: var(--primary); color: var(--primary); }
+    .pl-plays { font-size: .75rem; color: var(--muted); font-weight: 600; }
+    /* little equaliser that dances while playing */
+    .eq { display: inline-flex; align-items: flex-end; gap: 2px; height: 14px; }
+    .eq i { width: 3px; height: 4px; border-radius: 2px; background: var(--primary); }
+    .player.playing .eq i { animation: eq .8s ease-in-out infinite; }
+    .player.playing .eq i:nth-child(2) { animation-delay: .2s; }
+    .player.playing .eq i:nth-child(3) { animation-delay: .4s; }
+    .player.playing .eq i:nth-child(4) { animation-delay: .1s; }
+    @keyframes eq { 0%,100% { height: 4px; } 50% { height: 14px; } }
+    @media (max-width: 520px) { .pl-replay { display: none; } .player { gap: 10px; padding: 10px 12px; } }
+
+    .tab-btn:nth-child(5).active { background: var(--green); border-color: var(--green); }
+  </style>
+</head>
+<body>
+
+<header class="site-header">
+  <h1>Lesson 7 — Olympiad Demo: Высшая проба</h1>
+  <a class="back-link" href="../index.html">← All Lessons</a>
+</header>
+
+<div class="container">
+
+  <div class="lesson-meta">
+    <h2>«Высшая проба» · Первый тур отборочного этапа · 9–10 классы</h2>
+    <p>📅 25 September 2026 &nbsp;·&nbsp; Lesson 7</p>
+  </div>
+
+  <div class="exam-banner">
+    <strong>ДЕМОНСТРАЦИОННЫЙ ВАРИАНТ · АНГЛИЙСКИЙ ЯЗЫК · 9–10 КЛАССЫ</strong>
+    <p>Время выполнения – 40 минут. Максимальное количество баллов – 100.<br>
+       Фонетика (20) · Лексика (30) · Грамматика (30) · Лингвострановедение (20)</p>
+    <p>30 tasks. Your score stays locked 🔒 until every task has an answer.
+       In the real round you cannot go back to a question — try to work straight through.</p>
+  </div>
+
+  <div class="timer-box">
+    <div class="timer-clock" id="clock">40:00</div>
+    <button class="btn-mini" onclick="toggleTimer()" id="tbtn">Start</button>
+    <button class="btn-mini" onclick="resetTimer()">Reset</button>
+    <div class="timer-hint">Optional — the real round gives you 40 minutes for all four sections.</div>
+  </div>
+
+  <div class="progress-wrap">
+    <div class="progress-top">
+      <div class="progress-label">Tasks done: <span id="pgCount">0 / 30</span></div>
+      <div class="progress-label" id="pgHint" style="color:var(--muted);font-weight:500;">Score unlocks at 30 / 30</div>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="pgFill"></div></div>
+  </div>
+
+  <div class="tab-bar">
+    <button class="tab-btn active" onclick="switchTab('phon', this)">🔊 Фонетика</button>
+    <button class="tab-btn"        onclick="switchTab('lex',  this)">📚 Лексика</button>
+    <button class="tab-btn"        onclick="switchTab('gram', this)">⚙️ Грамматика</button>
+    <button class="tab-btn"        onclick="switchTab('cult', this)">🌍 Лингвострановедение</button>
+    <button class="tab-btn"        onclick="switchTab('score',this)">🔒 Результат</button>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════
+       РАЗДЕЛ 1 — ФОНЕТИКА (20 баллов) · Задания 1–10
+  ══════════════════════════════════════════════════════════ -->
+  <div class="tab-content active" id="tab-phon">
+
+    <div class="section-head">
+      <h2>Фонетика</h2>
+      <div class="sh-meta">Задания 1–10 &nbsp;·&nbsp; максимум 20 баллов</div>
+    </div>
+
+    <!-- Задание 1 -->
+    <div class="exercise task" data-task="1" data-sec="phon" data-points="1" data-mode="all">
+      <span class="task-num">Задание 1 · 1 балл</span>
+      <p class="orig-instr">Прослушайте аудиозапись и поставьте слова в том порядке, в котором вы их услышите.</p>
+      <div class="audio-wrap" style="margin:0 0 16px;"><audio controls preload="none"><source src="audio/l7-task01.mp3" type="audio/mpeg">Your browser does not support audio.</audio></div>
+      <p style="margin-bottom:14px;"><b>thorough, though, thought, through</b></p>
+      <div class="answer-row"><span class="ar-num">1st</span>
+        <select class="exam-select ans" id="t1-1" data-opts="thorough,though,thought,through" data-answer="thought"></select></div>
+      <div class="answer-row"><span class="ar-num">2nd</span>
+        <select class="exam-select ans" id="t1-2" data-opts="thorough,though,thought,through" data-answer="through"></select></div>
+      <div class="answer-row"><span class="ar-num">3rd</span>
+        <select class="exam-select ans" id="t1-3" data-opts="thorough,though,thought,through" data-answer="thorough"></select></div>
+      <div class="answer-row"><span class="ar-num">4th</span>
+        <select class="exam-select ans" id="t1-4" data-opts="thorough,though,thought,through" data-answer="though"></select></div>
+    </div>
+
+    <!-- Задание 2 -->
+    <div class="exercise task" data-task="2" data-sec="phon" data-points="1" data-mode="all">
+      <span class="task-num">Задание 2 · 1 балл</span>
+      <p class="orig-instr">Прослушайте аудиозапись и выберите те слова из списка, которые вы услышите. Четыре слова являются лишними.</p>
+      <div class="audio-wrap" style="margin:0 0 16px;"><audio controls preload="none"><source src="audio/l7-task02.mp3" type="audio/mpeg">Your browser does not support audio.</audio></div>
+      <div class="pick list ans" id="t2" data-need="4" data-all="1"
+           data-items="loose|lose|quite|quiet|adapt|adopt|costume|custom"
+           data-correct="lose,quiet,adapt,custom"></div>
+    </div>
+
+    <!-- Задание 3 -->
+    <div class="exercise task" data-task="3" data-sec="phon" data-points="4">
+      <span class="task-num">Задание 3 · 4 балла</span>
+      <p class="orig-instr">Прослушайте аудиозапись и соотнесите выделенные слова с их транскрипциями. Две транскрипции не соотносятся ни с одним словом.</p>
+      <div class="audio-wrap" style="margin:0 0 16px;"><audio controls preload="none"><source src="audio/l7-task03.mp3" type="audio/mpeg">Your browser does not support audio.</audio></div>
+      <div class="pair-grid">
+        <div>
+          <div class="answer-row"><span class="ar-num">1</span><span class="ar-txt">Be careful — that <b>knife</b> is very sharp.</span>
+            <select class="exam-select ans" id="t3-1" data-opts="a,b,c,d,e,f" data-answer="b"></select></div>
+          <div class="answer-row"><span class="ar-num">2</span><span class="ar-txt">For dinner, Mum grilled some fresh <b>salmon</b> with lemon.</span>
+            <select class="exam-select ans" id="t3-2" data-opts="a,b,c,d,e,f" data-answer="a"></select></div>
+          <div class="answer-row"><span class="ar-num">3</span><span class="ar-txt">The school <b>choir</b> performed at the charity concert.</span>
+            <select class="exam-select ans" id="t3-3" data-opts="a,b,c,d,e,f" data-answer="e"></select></div>
+          <div class="answer-row"><span class="ar-num">4</span><span class="ar-txt">They spent the summer on a tiny Scottish <b>island</b>.</span>
+            <select class="exam-select ans" id="t3-4" data-opts="a,b,c,d,e,f" data-answer="c"></select></div>
+        </div>
+        <div class="opt-box ipa">
+          <div class="opt-row"><span class="opt-letter">a</span><span class="opt-body">/ˈsæmən/</span></div>
+          <div class="opt-row"><span class="opt-letter">b</span><span class="opt-body">/naɪf/</span></div>
+          <div class="opt-row"><span class="opt-letter">c</span><span class="opt-body">/ˈaɪlənd/</span></div>
+          <div class="opt-row"><span class="opt-letter">d</span><span class="opt-body">/ˈsælmən/</span></div>
+          <div class="opt-row"><span class="opt-letter">e</span><span class="opt-body">/ˈkwaɪə/</span></div>
+          <div class="opt-row"><span class="opt-letter">f</span><span class="opt-body">/ˈtʃɔɪə/</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Задание 4 -->
+    <div class="exercise task" data-task="4" data-sec="phon" data-points="4">
+      <span class="task-num">Задание 4 · 4 балла</span>
+      <p class="orig-instr">Выберите четыре слова в предложении, в которых есть звук <span class="ipa">/ʒ/</span>.</p>
+      <div class="passage-box">
+        <div class="pick ans" id="t4" data-need="4" data-correct="usual,measure,occasion,decision"
+             data-words="It was usual for the passionate diver to measure the ocean floor on a special occasion, so his decision to stay ashore surprised everyone."></div>
+      </div>
+    </div>
+
+    <!-- Задание 5 -->
+    <div class="exercise task" data-task="5" data-sec="phon" data-points="1">
+      <span class="task-num">Задание 5 · 1 балл</span>
+      <p class="orig-instr">Прослушайте аудиозапись и выберите одно предложение, в котором нет связующего звука /r/.</p>
+      <div class="audio-wrap" style="margin:0 0 16px;"><audio controls preload="none"><source src="audio/l7-task05.mp3" type="audio/mpeg">Your browser does not support audio.</audio></div>
+      <div class="mc-options chips ans" data-correct="3">
+        <label class="mc-option"><input type="radio" name="t5" value="1"><span class="mc-bullet">1</span></label>
+        <label class="mc-option"><input type="radio" name="t5" value="2"><span class="mc-bullet">2</span></label>
+        <label class="mc-option"><input type="radio" name="t5" value="3"><span class="mc-bullet">3</span></label>
+        <label class="mc-option"><input type="radio" name="t5" value="4"><span class="mc-bullet">4</span></label>
+      </div>
+    </div>
+
+    <!-- Задание 6 -->
+    <div class="exercise task" data-task="6" data-sec="phon" data-points="4">
+      <span class="task-num">Задание 6 · 4 балла</span>
+      <p class="orig-instr">Соотнесите выделенные слова в предложениях с их звуковой схемой, где o – безударный слог, а O – ударный. Две звуковые схемы не соотносятся ни с одним словом.</p>
+      <div class="pair-grid">
+        <div>
+          <div class="answer-row"><span class="ar-num">1</span><span class="ar-txt">The magician’s best <b>technique</b> was making coins disappear.</span>
+            <select class="exam-select ans" id="t6-1" data-opts="a,b,c,d,e,f" data-answer="b"></select></div>
+          <div class="answer-row"><span class="ar-num">2</span><span class="ar-txt">The flood was a <b>catastrophe</b> for the small farming town.</span>
+            <select class="exam-select ans" id="t6-2" data-opts="a,b,c,d,e,f" data-answer="d"></select></div>
+          <div class="answer-row"><span class="ar-num">3</span><span class="ar-txt">The award <b>ceremony</b> will take place in the main hall.</span>
+            <select class="exam-select ans" id="t6-3" data-opts="a,b,c,d,e,f" data-answer="a"></select></div>
+          <div class="answer-row"><span class="ar-num">4</span><span class="ar-txt">All our products come with a two-year <b>guarantee</b>.</span>
+            <select class="exam-select ans" id="t6-4" data-opts="a,b,c,d,e,f" data-answer="f"></select></div>
+        </div>
+        <div class="opt-box">
+          <div class="opt-row"><span class="opt-letter">a</span><span class="opt-body">Oooo</span></div>
+          <div class="opt-row"><span class="opt-letter">b</span><span class="opt-body">oO</span></div>
+          <div class="opt-row"><span class="opt-letter">c</span><span class="opt-body">ooOo</span></div>
+          <div class="opt-row"><span class="opt-letter">d</span><span class="opt-body">oOoo</span></div>
+          <div class="opt-row"><span class="opt-letter">e</span><span class="opt-body">Oo</span></div>
+          <div class="opt-row"><span class="opt-letter">f</span><span class="opt-body">ooO</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Задание 7 -->
+    <div class="exercise task" data-task="7" data-sec="phon" data-points="1">
+      <span class="task-num">Задание 7 · 1 балл</span>
+      <p class="orig-instr">Прослушайте, как произносится слово. В каком из двух предложений оно используется именно в таком варианте звучания?</p>
+      <div class="audio-wrap" style="margin:0 0 16px;"><audio controls preload="none"><source src="audio/l7-task07.mp3" type="audio/mpeg">Your browser does not support audio.</audio></div>
+      <div class="mc-options stack ans" data-correct="2">
+        <label class="mc-option"><input type="radio" name="t7" value="1"><span class="mc-bullet">1</span> Several parents may <b>&nbsp;object&nbsp;</b> to the new uniform rules.</label>
+        <label class="mc-option"><input type="radio" name="t7" value="2"><span class="mc-bullet">2</span> The most valuable <b>&nbsp;object&nbsp;</b> in the museum is a Roman coin.</label>
+      </div>
+    </div>
+
+    <!-- Задание 8 -->
+    <div class="exercise task" data-task="8" data-sec="phon" data-points="1">
+      <span class="task-num">Задание 8 · 1 балл</span>
+      <p class="orig-instr">Прочитайте диалог и выберите слово в выделенном предложении, на которое должно упасть логическое ударение.</p>
+      <div class="passage-box dialogue">
+        <p>Speaker A: So you’ve already sent the invitations by post?</p>
+        <p>Speaker B: Not by post; our printer broke down on Monday.</p>
+        <p><b>Click one word:</b></p>
+        <div class="pick ans" id="t8" data-need="1" data-correct="emailed"
+             data-words="I emailed them to everyone yesterday."></div>
+      </div>
+    </div>
+
+    <!-- Задание 9 -->
+    <div class="exercise task" data-task="9" data-sec="phon" data-points="1">
+      <span class="task-num">Задание 9 · 1 балл</span>
+      <p class="orig-instr">Прослушайте предложение и определите, что на самом деле хочет сказать говорящий.</p>
+      <div class="audio-wrap" style="margin:0 0 16px;"><audio controls preload="none"><source src="audio/l7-task09.mp3" type="audio/mpeg">Your browser does not support audio.</audio></div>
+      <div class="mc-options stack ans" data-correct="2">
+        <label class="mc-option"><input type="radio" name="t9" value="1"><span class="mc-bullet">1</span> The speaker already knew this and is simply repeating the fact.</label>
+        <label class="mc-option"><input type="radio" name="t9" value="2"><span class="mc-bullet">2</span> The speaker is surprised by the news and is checking it.</label>
+        <label class="mc-option"><input type="radio" name="t9" value="3"><span class="mc-bullet">3</span> The speaker is telling the listener to go and look at the results.</label>
+        <label class="mc-option"><input type="radio" name="t9" value="4"><span class="mc-bullet">4</span> The speaker is sure the listener will agree and is making small talk.</label>
+      </div>
+    </div>
+
+    <!-- Задание 10 -->
+    <div class="exercise task" data-task="10" data-sec="phon" data-points="2">
+      <span class="task-num">Задание 10 · 2 балла</span>
+      <p class="orig-instr">Прослушайте аудиозапись и выберите два предложения, в которых используется нисходящий тон.</p>
+      <div class="audio-wrap" style="margin:0 0 16px;"><audio controls preload="none"><source src="audio/l7-task10.mp3" type="audio/mpeg">Your browser does not support audio.</audio></div>
+      <div class="pick items ans" id="t10" data-need="2" data-correct="1,3"
+           data-items="1|2|3|4"></div>
+      <div class="btn-row">
+        <button class="btn btn-ghost" onclick="switchTabByName('lex')">Next: Лексика →</button>
+      </div>
+    </div>
+
+  </div><!-- /tab-phon -->
+
+  <!-- ══════════════════════════════════════════════════════════
+       РАЗДЕЛ 2 — ЛЕКСИКА (30 баллов) · Задания 11–18
+  ══════════════════════════════════════════════════════════ -->
+  <div class="tab-content" id="tab-lex">
+
+    <div class="section-head">
+      <h2>Лексика</h2>
+      <div class="sh-meta">Задания 11–18 &nbsp;·&nbsp; максимум 30 баллов</div>
+    </div>
+
+    <!-- Задание 11 -->
+    <div class="exercise task" data-task="11" data-sec="lex" data-points="2">
+      <span class="task-num">Задание 11 · 2 балла</span>
+      <p class="orig-instr">В предложении найдите два слова с орфографической ошибкой.</p>
+      <div class="passage-box">
+        <div class="pick ans" id="t11" data-need="2" data-correct="goverment,recieving"
+             data-words="Despite the committee’s initial reluctance, the goverment finally announced that the new library would be accessible to everyone, recieving generous funding from several local businesses."></div>
+      </div>
+    </div>
+
+    <!-- Задание 12 -->
+    <div class="exercise task" data-task="12" data-sec="lex" data-points="4">
+      <span class="task-num">Задание 12 · 4 балла</span>
+      <p class="orig-instr">Используйте подходящие приставки, чтобы получить слова, лексически и грамматически подходящие в соответствующие пропуски в предложениях. Четыре приставки являются лишними.</p>
+      <div class="pair-grid">
+        <div>
+          <div class="answer-row"><span class="ar-num">1</span><span class="ar-txt">Our manager tends to [ESTIMATE] ______ how long tasks take, so we always miss our deadlines.</span>
+            <select class="exam-select ans" id="t12-1" data-opts="a,b,c,d,e,f,g,h" data-answer="e"></select></div>
+          <div class="answer-row"><span class="ar-num">2</span><span class="ar-txt">Many of the ancient letters are [LEGIBLE] ______ because the ink has faded.</span>
+            <select class="exam-select ans" id="t12-2" data-opts="a,b,c,d,e,f,g,h" data-answer="b"></select></div>
+          <div class="answer-row"><span class="ar-num">3</span><span class="ar-txt">The two schools decided to [OPERATE] ______ on a joint science project.</span>
+            <select class="exam-select ans" id="t12-3" data-opts="a,b,c,d,e,f,g,h" data-answer="c"></select></div>
+          <div class="answer-row"><span class="ar-num">4</span><span class="ar-txt">Please [ACTIVATE] ______ the alarm before you open the back door.</span>
+            <select class="exam-select ans" id="t12-4" data-opts="a,b,c,d,e,f,g,h" data-answer="d"></select></div>
+        </div>
+        <div class="opt-box">
+          <div class="opt-row"><span class="opt-letter">a</span><span class="opt-body">pre-</span></div>
+          <div class="opt-row"><span class="opt-letter">b</span><span class="opt-body">il-</span></div>
+          <div class="opt-row"><span class="opt-letter">c</span><span class="opt-body">co-</span></div>
+          <div class="opt-row"><span class="opt-letter">d</span><span class="opt-body">de-</span></div>
+          <div class="opt-row"><span class="opt-letter">e</span><span class="opt-body">under-</span></div>
+          <div class="opt-row"><span class="opt-letter">f</span><span class="opt-body">ir-</span></div>
+          <div class="opt-row"><span class="opt-letter">g</span><span class="opt-body">mis-</span></div>
+          <div class="opt-row"><span class="opt-letter">h</span><span class="opt-body">sub-</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Задание 13 -->
+    <div class="exercise task" data-task="13" data-sec="lex" data-points="4">
+      <span class="task-num">Задание 13 · 4 балла</span>
+      <p class="orig-instr">Соотнесите слова, выделенные в предложениях, с наиболее близкими к ним по значению словами из списка.</p>
+      <div class="q-grid">
+        <div class="q-card">
+          <p class="q-text">1. Her <b>candid</b> reply surprised the interviewers.</p>
+          <div class="mc-options stack ans" data-correct="b">
+            <label class="mc-option"><input type="radio" name="t13-1" value="a"><span class="mc-bullet">a</span> rude</label>
+            <label class="mc-option"><input type="radio" name="t13-1" value="b"><span class="mc-bullet">b</span> frank</label>
+            <label class="mc-option"><input type="radio" name="t13-1" value="c"><span class="mc-bullet">c</span> brief</label>
+            <label class="mc-option"><input type="radio" name="t13-1" value="d"><span class="mc-bullet">d</span> careful</label>
+          </div>
+        </div>
+        <div class="q-card">
+          <p class="q-text">2. Most of the equipment in the old lab is now <b>obsolete</b>.</p>
+          <div class="mc-options stack ans" data-correct="a">
+            <label class="mc-option"><input type="radio" name="t13-2" value="a"><span class="mc-bullet">a</span> out of date</label>
+            <label class="mc-option"><input type="radio" name="t13-2" value="b"><span class="mc-bullet">b</span> dangerous</label>
+            <label class="mc-option"><input type="radio" name="t13-2" value="c"><span class="mc-bullet">c</span> expensive</label>
+            <label class="mc-option"><input type="radio" name="t13-2" value="d"><span class="mc-bullet">d</span> broken</label>
+          </div>
+        </div>
+        <div class="q-card">
+          <p class="q-text">3. He made a <b>futile</b> attempt to catch the last train.</p>
+          <div class="mc-options stack ans" data-correct="c">
+            <label class="mc-option"><input type="radio" name="t13-3" value="a"><span class="mc-bullet">a</span> brave</label>
+            <label class="mc-option"><input type="radio" name="t13-3" value="b"><span class="mc-bullet">b</span> sudden</label>
+            <label class="mc-option"><input type="radio" name="t13-3" value="c"><span class="mc-bullet">c</span> useless</label>
+            <label class="mc-option"><input type="radio" name="t13-3" value="d"><span class="mc-bullet">d</span> clumsy</label>
+          </div>
+        </div>
+        <div class="q-card">
+          <p class="q-text">4. The hikers were <b>famished</b> after the long climb.</p>
+          <div class="mc-options stack ans" data-correct="d">
+            <label class="mc-option"><input type="radio" name="t13-4" value="a"><span class="mc-bullet">a</span> delighted</label>
+            <label class="mc-option"><input type="radio" name="t13-4" value="b"><span class="mc-bullet">b</span> lost</label>
+            <label class="mc-option"><input type="radio" name="t13-4" value="c"><span class="mc-bullet">c</span> exhausted</label>
+            <label class="mc-option"><input type="radio" name="t13-4" value="d"><span class="mc-bullet">d</span> very hungry</label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Задание 14 -->
+    <div class="exercise task" data-task="14" data-sec="lex" data-points="4">
+      <span class="task-num">Задание 14 · 4 балла</span>
+      <p class="orig-instr">Для предложений 1-4 укажите одно слово, которое лексически соответствует содержанию конкретного предложения. Четыре слова являются лишними.</p>
+      <div class="pair-grid">
+        <div>
+          <div class="answer-row"><span class="ar-num">1</span><span class="ar-txt">The young scientist was awarded a ______ to continue her research.</span>
+            <select class="exam-select ans" id="t14-1" data-opts="a,b,c,d,e,f,g,h" data-answer="c"></select></div>
+          <div class="answer-row"><span class="ar-num">2</span><span class="ar-txt">Before you sign, please read the terms and ______ carefully.</span>
+            <select class="exam-select ans" id="t14-2" data-opts="a,b,c,d,e,f,g,h" data-answer="e"></select></div>
+          <div class="answer-row"><span class="ar-num">3</span><span class="ar-txt">The police have launched an ______ into the incident.</span>
+            <select class="exam-select ans" id="t14-3" data-opts="a,b,c,d,e,f,g,h" data-answer="g"></select></div>
+          <div class="answer-row"><span class="ar-num">4</span><span class="ar-txt">In his speech, the headmaster paid ______ to the teacher who had retired.</span>
+            <select class="exam-select ans" id="t14-4" data-opts="a,b,c,d,e,f,g,h" data-answer="a"></select></div>
+        </div>
+        <div class="opt-box">
+          <div class="opt-row"><span class="opt-letter">a</span><span class="opt-body">tribute</span></div>
+          <div class="opt-row"><span class="opt-letter">b</span><span class="opt-body">rumour</span></div>
+          <div class="opt-row"><span class="opt-letter">c</span><span class="opt-body">grant</span></div>
+          <div class="opt-row"><span class="opt-letter">d</span><span class="opt-body">excuse</span></div>
+          <div class="opt-row"><span class="opt-letter">e</span><span class="opt-body">conditions</span></div>
+          <div class="opt-row"><span class="opt-letter">f</span><span class="opt-body">habit</span></div>
+          <div class="opt-row"><span class="opt-letter">g</span><span class="opt-body">investigation</span></div>
+          <div class="opt-row"><span class="opt-letter">h</span><span class="opt-body">remedy</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Задание 15 -->
+    <div class="exercise task" data-task="15" data-sec="lex" data-points="4">
+      <span class="task-num">Задание 15 · 4 балла</span>
+      <p class="orig-instr">Для предложений 1-4 укажите одно слово, которое лексически соответствует содержанию конкретного предложения. Четыре слова являются лишними.</p>
+      <div class="pair-grid">
+        <div>
+          <div class="answer-row"><span class="ar-num">1</span><span class="ar-txt">It took the firefighters six hours to ______ the blaze under control.</span>
+            <select class="exam-select ans" id="t15-1" data-opts="a,b,c,d,e,f,g,h" data-answer="g"></select></div>
+          <div class="answer-row"><span class="ar-num">2</span><span class="ar-txt">The new law will ______ into force next January.</span>
+            <select class="exam-select ans" id="t15-2" data-opts="a,b,c,d,e,f,g,h" data-answer="c"></select></div>
+          <div class="answer-row"><span class="ar-num">3</span><span class="ar-txt">As the oldest pupil, Mark always tries to ______ an example for the younger ones.</span>
+            <select class="exam-select ans" id="t15-3" data-opts="a,b,c,d,e,f,g,h" data-answer="a"></select></div>
+          <div class="answer-row"><span class="ar-num">4</span><span class="ar-txt">Please ______ a seat — the doctor will see you shortly.</span>
+            <select class="exam-select ans" id="t15-4" data-opts="a,b,c,d,e,f,g,h" data-answer="e"></select></div>
+        </div>
+        <div class="opt-box">
+          <div class="opt-row"><span class="opt-letter">a</span><span class="opt-body">set</span></div>
+          <div class="opt-row"><span class="opt-letter">b</span><span class="opt-body">make</span></div>
+          <div class="opt-row"><span class="opt-letter">c</span><span class="opt-body">come</span></div>
+          <div class="opt-row"><span class="opt-letter">d</span><span class="opt-body">raise</span></div>
+          <div class="opt-row"><span class="opt-letter">e</span><span class="opt-body">take</span></div>
+          <div class="opt-row"><span class="opt-letter">f</span><span class="opt-body">do</span></div>
+          <div class="opt-row"><span class="opt-letter">g</span><span class="opt-body">bring</span></div>
+          <div class="opt-row"><span class="opt-letter">h</span><span class="opt-body">pay</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Задание 16 -->
+    <div class="exercise task" data-task="16" data-sec="lex" data-points="4">
+      <span class="task-num">Задание 16 · 4 балла</span>
+      <p class="orig-instr">Для предложений 1-4 укажите одно слово, которое лексически соответствует содержанию конкретного предложения. Четыре слова являются лишними.</p>
+      <div class="pair-grid">
+        <div>
+          <div class="answer-row"><span class="ar-num">1</span><span class="ar-txt">The forecast warns of ______ rain throughout the weekend.</span>
+            <select class="exam-select ans" id="t16-1" data-opts="a,b,c,d,e,f,g,h" data-answer="c"></select></div>
+          <div class="answer-row"><span class="ar-num">2</span><span class="ar-txt">After the argument, there was an ______ silence in the room.</span>
+            <select class="exam-select ans" id="t16-2" data-opts="a,b,c,d,e,f,g,h" data-answer="e"></select></div>
+          <div class="answer-row"><span class="ar-num">3</span><span class="ar-txt">I have a ______ memory of my first day at school — I remember every detail.</span>
+            <select class="exam-select ans" id="t16-3" data-opts="a,b,c,d,e,f,g,h" data-answer="a"></select></div>
+          <div class="answer-row"><span class="ar-num">4</span><span class="ar-txt">Searching the whole forest before dark was a ______ task for the rescue team.</span>
+            <select class="exam-select ans" id="t16-4" data-opts="a,b,c,d,e,f,g,h" data-answer="g"></select></div>
+        </div>
+        <div class="opt-box">
+          <div class="opt-row"><span class="opt-letter">a</span><span class="opt-body">vivid</span></div>
+          <div class="opt-row"><span class="opt-letter">b</span><span class="opt-body">thick</span></div>
+          <div class="opt-row"><span class="opt-letter">c</span><span class="opt-body">heavy</span></div>
+          <div class="opt-row"><span class="opt-letter">d</span><span class="opt-body">loud</span></div>
+          <div class="opt-row"><span class="opt-letter">e</span><span class="opt-body">awkward</span></div>
+          <div class="opt-row"><span class="opt-letter">f</span><span class="opt-body">tall</span></div>
+          <div class="opt-row"><span class="opt-letter">g</span><span class="opt-body">daunting</span></div>
+          <div class="opt-row"><span class="opt-letter">h</span><span class="opt-body">wide</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Задание 17 -->
+    <div class="exercise task" data-task="17" data-sec="lex" data-points="4">
+      <span class="task-num">Задание 17 · 4 балла</span>
+      <p class="orig-instr">Для предложений 1-4 укажите одно слово, которое лексически соответствует содержанию конкретного предложения. Четыре слова являются лишними.</p>
+      <div class="pair-grid">
+        <div>
+          <div class="answer-row"><span class="ar-num">1</span><span class="ar-txt">She was accused ______ stealing the documents.</span>
+            <select class="exam-select ans" id="t17-1" data-opts="a,b,c,d,e,f,g,h" data-answer="b"></select></div>
+          <div class="answer-row"><span class="ar-num">2</span><span class="ar-txt">The success of the project depends ______ everyone’s cooperation.</span>
+            <select class="exam-select ans" id="t17-2" data-opts="a,b,c,d,e,f,g,h" data-answer="d"></select></div>
+          <div class="answer-row"><span class="ar-num">3</span><span class="ar-txt">He apologised ______ being late for the third time this week.</span>
+            <select class="exam-select ans" id="t17-3" data-opts="a,b,c,d,e,f,g,h" data-answer="f"></select></div>
+          <div class="answer-row"><span class="ar-num">4</span><span class="ar-txt">After three attempts, they finally succeeded ______ reaching the summit.</span>
+            <select class="exam-select ans" id="t17-4" data-opts="a,b,c,d,e,f,g,h" data-answer="g"></select></div>
+        </div>
+        <div class="opt-box">
+          <div class="opt-row"><span class="opt-letter">a</span><span class="opt-body">at</span></div>
+          <div class="opt-row"><span class="opt-letter">b</span><span class="opt-body">of</span></div>
+          <div class="opt-row"><span class="opt-letter">c</span><span class="opt-body">with</span></div>
+          <div class="opt-row"><span class="opt-letter">d</span><span class="opt-body">on</span></div>
+          <div class="opt-row"><span class="opt-letter">e</span><span class="opt-body">about</span></div>
+          <div class="opt-row"><span class="opt-letter">f</span><span class="opt-body">for</span></div>
+          <div class="opt-row"><span class="opt-letter">g</span><span class="opt-body">in</span></div>
+          <div class="opt-row"><span class="opt-letter">h</span><span class="opt-body">to</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Задание 18 -->
+    <div class="exercise task" data-task="18" data-sec="lex" data-points="4">
+      <span class="task-num">Задание 18 · 4 балла</span>
+      <p class="orig-instr">Выберите предлоги, которые завершают фразовые глаголы в контексте. Четыре предлога являются лишними.</p>
+      <div class="pair-grid">
+        <div>
+          <div class="answer-row"><span class="ar-num">1</span><span class="ar-txt">The meeting was called ______ because the director was ill.</span>
+            <select class="exam-select ans" id="t18-1" data-opts="a,b,c,d,e,f,g,h" data-answer="a"></select></div>
+          <div class="answer-row"><span class="ar-num">2</span><span class="ar-txt">I can hardly make ______ what he has written — his handwriting is terrible.</span>
+            <select class="exam-select ans" id="t18-2" data-opts="a,b,c,d,e,f,g,h" data-answer="c"></select></div>
+          <div class="answer-row"><span class="ar-num">3</span><span class="ar-txt">I can’t put ______ with this noise any longer!</span>
+            <select class="exam-select ans" id="t18-3" data-opts="a,b,c,d,e,f,g,h" data-answer="e"></select></div>
+          <div class="answer-row"><span class="ar-num">4</span><span class="ar-txt">Our car broke ______ on the motorway, so we were late.</span>
+            <select class="exam-select ans" id="t18-4" data-opts="a,b,c,d,e,f,g,h" data-answer="g"></select></div>
+        </div>
+        <div class="opt-box">
+          <div class="opt-row"><span class="opt-letter">a</span><span class="opt-body">off</span></div>
+          <div class="opt-row"><span class="opt-letter">b</span><span class="opt-body">through</span></div>
+          <div class="opt-row"><span class="opt-letter">c</span><span class="opt-body">out</span></div>
+          <div class="opt-row"><span class="opt-letter">d</span><span class="opt-body">over</span></div>
+          <div class="opt-row"><span class="opt-letter">e</span><span class="opt-body">up</span></div>
+          <div class="opt-row"><span class="opt-letter">f</span><span class="opt-body">away</span></div>
+          <div class="opt-row"><span class="opt-letter">g</span><span class="opt-body">down</span></div>
+          <div class="opt-row"><span class="opt-letter">h</span><span class="opt-body">across</span></div>
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-ghost" onclick="switchTabByName('gram')">Next: Грамматика →</button>
+      </div>
+    </div>
+
+  </div><!-- /tab-lex -->
+
+  <!-- ══════════════════════════════════════════════════════════
+       РАЗДЕЛ 3 — ГРАММАТИКА (30 баллов) · Задания 19–26
+  ══════════════════════════════════════════════════════════ -->
+  <div class="tab-content" id="tab-gram">
+
+    <div class="section-head">
+      <h2>Грамматика</h2>
+      <div class="sh-meta">Задания 19–26 &nbsp;·&nbsp; максимум 30 баллов</div>
+    </div>
+
+    <!-- Задание 19 -->
+    <div class="exercise task" data-task="19" data-sec="gram" data-points="4">
+      <span class="task-num">Задание 19 · 4 балла</span>
+      <p class="orig-instr">Заполните пропуски в предложениях нужным артиклем. (a(n) / the / ∅ – нулевой артикль)</p>
+      <div class="answer-row"><span class="ar-num">1</span><span class="ar-txt">After a week of hiking in <select class="exam-select ans" id="t19-1" data-opts="a(n),the,∅" data-answer="the"></select> Alps, they spent two quiet days in Geneva.</span></div>
+      <div class="answer-row"><span class="ar-num">2</span><span class="ar-txt">Last season she was elected <select class="exam-select ans" id="t19-2" data-opts="a(n),the,∅" data-answer="∅"></select> captain of the school volleyball team.</span></div>
+      <div class="answer-row"><span class="ar-num">3</span><span class="ar-txt"><select class="exam-select ans" id="t19-3" data-opts="a(n),the,∅" data-answer="a(n)"></select> Mr Jenkins phoned while you were out — does anyone here know somebody by that name?</span></div>
+      <div class="answer-row"><span class="ar-num">4</span><span class="ar-txt">My brother has played <select class="exam-select ans" id="t19-4" data-opts="a(n),the,∅" data-answer="the"></select> violin in the city youth orchestra since he was nine.</span></div>
+    </div>
+
+    <!-- Задание 20 -->
+    <div class="exercise task" data-task="20" data-sec="gram" data-points="4">
+      <span class="task-num">Задание 20 · 4 балла</span>
+      <p class="orig-instr">Соотнесите слово и способ, которым образуется множественное число данного слова. Один способ является лишним.</p>
+      <div class="pair-grid">
+        <div>
+          <div class="answer-row"><span class="ar-num">1</span><span class="ar-txt">crisis</span>
+            <select class="exam-select ans" id="t20-1" data-opts="a,b,c,d,e" data-answer="c"></select></div>
+          <div class="answer-row"><span class="ar-num">2</span><span class="ar-txt">sheep</span>
+            <select class="exam-select ans" id="t20-2" data-opts="a,b,c,d,e" data-answer="d"></select></div>
+          <div class="answer-row"><span class="ar-num">3</span><span class="ar-txt">advice</span>
+            <select class="exam-select ans" id="t20-3" data-opts="a,b,c,d,e" data-answer="e"></select></div>
+          <div class="answer-row"><span class="ar-num">4</span><span class="ar-txt">goose</span>
+            <select class="exam-select ans" id="t20-4" data-opts="a,b,c,d,e" data-answer="b"></select></div>
+        </div>
+        <div class="opt-box">
+          <div class="opt-row"><span class="opt-letter">a</span><span class="opt-body">Добавление окончания (e)s</span></div>
+          <div class="opt-row"><span class="opt-letter">b</span><span class="opt-body">Изменение корня</span></div>
+          <div class="opt-row"><span class="opt-letter">c</span><span class="opt-body">Заимствованное (греческое/латинское) окончание</span></div>
+          <div class="opt-row"><span class="opt-letter">d</span><span class="opt-body">Форма не меняется</span></div>
+          <div class="opt-row"><span class="opt-letter">e</span><span class="opt-body">Формы множественного числа нет</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Задание 21 -->
+    <div class="exercise task" data-task="21" data-sec="gram" data-points="4">
+      <span class="task-num">Задание 21 · 4 балла</span>
+      <p class="orig-instr">Расставьте прилагательные в правильном порядке в предложении.</p>
+      <div class="demo-note">Click the adjectives in order. Click a word in the gap to send it back.</div>
+      <div class="build-item"><div class="builder ans" id="t21-1" data-labels="1"
+           data-before="1. There is a" data-after="table in my grandparents’ dining room."
+           data-tiles="wooden|round|beautiful|old|Italian"
+           data-answer="beautiful old round Italian wooden"></div></div>
+      <div class="build-item"><div class="builder ans" id="t21-2" data-labels="1"
+           data-before="2. For the trip he bought a pair of" data-after="boots."
+           data-tiles="leather|brown|walking|comfortable|new"
+           data-answer="comfortable new brown leather walking"></div></div>
+      <div class="build-item"><div class="builder ans" id="t21-3" data-labels="1"
+           data-before="3. On the windowsill stood a(n)" data-after="vase."
+           data-tiles="glass|tall|blue|elegant|Venetian"
+           data-answer="elegant tall blue Venetian glass"></div></div>
+      <div class="build-item"><div class="builder ans" id="t21-4" data-labels="1"
+           data-before="4. We slept in a(n)" data-after="tent."
+           data-tiles="huge|nylon|camping|orange|cheap"
+           data-answer="cheap huge orange nylon camping"></div></div>
+    </div>
+
+    <!-- Задание 22 -->
+    <div class="exercise task" data-task="22" data-sec="gram" data-points="4">
+      <span class="task-num">Задание 22 · 4 балла</span>
+      <p class="orig-instr">Для предложений 1-4 выберите глагол, который грамматически соответствует содержанию конкретного предложения. Два глагола являются лишними.</p>
+      <div class="pair-grid">
+        <div>
+          <div class="answer-row"><span class="ar-num">1</span><span class="ar-txt">By the time you arrive, we ______ dinner, so please don’t be late.</span>
+            <select class="exam-select ans" id="t22-1" data-opts="a,b,c,d,e,f" data-answer="a"></select></div>
+          <div class="answer-row"><span class="ar-num">2</span><span class="ar-txt">He ______ the city marathon in under four hours last year.</span>
+            <select class="exam-select ans" id="t22-2" data-opts="a,b,c,d,e,f" data-answer="b"></select></div>
+          <div class="answer-row"><span class="ar-num">3</span><span class="ar-txt">The film ______ by the time we got to the cinema, so we went for a pizza instead.</span>
+            <select class="exam-select ans" id="t22-3" data-opts="a,b,c,d,e,f" data-answer="c"></select></div>
+          <div class="answer-row"><span class="ar-num">4</span><span class="ar-txt">My sister ______ all her homework, so now she can go out with her friends.</span>
+            <select class="exam-select ans" id="t22-4" data-opts="a,b,c,d,e,f" data-answer="e"></select></div>
+        </div>
+        <div class="opt-box">
+          <div class="opt-row"><span class="opt-letter">a</span><span class="opt-body">will have finished</span></div>
+          <div class="opt-row"><span class="opt-letter">b</span><span class="opt-body">finished</span></div>
+          <div class="opt-row"><span class="opt-letter">c</span><span class="opt-body">had finished</span></div>
+          <div class="opt-row"><span class="opt-letter">d</span><span class="opt-body">was finishing</span></div>
+          <div class="opt-row"><span class="opt-letter">e</span><span class="opt-body">has finished</span></div>
+          <div class="opt-row"><span class="opt-letter">f</span><span class="opt-body">is finished</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Задание 23 -->
+    <div class="exercise task" data-task="23" data-sec="gram" data-points="4">
+      <span class="task-num">Задание 23 · 4 балла</span>
+      <p class="orig-instr">Соотнесите модальные конструкции, выделенные в предложениях, со значением, которое они выражают. Одно значение является лишним.</p>
+      <div class="pair-grid">
+        <div>
+          <div class="answer-row"><span class="ar-num">1</span><span class="ar-txt">You <b>mustn’t use</b> your phone during the exam.</span>
+            <select class="exam-select ans" id="t23-1" data-opts="a,b,c,d,e" data-answer="b"></select></div>
+          <div class="answer-row"><span class="ar-num">2</span><span class="ar-txt">You <b>needn’t have bought</b> any milk — we already had two bottles in the fridge.</span>
+            <select class="exam-select ans" id="t23-2" data-opts="a,b,c,d,e" data-answer="c"></select></div>
+          <div class="answer-row"><span class="ar-num">3</span><span class="ar-txt">Despite the storm, the crew <b>were able to reach</b> the shore.</span>
+            <select class="exam-select ans" id="t23-3" data-opts="a,b,c,d,e" data-answer="d"></select></div>
+          <div class="answer-row"><span class="ar-num">4</span><span class="ar-txt">You <b>ought to see</b> a doctor about that cough.</span>
+            <select class="exam-select ans" id="t23-4" data-opts="a,b,c,d,e" data-answer="a"></select></div>
+        </div>
+        <div class="opt-box">
+          <div class="opt-row"><span class="opt-letter">a</span><span class="opt-body">advice</span></div>
+          <div class="opt-row"><span class="opt-letter">b</span><span class="opt-body">prohibition</span></div>
+          <div class="opt-row"><span class="opt-letter">c</span><span class="opt-body">an unnecessary past action</span></div>
+          <div class="opt-row"><span class="opt-letter">d</span><span class="opt-body">ability in a specific past situation</span></div>
+          <div class="opt-row"><span class="opt-letter">e</span><span class="opt-body">strong certainty about the present</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Задание 24 -->
+    <div class="exercise task" data-task="24" data-sec="gram" data-points="4">
+      <span class="task-num">Задание 24 · 4 балла</span>
+      <p class="orig-instr">Соедините начало каждого предложения (1–4) с подходящим окончанием (a–e), чтобы получились грамматически верные и логичные высказывания. Одно окончание является лишним.</p>
+      <div class="pair-grid">
+        <div>
+          <div class="answer-row"><span class="ar-num">1</span><span class="ar-txt">The teacher made us</span>
+            <select class="exam-select ans" id="t24-1" data-opts="a,b,c,d,e" data-answer="a"></select></div>
+          <div class="answer-row"><span class="ar-num">2</span><span class="ar-txt">She can’t help</span>
+            <select class="exam-select ans" id="t24-2" data-opts="a,b,c,d,e" data-answer="d"></select></div>
+          <div class="answer-row"><span class="ar-num">3</span><span class="ar-txt">We were made</span>
+            <select class="exam-select ans" id="t24-3" data-opts="a,b,c,d,e" data-answer="b"></select></div>
+          <div class="answer-row"><span class="ar-num">4</span><span class="ar-txt">The suspect was last seen</span>
+            <select class="exam-select ans" id="t24-4" data-opts="a,b,c,d,e" data-answer="e"></select></div>
+        </div>
+        <div class="opt-box">
+          <div class="opt-row"><span class="opt-letter">a</span><span class="opt-body">rewrite the whole essay from scratch.</span></div>
+          <div class="opt-row"><span class="opt-letter">b</span><span class="opt-body">to wait outside for over an hour.</span></div>
+          <div class="opt-row"><span class="opt-letter">c</span><span class="opt-body">that the answer was correct.</span></div>
+          <div class="opt-row"><span class="opt-letter">d</span><span class="opt-body">laughing whenever she watches that video.</span></div>
+          <div class="opt-row"><span class="opt-letter">e</span><span class="opt-body">leaving the railway station at midnight.</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Задание 25 -->
+    <div class="exercise task" data-task="25" data-sec="gram" data-points="4">
+      <span class="task-num">Задание 25 · 4 балла</span>
+      <p class="orig-instr">Прочитайте исходное предложение и выберите один вариант, который передает тот же смысл с помощью условного предложения.</p>
+      <div class="q-grid">
+        <div class="q-card">
+          <p class="q-text">1. <i>I didn’t set an alarm, so I overslept.</i></p>
+          <div class="mc-options stack ans" data-correct="c">
+            <label class="mc-option"><input type="radio" name="t25-1" value="a"><span class="mc-bullet">A</span> If I set an alarm, I wouldn’t oversleep.</label>
+            <label class="mc-option"><input type="radio" name="t25-1" value="b"><span class="mc-bullet">B</span> If I had set an alarm, I would oversleep.</label>
+            <label class="mc-option"><input type="radio" name="t25-1" value="c"><span class="mc-bullet">C</span> If I had set an alarm, I wouldn’t have overslept.</label>
+          </div>
+        </div>
+        <div class="q-card">
+          <p class="q-text">2. <i>I’m not tall enough, so I can’t reach the top shelf.</i></p>
+          <div class="mc-options stack ans" data-correct="a">
+            <label class="mc-option"><input type="radio" name="t25-2" value="a"><span class="mc-bullet">A</span> If I were taller, I could reach the top shelf.</label>
+            <label class="mc-option"><input type="radio" name="t25-2" value="b"><span class="mc-bullet">B</span> If I had been taller, I could have reached the top shelf.</label>
+            <label class="mc-option"><input type="radio" name="t25-2" value="c"><span class="mc-bullet">C</span> If I am taller, I can reach the top shelf.</label>
+          </div>
+        </div>
+        <div class="q-card">
+          <p class="q-text">3. <i>She didn’t study medicine, so she isn’t a doctor now.</i></p>
+          <div class="mc-options stack ans" data-correct="b">
+            <label class="mc-option"><input type="radio" name="t25-3" value="a"><span class="mc-bullet">A</span> If she studied medicine, she would be a doctor now.</label>
+            <label class="mc-option"><input type="radio" name="t25-3" value="b"><span class="mc-bullet">B</span> If she had studied medicine, she would be a doctor now.</label>
+            <label class="mc-option"><input type="radio" name="t25-3" value="c"><span class="mc-bullet">C</span> If she had studied medicine, she would have been a doctor now.</label>
+          </div>
+        </div>
+        <div class="q-card">
+          <p class="q-text">4. <i>Whenever you heat ice, it melts.</i></p>
+          <div class="mc-options stack ans" data-correct="c">
+            <label class="mc-option"><input type="radio" name="t25-4" value="a"><span class="mc-bullet">A</span> If you heat ice, it would melt.</label>
+            <label class="mc-option"><input type="radio" name="t25-4" value="b"><span class="mc-bullet">B</span> If you will heat ice, it melts.</label>
+            <label class="mc-option"><input type="radio" name="t25-4" value="c"><span class="mc-bullet">C</span> If you heat ice, it melts.</label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Задание 26 -->
+    <div class="exercise task" data-task="26" data-sec="gram" data-points="2">
+      <span class="task-num">Задание 26 · 2 балла</span>
+      <p class="orig-instr">Расставьте слова в правильном порядке. В задании есть лишние слова.</p>
+      <div class="demo-note">Click the words in order. Click a word in the gap to send it back.</div>
+      <div class="build-item">
+        <p style="margin-bottom:6px;">1. Direct speech: “Have you ever been to Japan?” Tom asked me.</p>
+        <div class="builder ans" id="t26-1"
+             data-before="Reported speech: Tom" data-after="."
+             data-tiles="been|me|have|if|Japan|said|asked|you|ever|had|to|I|did|was"
+             data-answer="asked me if I had ever been to Japan"></div>
+      </div>
+      <div class="build-item">
+        <p style="margin-bottom:6px;">2. Direct speech: “Don’t touch the paintings,” the guide said to us.</p>
+        <div class="builder ans" id="t26-2"
+             data-before="Reported speech: The guide" data-after="."
+             data-tiles="touch|said|not|the|don’t|us|that|paintings|to|didn’t|told"
+             data-answer="told us not to touch the paintings"></div>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-ghost" onclick="switchTabByName('cult')">Next: Лингвострановедение →</button>
+      </div>
+    </div>
+
+  </div><!-- /tab-gram -->
+
+  <!-- ══════════════════════════════════════════════════════════
+       РАЗДЕЛ 4 — ЛИНГВОСТРАНОВЕДЕНИЕ (20 баллов) · Задания 27–30
+  ══════════════════════════════════════════════════════════ -->
+  <div class="tab-content" id="tab-cult">
+
+    <div class="section-head">
+      <h2>Лингвострановедение</h2>
+      <div class="sh-meta">Задания 27–30 &nbsp;·&nbsp; максимум 20 баллов</div>
+    </div>
+
+    <!-- Задание 27 -->
+    <div class="exercise task" data-task="27" data-sec="cult" data-points="5">
+      <span class="task-num">Задание 27 · 5 баллов</span>
+      <p class="orig-instr">Соотнесите изображение и событие, которое на нем представлено. Два события не соотносятся ни с одним из изображений.</p>
+      <div class="pic-grid">
+        <div class="pic-card"><img src="images/culture/09-armada.jpg" alt="Picture 1">
+          <div class="pic-foot"><span class="ar-num">1</span><select class="exam-select ans" id="t27-1" data-opts="a,b,c,d,e,f,g" data-answer="c"></select></div></div>
+        <div class="pic-card"><img src="images/usa/09-delaware.jpg" alt="Picture 2">
+          <div class="pic-foot"><span class="ar-num">2</span><select class="exam-select ans" id="t27-2" data-opts="a,b,c,d,e,f,g" data-answer="f"></select></div></div>
+        <div class="pic-card"><img src="images/culture/04-hastings.jpg" alt="Picture 3">
+          <div class="pic-foot"><span class="ar-num">3</span><select class="exam-select ans" id="t27-3" data-opts="a,b,c,d,e,f,g" data-answer="b"></select></div></div>
+        <div class="pic-card"><img src="images/culture/15-blitz.jpg" alt="Picture 4">
+          <div class="pic-foot"><span class="ar-num">4</span><select class="exam-select ans" id="t27-4" data-opts="a,b,c,d,e,f,g" data-answer="e"></select></div></div>
+        <div class="pic-card"><img src="images/culture/13-trafalgar.jpg" alt="Picture 5">
+          <div class="pic-foot"><span class="ar-num">5</span><select class="exam-select ans" id="t27-5" data-opts="a,b,c,d,e,f,g" data-answer="g"></select></div></div>
+      </div>
+      <div class="opt-box" style="margin-top:18px;">
+        <div class="opt-row"><span class="opt-letter">a</span><span class="opt-body">The Boston Tea Party</span></div>
+        <div class="opt-row"><span class="opt-letter">b</span><span class="opt-body">The Battle of Hastings</span></div>
+        <div class="opt-row"><span class="opt-letter">c</span><span class="opt-body">The Defeat of the Spanish Armada</span></div>
+        <div class="opt-row"><span class="opt-letter">d</span><span class="opt-body">The Battle of Bosworth Field</span></div>
+        <div class="opt-row"><span class="opt-letter">e</span><span class="opt-body">The Blitz</span></div>
+        <div class="opt-row"><span class="opt-letter">f</span><span class="opt-body">Washington Crossing the Delaware</span></div>
+        <div class="opt-row"><span class="opt-letter">g</span><span class="opt-body">The Battle of Trafalgar</span></div>
+      </div>
+    </div>
+
+    <!-- Задание 28 -->
+    <div class="exercise task" data-task="28" data-sec="cult" data-points="5">
+      <span class="task-num">Задание 28 · 5 баллов</span>
+      <p class="orig-instr">Соотнесите автора и произведение, которое он написал. Два произведения не соотносятся ни с одним из авторов.</p>
+      <div class="pair-grid">
+        <div>
+          <div class="answer-row"><span class="ar-num">1</span><span class="ar-txt">Charles Dickens</span>
+            <select class="exam-select ans" id="t28-1" data-opts="a,b,c,d,e,f,g" data-answer="c"></select></div>
+          <div class="answer-row"><span class="ar-num">2</span><span class="ar-txt">Jane Austen</span>
+            <select class="exam-select ans" id="t28-2" data-opts="a,b,c,d,e,f,g" data-answer="f"></select></div>
+          <div class="answer-row"><span class="ar-num">3</span><span class="ar-txt">Arthur Conan Doyle</span>
+            <select class="exam-select ans" id="t28-3" data-opts="a,b,c,d,e,f,g" data-answer="d"></select></div>
+          <div class="answer-row"><span class="ar-num">4</span><span class="ar-txt">Harper Lee</span>
+            <select class="exam-select ans" id="t28-4" data-opts="a,b,c,d,e,f,g" data-answer="g"></select></div>
+          <div class="answer-row"><span class="ar-num">5</span><span class="ar-txt">J. R. R. Tolkien</span>
+            <select class="exam-select ans" id="t28-5" data-opts="a,b,c,d,e,f,g" data-answer="a"></select></div>
+        </div>
+        <div class="opt-box">
+          <div class="opt-row"><span class="opt-letter">a</span><span class="opt-body">The Hobbit</span></div>
+          <div class="opt-row"><span class="opt-letter">b</span><span class="opt-body">Frankenstein</span></div>
+          <div class="opt-row"><span class="opt-letter">c</span><span class="opt-body">Oliver Twist</span></div>
+          <div class="opt-row"><span class="opt-letter">d</span><span class="opt-body">The Hound of the Baskervilles</span></div>
+          <div class="opt-row"><span class="opt-letter">e</span><span class="opt-body">The Great Gatsby</span></div>
+          <div class="opt-row"><span class="opt-letter">f</span><span class="opt-body">Pride and Prejudice</span></div>
+          <div class="opt-row"><span class="opt-letter">g</span><span class="opt-body">To Kill a Mockingbird</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Задание 29 -->
+    <div class="exercise task" data-task="29" data-sec="cult" data-points="5">
+      <span class="task-num">Задание 29 · 5 баллов</span>
+      <p class="orig-instr">Сопоставьте имена выдающихся людей и связанные с ними события, открытия, направления деятельности.</p>
+      <div class="pair-grid">
+        <div>
+          <div class="answer-row"><span class="ar-num">1</span><span class="ar-txt">Became the first woman to fly solo across the Atlantic Ocean.</span>
+            <select class="exam-select ans" id="t29-1" data-opts="a,b,c,d,e" data-answer="c"></select></div>
+          <div class="answer-row"><span class="ar-num">2</span><span class="ar-txt">Reformed hospital care during the Crimean War and became known as “the Lady with the Lamp”.</span>
+            <select class="exam-select ans" id="t29-2" data-opts="a,b,c,d,e" data-answer="e"></select></div>
+          <div class="answer-row"><span class="ar-num">3</span><span class="ar-txt">Invented the World Wide Web while working at CERN.</span>
+            <select class="exam-select ans" id="t29-3" data-opts="a,b,c,d,e" data-answer="a"></select></div>
+          <div class="answer-row"><span class="ar-num">4</span><span class="ar-txt">Led the Montgomery bus boycott and gave the famous “I Have a Dream” speech.</span>
+            <select class="exam-select ans" id="t29-4" data-opts="a,b,c,d,e" data-answer="d"></select></div>
+          <div class="answer-row"><span class="ar-num">5</span><span class="ar-txt">Discovered penicillin by accident in 1928.</span>
+            <select class="exam-select ans" id="t29-5" data-opts="a,b,c,d,e" data-answer="b"></select></div>
+        </div>
+        <div class="opt-box">
+          <div class="opt-row"><span class="opt-letter">a</span><span class="opt-body">Tim Berners-Lee</span></div>
+          <div class="opt-row"><span class="opt-letter">b</span><span class="opt-body">Alexander Fleming</span></div>
+          <div class="opt-row"><span class="opt-letter">c</span><span class="opt-body">Amelia Earhart</span></div>
+          <div class="opt-row"><span class="opt-letter">d</span><span class="opt-body">Martin Luther King Jr.</span></div>
+          <div class="opt-row"><span class="opt-letter">e</span><span class="opt-body">Florence Nightingale</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Задание 30 -->
+    <div class="exercise task" data-task="30" data-sec="cult" data-points="5">
+      <span class="task-num">Задание 30 · 5 баллов</span>
+      <p class="orig-instr">Прочитайте текст и заполните пропуски подходящими по смыслу идиомами из списка. Две идиомы в списке не подходят ни в один пропуск.</p>
+      <div class="passage-box" style="line-height:2.3; margin-bottom:18px;">
+        When Jake was invited to join the school robotics team for the national competition, he nearly
+        (1) <select class="exam-select ans" id="t30-1" data-opts="a,b,c,d,e,f,g" data-answer="d"></select>
+        — he had never built anything more complicated than a model plane. But his teammate Lily
+        persuaded him to give it a try. A week before the competition their robot stopped working
+        completely, and the team felt they were
+        (2) <select class="exam-select ans" id="t30-2" data-opts="a,b,c,d,e,f,g" data-answer="b"></select>.
+        Jake wanted to
+        (3) <select class="exam-select ans" id="t30-3" data-opts="a,b,c,d,e,f,g" data-answer="e"></select>,
+        but Lily wouldn’t hear of it, so they decided to
+        (4) <select class="exam-select ans" id="t30-4" data-opts="a,b,c,d,e,f,g" data-answer="c"></select>,
+        staying in the lab late every evening. In the end, all their hard work paid off: the robot passed
+        the final test
+        (5) <select class="exam-select ans" id="t30-5" data-opts="a,b,c,d,e,f,g" data-answer="g"></select>
+        and the team won first prize.
+      </div>
+      <div class="opt-box">
+        <div class="opt-row"><span class="opt-letter">a</span><span class="opt-body">a piece of cake</span></div>
+        <div class="opt-row"><span class="opt-letter">b</span><span class="opt-body">back to square one</span></div>
+        <div class="opt-row"><span class="opt-letter">c</span><span class="opt-body">burn the midnight oil</span></div>
+        <div class="opt-row"><span class="opt-letter">d</span><span class="opt-body">got cold feet</span></div>
+        <div class="opt-row"><span class="opt-letter">e</span><span class="opt-body">throw in the towel</span></div>
+        <div class="opt-row"><span class="opt-letter">f</span><span class="opt-body">the icing on the cake</span></div>
+        <div class="opt-row"><span class="opt-letter">g</span><span class="opt-body">with flying colours</span></div>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-ghost" onclick="switchTabByName('score')">Next: Результат →</button>
+      </div>
+    </div>
+
+  </div><!-- /tab-cult -->
+
+  <!-- ══════════════════════════════════════════════════════════
+       РЕЗУЛЬТАТ — locked until all 30 tasks are answered
+  ══════════════════════════════════════════════════════════ -->
+  <div class="tab-content" id="tab-score">
+
+    <div id="scoreLocked">
+      <div class="locked-card">
+        <div class="lock-ico">🔒</div>
+        <h3>Your score is locked</h3>
+        <p>Finish every task first — then the score appears and all the answers are revealed.<br>
+           Nothing is marked before that, so make a sensible guess rather than leaving gaps!</p>
+        <ul class="todo-list" id="todoList"></ul>
+      </div>
+    </div>
+
+    <div id="scoreReady" style="display:none;">
+      <div class="exercise">
+        <div class="exercise-label">Ready</div>
+        <h3>All 30 tasks are answered. 🎉</h3>
+        <p>Press the button when you want to see how you did. After this, every answer on the page
+          is marked, the correct answers are shown and nothing can be changed.</p>
+        <div class="btn-row">
+          <button class="btn btn-primary" onclick="submitPaper()">Show my score 🏆</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="scoreResult" style="display:none;">
+      <div class="exercise">
+        <div class="exercise-label">Result</div>
+        <div class="score-hero">
+          <div class="score-big"><span id="scTotal">0</span><small> / 100</small></div>
+          <div class="score-verdict" id="scVerdict"></div>
+        </div>
+
+        <div class="score-rows">
+          <div class="score-row">
+            <div class="score-row-top"><span>🔊 Фонетика (Задания 1–10)</span><span id="sc-phon">0 / 20</span></div>
+            <div class="score-track"><div class="score-meter m1" id="m-phon"></div></div>
+          </div>
+          <div class="score-row">
+            <div class="score-row-top"><span>📚 Лексика (Задания 11–18)</span><span id="sc-lex">0 / 30</span></div>
+            <div class="score-track"><div class="score-meter m2" id="m-lex"></div></div>
+          </div>
+          <div class="score-row">
+            <div class="score-row-top"><span>⚙️ Грамматика (Задания 19–26)</span><span id="sc-gram">0 / 30</span></div>
+            <div class="score-track"><div class="score-meter m3" id="m-gram"></div></div>
+          </div>
+          <div class="score-row">
+            <div class="score-row-top"><span>🌍 Лингвострановедение (Задания 27–30)</span><span id="sc-cult">0 / 20</span></div>
+            <div class="score-track"><div class="score-meter m4" id="m-cult"></div></div>
+          </div>
+        </div>
+
+        <div id="taskBreakdown"></div>
+
+        <p style="margin-top:24px; color:var(--muted); line-height:1.7;">
+          Go back through the four tabs: green = correct, red = wrong, and the green tag next to an
+          answer shows what was expected. Write down every task you lost points on — that list is
+          your revision plan for the real first round.
+        </p>
+
+        <details style="margin-top:18px;">
+          <summary style="cursor:pointer; font-weight:600;">🎧 Audio script (Задания 1, 2, 3, 5, 7, 9, 10)</summary>
+          <div class="script-box" style="margin-top:10px;">
+            <p><b>Задание 1:</b> thought – through – thorough – though</p>
+            <p><b>Задание 2:</b> When my grandparents moved to a small village, they found it hard to <b>adapt</b> at first.
+              Life there was so <b>quiet</b> that they almost missed the noise of the city. But soon they discovered a lovely
+              local <b>custom</b>: every Friday the whole village gathers for dinner in the square. Now they say they would
+              hate to <b>lose</b> that sense of community.</p>
+            <p><b>Задание 3:</b> 1) …that knife /naɪf/… 2) …fresh salmon /ˈsæmən/… 3) The school choir /ˈkwaɪə/… 4) …a tiny Scottish island /ˈaɪlənd/.</p>
+            <p><b>Задание 5:</b> 1. Thei<u>r a</u>nswer appeared in the newspape<u>r o</u>n Monday. 2. The enginee<u>r a</u>dmitted that the plan had failed.
+              <b>3. My brother’s favourite teacher retired last spring.</b> (no linking /r/) 4. Fou<u>r o</u>f us stayed after the meeting to help.</p>
+            <p><b>Задание 7:</b> object /ˈɒbdʒɪkt/ — the noun, stress on the first syllable</p>
+            <p><b>Задание 9:</b> A: By the way, the results of the contest came out this morning. — B: They’ve ↗come out? (rising: surprise, checking what was just heard)</p>
+            <p><b>Задание 10:</b> <b>1. Where did you leave my umbrella? ↘</b> 2. Did you remember to lock the door? ↗
+              <b>3. What a wonderful surprise! ↘</b> 4. Are you ready to order? ↗</p>
+          </div>
+        </details>
+
+        <div class="btn-row">
+          <button class="btn btn-danger" onclick="restartPaper()">Clear everything and start again</button>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /tab-score -->
+
+</div><!-- /container -->
+
+<div class="save-indicator" id="saveIndicator">✓ Saved</div>
+
+<script>
+const LESSON_KEY = 'lesson-07';
+const SECTIONS = [
+  { id: 'phon', label: '🔊 Фонетика',            max: 20 },
+  { id: 'lex',  label: '📚 Лексика',              max: 30 },
+  { id: 'gram', label: '⚙️ Грамматика',           max: 30 },
+  { id: 'cult', label: '🌍 Лингвострановедение',  max: 20 }
+];
+const TASKS = [...document.querySelectorAll('.task')];
+const TOTAL_TASKS = TASKS.length;   // 30
+
+let data = {};
+try { data = JSON.parse(localStorage.getItem(LESSON_KEY)) || {}; } catch(e) {}
+
+function save(patch) {
+  Object.assign(data, patch);
+  try { localStorage.setItem(LESSON_KEY, JSON.stringify(data)); } catch(e) {}
+  flashSaved();
+}
+let saveTimer;
+function flashSaved() {
+  const el = document.getElementById('saveIndicator');
+  el.classList.add('show');
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(() => el.classList.remove('show'), 1600);
+}
+const locked = () => !!data.submitted;
+
+// ── TABS ───────────────────────────────────────────────────────
+function showTab(name) {
+  const btn = document.querySelector('.tab-btn[onclick*="\'' + name + '\'"]');
+  if (!btn) return;
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  btn.classList.add('active');
+}
+function switchTab(name, btn) {
+  showTab(name);
+  save({ activeTab: name });
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+function switchTabByName(name) { switchTab(name); }
+
+// ── PRETTY AUDIO PLAYERS ───────────────────────────────────────
+function fmtT(t) { t = Math.max(0, Math.floor(t || 0)); return Math.floor(t / 60) + ':' + String(t % 60).padStart(2, '0'); }
+document.querySelectorAll('.audio-wrap audio').forEach(audio => {
+  const wrap = audio.parentElement;
+  const task = wrap.closest('.task').dataset.task;
+  audio.removeAttribute('controls');
+  audio.preload = 'metadata';
+  const pl = document.createElement('div');
+  pl.className = 'player';
+  pl.innerHTML =
+    '<button type="button" class="pl-btn" aria-label="Play">' +
+      '<svg class="i-play" viewBox="0 0 24 24"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.2-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z"/></svg>' +
+      '<svg class="i-pause" viewBox="0 0 24 24"><rect x="6" y="5" width="4.2" height="14" rx="1.2"/><rect x="13.8" y="5" width="4.2" height="14" rx="1.2"/></svg>' +
+    '</button>' +
+    '<div class="pl-main">' +
+      '<div class="pl-top"><span class="pl-label"><span class="eq"><i></i><i></i><i></i><i></i></span>Recording · Задание ' + task +
+        ' <span class="pl-plays"></span></span><span class="pl-time">0:00</span></div>' +
+      '<div class="pl-track"><div class="pl-fill"></div><div class="pl-knob"></div></div>' +
+    '</div>' +
+    '<button type="button" class="pl-replay" title="Play from the start">↺</button>';
+  wrap.replaceWith(pl);
+  pl.appendChild(audio);
+
+  const fill = pl.querySelector('.pl-fill'), knob = pl.querySelector('.pl-knob');
+  const time = pl.querySelector('.pl-time'), track = pl.querySelector('.pl-track');
+  const plays = pl.querySelector('.pl-plays');
+  let count = 0;
+  const paint = () => {
+    const pct = audio.duration ? audio.currentTime / audio.duration * 100 : 0;
+    fill.style.width = pct + '%'; knob.style.left = pct + '%';
+    time.textContent = fmtT(audio.currentTime) + ' / ' + fmtT(audio.duration);
+  };
+  const play = () => {
+    document.querySelectorAll('.player audio').forEach(a => { if (a !== audio) a.pause(); });
+    audio.play();
+  };
+  pl.querySelector('.pl-btn').addEventListener('click', () => audio.paused ? play() : audio.pause());
+  pl.querySelector('.pl-replay').addEventListener('click', () => { audio.currentTime = 0; play(); });
+  track.addEventListener('click', e => {
+    if (!audio.duration) return;
+    const r = track.getBoundingClientRect();
+    audio.currentTime = Math.min(1, Math.max(0, (e.clientX - r.left) / r.width)) * audio.duration;
+    paint();
+  });
+  audio.addEventListener('play',  () => pl.classList.add('playing'));
+  audio.addEventListener('pause', () => pl.classList.remove('playing'));
+  audio.addEventListener('ended', () => {
+    pl.classList.remove('playing');
+    count++; plays.textContent = '· played ' + count + '×';
+    audio.currentTime = 0; paint();
+  });
+  audio.addEventListener('timeupdate', paint);
+  audio.addEventListener('loadedmetadata', paint);
+});
+
+// ── BUILD THE CONTROLS ─────────────────────────────────────────
+// dropdowns
+document.querySelectorAll('select.ans').forEach(sel => {
+  const blank = document.createElement('option');
+  blank.value = ''; blank.textContent = '—';
+  sel.appendChild(blank);
+  sel.dataset.opts.split(',').forEach(v => {
+    const o = document.createElement('option');
+    o.value = v; o.textContent = v;
+    sel.appendChild(o);
+  });
+  if (data[sel.id] !== undefined) sel.value = data[sel.id];
+  sel.addEventListener('change', () => { save({ [sel.id]: sel.value }); updateProgress(); });
+});
+
+// multiple choice
+document.querySelectorAll('.mc-options.ans').forEach(group => {
+  const name = group.querySelector('input').name;
+  group.querySelectorAll('.mc-option').forEach(label => {
+    const input = label.querySelector('input');
+    if (data['mc-' + name] === input.value) { label.classList.add('selected'); input.checked = true; }
+    label.addEventListener('click', () => {
+      if (locked()) return;
+      group.querySelectorAll('.mc-option').forEach(l => l.classList.remove('selected'));
+      label.classList.add('selected');
+      save({ ['mc-' + name]: input.value });
+      updateProgress();
+    });
+  });
+});
+
+// pick words / items
+const clean = w => w.toLowerCase().replace(/[^a-z’'\-]/g, '').replace(/[’']s$/, '');
+document.querySelectorAll('.pick.ans').forEach(box => {
+  const need = +box.dataset.need;
+  const chosen = new Set(data[box.id] || []);
+  const makeChip = (text, value) => {
+    const c = document.createElement('span');
+    c.className = 'chip'; c.textContent = text; c.dataset.v = value;
+    if (chosen.has(value)) c.classList.add('on');
+    c.addEventListener('click', () => {
+      if (locked()) return;
+      if (c.classList.contains('on')) c.classList.remove('on');
+      else {
+        if (box.querySelectorAll('.chip.on').length >= need) {
+          if (need === 1) box.querySelectorAll('.chip.on').forEach(x => x.classList.remove('on'));
+          else { flashCount(box); return; }
+        }
+        c.classList.add('on');
+      }
+      save({ [box.id]: [...box.querySelectorAll('.chip.on')].map(x => x.dataset.v) });
+      paintCount(box); updateProgress();
+    });
+    return c;
+  };
+  if (box.dataset.words) {
+    box.dataset.words.split(' ').forEach((w, i) => {
+      box.appendChild(makeChip(w, clean(w)));
+      box.appendChild(document.createTextNode(' '));
+    });
+  } else {
+    const isNumbered = /^\d\./.test(box.dataset.items);
+    box.dataset.items.split('|').forEach((t, i) => {
+      box.appendChild(makeChip(t, isNumbered ? String(i + 1) : t));
+    });
+  }
+  const cnt = document.createElement('div');
+  cnt.className = 'pick-count';
+  box.after(cnt);
+  paintCount(box);
+});
+function paintCount(box) {
+  const n = box.querySelectorAll('.chip.on').length, need = +box.dataset.need;
+  box.nextElementSibling.textContent = 'Selected ' + n + ' of ' + need;
+  box.nextElementSibling.style.color = '';
+}
+function flashCount(box) {
+  const el = box.nextElementSibling;
+  el.textContent = 'You can only choose ' + box.dataset.need + ' — unselect one first.';
+  el.style.color = 'var(--red)';
+}
+
+// build-the-phrase
+document.querySelectorAll('.builder.ans').forEach(b => {
+  const tiles = b.dataset.tiles.split('|');
+  const letters = 'abcdefghijklmnop';
+  const line = document.createElement('div'); line.className = 'build-line';
+  line.appendChild(document.createTextNode(b.dataset.before + ' '));
+  const slot = document.createElement('span'); slot.className = 'build-slot';
+  line.appendChild(slot);
+  line.appendChild(document.createTextNode(' ' + b.dataset.after));
+  const bank = document.createElement('div'); bank.className = 'tile-bank';
+  b.appendChild(line); b.appendChild(bank);
+
+  const bankTiles = tiles.map((t, i) => {
+    const btn = document.createElement('button');
+    btn.type = 'button'; btn.className = 'tile'; btn.dataset.i = i;
+    btn.innerHTML = (b.dataset.labels ? '<b>' + letters[i] + ')</b>' : '') + t;
+    btn.addEventListener('click', () => { if (!locked()) { place(i); persist(); } });
+    bank.appendChild(btn);
+    return btn;
+  });
+  function place(i) {
+    bankTiles[i].classList.add('used');
+    const p = document.createElement('button');
+    p.type = 'button'; p.className = 'tile placed'; p.dataset.i = i; p.textContent = tiles[i];
+    p.addEventListener('click', () => {
+      if (locked()) return;
+      p.remove(); bankTiles[i].classList.remove('used'); persist();
+    });
+    slot.appendChild(p);
+  }
+  function persist() {
+    save({ [b.id]: [...slot.children].map(x => +x.dataset.i) });
+    updateProgress();
+  }
+  (data[b.id] || []).forEach(place);
+  b._value = () => [...slot.children].map(x => tiles[+x.dataset.i]).join(' ');
+  b._slot = slot;
+});
+
+// ── ANSWERED / MARKING PER CONTROL ─────────────────────────────
+function isAnswered(el) {
+  if (el.tagName === 'SELECT') return el.value !== '';
+  if (el.classList.contains('mc-options')) return !!el.querySelector('.mc-option.selected');
+  if (el.classList.contains('pick')) return el.querySelectorAll('.chip.on').length === +el.dataset.need;
+  if (el.classList.contains('builder')) return el._slot.children.length > 0;
+  return false;
+}
+// returns [earned, max]; with paint=true it also colours the control
+function mark(el, paint) {
+  if (el.tagName === 'SELECT') {
+    const ok = el.value === el.dataset.answer;
+    if (paint) {
+      el.classList.add(ok ? 'correct' : 'wrong');
+      if (!ok) el.insertAdjacentHTML('afterend', '<span class="key">' + el.dataset.answer + '</span>');
+    }
+    return [ok ? 1 : 0, 1];
+  }
+  if (el.classList.contains('mc-options')) {
+    const correct = el.dataset.correct;
+    const sel = el.querySelector('.mc-option.selected');
+    const ok = sel && sel.querySelector('input').value === correct;
+    if (paint) el.querySelectorAll('.mc-option').forEach(l => {
+      const v = l.querySelector('input').value;
+      if (v === correct) l.classList.add('correct');
+      else if (l === sel) l.classList.add('wrong');
+    });
+    return [ok ? 1 : 0, 1];
+  }
+  if (el.classList.contains('pick')) {
+    const correct = el.dataset.correct.split(',');
+    const need = +el.dataset.need;
+    let hits = 0;
+    el.querySelectorAll('.chip').forEach(c => {
+      const isC = correct.includes(c.dataset.v), on = c.classList.contains('on');
+      if (on && isC) hits++;
+      if (paint) {
+        if (on) { c.classList.remove('on'); c.classList.add(isC ? 'ok' : 'no'); }
+        else if (isC) c.classList.add('miss');
+      }
+    });
+    if (el.dataset.all) return [hits === need ? 1 : 0, 1];
+    return [hits, need];
+  }
+  if (el.classList.contains('builder')) {
+    const val = el._value().toLowerCase();
+    const answers = el.dataset.answer.split('|');
+    const ok = answers.some(a => a.toLowerCase() === val);
+    if (paint) {
+      el._slot.classList.add(ok ? 'correct' : 'wrong');
+      if (!ok) el.querySelector('.build-line').insertAdjacentHTML('beforeend',
+        '<br><span class="key">' + answers[0] + '</span>');
+    }
+    return [ok ? 1 : 0, 1];
+  }
+  return [0, 0];
+}
+function taskDone(t) { return [...t.querySelectorAll('.ans')].every(isAnswered); }
+function taskScore(t, paint) {
+  const parts = [...t.querySelectorAll('.ans')].map(el => mark(el, paint));
+  const pts = +t.dataset.points;
+  if (t.dataset.mode === 'all') return parts.every(([e, m]) => e === m) ? pts : 0;
+  return parts.reduce((a, [e]) => a + e, 0);
+}
+
+// ── PROGRESS ───────────────────────────────────────────────────
+function updateProgress() {
+  const done = TASKS.filter(taskDone).length;
+  document.getElementById('pgCount').textContent = done + ' / ' + TOTAL_TASKS;
+  document.getElementById('pgFill').style.width = (done / TOTAL_TASKS * 100) + '%';
+
+  const complete = done === TOTAL_TASKS;
+  const scoreBtn = document.querySelectorAll('.tab-btn')[4];
+  if (!locked()) {
+    document.getElementById('pgHint').textContent =
+      complete ? '✅ All done — open «Результат»' : 'Score unlocks at ' + TOTAL_TASKS + ' / ' + TOTAL_TASKS;
+    scoreBtn.textContent = complete ? '🏆 Результат' : '🔒 Результат';
+    document.getElementById('scoreLocked').style.display = complete ? 'none'  : 'block';
+    document.getElementById('scoreReady').style.display  = complete ? 'block' : 'none';
+  }
+
+  const list = document.getElementById('todoList');
+  list.innerHTML = '';
+  SECTIONS.forEach(s => {
+    const ts = TASKS.filter(t => t.dataset.sec === s.id);
+    const d = ts.filter(taskDone);
+    const missing = ts.filter(t => !taskDone(t)).map(t => t.dataset.task);
+    const li = document.createElement('li');
+    li.className = d.length === ts.length ? 'done' : '';
+    li.innerHTML = '<span>' + (d.length === ts.length ? '✓ ' : '') + s.label +
+      (missing.length ? '<small>Not finished: Задание ' + missing.join(', ') + '</small>' : '') +
+      '</span><b>' + d.length + ' / ' + ts.length + '</b>';
+    list.appendChild(li);
+  });
+}
+
+// ── SUBMIT & RESULT ────────────────────────────────────────────
+function lockAll() {
+  document.querySelectorAll('select.ans, .tile').forEach(el => el.disabled = true);
+}
+function markEverything() {
+  const perTask = {};
+  TASKS.forEach(t => { perTask[t.dataset.task] = taskScore(t, true); });
+  document.body.classList.add('revealed');
+  return perTask;
+}
+function showResult(perTask) {
+  let total = 0;
+  const bd = document.getElementById('taskBreakdown');
+  bd.innerHTML = '';
+  SECTIONS.forEach(s => {
+    const ts = TASKS.filter(t => t.dataset.sec === s.id);
+    const got = ts.reduce((a, t) => a + perTask[t.dataset.task], 0);
+    total += got;
+    document.getElementById('sc-' + s.id).textContent = got + ' / ' + s.max;
+    document.getElementById('m-' + s.id).style.width = (got / s.max * 100) + '%';
+
+    const h = document.createElement('div'); h.className = 'tt-sec';
+    h.textContent = s.label + ' — ' + got + ' / ' + s.max;
+    const grid = document.createElement('div'); grid.className = 'task-table';
+    ts.forEach(t => {
+      const g = perTask[t.dataset.task], m = +t.dataset.points;
+      const c = document.createElement('div');
+      c.className = 'tt-cell ' + (g === m ? 'full' : g === 0 ? 'zero' : 'part');
+      c.innerHTML = 'Задание ' + t.dataset.task + '<b>' + g + ' / ' + m + '</b>';
+      grid.appendChild(c);
+    });
+    bd.appendChild(h); bd.appendChild(grid);
+  });
+
+  document.getElementById('scTotal').textContent = total;
+  document.getElementById('scVerdict').textContent =
+    total >= 85 ? 'Excellent — that is a very strong first-round result. 🌟' :
+    total >= 70 ? 'Strong work — polish the weakest section and you are there. 💪' :
+    total >= 50 ? 'A solid base. Look at the lowest bars below and drill those. 📌' :
+                  'Good that you did the whole paper — now we know exactly what to work on. 🔧';
+
+  document.getElementById('scoreLocked').style.display = 'none';
+  document.getElementById('scoreReady').style.display  = 'none';
+  document.getElementById('scoreResult').style.display = 'block';
+  document.querySelectorAll('.tab-btn')[4].textContent = '🏆 Результат';
+  document.getElementById('pgHint').textContent = 'Paper handed in — ' + total + ' / 100';
+}
+function submitPaper() {
+  if (TASKS.filter(taskDone).length < TOTAL_TASKS) { updateProgress(); return; }   // safety net
+  save({ submitted: true });
+  lockAll();
+  showResult(markEverything());
+}
+function restartPaper() {
+  if (!confirm('This clears every answer and your score. Start the whole paper again?')) return;
+  try { localStorage.removeItem(LESSON_KEY); } catch(e) {}
+  location.reload();
+}
+
+// ── OPTIONAL 40-MINUTE TIMER ───────────────────────────────────
+let tLeft = 40 * 60, tId = null;
+function fmt(s) {
+  const neg = s < 0; s = Math.abs(s);
+  return (neg ? '-' : '') + String(Math.floor(s / 60)).padStart(2, '0') + ':' + String(s % 60).padStart(2, '0');
+}
+function paintTimer() {
+  const el = document.getElementById('clock');
+  el.textContent = fmt(tLeft);
+  el.classList.toggle('over', tLeft <= 0);
+}
+function toggleTimer() {
+  const btn = document.getElementById('tbtn');
+  if (tId) { clearInterval(tId); tId = null; btn.textContent = 'Start'; }
+  else { btn.textContent = 'Pause'; tId = setInterval(() => { tLeft--; paintTimer(); }, 1000); }
+}
+function resetTimer() {
+  if (tId) clearInterval(tId);
+  tId = null; tLeft = 40 * 60;
+  document.getElementById('tbtn').textContent = 'Start';
+  paintTimer();
+}
+
+// ── INIT ───────────────────────────────────────────────────────
+if (data.activeTab) showTab(data.activeTab);
+updateProgress();
+if (locked()) { lockAll(); showResult(markEverything()); }
+</script>
+
+</body>
+</html>
