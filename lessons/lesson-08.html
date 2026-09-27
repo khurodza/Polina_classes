@@ -1,0 +1,2238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lesson 8 – Demo Review: The Logic of Each Task</title>
+  <link rel="stylesheet" href="../style.css">
+  <style>
+    /* ── same exam look as lesson 7 ─────────────────────────── */
+    .section-head { text-align: center; border-bottom: 3px double var(--border); padding-bottom: 14px; margin-bottom: 22px; }
+    .section-head h2 { font-family: 'Fraunces', Georgia, serif; font-size: 1.6rem; letter-spacing: .12em; text-transform: uppercase; color: var(--primary); }
+    .section-head .sh-meta { color: var(--muted); font-size: .9rem; margin-top: 4px; }
+
+    .exam-select {
+      font: inherit; font-weight: 700; text-align: center;
+      padding: 7px 10px; border-radius: 10px;
+      border: 2px solid var(--border); background: var(--card);
+      color: var(--text); cursor: pointer; min-width: 70px;
+    }
+    .exam-select:focus { border-color: var(--primary); outline: none; }
+    .exam-select.correct { border-color: var(--green); color: var(--green); background: rgba(91,140,69,.08); }
+    .exam-select.wrong   { border-color: var(--red);   color: var(--red);   background: rgba(200,64,64,.06); }
+
+    .pair-grid { display: grid; grid-template-columns: 3fr 2fr; gap: 22px; align-items: start; }
+    @media (max-width: 720px) { .pair-grid { grid-template-columns: 1fr; } }
+    .opt-box { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+    .opt-row { display: flex; border-bottom: 1px solid var(--border); }
+    .opt-row:last-child { border-bottom: none; }
+    .opt-letter {
+      flex: 0 0 46px; display: flex; align-items: center; justify-content: center;
+      font-weight: 700; color: var(--accent-dk); background: rgba(201,160,48,.10);
+      border-right: 1px solid var(--border);
+    }
+    .opt-body { padding: 9px 14px; line-height: 1.55; }
+    .answer-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; padding: 9px 0; border-bottom: 1px dashed var(--border); }
+    .answer-row:last-child { border-bottom: none; }
+    .ar-num { font-family: 'Fraunces', Georgia, serif; font-weight: 700; color: var(--primary); min-width: 24px; }
+    .ar-txt { flex: 1; min-width: 200px; line-height: 1.65; }
+    .ipa { font-family: 'Charis SIL', 'Doulos SIL', 'Lucida Sans Unicode', 'Arial Unicode MS', sans-serif; }
+
+    .q-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+    @media (max-width: 760px) { .q-grid { grid-template-columns: 1fr; } }
+    .q-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px 18px 18px; display: flex; flex-direction: column; gap: 10px; }
+    .q-text { font-weight: 600; line-height: 1.55; }
+    .mc-options.stack { grid-template-columns: 1fr; gap: 8px; margin-top: auto; }
+    .mc-options.stack .mc-option { padding: 10px 14px; font-size: .97rem; }
+
+    .pick { line-height: 2.5; font-size: 1.02rem; }
+    .pick.list { display: flex; flex-wrap: wrap; gap: 8px; line-height: 1.5; }
+    .chip { display: inline-block; padding: 3px 8px; margin: 0 1px; border-radius: 8px; border: 2px solid transparent; cursor: pointer; transition: all .15s; user-select: none; }
+    .pick.list .chip { border-color: var(--border); background: var(--card); padding: 9px 15px; }
+    .chip:hover { border-color: var(--primary); }
+    .chip.on   { background: var(--primary); border-color: var(--primary); color: #fff; }
+    .chip.ok   { background: var(--green); border-color: var(--green); color: #fff; }
+    .chip.no   { background: rgba(200,64,64,.10); border-color: var(--red); color: var(--red); }
+    .chip.miss { border-color: var(--green); border-style: dashed; color: var(--green); }
+    .passage-box { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 18px; }
+    .dialogue p { margin-bottom: 4px; line-height: 1.7; }
+
+    .build-item { padding: 12px 0; border-bottom: 1px dashed var(--border); }
+    .build-item:last-child { border-bottom: none; }
+    .build-line { line-height: 2.2; font-size: 1.02rem; }
+    .build-slot { display: inline-flex; flex-wrap: wrap; gap: 5px; align-items: center; min-width: 220px; min-height: 38px; padding: 3px 8px; margin: 0 4px; border-bottom: 2px solid var(--primary); vertical-align: middle; }
+    .build-slot.correct { border-color: var(--green); }
+    .build-slot.wrong   { border-color: var(--red); }
+    .tile { font: inherit; font-size: .95rem; font-weight: 600; padding: 5px 12px; border-radius: 9px; cursor: pointer; border: 2px solid var(--border); background: var(--card); color: var(--text); }
+    .tile:hover { border-color: var(--primary); }
+    .tile.placed { background: rgba(212,87,42,.10); border-color: var(--primary); }
+    .tile.used { visibility: hidden; }
+    .tile-bank { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 10px; }
+
+    .pic-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 16px; }
+    .pic-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+    .pic-card img { width: 100%; height: 180px; object-fit: cover; display: block; }
+    .pic-foot { display: flex; align-items: center; gap: 10px; padding: 10px 14px; flex-wrap: wrap; }
+
+    /* ── review-lesson bits ─────────────────────────────────── */
+    .review-head { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 6px; }
+    .task-num { font-weight: 700; color: var(--accent-dk); background: rgba(201,160,48,.15); padding: 3px 12px; border-radius: 99px; font-size: .85rem; }
+    .demo-score { font-weight: 700; font-size: .82rem; padding: 3px 10px; border-radius: 99px; color: var(--red); background: rgba(200,64,64,.08); }
+    .demo-score.part { color: var(--accent-dk); background: rgba(201,160,48,.12); }
+
+    .step-title { font-weight: 700; font-size: .8rem; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin: 22px 0 10px; display: flex; align-items: center; gap: 8px; }
+    .step-title::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+    .talk { background: rgba(95,142,196,.09); border-left: 4px solid var(--blue); border-radius: 0 10px 10px 0; padding: 10px 14px; margin: 10px 0 4px; line-height: 1.6; font-size: .97rem; }
+    .demo-tag { font-size: .78rem; font-weight: 700; color: var(--red); background: rgba(200,64,64,.08); border: 1px dashed rgba(200,64,64,.45); padding: 2px 8px; border-radius: 6px; white-space: nowrap; }
+
+    .logic { background: rgba(201,160,48,.09); border: 2px solid rgba(201,160,48,.35); border-radius: var(--radius); padding: 14px 18px 12px; margin-top: 8px; }
+    .logic h4 { font-family: 'Fraunces', Georgia, serif; font-size: 1.05rem; color: var(--accent-dk); margin-bottom: 8px; }
+    .logic ol, .logic ul { padding-left: 22px; line-height: 1.7; }
+    .logic li { margin-bottom: 4px; }
+    .logic table { border-collapse: collapse; margin: 8px 0 4px; font-size: .93rem; width: 100%; }
+    .logic td, .logic th { border: 1px solid var(--border); padding: 5px 9px; text-align: left; vertical-align: top; background: var(--card); }
+    .logic th { background: rgba(201,160,48,.14); }
+    .logic .tbl-wrap { overflow-x: auto; }
+
+    details.why { margin-top: 12px; border: 2px solid rgba(91,140,69,.35); border-radius: 12px; background: rgba(91,140,69,.05); }
+    details.why summary { cursor: pointer; padding: 9px 14px; font-weight: 700; color: var(--green); }
+    details.why .why-body { padding: 2px 16px 12px; line-height: 1.7; font-size: .96rem; }
+    details.why .why-body p { margin-bottom: 6px; }
+
+    .quiz-foot { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-top: 14px; }
+    .q-result { font-weight: 700; }
+    .q-result.full { color: var(--green); }
+    .q-result.part { color: var(--accent-dk); }
+    .q-result.zero { color: var(--red); }
+    .key { margin-left: 4px; font-size: .82rem; font-weight: 700; color: var(--green); background: rgba(91,140,69,.10); padding: 2px 8px; border-radius: 6px; }
+
+    .progress-wrap { position: sticky; top: 0; z-index: 30; background: var(--bg); padding: 10px 0 12px; margin-bottom: 8px; border-bottom: 1px solid var(--border); }
+    .progress-top { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 7px; font-weight: 600; font-size: .92rem; }
+    .progress-top span { color: var(--primary); }
+    .progress-bar { height: 9px; border-radius: 99px; background: var(--border); overflow: hidden; }
+    .progress-fill { height: 100%; width: 0%; border-radius: 99px; background: linear-gradient(90deg, var(--primary), var(--accent-dk)); transition: width .3s ease; }
+
+    .score-row { margin-bottom: 14px; }
+    .score-row-top { display: flex; justify-content: space-between; font-weight: 600; font-size: .95rem; margin-bottom: 5px; }
+    .score-track { height: 12px; border-radius: 99px; background: var(--border); overflow: hidden; }
+    .score-meter { height: 100%; border-radius: 99px; }
+    .habit { display: flex; gap: 14px; padding: 12px 0; border-bottom: 1px dashed var(--border); }
+    .habit:last-child { border-bottom: none; }
+    .habit .h-ico { font-size: 1.6rem; line-height: 1.2; }
+    .habit b { display: block; margin-bottom: 2px; }
+    .habit p { margin: 0 !important; font-size: .96rem !important; color: var(--text); }
+
+    /* custom audio player */
+    .player {
+      display: flex; align-items: center; gap: 14px;
+      background: linear-gradient(135deg, rgba(212,87,42,.09), rgba(201,160,48,.10));
+      border: 2px solid rgba(212,87,42,.25); border-radius: 18px;
+      padding: 12px 16px; margin: 0 0 18px;
+    }
+    .pl-btn {
+      flex: 0 0 52px; width: 52px; height: 52px; border-radius: 50%; border: none;
+      background: var(--primary); color: #fff; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 4px 12px rgba(212,87,42,.35);
+      transition: transform .15s, background .15s;
+    }
+    .pl-btn:hover { transform: scale(1.07); background: var(--primary-dk); }
+    .pl-btn svg { width: 22px; height: 22px; fill: currentColor; }
+    .pl-btn .i-pause { display: none; }
+    .player.playing .pl-btn .i-play  { display: none; }
+    .player.playing .pl-btn .i-pause { display: block; }
+    .pl-main { flex: 1; min-width: 0; }
+    .pl-top { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 8px; }
+    .pl-label { font-weight: 700; font-size: .9rem; color: var(--primary-dk); display: flex; align-items: center; gap: 8px; }
+    .pl-time { font-size: .82rem; color: var(--muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
+    .pl-track {
+      position: relative; height: 8px; border-radius: 99px;
+      background: rgba(44,32,16,.10); cursor: pointer;
+    }
+    .pl-fill {
+      position: absolute; inset: 0 auto 0 0; width: 0; border-radius: 99px;
+      background: linear-gradient(90deg, var(--primary), var(--accent-dk));
+    }
+    .pl-knob {
+      position: absolute; top: 50%; left: 0; width: 16px; height: 16px; margin: -8px 0 0 -8px;
+      border-radius: 50%; background: #fff; border: 3px solid var(--primary);
+      box-shadow: 0 1px 4px rgba(0,0,0,.2); transition: transform .15s;
+    }
+    .pl-track:hover .pl-knob { transform: scale(1.2); }
+    .pl-replay {
+      flex: 0 0 36px; width: 36px; height: 36px; border-radius: 50%;
+      border: 2px solid var(--border); background: var(--card); color: var(--muted);
+      cursor: pointer; font-size: 1.05rem; line-height: 1;
+    }
+    .pl-replay:hover { border-color: var(--primary); color: var(--primary); }
+    .pl-plays { font-size: .75rem; color: var(--muted); font-weight: 600; }
+    /* little equaliser that dances while playing */
+    .eq { display: inline-flex; align-items: flex-end; gap: 2px; height: 14px; }
+    .eq i { width: 3px; height: 4px; border-radius: 2px; background: var(--primary); }
+    .player.playing .eq i { animation: eq .8s ease-in-out infinite; }
+    .player.playing .eq i:nth-child(2) { animation-delay: .2s; }
+    .player.playing .eq i:nth-child(3) { animation-delay: .4s; }
+    .player.playing .eq i:nth-child(4) { animation-delay: .1s; }
+    @keyframes eq { 0%,100% { height: 4px; } 50% { height: 14px; } }
+    @media (max-width: 520px) { .pl-replay { display: none; } .player { gap: 10px; padding: 10px 12px; } }
+
+    .tab-btn:nth-child(5).active { background: var(--green); border-color: var(--green); }
+  </style>
+</head>
+<body>
+
+<header class="site-header">
+  <h1>Lesson 8 — Demo Review: The Logic of Each Task</h1>
+  <a class="back-link" href="../index.html">← All Lessons</a>
+</header>
+
+<div class="container">
+
+  <div class="lesson-meta">
+    <h2>«Высшая проба» · Working through the demo mistakes</h2>
+    <p>📅 28 September 2026 &nbsp;·&nbsp; Lesson 8 &nbsp;·&nbsp; follows the Lesson 7 demo</p>
+  </div>
+
+  <div class="progress-wrap">
+    <div class="progress-top">
+      <div>Blocks checked: <span id="pgCount">0 / 0</span></div>
+      <div>Points today: <span id="pgScore">0 / 0</span></div>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="pgFill"></div></div>
+  </div>
+
+  <div class="tab-bar">
+    <button class="tab-btn active" onclick="switchTab('plan', this)">🧭 Game plan</button>
+    <button class="tab-btn"        onclick="switchTab('phon', this)">🔊 Фонетика</button>
+    <button class="tab-btn"        onclick="switchTab('lex',  this)">📚 Лексика</button>
+    <button class="tab-btn"        onclick="switchTab('gram', this)">⚙️ Грамматика</button>
+    <button class="tab-btn"        onclick="switchTab('cult', this)">🌍 Культура</button>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════
+       TAB 0 — GAME PLAN
+  ══════════════════════════════════════════════════════════ -->
+  <div class="tab-content active" id="tab-plan">
+
+    <div class="exercise">
+      <div class="exercise-label">Where the points went</div>
+      <h3>Demo result: 39 / 100</h3>
+      <p>The bars show what you scored. The empty part of each bar is what we win back today.</p>
+      <div class="score-row">
+        <div class="score-row-top"><span>🔊 Фонетика</span><span>8 / 20</span></div>
+        <div class="score-track"><div class="score-meter" style="width:40%;background:var(--primary)"></div></div>
+      </div>
+      <div class="score-row">
+        <div class="score-row-top"><span>📚 Лексика</span><span>5 / 30 &nbsp;← biggest gap</span></div>
+        <div class="score-track"><div class="score-meter" style="width:16.7%;background:var(--blue)"></div></div>
+      </div>
+      <div class="score-row">
+        <div class="score-row-top"><span>⚙️ Грамматика</span><span>11 / 30</span></div>
+        <div class="score-track"><div class="score-meter" style="width:36.7%;background:var(--accent-dk)"></div></div>
+      </div>
+      <div class="score-row">
+        <div class="score-row-top"><span>🌍 Лингвострановедение</span><span>15 / 20</span></div>
+        <div class="score-track"><div class="score-meter" style="width:75%;background:var(--rose)"></div></div>
+      </div>
+    </div>
+
+    <div class="exercise">
+      <div class="exercise-label">Diagnosis</div>
+      <h3>Three habits cost most of the points</h3>
+      <p>You know a lot of this material, so this was not a knowledge problem. Most points were lost to <b>how</b> you answered:</p>
+      <div class="habit"><div class="h-ico">👀</div><div>
+        <b>1. Choosing what <i>looks</i> right, not what you can <i>prove</i></b>
+        <p>Задание 11: you marked <i>committee</i> and <i>businesses</i> as misspelt because they look long and strange, but both are spelt correctly.
+           Задание 3: <i>choir</i> starts with “ch”, so /ˈtʃɔɪə/ <i>looked</i> right. It was a spelling trap.</p></div></div>
+      <div class="habit"><div class="h-ico">🧩</div><div>
+        <b>2. Not using the grammar around the gap</b>
+        <p>Задание 30: after <i>“they were ___”</i> you put <i>burn the midnight oil</i>, which is a verb, so it can’t follow <i>were</i>.
+           Задание 12: <i>ir-</i> + <i>legible</i> is impossible, because <i>il-</i> goes before <b>l</b> and <i>ir-</i> goes before <b>r</b>. Grammar and spelling rule out options before you think about meaning.</p></div></div>
+      <div class="habit"><div class="h-ico">🔢</div><div>
+        <b>3. Skipping the mechanical first step</b>
+        <p>Задание 6: <i>ceremony</i> has 4 syllables and <i>guarantee</i> has 3, but you picked 3- and 2-syllable patterns. Counting first would have removed most of the options.
+           Задание 5: checking each sentence for “r + vowel” gives the answer every time.</p></div></div>
+    </div>
+
+    <div class="exercise">
+      <div class="exercise-label">The method</div>
+      <h3>How to do any “match it — some options are extra” task</h3>
+      <p>About <b>15 of the 30 tasks</b> in the paper look like this, so this method is worth more points than anything else.</p>
+      <div class="logic">
+        <h4>🧠 The 6 steps</h4>
+        <ol>
+          <li><b>Read the instruction.</b> How many options are extra (2? 4?)? Can an option be used twice?</li>
+          <li><b>Scan all the options first</b> and sort them: nouns / verbs / past forms / adjectives / prepositions.</li>
+          <li><b>For each gap, ask what the grammar needs.</b> Look left and right: <i>a / an</i>? <i>to</i> + ? <i>were</i> + ? a preposition after the gap?</li>
+          <li><b>Answer the ones you are sure of first</b> and cross them out. Each one you finish leaves fewer choices for the rest.</li>
+          <li><b>Read the whole sentence aloud with your answer.</b> Does it sound like a phrase you have heard before?</li>
+          <li><b>Finish with elimination.</b> Never leave a gap. For the last one, choose between the options that are left.</li>
+        </ol>
+      </div>
+
+      <div class="step-title">Warm-up · Step 3 only: what kind of word goes in the gap?</div>
+      <p>Don’t look for the answer yet. Only decide <b>what type</b> of word must go in the gap. All of these gaps are from your demo.</p>
+      <div class="quiz">
+        <div class="answer-row"><span class="ar-num">1</span><span class="ar-txt">…he nearly ______ — he had never built anything more complicated than a model plane.</span>
+          <select class="exam-select ans" data-opts="noun,verb – base form,verb – past form,-ing form,preposition,adjective" data-answer="verb – past form"></select></div>
+        <div class="answer-row"><span class="ar-num">2</span><span class="ar-txt">The police have launched an ______ into the incident.</span>
+          <select class="exam-select ans" data-opts="noun,verb – base form,verb – past form,-ing form,preposition,adjective" data-answer="noun"></select></div>
+        <div class="answer-row"><span class="ar-num">3</span><span class="ar-txt">…so they decided to ______, staying in the lab late every evening.</span>
+          <select class="exam-select ans" data-opts="noun,verb – base form,verb – past form,-ing form,preposition,adjective" data-answer="verb – base form"></select></div>
+        <div class="answer-row"><span class="ar-num">4</span><span class="ar-txt">She can’t help ______ whenever she watches that video.</span>
+          <select class="exam-select ans" data-opts="noun,verb – base form,verb – past form,-ing form,preposition,adjective" data-answer="-ing form"></select></div>
+        <div class="answer-row"><span class="ar-num">5</span><span class="ar-txt">After three attempts, they finally succeeded ______ reaching the summit.</span>
+          <select class="exam-select ans" data-opts="noun,verb – base form,verb – past form,-ing form,preposition,adjective" data-answer="preposition"></select></div>
+        <div class="answer-row"><span class="ar-num">6</span><span class="ar-txt">Many of the ancient letters are ______ because the ink has faded.</span>
+          <select class="exam-select ans" data-opts="noun,verb – base form,verb – past form,-ing form,preposition,adjective" data-answer="adjective"></select></div>
+      </div>
+      <details class="why"><summary>💡 Why this matters</summary><div class="why-body">
+        <p>In gap 1, only a <b>past</b> form fits. In the demo list, <i>got cold feet</i> was the only past-tense idiom, so you can find the answer from grammar alone.</p>
+        <p>In gap 2, <i>an</i> + noun means the noun must start with a vowel sound. From the 8 options in Задание 14, only <i>excuse</i> and <i>investigation</i> are left.</p>
+        <p>This step takes about 3 seconds per gap and often leaves only one or two options.</p>
+      </div></details>
+    </div>
+
+    <div class="exercise">
+      <div class="exercise-label">Take this into the exam</div>
+      <h3>✅ Exam-day checklist</h3>
+      <ul style="padding-left:22px; line-height:1.9;">
+        <li>Matching task → read <b>all</b> the options before the first gap.</li>
+        <li>Check the gap’s grammar (article, tense, preposition) <b>before</b> meaning.</li>
+        <li>Transcription task → a transcription that follows the spelling exactly may be a <b>trap</b>.</li>
+        <li>Stress task → <b>count the syllables</b> first.</li>
+        <li>Spelling task → check each word against the trap list. Don’t pick words just because they are long.</li>
+        <li>“Find the one with / without…” → check <b>every</b> option. Don’t stop at the first one that seems right.</li>
+        <li>Never leave a gap. A choice made by elimination is better than an empty answer.</li>
+      </ul>
+      <div class="btn-row"><button class="btn btn-primary" onclick="switchTab('phon')">Start: Фонетика →</button></div>
+    </div>
+  </div><!-- /tab-plan -->
+
+  <!-- ══════════════════════════════════════════════════════════
+       TAB 1 — ФОНЕТИКА
+  ══════════════════════════════════════════════════════════ -->
+  <div class="tab-content" id="tab-phon">
+    <div class="section-head">
+      <h2>Фонетика</h2>
+      <div class="sh-meta">Demo: 8 / 20 &nbsp;·&nbsp; review Задания 2, 3, 4, 5, 6, 8, 9, 10</div>
+    </div>
+
+    <!-- Задание 2 -->
+    <div class="exercise">
+      <div class="review-head"><span class="task-num">Задание 2</span><span class="demo-score">demo 0 / 1</span></div>
+      <h3>Look-alike words: hear the difference</h3>
+      <div class="talk">💬 You chose <b>loose</b> instead of <b>lose</b>. Say both words aloud. What is different?</div>
+
+      <div class="step-title">1 · Listen again to the demo recording</div>
+      <div class="audio-wrap"><audio controls preload="none" src="audio/l7-task02.mp3"></audio></div>
+      <div class="quiz">
+        <div class="pick list ans" data-need="4" data-items="loose|lose|quite|quiet|adapt|adopt|costume|custom" data-correct="lose,quiet,adapt,custom"></div>
+      </div>
+      <details class="why"><summary>💡 Answer &amp; why</summary><div class="why-body">
+        <p>✓ <b>lose, quiet, adapt, custom</b>. The script: “…they would hate to <b>lose</b> that sense of community.”</p>
+        <p>After <i>hate to</i> you need a <b>verb</b>. <i>Loose</i> is an adjective (свободный, болтающийся), so grammar gives you the answer as well.</p>
+      </div></details>
+
+      <div class="logic">
+        <h4>🧠 The logic</h4>
+        <ol>
+          <li>The 8 words are <b>4 pairs of look-alikes</b>. Usually one word from each pair is in the recording.</li>
+          <li>Before you listen, say each pair in your head and find the sound that is different:
+            <div class="tbl-wrap"><table class="ipa">
+              <tr><th>pair</th><th>the difference</th></tr>
+              <tr><td>loose /luːs/ — lose /luːz/</td><td>/s/ like <i>goose</i> vs /z/ like <i>choose</i></td></tr>
+              <tr><td>quite /kwaɪt/ — quiet /ˈkwaɪət/</td><td>1 syllable vs 2 syllables</td></tr>
+              <tr><td>adapt /əˈdæpt/ — adopt /əˈdɒpt/</td><td>/æ/ vs /ɒ/</td></tr>
+              <tr><td>custom /ˈkʌstəm/ — costume /ˈkɒstjuːm/</td><td>short /ʌ…ə/ vs long /juː/ at the end</td></tr>
+            </table></div></li>
+          <li>While you listen, also use the <b>grammar and meaning</b> around the word. <i>to ___</i> needs a verb, <i>so ___</i> needs an adjective.</li>
+        </ol>
+      </div>
+
+      <div class="step-title">2 · New practice: choose the 4 words you hear (4 are extra)</div>
+      <div class="audio-wrap"><audio controls preload="none" src="audio/l8-pairs.mp3"></audio></div>
+      <div class="quiz">
+        <div class="pick list ans" data-need="4" data-items="work|walk|breathe|breath|advise|advice|desert|dessert" data-correct="walk,breath,advice,dessert"></div>
+      </div>
+      <details class="why"><summary>💡 Script</summary><div class="why-body">
+        <p>Last summer my family went on a long <b>walk</b> through the hills. By the time we reached the top, I was so out of <b>breath</b> that I had to sit down on a rock. My aunt gave me a useful piece of <b>advice</b>: drink a little water every half an hour. When we got back to the hotel, we were all starving, and we had chocolate cake for <b>dessert</b>.</p>
+        <p class="ipa">walk /wɔːk/ ≠ work /wɜːk/ · breath /breθ/ (noun) ≠ breathe /briːð/ (verb) · advice /-s/ (noun) ≠ advise /-z/ (verb) · dessert /dɪˈzɜːt/ ≠ desert /ˈdezət/</p>
+        <p>Grammar helps here too: <i>out of ___</i> and <i>a piece of ___</i> both need nouns, so the answers are <i>breath</i> and <i>advice</i>.</p>
+      </div></details>
+    </div>
+
+    <!-- Задание 3 -->
+    <div class="exercise">
+      <div class="review-head"><span class="task-num">Задание 3</span><span class="demo-score part">demo 3 / 4</span></div>
+      <h3>Transcriptions: watch for spelling traps</h3>
+      <div class="talk">💬 For <b>choir</b> you chose /ˈtʃɔɪə/. What made that one look right?</div>
+
+      <div class="step-title">1 · Listen again and redo the demo item</div>
+      <div class="audio-wrap"><audio controls preload="none" src="audio/l7-task03.mp3"></audio></div>
+      <div class="quiz">
+        <div class="pair-grid">
+          <div>
+            <div class="answer-row"><span class="ar-num">1</span><span class="ar-txt">…that <b>knife</b> is very sharp.</span><select class="exam-select ans" data-opts="a,b,c,d,e,f" data-answer="b"></select></div>
+            <div class="answer-row"><span class="ar-num">2</span><span class="ar-txt">…some fresh <b>salmon</b> with lemon.</span><select class="exam-select ans" data-opts="a,b,c,d,e,f" data-answer="a"></select></div>
+            <div class="answer-row"><span class="ar-num">3</span><span class="ar-txt">The school <b>choir</b> performed… <span class="demo-tag">demo: f</span></span><select class="exam-select ans" data-opts="a,b,c,d,e,f" data-answer="e"></select></div>
+            <div class="answer-row"><span class="ar-num">4</span><span class="ar-txt">…a tiny Scottish <b>island</b>.</span><select class="exam-select ans" data-opts="a,b,c,d,e,f" data-answer="c"></select></div>
+          </div>
+          <div class="opt-box ipa">
+            <div class="opt-row"><span class="opt-letter">a</span><span class="opt-body">/ˈsæmən/</span></div>
+            <div class="opt-row"><span class="opt-letter">b</span><span class="opt-body">/naɪf/</span></div>
+            <div class="opt-row"><span class="opt-letter">c</span><span class="opt-body">/ˈaɪlənd/</span></div>
+            <div class="opt-row"><span class="opt-letter">d</span><span class="opt-body">/ˈsælmən/</span></div>
+            <div class="opt-row"><span class="opt-letter">e</span><span class="opt-body">/ˈkwaɪə/</span></div>
+            <div class="opt-row"><span class="opt-letter">f</span><span class="opt-body">/ˈtʃɔɪə/</span></div>
+          </div>
+        </div>
+      </div>
+      <details class="why"><summary>💡 Answer &amp; why</summary><div class="why-body">
+        <p>✓ choir = <b class="ipa">/ˈkwaɪə/</b>, the same sound as in <i>quiet</i>. The “ch” spelling comes from Greek and is pronounced /k/, as in <i>chorus, chemistry, school, character</i>.</p>
+        <p>The two extra options, <span class="ipa">/ˈsælmən/</span> and <span class="ipa">/ˈtʃɔɪə/</span>, are both <b>“read it letter by letter”</b> versions. The exam writers made them on purpose.</p>
+      </div></details>
+
+      <div class="logic">
+        <h4>🧠 The logic</h4>
+        <ol>
+          <li>For each word, ask: <b>what would someone say if they had only seen the word written down?</b> If a transcription matches that exactly, be careful. It may be the trap.</li>
+          <li>Look for <b>silent letters</b>: k<i>n</i>ife, sa<i>l</i>mon, i<i>s</i>land, de<i>b</i>t, recei<i>p</i>t, <i>w</i>rite, <i>p</i>sychology.</li>
+          <li>Check the 2 extra transcriptions. If both look like spelling-based versions of your words, you have probably spotted the traps correctly.</li>
+        </ol>
+      </div>
+
+      <div class="step-title">2 · New practice: listen and match (2 transcriptions are extra)</div>
+      <div class="audio-wrap"><audio controls preload="none" src="audio/l8-task03.mp3"></audio></div>
+      <div class="quiz">
+        <div class="pair-grid">
+          <div>
+            <div class="answer-row"><span class="ar-num">1</span><span class="ar-txt">The <b>colonel</b> gave the order to march.</span><select class="exam-select ans" data-opts="a,b,c,d,e,f" data-answer="e"></select></div>
+            <div class="answer-row"><span class="ar-num">2</span><span class="ar-txt">They sailed round the island in a small <b>yacht</b>.</span><select class="exam-select ans" data-opts="a,b,c,d,e,f" data-answer="b"></select></div>
+            <div class="answer-row"><span class="ar-num">3</span><span class="ar-txt">He finally paid off his <b>debt</b> to the bank.</span><select class="exam-select ans" data-opts="a,b,c,d,e,f" data-answer="d"></select></div>
+            <div class="answer-row"><span class="ar-num">4</span><span class="ar-txt">Keep the <b>receipt</b> in case you want to return it.</span><select class="exam-select ans" data-opts="a,b,c,d,e,f" data-answer="f"></select></div>
+          </div>
+          <div class="opt-box ipa">
+            <div class="opt-row"><span class="opt-letter">a</span><span class="opt-body">/rɪˈsiːpt/</span></div>
+            <div class="opt-row"><span class="opt-letter">b</span><span class="opt-body">/jɒt/</span></div>
+            <div class="opt-row"><span class="opt-letter">c</span><span class="opt-body">/ˈkɒlənəl/</span></div>
+            <div class="opt-row"><span class="opt-letter">d</span><span class="opt-body">/det/</span></div>
+            <div class="opt-row"><span class="opt-letter">e</span><span class="opt-body">/ˈkɜːnl/</span></div>
+            <div class="opt-row"><span class="opt-letter">f</span><span class="opt-body">/rɪˈsiːt/</span></div>
+          </div>
+        </div>
+      </div>
+      <details class="why"><summary>💡 Why</summary><div class="why-body">
+        <p><i>Colonel</i> sounds exactly like <i>kernel</i>, /ˈkɜːnl/. /ˈkɒlənəl/ is the letter-by-letter trap. In <i>receipt</i> the p is silent, so /rɪˈsiːpt/ is the other trap.</p>
+      </div></details>
+    </div>
+
+    <!-- Задание 4 -->
+    <div class="exercise">
+      <div class="review-head"><span class="task-num">Задание 4</span><span class="demo-score part">demo 2 / 4</span></div>
+      <h3>Finding /ʒ/: don’t confuse it with /z/</h3>
+      <div class="talk">💬 You chose <b>was</b> and <b>surprised</b>. Say them slowly. Is the sound /z/ or /ʒ/, like the <i>ж</i> in <i>жираф</i>?</div>
+
+      <div class="step-title">1 · Redo the demo item: choose 4 words with /ʒ/</div>
+      <div class="quiz">
+        <div class="passage-box">
+          <div class="pick ans" data-need="4" data-correct="usual,measure,occasion,decision"
+               data-words="It was usual for the passionate diver to measure the ocean floor on a special occasion, so his decision to stay ashore surprised everyone."></div>
+        </div>
+      </div>
+      <details class="why"><summary>💡 Answer &amp; why</summary><div class="why-body">
+        <p>✓ <b>usual, measure, occasion, decision</b></p>
+        <p>The sentence is full of traps. <i>was, surprised</i> have /z/. <i>passionate, ocean, special, ashore</i> have /ʃ/, the voiceless partner of /ʒ/.</p>
+      </div></details>
+
+      <div class="logic">
+        <h4>🧠 The logic: /ʒ/ has only a few spellings</h4>
+        <div class="tbl-wrap"><table>
+          <tr><th>/ʒ/ spelling</th><th>examples</th><th>⚠ looks similar but isn’t /ʒ/</th></tr>
+          <tr><td>vowel + <b>-sion</b></td><td>decision, occasion, vision, television</td><td>-<b>ss</b>ion / -<b>n</b>sion = /ʃ/: passion, mission, tension</td></tr>
+          <tr><td>vowel + <b>-sure</b></td><td>measure, pleasure, treasure, leisure</td><td>-<b>ss</b>ure = /ʃ/: pressure; <i>sure</i> itself = /ʃ/</td></tr>
+          <tr><td><b>-sual / -sually</b></td><td>usual, visual, casual</td><td></td></tr>
+          <tr><td>French words with <b>-ge / -g-</b></td><td>beige, massage, genre, regime</td><td>normal <i>-ge</i> = /dʒ/: large, bridge</td></tr>
+          <tr><td>a few others</td><td>Asia, Asian</td><td></td></tr>
+        </table></div>
+        <p style="margin-top:6px">A plain <b>s</b> between vowels (<i>was, busy, rose, surprised</i>) is <b>/z/</b>, not /ʒ/.</p>
+      </div>
+
+      <div class="step-title">2 · Sort the sounds</div>
+      <div class="quiz">
+        <div class="q-grid">
+          <div>
+            <div class="answer-row"><span class="ar-txt">treasure</span><select class="exam-select ans" data-opts="/ʃ/,/ʒ/,/z/,/dʒ/" data-answer="/ʒ/"></select></div>
+            <div class="answer-row"><span class="ar-txt">pressure</span><select class="exam-select ans" data-opts="/ʃ/,/ʒ/,/z/,/dʒ/" data-answer="/ʃ/"></select></div>
+            <div class="answer-row"><span class="ar-txt">vision</span><select class="exam-select ans" data-opts="/ʃ/,/ʒ/,/z/,/dʒ/" data-answer="/ʒ/"></select></div>
+            <div class="answer-row"><span class="ar-txt">mission</span><select class="exam-select ans" data-opts="/ʃ/,/ʒ/,/z/,/dʒ/" data-answer="/ʃ/"></select></div>
+            <div class="answer-row"><span class="ar-txt">busy</span><select class="exam-select ans" data-opts="/ʃ/,/ʒ/,/z/,/dʒ/" data-answer="/z/"></select></div>
+          </div>
+          <div>
+            <div class="answer-row"><span class="ar-txt">bridge</span><select class="exam-select ans" data-opts="/ʃ/,/ʒ/,/z/,/dʒ/" data-answer="/dʒ/"></select></div>
+            <div class="answer-row"><span class="ar-txt">beige</span><select class="exam-select ans" data-opts="/ʃ/,/ʒ/,/z/,/dʒ/" data-answer="/ʒ/"></select></div>
+            <div class="answer-row"><span class="ar-txt">ocean</span><select class="exam-select ans" data-opts="/ʃ/,/ʒ/,/z/,/dʒ/" data-answer="/ʃ/"></select></div>
+            <div class="answer-row"><span class="ar-txt">usually</span><select class="exam-select ans" data-opts="/ʃ/,/ʒ/,/z/,/dʒ/" data-answer="/ʒ/"></select></div>
+            <div class="answer-row"><span class="ar-txt">rose</span><select class="exam-select ans" data-opts="/ʃ/,/ʒ/,/z/,/dʒ/" data-answer="/z/"></select></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step-title">3 · New exam-style item: choose 4 words with /ʒ/</div>
+      <div class="quiz">
+        <div class="passage-box">
+          <div class="pick ans" data-need="4" data-correct="casual,decision,visual,pleasure"
+               data-words="My cousin was surprised that her casual decision to join the visual arts club gave her more pleasure than any pressure at school."></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Задание 5 -->
+    <div class="exercise">
+      <div class="review-head"><span class="task-num">Задание 5</span><span class="demo-score">demo 0 / 1</span></div>
+      <h3>Linking /r/: check every sentence</h3>
+      <div class="talk">💬 You chose sentence 4, <i>“Four of us stayed…”</i>. Is there an r + vowel there?</div>
+
+      <div class="step-title">1 · Listen again: which sentence has NO linking /r/?</div>
+      <div class="audio-wrap"><audio controls preload="none" src="audio/l7-task05.mp3"></audio></div>
+      <div class="quiz">
+        <div class="mc-options chips ans" data-correct="3">
+          <label class="mc-option" data-v="1"><span class="mc-bullet">1</span></label>
+          <label class="mc-option" data-v="2"><span class="mc-bullet">2</span></label>
+          <label class="mc-option" data-v="3"><span class="mc-bullet">3</span></label>
+          <label class="mc-option" data-v="4"><span class="mc-bullet">4</span></label>
+        </div>
+      </div>
+      <details class="why"><summary>💡 Script &amp; why</summary><div class="why-body">
+        <p>1. Thei<u>r a</u>nswer appeared in the newspape<u>r o</u>n Monday.<br>
+           2. The enginee<u>r a</u>dmitted that the plan had failed.<br>
+           <b>3. My brother’s favourite teacher retired last spring.</b> ✓<br>
+           4. Fou<u>r o</u>f us stayed after the meeting to help.</p>
+        <p>In 3, <i>teacher</i> is followed by <i>retired</i>, which starts with a consonant, so there is no link. <i>brother’s</i> ends in /z/, not r.</p>
+      </div></details>
+
+      <div class="logic">
+        <h4>🧠 The logic: a 2-condition test</h4>
+        <ol>
+          <li>Find every word that <b>ends in the letter r</b> (or <b>-re</b>): four, their, teacher, after, where…</li>
+          <li>Look at the <b>next word</b>. Does it start with a <b>vowel sound</b>? If yes, that is a linking /r/: <i>four‿of</i>, <i>where‿is</i>.</li>
+          <li>Do this for <b>all four sentences</b> and write ✓ or ✗ next to each. The sentence that stays empty is the answer. You can do this from the written words even when the audio is fast.</li>
+        </ol>
+      </div>
+
+      <div class="step-title">2 · New practice: which sentence has NO linking /r/?</div>
+      <div class="quiz">
+        <div class="mc-options stack ans" data-correct="3">
+          <label class="mc-option" data-v="1"><span class="mc-bullet">1</span> The doctor examined my arm very carefully.</label>
+          <label class="mc-option" data-v="2"><span class="mc-bullet">2</span> Where is the nearest post office?</label>
+          <label class="mc-option" data-v="3"><span class="mc-bullet">3</span> Our teacher never gives us homework on Fridays.</label>
+          <label class="mc-option" data-v="4"><span class="mc-bullet">4</span> My sister often helps me with maths.</label>
+        </div>
+      </div>
+
+      <div class="step-title">3 · Click the 4 words that link with /r/ to the next word</div>
+      <div class="quiz">
+        <div class="passage-box">
+          <div class="pick ans" data-need="4" data-correct="peter,for,hour,after"
+               data-words="Peter and I stayed for an hour or two after our lesson."></div>
+        </div>
+      </div>
+      <details class="why"><summary>💡 Why</summary><div class="why-body">
+        <p>Pete<u>r a</u>nd · fo<u>r a</u>n · hou<u>r o</u>r · afte<u>r o</u>ur. There is no link in <i>or two</i> or <i>our lesson</i>, because the next word starts with a consonant.</p>
+      </div></details>
+    </div>
+
+    <!-- Задание 6 -->
+    <div class="exercise">
+      <div class="review-head"><span class="task-num">Задание 6</span><span class="demo-score">demo 0 / 4</span></div>
+      <h3>Stress patterns: count the syllables first</h3>
+      <div class="talk">💬 Clap the syllables of <b>ceremony</b> and <b>guarantee</b>. How many are there? Now look at the patterns you chose in the demo.</div>
+
+      <div class="step-title">1 · Redo the demo item</div>
+      <div class="quiz">
+        <div class="pair-grid">
+          <div>
+            <div class="answer-row"><span class="ar-num">1</span><span class="ar-txt">The magician’s best <b>technique</b>… <span class="demo-tag">demo: e</span></span><select class="exam-select ans" data-opts="a,b,c,d,e,f" data-answer="b"></select></div>
+            <div class="answer-row"><span class="ar-num">2</span><span class="ar-txt">The flood was a <b>catastrophe</b>… <span class="demo-tag">demo: c</span></span><select class="exam-select ans" data-opts="a,b,c,d,e,f" data-answer="d"></select></div>
+            <div class="answer-row"><span class="ar-num">3</span><span class="ar-txt">The award <b>ceremony</b>… <span class="demo-tag">demo: f</span></span><select class="exam-select ans" data-opts="a,b,c,d,e,f" data-answer="a"></select></div>
+            <div class="answer-row"><span class="ar-num">4</span><span class="ar-txt">…a two-year <b>guarantee</b>. <span class="demo-tag">demo: b</span></span><select class="exam-select ans" data-opts="a,b,c,d,e,f" data-answer="f"></select></div>
+          </div>
+          <div class="opt-box">
+            <div class="opt-row"><span class="opt-letter">a</span><span class="opt-body">Oooo</span></div>
+            <div class="opt-row"><span class="opt-letter">b</span><span class="opt-body">oO</span></div>
+            <div class="opt-row"><span class="opt-letter">c</span><span class="opt-body">ooOo</span></div>
+            <div class="opt-row"><span class="opt-letter">d</span><span class="opt-body">oOoo</span></div>
+            <div class="opt-row"><span class="opt-letter">e</span><span class="opt-body">Oo</span></div>
+            <div class="opt-row"><span class="opt-letter">f</span><span class="opt-body">ooO</span></div>
+          </div>
+        </div>
+      </div>
+      <details class="why"><summary>💡 Answer &amp; why</summary><div class="why-body">
+        <p>tech-<b>NIQUE</b> (2) = oO · ca-<b>TAS</b>-tro-phe (4) = oOoo · <b>CE</b>-re-mo-ny (4) = Oooo · gua-ran-<b>TEE</b> (3) = ooO</p>
+        <p>In the demo you chose a 3-syllable pattern for <i>ceremony</i> and a 2-syllable pattern for <i>guarantee</i>. Counting first would have ruled those out.</p>
+      </div></details>
+
+      <div class="logic">
+        <h4>🧠 The logic</h4>
+        <ol>
+          <li><b>Count syllables by vowel sounds</b>, not by letters. Crossing out every pattern with the wrong length usually leaves 1–2 options.</li>
+          <li><b>Use endings that decide the stress:</b>
+            <ul>
+              <li><b>-ique, -ee, -eer, -oon, -ese</b> are stressed themselves: tech<b>nique</b>, guaran<b>tee</b>, refu<b>gee</b>, engi<b>neer</b>, bal<b>loon</b>, Japa<b>nese</b></li>
+              <li><b>-phy, -logy, -ity, -graphy</b>: stress 3 syllables from the end: ca<b>tas</b>trophe, bi<b>o</b>logy, a<b>bil</b>ity, pho<b>to</b>graphy</li>
+              <li><b>-ic, -tion, -sion</b>: stress just before the ending: fan<b>tas</b>tic, infor<b>ma</b>tion</li>
+            </ul></li>
+          <li>Say the word quietly with the stress on each candidate syllable. The correct version will sound familiar.</li>
+        </ol>
+      </div>
+
+      <div class="step-title">2 · Warm-up: how many syllables?</div>
+      <div class="quiz">
+        <div class="q-grid">
+          <div>
+            <div class="answer-row"><span class="ar-txt">Wednesday</span><select class="exam-select ans" data-opts="1,2,3,4,5" data-answer="2"></select></div>
+            <div class="answer-row"><span class="ar-txt">ceremony</span><select class="exam-select ans" data-opts="1,2,3,4,5" data-answer="4"></select></div>
+            <div class="answer-row"><span class="ar-txt">guarantee</span><select class="exam-select ans" data-opts="1,2,3,4,5" data-answer="3"></select></div>
+          </div>
+          <div>
+            <div class="answer-row"><span class="ar-txt">comfortable</span><select class="exam-select ans" data-opts="1,2,3,4,5" data-answer="3"></select></div>
+            <div class="answer-row"><span class="ar-txt">photography</span><select class="exam-select ans" data-opts="1,2,3,4,5" data-answer="4"></select></div>
+            <div class="answer-row"><span class="ar-txt">unique</span><select class="exam-select ans" data-opts="1,2,3,4,5" data-answer="2"></select></div>
+          </div>
+        </div>
+      </div>
+      <details class="why"><summary>💡 Why</summary><div class="why-body">
+        <p><i>Wednesday</i> = /ˈwenzdeɪ/, where the first d is silent. <i>Comfortable</i> = /ˈkʌmftəbl/, <b>COMF</b>-ta-ble. The spelling has more vowels than you actually say.</p>
+      </div></details>
+
+      <div class="step-title">3 · New exam-style item (2 patterns are extra)</div>
+      <div class="quiz">
+        <div class="pair-grid">
+          <div>
+            <div class="answer-row"><span class="ar-num">1</span><span class="ar-txt">She has a very <b>unique</b> style of painting.</span><select class="exam-select ans" data-opts="a,b,c,d,e,f" data-answer="c"></select></div>
+            <div class="answer-row"><span class="ar-num">2</span><span class="ar-txt">The main <b>character</b> is a young detective.</span><select class="exam-select ans" data-opts="a,b,c,d,e,f" data-answer="a"></select></div>
+            <div class="answer-row"><span class="ar-num">3</span><span class="ar-txt">My cousin is studying <b>photography</b> in Paris.</span><select class="exam-select ans" data-opts="a,b,c,d,e,f" data-answer="e"></select></div>
+            <div class="answer-row"><span class="ar-num">4</span><span class="ar-txt">Every summer she works as a <b>volunteer</b> at the zoo.</span><select class="exam-select ans" data-opts="a,b,c,d,e,f" data-answer="b"></select></div>
+          </div>
+          <div class="opt-box">
+            <div class="opt-row"><span class="opt-letter">a</span><span class="opt-body">Ooo</span></div>
+            <div class="opt-row"><span class="opt-letter">b</span><span class="opt-body">ooO</span></div>
+            <div class="opt-row"><span class="opt-letter">c</span><span class="opt-body">oO</span></div>
+            <div class="opt-row"><span class="opt-letter">d</span><span class="opt-body">ooOo</span></div>
+            <div class="opt-row"><span class="opt-letter">e</span><span class="opt-body">oOoo</span></div>
+            <div class="opt-row"><span class="opt-letter">f</span><span class="opt-body">Oo</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Задание 8 -->
+    <div class="exercise">
+      <div class="review-head"><span class="task-num">Задание 8</span><span class="demo-score">demo 0 / 1</span></div>
+      <h3>Logical stress: what is being corrected?</h3>
+      <div class="talk">💬 You stressed <b>yesterday</b>. Did Speaker A say anything about <i>when</i>?</div>
+
+      <div class="step-title">1 · Redo the demo item</div>
+      <div class="quiz">
+        <div class="passage-box dialogue">
+          <p>Speaker A: So you’ve already sent the invitations by post?</p>
+          <p>Speaker B: Not by post; our printer broke down on Monday.</p>
+          <div class="pick ans" data-need="1" data-correct="emailed" data-words="I emailed them to everyone yesterday."></div>
+        </div>
+      </div>
+      <details class="why"><summary>💡 Answer &amp; why</summary><div class="why-body">
+        <p>✓ <b>emailed</b>. A said <i>by post</i>, and B corrects this: “not by post, I <b>EMAILED</b> them.” Nobody asked about the time, so <i>yesterday</i> is not new or contrasting information.</p>
+      </div></details>
+
+      <div class="logic">
+        <h4>🧠 The logic</h4>
+        <ol>
+          <li>Read Speaker A and underline the key word they used, for example <i>post</i>.</li>
+          <li>In B’s sentence, find the word that <b>replaces or contradicts</b> it. That word gets the stress.</li>
+          <li>Check: if you stress that word, does B sound like they are correcting A? If yes, you have the answer.</li>
+        </ol>
+      </div>
+
+      <div class="step-title">2 · New practice: click the word that carries the stress</div>
+      <div class="quiz">
+        <div class="passage-box dialogue" style="margin-bottom:10px">
+          <p>A: I heard you bought a red dress for the party.</p>
+          <p>B: Actually,</p>
+          <div class="pick ans" data-need="1" data-correct="blue" data-words="I bought a blue one."></div>
+        </div>
+        <div class="passage-box dialogue" style="margin-bottom:10px">
+          <p>A: Is Tom driving you to the airport tomorrow?</p>
+          <p>B: No, Tom’s busy.</p>
+          <div class="pick ans" data-need="1" data-correct="sister" data-words="His sister is driving me."></div>
+        </div>
+        <div class="passage-box dialogue" style="margin-bottom:10px">
+          <p>A: So you’ve finished your essay?</p>
+          <p>B: Not yet.</p>
+          <div class="pick ans" data-need="1" data-correct="started" data-words="I’ve only started it."></div>
+        </div>
+        <div class="passage-box dialogue">
+          <p>A: Shall we meet at the café at five?</p>
+          <p>B: The café’s closed on Sundays.</p>
+          <div class="pick ans" data-need="1" data-correct="library" data-words="Let’s meet at the library at five."></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Задания 9 & 10 -->
+    <div class="exercise">
+      <div class="review-head"><span class="task-num">Задания 9 &amp; 10</span><span class="demo-score">demo 1 / 3</span></div>
+      <h3>Intonation: know the default tones</h3>
+      <div class="talk">💬 In Задание 10 you chose sentence 2, <i>“Did you remember to lock the door?”</i>. What type of question is it, and what tone does it normally have?</div>
+
+      <div class="step-title">1 · Listen again</div>
+      <p><b>Задание 9</b>: what does the speaker really mean?</p>
+      <div class="audio-wrap"><audio controls preload="none" src="audio/l7-task09.mp3"></audio></div>
+      <div class="quiz">
+        <div class="mc-options stack ans" data-correct="2">
+          <label class="mc-option" data-v="1"><span class="mc-bullet">1</span> The speaker already knew this and is simply repeating the fact. <span class="demo-tag">demo</span></label>
+          <label class="mc-option" data-v="2"><span class="mc-bullet">2</span> The speaker is surprised by the news and is checking it.</label>
+          <label class="mc-option" data-v="3"><span class="mc-bullet">3</span> The speaker is telling the listener to go and look at the results.</label>
+          <label class="mc-option" data-v="4"><span class="mc-bullet">4</span> The speaker is sure the listener will agree and is making small talk.</label>
+        </div>
+      </div>
+      <p style="margin-top:16px"><b>Задание 10</b>: which two sentences have a falling tone?</p>
+      <div class="audio-wrap"><audio controls preload="none" src="audio/l7-task10.mp3"></audio></div>
+      <div class="quiz">
+        <div class="pick list ans" data-need="2" data-items="1|2|3|4" data-correct="1,3"></div>
+      </div>
+      <details class="why"><summary>💡 Script &amp; why</summary><div class="why-body">
+        <p><b>9:</b> A: The results of the contest came out this morning. — B: They’ve ↗come out? A <b>rise</b> on a repeated statement shows surprise: “Really? Is that true?”</p>
+        <p><b>10:</b> 1. Where did you leave my umbrella? ↘ (wh-question) · 2. Did you remember to lock the door? ↗ (yes/no) · 3. What a wonderful surprise! ↘ (exclamation) · 4. Are you ready to order? ↗ (yes/no)</p>
+      </div></details>
+
+      <div class="logic">
+        <h4>🧠 The logic: the default tone map</h4>
+        <div class="tbl-wrap"><table>
+          <tr><th>↘ Falling = finished, certain</th><th>↗ Rising = unfinished, uncertain</th></tr>
+          <tr><td>statements · <b>wh-questions</b> (what, where, why…) · commands · exclamations (<i>What a…! How…!</i>)</td>
+              <td><b>yes/no questions</b> (Do…? Are…? Have…?) · repeated statements that show <b>surprise</b> or checking · items in a list before the last one</td></tr>
+        </table></div>
+        <p style="margin-top:6px">Before you listen, label each sentence with its <b>type</b>. You can often predict the answer before the audio starts, then use the audio to confirm it.</p>
+      </div>
+
+      <div class="step-title">2 · New practice: predict the tone from the sentence type</div>
+      <div class="quiz">
+        <div class="q-grid">
+          <div>
+            <div class="answer-row"><span class="ar-txt">What time does the film start?</span><select class="exam-select ans" data-opts="↘,↗" data-answer="↘"></select></div>
+            <div class="answer-row"><span class="ar-txt">Have you seen my keys?</span><select class="exam-select ans" data-opts="↘,↗" data-answer="↗"></select></div>
+            <div class="answer-row"><span class="ar-txt">Close the window, please.</span><select class="exam-select ans" data-opts="↘,↗" data-answer="↘"></select></div>
+          </div>
+          <div>
+            <div class="answer-row"><span class="ar-txt">What a beautiful view!</span><select class="exam-select ans" data-opts="↘,↗" data-answer="↘"></select></div>
+            <div class="answer-row"><span class="ar-txt">Is this your bag?</span><select class="exam-select ans" data-opts="↘,↗" data-answer="↗"></select></div>
+            <div class="answer-row"><span class="ar-txt">Why are you laughing?</span><select class="exam-select ans" data-opts="↘,↗" data-answer="↘"></select></div>
+          </div>
+        </div>
+        <p style="margin:16px 0 8px"><b>A:</b> I’m moving to Australia next month. &nbsp;<b>B:</b> You’re moving to ↗Australia? What does B mean?</p>
+        <div class="mc-options stack ans" data-correct="b">
+          <label class="mc-option" data-v="a"><span class="mc-bullet">a</span> B already knew and is just repeating it.</label>
+          <label class="mc-option" data-v="b"><span class="mc-bullet">b</span> B is surprised and checking what they heard.</label>
+          <label class="mc-option" data-v="c"><span class="mc-bullet">c</span> B is telling A to move.</label>
+        </div>
+      </div>
+      <div class="btn-row"><button class="btn btn-ghost" onclick="switchTab('lex')">Next: Лексика →</button></div>
+    </div>
+  </div><!-- /tab-phon -->
+
+  <!-- ══════════════════════════════════════════════════════════
+       TAB 2 — ЛЕКСИКА
+  ══════════════════════════════════════════════════════════ -->
+  <div class="tab-content" id="tab-lex">
+    <div class="section-head">
+      <h2>Лексика</h2>
+      <div class="sh-meta">Demo: 5 / 30 &nbsp;·&nbsp; review Задания 11–18</div>
+    </div>
+
+    <!-- Задание 11 -->
+    <div class="exercise">
+      <div class="review-head"><span class="task-num">Задание 11</span><span class="demo-score">demo 0 / 2</span></div>
+      <h3>Spelling: check each word, don’t guess</h3>
+      <div class="talk">💬 You chose <b>committee</b> and <b>businesses</b>. Are they wrong, or do they just look difficult? Spell <i>government</i> aloud, syllable by syllable.</div>
+
+      <div class="step-title">1 · Redo the demo item: find 2 misspelt words</div>
+      <div class="quiz">
+        <div class="passage-box">
+          <div class="pick ans" data-need="2" data-correct="goverment,recieving"
+               data-words="Despite the committee’s initial reluctance, the goverment finally announced that the new library would be accessible to everyone, recieving generous funding from several local businesses."></div>
+        </div>
+      </div>
+      <details class="why"><summary>💡 Answer &amp; why</summary><div class="why-body">
+        <p>✓ <b>goverment → government</b> (govern + ment. The n is quiet when you speak but is still written). ✓ <b>recieving → receiving</b> (i before e, except after c).</p>
+        <p><i>committee</i> (mm, tt, ee) and <i>businesses</i> are correct. The exam includes long “scary” words that are spelt correctly as traps.</p>
+      </div></details>
+
+      <div class="logic">
+        <h4>🧠 The logic: check every word against the trap list</h4>
+        <ol>
+          <li><b>i before e, except after c:</b> believe, piece, field, but receive, ceiling, receipt.</li>
+          <li><b>Letters you don’t hear:</b> gover<b>n</b>ment, envi<b>ron</b>ment, Feb<b>r</b>uary, We<b>d</b>nesday.</li>
+          <li><b>Double letters:</b> a<b>cc</b>o<b>mm</b>odate, co<b>mm</b>i<b>tt</b>ee, embarra<b>ss</b> (rr + ss), ne<b>c</b>e<b>ss</b>ary (1 c, 2 s), re<b>c</b>o<b>mm</b>end (1 c, 2 m), o<b>cc</b>a<b>s</b>ion (2 c, 1 s).</li>
+          <li><b>Swapped endings:</b> -ence / -ance, -ible / -able, defin<b>ite</b>ly (not <i>definately</i>), sep<b>a</b>rate.</li>
+          <li>Go through the sentence <b>one word at a time</b>. Don’t choose a word just because it is long.</li>
+        </ol>
+      </div>
+
+      <div class="step-title">2 · Correct or wrong?</div>
+      <div class="quiz">
+        <div class="q-grid">
+          <div>
+            <div class="answer-row"><span class="ar-txt">accommodate</span><select class="exam-select ans" data-opts="✓ correct,✗ wrong" data-answer="✓ correct"></select></div>
+            <div class="answer-row"><span class="ar-txt">neccessary</span><select class="exam-select ans" data-opts="✓ correct,✗ wrong" data-answer="✗ wrong"></select></div>
+            <div class="answer-row"><span class="ar-txt">definately</span><select class="exam-select ans" data-opts="✓ correct,✗ wrong" data-answer="✗ wrong"></select></div>
+            <div class="answer-row"><span class="ar-txt">recommend</span><select class="exam-select ans" data-opts="✓ correct,✗ wrong" data-answer="✓ correct"></select></div>
+            <div class="answer-row"><span class="ar-txt">embarassed</span><select class="exam-select ans" data-opts="✓ correct,✗ wrong" data-answer="✗ wrong"></select></div>
+          </div>
+          <div>
+            <div class="answer-row"><span class="ar-txt">occasion</span><select class="exam-select ans" data-opts="✓ correct,✗ wrong" data-answer="✓ correct"></select></div>
+            <div class="answer-row"><span class="ar-txt">beleive</span><select class="exam-select ans" data-opts="✓ correct,✗ wrong" data-answer="✗ wrong"></select></div>
+            <div class="answer-row"><span class="ar-txt">receipt</span><select class="exam-select ans" data-opts="✓ correct,✗ wrong" data-answer="✓ correct"></select></div>
+            <div class="answer-row"><span class="ar-txt">enviroment</span><select class="exam-select ans" data-opts="✓ correct,✗ wrong" data-answer="✗ wrong"></select></div>
+            <div class="answer-row"><span class="ar-txt">separate</span><select class="exam-select ans" data-opts="✓ correct,✗ wrong" data-answer="✓ correct"></select></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step-title">3 · New exam-style item: find 2 misspelt words</div>
+      <div class="quiz">
+        <div class="passage-box">
+          <div class="pick ans" data-need="2" data-correct="embarassing,febuary"
+               data-words="The organisers were extremely disappointed when the famous guest cancelled his appearance, although most of the audience didn’t notice the embarassing mistake in the programme, which had been printed in Febuary."></div>
+        </div>
+      </div>
+      <details class="why"><summary>💡 Why</summary><div class="why-body">
+        <p>✓ embarrassing (rr + ss) · ✓ February. <i>Cancelled</i> and <i>programme</i> are correct British spellings. They are traps, not mistakes.</p>
+      </div></details>
+    </div>
+
+    <!-- Задание 12 -->
+    <div class="exercise">
+      <div class="review-head"><span class="task-num">Задание 12</span><span class="demo-score">demo 0 / 4</span></div>
+      <h3>Prefixes: meaning first, then the spelling rule</h3>
+      <div class="talk">💬 For [LEGIBLE] you chose <b>ir-</b>. Which letter does <i>legible</i> start with? Which negative prefix goes with that letter?</div>
+
+      <div class="step-title">1 · Redo the demo item</div>
+      <div class="quiz">
+        <div class="pair-grid">
+          <div>
+            <div class="answer-row"><span class="ar-num">1</span><span class="ar-txt">Our manager tends to [ESTIMATE] ___ how long tasks take, so we always miss our deadlines. <span class="demo-tag">demo: h</span></span><select class="exam-select ans" data-opts="a,b,c,d,e,f,g,h" data-answer="e"></select></div>
+            <div class="answer-row"><span class="ar-num">2</span><span class="ar-txt">Many of the ancient letters are [LEGIBLE] ___ because the ink has faded. <span class="demo-tag">demo: f</span></span><select class="exam-select ans" data-opts="a,b,c,d,e,f,g,h" data-answer="b"></select></div>
+            <div class="answer-row"><span class="ar-num">3</span><span class="ar-txt">The two schools decided to [OPERATE] ___ on a joint science project. <span class="demo-tag">demo: a</span></span><select class="exam-select ans" data-opts="a,b,c,d,e,f,g,h" data-answer="c"></select></div>
+            <div class="answer-row"><span class="ar-num">4</span><span class="ar-txt">Please [ACTIVATE] ___ the alarm before you open the back door. <span class="demo-tag">demo: g</span></span><select class="exam-select ans" data-opts="a,b,c,d,e,f,g,h" data-answer="d"></select></div>
+          </div>
+          <div class="opt-box">
+            <div class="opt-row"><span class="opt-letter">a</span><span class="opt-body">pre-</span></div>
+            <div class="opt-row"><span class="opt-letter">b</span><span class="opt-body">il-</span></div>
+            <div class="opt-row"><span class="opt-letter">c</span><span class="opt-body">co-</span></div>
+            <div class="opt-row"><span class="opt-letter">d</span><span class="opt-body">de-</span></div>
+            <div class="opt-row"><span class="opt-letter">e</span><span class="opt-body">under-</span></div>
+            <div class="opt-row"><span class="opt-letter">f</span><span class="opt-body">ir-</span></div>
+            <div class="opt-row"><span class="opt-letter">g</span><span class="opt-body">mis-</span></div>
+            <div class="opt-row"><span class="opt-letter">h</span><span class="opt-body">sub-</span></div>
+          </div>
+        </div>
+      </div>
+      <details class="why"><summary>💡 Answer &amp; why</summary><div class="why-body">
+        <p>1. <b>under</b>estimate: they always miss deadlines, so the manager thinks tasks take <i>less</i> time than they do.<br>
+           2. <b>il</b>legible: <i>il-</i> is the only possible prefix before <b>l</b>.<br>
+           3. <b>co</b>operate: two schools working <i>together</i>.<br>
+           4. <b>de</b>activate: switch the alarm <i>off</i>.</p>
+      </div></details>
+
+      <div class="logic">
+        <h4>🧠 The logic</h4>
+        <ol>
+          <li><b>Use the context to decide what the word must mean:</b> too little? not? together? reverse?</li>
+          <li><b>Apply the spelling rules for negative prefixes.</b> Often only one option is left:
+            <b>il-</b> + l (illegal, illogical) · <b>ir-</b> + r (irregular, irresponsible) · <b>im-</b> + m/p (impossible, immature) · <b>in-</b> elsewhere.</li>
+          <li><b>Know the meanings of the common prefixes:</b>
+            <div class="tbl-wrap"><table>
+              <tr><td><b>under-</b> too little</td><td><b>over-</b> too much</td><td><b>mis-</b> wrongly</td><td><b>co-</b> together</td></tr>
+              <tr><td><b>de-</b> remove / reverse</td><td><b>pre-</b> before</td><td><b>sub-</b> below</td><td><b>dis-</b> the opposite</td></tr>
+            </table></div></li>
+        </ol>
+      </div>
+
+      <div class="step-title">2 · New practice (4 prefixes are extra)</div>
+      <div class="quiz">
+        <div class="pair-grid">
+          <div>
+            <div class="answer-row"><span class="ar-num">1</span><span class="ar-txt">The instructions were so unclear that I completely [UNDERSTOOD] ___ what to do.</span><select class="exam-select ans" data-opts="a,b,c,d,e,f,g,h" data-answer="c"></select></div>
+            <div class="answer-row"><span class="ar-num">2</span><span class="ar-txt">It is [RESPONSIBLE] ___ to leave young children alone near water.</span><select class="exam-select ans" data-opts="a,b,c,d,e,f,g,h" data-answer="e"></select></div>
+            <div class="answer-row"><span class="ar-num">3</span><span class="ar-txt">Take the chicken out of the freezer tonight so it can [FROST] ___ by tomorrow.</span><select class="exam-select ans" data-opts="a,b,c,d,e,f,g,h" data-answer="d"></select></div>
+            <div class="answer-row"><span class="ar-num">4</span><span class="ar-txt">I think the café [CHARGED] ___ us — the bill was twice what it should have been.</span><select class="exam-select ans" data-opts="a,b,c,d,e,f,g,h" data-answer="a"></select></div>
+          </div>
+          <div class="opt-box">
+            <div class="opt-row"><span class="opt-letter">a</span><span class="opt-body">over-</span></div>
+            <div class="opt-row"><span class="opt-letter">b</span><span class="opt-body">il-</span></div>
+            <div class="opt-row"><span class="opt-letter">c</span><span class="opt-body">mis-</span></div>
+            <div class="opt-row"><span class="opt-letter">d</span><span class="opt-body">de-</span></div>
+            <div class="opt-row"><span class="opt-letter">e</span><span class="opt-body">ir-</span></div>
+            <div class="opt-row"><span class="opt-letter">f</span><span class="opt-body">under-</span></div>
+            <div class="opt-row"><span class="opt-letter">g</span><span class="opt-body">pre-</span></div>
+            <div class="opt-row"><span class="opt-letter">h</span><span class="opt-body">dis-</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Задание 13 -->
+    <div class="exercise">
+      <div class="review-head"><span class="task-num">Задание 13</span><span class="demo-score part">demo 2 / 4</span></div>
+      <h3>Synonyms: “fits the sentence” is not the same as “means the same”</h3>
+      <div class="talk">💬 You chose <i>exhausted</i> for <b>famished</b>. Hikers after a long climb <i>are</i> probably exhausted. So why is it still wrong?</div>
+
+      <div class="step-title">1 · Redo the two missed items</div>
+      <div class="quiz">
+        <div class="q-grid">
+          <div class="q-card">
+            <p class="q-text">3. He made a <b>futile</b> attempt to catch the last train. <span class="demo-tag">demo: a</span></p>
+            <div class="mc-options stack ans" data-correct="c">
+              <label class="mc-option" data-v="a"><span class="mc-bullet">a</span> brave</label>
+              <label class="mc-option" data-v="b"><span class="mc-bullet">b</span> sudden</label>
+              <label class="mc-option" data-v="c"><span class="mc-bullet">c</span> useless</label>
+              <label class="mc-option" data-v="d"><span class="mc-bullet">d</span> clumsy</label>
+            </div>
+          </div>
+          <div class="q-card">
+            <p class="q-text">4. The hikers were <b>famished</b> after the long climb. <span class="demo-tag">demo: c</span></p>
+            <div class="mc-options stack ans" data-correct="d">
+              <label class="mc-option" data-v="a"><span class="mc-bullet">a</span> delighted</label>
+              <label class="mc-option" data-v="b"><span class="mc-bullet">b</span> lost</label>
+              <label class="mc-option" data-v="c"><span class="mc-bullet">c</span> exhausted</label>
+              <label class="mc-option" data-v="d"><span class="mc-bullet">d</span> very hungry</label>
+            </div>
+          </div>
+        </div>
+      </div>
+      <details class="why"><summary>💡 Answer &amp; why</summary><div class="why-body">
+        <p><b>futile</b> = useless, with no result. <b>famished</b> = very hungry. It is related to <i>famine</i> (голод).</p>
+        <p>The wrong options are chosen <b>because</b> they fit the context. The question asks what the word <b>means</b>, not what might also be true.</p>
+      </div></details>
+
+      <div class="logic">
+        <h4>🧠 The logic</h4>
+        <ol>
+          <li>Several options will make sense in the sentence. Don’t stop at the first one that does.</li>
+          <li>Look for <b>word families</b>: famished → famine; futile → like <i>fruitless</i>; obsolete → like <i>old</i>.</li>
+          <li>Put the option in place of the word. Does it keep <b>exactly</b> the same meaning, or does it only fit the situation?</li>
+        </ol>
+      </div>
+
+      <div class="step-title">2 · New practice: all 4 options fit the context, but only one is a synonym</div>
+      <div class="quiz">
+        <div class="q-grid">
+          <div class="q-card">
+            <p class="q-text">1. After swimming all afternoon, the children were <b>ravenous</b>.</p>
+            <div class="mc-options stack ans" data-correct="b">
+              <label class="mc-option" data-v="a"><span class="mc-bullet">a</span> sleepy</label>
+              <label class="mc-option" data-v="b"><span class="mc-bullet">b</span> extremely hungry</label>
+              <label class="mc-option" data-v="c"><span class="mc-bullet">c</span> cold</label>
+              <label class="mc-option" data-v="d"><span class="mc-bullet">d</span> noisy</label>
+            </div>
+          </div>
+          <div class="q-card">
+            <p class="q-text">2. He is <b>meticulous</b> about his homework.</p>
+            <div class="mc-options stack ans" data-correct="a">
+              <label class="mc-option" data-v="a"><span class="mc-bullet">a</span> very careful</label>
+              <label class="mc-option" data-v="b"><span class="mc-bullet">b</span> lazy</label>
+              <label class="mc-option" data-v="c"><span class="mc-bullet">c</span> proud</label>
+              <label class="mc-option" data-v="d"><span class="mc-bullet">d</span> nervous</label>
+            </div>
+          </div>
+          <div class="q-card">
+            <p class="q-text">3. The film had a rather <b>mediocre</b> ending.</p>
+            <div class="mc-options stack ans" data-correct="c">
+              <label class="mc-option" data-v="a"><span class="mc-bullet">a</span> surprising</label>
+              <label class="mc-option" data-v="b"><span class="mc-bullet">b</span> sad</label>
+              <label class="mc-option" data-v="c"><span class="mc-bullet">c</span> not very good</label>
+              <label class="mc-option" data-v="d"><span class="mc-bullet">d</span> happy</label>
+            </div>
+          </div>
+          <div class="q-card">
+            <p class="q-text">4. They were <b>reluctant</b> to leave the party.</p>
+            <div class="mc-options stack ans" data-correct="b">
+              <label class="mc-option" data-v="a"><span class="mc-bullet">a</span> eager</label>
+              <label class="mc-option" data-v="b"><span class="mc-bullet">b</span> unwilling</label>
+              <label class="mc-option" data-v="c"><span class="mc-bullet">c</span> too tired</label>
+              <label class="mc-option" data-v="d"><span class="mc-bullet">d</span> late</label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Задание 14 -->
+    <div class="exercise">
+      <div class="review-head"><span class="task-num">Задание 14</span><span class="demo-score">demo 0 / 4</span></div>
+      <h3>Nouns: look at the partner words</h3>
+      <div class="talk">💬 Read your demo answers aloud: “read the terms and <i>remedy</i>”, “launched an <i>excuse</i>”, “paid <i>grant</i> to”. Have you ever heard these phrases?</div>
+
+      <div class="step-title">1 · Redo the demo item</div>
+      <div class="quiz">
+        <div class="pair-grid">
+          <div>
+            <div class="answer-row"><span class="ar-num">1</span><span class="ar-txt">The young scientist was awarded a ___ to continue her research. <span class="demo-tag">demo: a</span></span><select class="exam-select ans" data-opts="a,b,c,d,e,f,g,h" data-answer="c"></select></div>
+            <div class="answer-row"><span class="ar-num">2</span><span class="ar-txt">Before you sign, please read the terms and ___ carefully. <span class="demo-tag">demo: h</span></span><select class="exam-select ans" data-opts="a,b,c,d,e,f,g,h" data-answer="e"></select></div>
+            <div class="answer-row"><span class="ar-num">3</span><span class="ar-txt">The police have launched an ___ into the incident. <span class="demo-tag">demo: d</span></span><select class="exam-select ans" data-opts="a,b,c,d,e,f,g,h" data-answer="g"></select></div>
+            <div class="answer-row"><span class="ar-num">4</span><span class="ar-txt">In his speech, the headmaster paid ___ to the teacher who had retired. <span class="demo-tag">demo: c</span></span><select class="exam-select ans" data-opts="a,b,c,d,e,f,g,h" data-answer="a"></select></div>
+          </div>
+          <div class="opt-box">
+            <div class="opt-row"><span class="opt-letter">a</span><span class="opt-body">tribute</span></div>
+            <div class="opt-row"><span class="opt-letter">b</span><span class="opt-body">rumour</span></div>
+            <div class="opt-row"><span class="opt-letter">c</span><span class="opt-body">grant</span></div>
+            <div class="opt-row"><span class="opt-letter">d</span><span class="opt-body">excuse</span></div>
+            <div class="opt-row"><span class="opt-letter">e</span><span class="opt-body">conditions</span></div>
+            <div class="opt-row"><span class="opt-letter">f</span><span class="opt-body">habit</span></div>
+            <div class="opt-row"><span class="opt-letter">g</span><span class="opt-body">investigation</span></div>
+            <div class="opt-row"><span class="opt-letter">h</span><span class="opt-body">remedy</span></div>
+          </div>
+        </div>
+      </div>
+      <details class="why"><summary>💡 Answer &amp; why</summary><div class="why-body">
+        <p><b>award a grant</b> (грант) · <b>terms and conditions</b> (a fixed pair) · <b>launch an investigation</b> · <b>pay tribute to</b> (отдать дань уважения)</p>
+        <p>Grammar narrows gap 3: <i>an ___</i> needs a vowel sound, so only <i>excuse</i> or <i>investigation</i> are possible. The police launch an investigation, not an excuse.</p>
+      </div></details>
+
+      <div class="logic">
+        <h4>🧠 The logic: this task tests collocations</h4>
+        <ol>
+          <li>Find the <b>partner word</b> in each sentence: the verb before the gap (<i>award, launch, pay</i>) or the word joined with <i>and</i> (<i>terms and…</i>).</li>
+          <li>Use the grammar: <i>a / an</i>, singular or plural, a preposition after the gap (<i>tribute <b>to</b></i>, <i>investigation <b>into</b></i>).</li>
+          <li>Ask yourself: have I seen <i>verb + this noun</i> together before? If not, it is probably one of the extra words.</li>
+          <li>Learn vocabulary in <b>chunks</b> (<i>pay tribute to</i>), not single words (<i>tribute</i>).</li>
+        </ol>
+      </div>
+
+      <div class="step-title">2 · New practice (4 nouns are extra)</div>
+      <div class="quiz">
+        <div class="pair-grid">
+          <div>
+            <div class="answer-row"><span class="ar-num">1</span><span class="ar-txt">The phone arrived broken, so the shop gave me a full ___.</span><select class="exam-select ans" data-opts="a,b,c,d,e,f,g,h" data-answer="b"></select></div>
+            <div class="answer-row"><span class="ar-num">2</span><span class="ar-txt">Nobody knows if it’s true — it’s just a ___ that she’s leaving the school.</span><select class="exam-select ans" data-opts="a,b,c,d,e,f,g,h" data-answer="d"></select></div>
+            <div class="answer-row"><span class="ar-num">3</span><span class="ar-txt">After months of talks, the two sides finally reached an ___.</span><select class="exam-select ans" data-opts="a,b,c,d,e,f,g,h" data-answer="e"></select></div>
+            <div class="answer-row"><span class="ar-num">4</span><span class="ar-txt">Please pay ___ — this will be in the test.</span><select class="exam-select ans" data-opts="a,b,c,d,e,f,g,h" data-answer="a"></select></div>
+          </div>
+          <div class="opt-box">
+            <div class="opt-row"><span class="opt-letter">a</span><span class="opt-body">attention</span></div>
+            <div class="opt-row"><span class="opt-letter">b</span><span class="opt-body">refund</span></div>
+            <div class="opt-row"><span class="opt-letter">c</span><span class="opt-body">habit</span></div>
+            <div class="opt-row"><span class="opt-letter">d</span><span class="opt-body">rumour</span></div>
+            <div class="opt-row"><span class="opt-letter">e</span><span class="opt-body">agreement</span></div>
+            <div class="opt-row"><span class="opt-letter">f</span><span class="opt-body">excuse</span></div>
+            <div class="opt-row"><span class="opt-letter">g</span><span class="opt-body">remedy</span></div>
+            <div class="opt-row"><span class="opt-letter">h</span><span class="opt-body">tribute</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Задание 15 -->
+    <div class="exercise">
+      <div class="review-head"><span class="task-num">Задание 15</span><span class="demo-score part">demo 1 / 4</span></div>
+      <h3>Verbs: fixed verb + noun phrases</h3>
+      <div class="talk">💬 Which of these did you already know: <i>bring under control</i>, <i>come into force</i>, <i>set an example</i>? Which were completely new?</div>
+
+      <div class="step-title">1 · Redo the demo item</div>
+      <div class="quiz">
+        <div class="pair-grid">
+          <div>
+            <div class="answer-row"><span class="ar-num">1</span><span class="ar-txt">It took the firefighters six hours to ___ the blaze under control. <span class="demo-tag">demo: b</span></span><select class="exam-select ans" data-opts="a,b,c,d,e,f,g,h" data-answer="g"></select></div>
+            <div class="answer-row"><span class="ar-num">2</span><span class="ar-txt">The new law will ___ into force next January. <span class="demo-tag">demo: h</span></span><select class="exam-select ans" data-opts="a,b,c,d,e,f,g,h" data-answer="c"></select></div>
+            <div class="answer-row"><span class="ar-num">3</span><span class="ar-txt">As the oldest pupil, Mark always tries to ___ an example for the younger ones. <span class="demo-tag">demo: g</span></span><select class="exam-select ans" data-opts="a,b,c,d,e,f,g,h" data-answer="a"></select></div>
+            <div class="answer-row"><span class="ar-num">4</span><span class="ar-txt">Please ___ a seat — the doctor will see you shortly.</span><select class="exam-select ans" data-opts="a,b,c,d,e,f,g,h" data-answer="e"></select></div>
+          </div>
+          <div class="opt-box">
+            <div class="opt-row"><span class="opt-letter">a</span><span class="opt-body">set</span></div>
+            <div class="opt-row"><span class="opt-letter">b</span><span class="opt-body">make</span></div>
+            <div class="opt-row"><span class="opt-letter">c</span><span class="opt-body">come</span></div>
+            <div class="opt-row"><span class="opt-letter">d</span><span class="opt-body">raise</span></div>
+            <div class="opt-row"><span class="opt-letter">e</span><span class="opt-body">take</span></div>
+            <div class="opt-row"><span class="opt-letter">f</span><span class="opt-body">do</span></div>
+            <div class="opt-row"><span class="opt-letter">g</span><span class="opt-body">bring</span></div>
+            <div class="opt-row"><span class="opt-letter">h</span><span class="opt-body">pay</span></div>
+          </div>
+        </div>
+      </div>
+      <details class="why"><summary>💡 Answer &amp; why</summary><div class="why-body">
+        <p><b>bring</b> sth under control · a law <b>comes</b> into force · <b>set</b> an example · <b>take</b> a seat</p>
+        <p>Grammar check for gap 2: a <i>law</i> does the action itself, with no object, so you need an intransitive verb. Only <i>come</i> works: “will come into force”.</p>
+      </div></details>
+
+      <div class="logic">
+        <h4>🧠 The logic</h4>
+        <ol>
+          <li>Look at <b>what follows</b> the gap: the noun and the preposition (<i>___ an example</i>, <i>___ into force</i>, <i>___ under control</i>).</li>
+          <li>Does the verb need an object? “The law will ___ into force” has no object, so choose <i>come</i> or <i>go</i>, not <i>bring</i> or <i>make</i>.</li>
+          <li>Don’t translate from Russian. “Принять меры” is <i>take</i> measures, and “сделать ошибку” is <i>make</i> a mistake.</li>
+        </ol>
+      </div>
+
+      <div class="step-title">2 · New practice (4 verbs are extra)</div>
+      <div class="quiz">
+        <div class="pair-grid">
+          <div>
+            <div class="answer-row"><span class="ar-num">1</span><span class="ar-txt">You should always ___ your promises.</span><select class="exam-select ans" data-opts="a,b,c,d,e,f,g,h" data-answer="c"></select></div>
+            <div class="answer-row"><span class="ar-num">2</span><span class="ar-txt">It’s your turn to ___ the washing-up tonight.</span><select class="exam-select ans" data-opts="a,b,c,d,e,f,g,h" data-answer="d"></select></div>
+            <div class="answer-row"><span class="ar-num">3</span><span class="ar-txt">Can I ___ a suggestion? Let’s order pizza.</span><select class="exam-select ans" data-opts="a,b,c,d,e,f,g,h" data-answer="a"></select></div>
+            <div class="answer-row"><span class="ar-num">4</span><span class="ar-txt">The teacher asked us to ___ attention to the board.</span><select class="exam-select ans" data-opts="a,b,c,d,e,f,g,h" data-answer="h"></select></div>
+          </div>
+          <div class="opt-box">
+            <div class="opt-row"><span class="opt-letter">a</span><span class="opt-body">make</span></div>
+            <div class="opt-row"><span class="opt-letter">b</span><span class="opt-body">take</span></div>
+            <div class="opt-row"><span class="opt-letter">c</span><span class="opt-body">keep</span></div>
+            <div class="opt-row"><span class="opt-letter">d</span><span class="opt-body">do</span></div>
+            <div class="opt-row"><span class="opt-letter">e</span><span class="opt-body">raise</span></div>
+            <div class="opt-row"><span class="opt-letter">f</span><span class="opt-body">set</span></div>
+            <div class="opt-row"><span class="opt-letter">g</span><span class="opt-body">bring</span></div>
+            <div class="opt-row"><span class="opt-letter">h</span><span class="opt-body">pay</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Задание 16 -->
+    <div class="exercise">
+      <div class="review-head"><span class="task-num">Задание 16</span><span class="demo-score">demo 0 / 4</span></div>
+      <h3>Adjectives: English collocations, not Russian ones</h3>
+      <div class="talk">💬 In Russian it’s “сильный дождь”. What do we say in English? Why doesn’t <i>thick rain</i> or <i>loud rain</i> work?</div>
+
+      <div class="step-title">1 · Redo the demo item</div>
+      <div class="quiz">
+        <div class="pair-grid">
+          <div>
+            <div class="answer-row"><span class="ar-num">1</span><span class="ar-txt">The forecast warns of ___ rain throughout the weekend. <span class="demo-tag">demo: h</span></span><select class="exam-select ans" data-opts="a,b,c,d,e,f,g,h" data-answer="c"></select></div>
+            <div class="answer-row"><span class="ar-num">2</span><span class="ar-txt">After the argument, there was an ___ silence in the room. <span class="demo-tag">demo: c</span></span><select class="exam-select ans" data-opts="a,b,c,d,e,f,g,h" data-answer="e"></select></div>
+            <div class="answer-row"><span class="ar-num">3</span><span class="ar-txt">I have a ___ memory of my first day at school — I remember every detail. <span class="demo-tag">demo: b</span></span><select class="exam-select ans" data-opts="a,b,c,d,e,f,g,h" data-answer="a"></select></div>
+            <div class="answer-row"><span class="ar-num">4</span><span class="ar-txt">Searching the whole forest before dark was a ___ task for the rescue team. <span class="demo-tag">demo: e</span></span><select class="exam-select ans" data-opts="a,b,c,d,e,f,g,h" data-answer="g"></select></div>
+          </div>
+          <div class="opt-box">
+            <div class="opt-row"><span class="opt-letter">a</span><span class="opt-body">vivid</span></div>
+            <div class="opt-row"><span class="opt-letter">b</span><span class="opt-body">thick</span></div>
+            <div class="opt-row"><span class="opt-letter">c</span><span class="opt-body">heavy</span></div>
+            <div class="opt-row"><span class="opt-letter">d</span><span class="opt-body">loud</span></div>
+            <div class="opt-row"><span class="opt-letter">e</span><span class="opt-body">awkward</span></div>
+            <div class="opt-row"><span class="opt-letter">f</span><span class="opt-body">tall</span></div>
+            <div class="opt-row"><span class="opt-letter">g</span><span class="opt-body">daunting</span></div>
+            <div class="opt-row"><span class="opt-letter">h</span><span class="opt-body">wide</span></div>
+          </div>
+        </div>
+      </div>
+      <details class="why"><summary>💡 Answer &amp; why</summary><div class="why-body">
+        <p><b>heavy</b> rain · an <b>awkward</b> silence · a <b>vivid</b> memory · a <b>daunting</b> task (a difficult task that frightens you)</p>
+        <p>Grammar decides gap 2: <i>an ___</i> needs a vowel sound, and <i>awkward</i> is the only word in the list that starts with one. This gap has only one possible answer.</p>
+      </div></details>
+
+      <div class="logic">
+        <h4>🧠 The logic</h4>
+        <ol>
+          <li><b>Check <i>a / an</i> first.</b> In the demo, this alone gave you gap 2.</li>
+          <li><b>Translating word by word from Russian is a trap:</b> сильный дождь = <i>heavy</i> rain, крепкий кофе = <i>strong</i> coffee, сильная конкуренция = <i>fierce</i> competition.</li>
+          <li>Use the <b>explanation after the dash</b>. “I remember every detail” means the memory is <i>clear and bright</i>, so the answer is <i>vivid</i>.</li>
+        </ol>
+      </div>
+
+      <div class="step-title">2 · New practice (4 adjectives are extra)</div>
+      <div class="quiz">
+        <div class="pair-grid">
+          <div>
+            <div class="answer-row"><span class="ar-num">1</span><span class="ar-txt">There was ___ traffic on the way to school, so we were late.</span><select class="exam-select ans" data-opts="a,b,c,d,e,f,g,h" data-answer="b"></select></div>
+            <div class="answer-row"><span class="ar-num">2</span><span class="ar-txt">Drink this — it’s ___ coffee, it’ll wake you up.</span><select class="exam-select ans" data-opts="a,b,c,d,e,f,g,h" data-answer="a"></select></div>
+            <div class="answer-row"><span class="ar-num">3</span><span class="ar-txt">The two teams are in ___ competition for first place.</span><select class="exam-select ans" data-opts="a,b,c,d,e,f,g,h" data-answer="d"></select></div>
+            <div class="answer-row"><span class="ar-num">4</span><span class="ar-txt">He had a ___ escape when the tree fell just behind him.</span><select class="exam-select ans" data-opts="a,b,c,d,e,f,g,h" data-answer="e"></select></div>
+          </div>
+          <div class="opt-box">
+            <div class="opt-row"><span class="opt-letter">a</span><span class="opt-body">strong</span></div>
+            <div class="opt-row"><span class="opt-letter">b</span><span class="opt-body">heavy</span></div>
+            <div class="opt-row"><span class="opt-letter">c</span><span class="opt-body">powerful</span></div>
+            <div class="opt-row"><span class="opt-letter">d</span><span class="opt-body">fierce</span></div>
+            <div class="opt-row"><span class="opt-letter">e</span><span class="opt-body">narrow</span></div>
+            <div class="opt-row"><span class="opt-letter">f</span><span class="opt-body">thin</span></div>
+            <div class="opt-row"><span class="opt-letter">g</span><span class="opt-body">tall</span></div>
+            <div class="opt-row"><span class="opt-letter">h</span><span class="opt-body">big</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Задание 17 -->
+    <div class="exercise">
+      <div class="review-head"><span class="task-num">Задание 17</span><span class="demo-score part">demo 1 / 4</span></div>
+      <h3>Dependent prepositions</h3>
+      <div class="talk">💬 In Russian: обвинить <b>в</b>, извиниться <b>за</b>. What are they in English? Does translating help or trick you?</div>
+
+      <div class="step-title">1 · Redo the demo item</div>
+      <div class="quiz">
+        <div class="pair-grid">
+          <div>
+            <div class="answer-row"><span class="ar-num">1</span><span class="ar-txt">She was accused ___ stealing the documents. <span class="demo-tag">demo: e</span></span><select class="exam-select ans" data-opts="a,b,c,d,e,f,g,h" data-answer="b"></select></div>
+            <div class="answer-row"><span class="ar-num">2</span><span class="ar-txt">The success of the project depends ___ everyone’s cooperation.</span><select class="exam-select ans" data-opts="a,b,c,d,e,f,g,h" data-answer="d"></select></div>
+            <div class="answer-row"><span class="ar-num">3</span><span class="ar-txt">He apologised ___ being late for the third time this week. <span class="demo-tag">demo: c</span></span><select class="exam-select ans" data-opts="a,b,c,d,e,f,g,h" data-answer="f"></select></div>
+            <div class="answer-row"><span class="ar-num">4</span><span class="ar-txt">After three attempts, they finally succeeded ___ reaching the summit. <span class="demo-tag">demo: a</span></span><select class="exam-select ans" data-opts="a,b,c,d,e,f,g,h" data-answer="g"></select></div>
+          </div>
+          <div class="opt-box">
+            <div class="opt-row"><span class="opt-letter">a</span><span class="opt-body">at</span></div>
+            <div class="opt-row"><span class="opt-letter">b</span><span class="opt-body">of</span></div>
+            <div class="opt-row"><span class="opt-letter">c</span><span class="opt-body">with</span></div>
+            <div class="opt-row"><span class="opt-letter">d</span><span class="opt-body">on</span></div>
+            <div class="opt-row"><span class="opt-letter">e</span><span class="opt-body">about</span></div>
+            <div class="opt-row"><span class="opt-letter">f</span><span class="opt-body">for</span></div>
+            <div class="opt-row"><span class="opt-letter">g</span><span class="opt-body">in</span></div>
+            <div class="opt-row"><span class="opt-letter">h</span><span class="opt-body">to</span></div>
+          </div>
+        </div>
+      </div>
+      <details class="why"><summary>💡 Answer &amp; why</summary><div class="why-body">
+        <p>accuse sb <b>of</b> · depend <b>on</b> · apologise <b>for</b> sth (apologise <b>to</b> a person) · succeed <b>in</b> doing</p>
+        <p>Here the Russian actually helps with <i>apologise for</i> (извиниться <b>за</b>) and <i>succeed in</i> (преуспеть <b>в</b>). It only tricks you with <i>accuse of</i>.</p>
+      </div></details>
+
+      <div class="logic">
+        <h4>🧠 The logic</h4>
+        <ol>
+          <li>Verb + preposition pairs are <b>fixed</b>. Learn them as one unit: <i>accuse-of, rely-on, insist-on, apologise-for, succeed-in, consist-of</i>.</li>
+          <li>Start with the pairs you are 100% sure of and cross them out. The rest gets easier.</li>
+          <li>Check what is <b>after</b> the gap. A preposition + <b>-ing</b> is very common here (<i>of stealing, in reaching</i>).</li>
+        </ol>
+      </div>
+
+      <div class="step-title">2 · New practice (4 prepositions are extra)</div>
+      <div class="quiz">
+        <div class="pair-grid">
+          <div>
+            <div class="answer-row"><span class="ar-num">1</span><span class="ar-txt">I’m not very good ___ maths, but I love history.</span><select class="exam-select ans" data-opts="a,b,c,d,e,f,g,h" data-answer="a"></select></div>
+            <div class="answer-row"><span class="ar-num">2</span><span class="ar-txt">She insisted ___ paying for everyone’s dinner.</span><select class="exam-select ans" data-opts="a,b,c,d,e,f,g,h" data-answer="d"></select></div>
+            <div class="answer-row"><span class="ar-num">3</span><span class="ar-txt">He is very proud ___ his little sister’s achievements.</span><select class="exam-select ans" data-opts="a,b,c,d,e,f,g,h" data-answer="b"></select></div>
+            <div class="answer-row"><span class="ar-num">4</span><span class="ar-txt">The neighbours complained ___ the noise from our party.</span><select class="exam-select ans" data-opts="a,b,c,d,e,f,g,h" data-answer="e"></select></div>
+          </div>
+          <div class="opt-box">
+            <div class="opt-row"><span class="opt-letter">a</span><span class="opt-body">at</span></div>
+            <div class="opt-row"><span class="opt-letter">b</span><span class="opt-body">of</span></div>
+            <div class="opt-row"><span class="opt-letter">c</span><span class="opt-body">with</span></div>
+            <div class="opt-row"><span class="opt-letter">d</span><span class="opt-body">on</span></div>
+            <div class="opt-row"><span class="opt-letter">e</span><span class="opt-body">about</span></div>
+            <div class="opt-row"><span class="opt-letter">f</span><span class="opt-body">for</span></div>
+            <div class="opt-row"><span class="opt-letter">g</span><span class="opt-body">in</span></div>
+            <div class="opt-row"><span class="opt-letter">h</span><span class="opt-body">to</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Задание 18 -->
+    <div class="exercise">
+      <div class="review-head"><span class="task-num">Задание 18</span><span class="demo-score part">demo 1 / 4</span></div>
+      <h3>Phrasal verbs: read the whole phrase</h3>
+      <div class="talk">💬 Gap 3 was “I can’t put ___ <b>with</b> this noise”. Which phrasal verb has <i>with</i> after it?</div>
+
+      <div class="step-title">1 · Redo the demo item</div>
+      <div class="quiz">
+        <div class="pair-grid">
+          <div>
+            <div class="answer-row"><span class="ar-num">1</span><span class="ar-txt">The meeting was called ___ because the director was ill.</span><select class="exam-select ans" data-opts="a,b,c,d,e,f,g,h" data-answer="a"></select></div>
+            <div class="answer-row"><span class="ar-num">2</span><span class="ar-txt">I can hardly make ___ what he has written — his handwriting is terrible. <span class="demo-tag">demo: e</span></span><select class="exam-select ans" data-opts="a,b,c,d,e,f,g,h" data-answer="c"></select></div>
+            <div class="answer-row"><span class="ar-num">3</span><span class="ar-txt">I can’t put ___ with this noise any longer! <span class="demo-tag">demo: c</span></span><select class="exam-select ans" data-opts="a,b,c,d,e,f,g,h" data-answer="e"></select></div>
+            <div class="answer-row"><span class="ar-num">4</span><span class="ar-txt">Our car broke ___ on the motorway, so we were late. <span class="demo-tag">demo: f</span></span><select class="exam-select ans" data-opts="a,b,c,d,e,f,g,h" data-answer="g"></select></div>
+          </div>
+          <div class="opt-box">
+            <div class="opt-row"><span class="opt-letter">a</span><span class="opt-body">off</span></div>
+            <div class="opt-row"><span class="opt-letter">b</span><span class="opt-body">through</span></div>
+            <div class="opt-row"><span class="opt-letter">c</span><span class="opt-body">out</span></div>
+            <div class="opt-row"><span class="opt-letter">d</span><span class="opt-body">over</span></div>
+            <div class="opt-row"><span class="opt-letter">e</span><span class="opt-body">up</span></div>
+            <div class="opt-row"><span class="opt-letter">f</span><span class="opt-body">away</span></div>
+            <div class="opt-row"><span class="opt-letter">g</span><span class="opt-body">down</span></div>
+            <div class="opt-row"><span class="opt-letter">h</span><span class="opt-body">across</span></div>
+          </div>
+        </div>
+      </div>
+      <details class="why"><summary>💡 Answer &amp; why</summary><div class="why-body">
+        <p>call <b>off</b> = cancel · make <b>out</b> = manage to see or read · put <b>up with</b> = tolerate · break <b>down</b> = stop working (a car or machine)</p>
+        <p>It looks like you swapped 2 and 3. Seeing <i>with</i> after the gap tells you it must be <i>put up with</i>.</p>
+      </div></details>
+
+      <div class="logic">
+        <h4>🧠 The logic</h4>
+        <ol>
+          <li>Read <b>past the gap</b>. The word after it (<i>with, of, on</i>) often shows you a three-part phrasal verb: <i>put up with, run out of, get on with, look forward to</i>.</li>
+          <li>Decide what the phrase must <b>mean</b> in context (cancel, tolerate, stop working), then find the particle that gives that meaning.</li>
+        </ol>
+      </div>
+
+      <div class="step-title">2 · New practice (4 particles are extra)</div>
+      <div class="quiz">
+        <div class="pair-grid">
+          <div>
+            <div class="answer-row"><span class="ar-num">1</span><span class="ar-txt">The plane took ___ an hour late because of the fog.</span><select class="exam-select ans" data-opts="a,b,c,d,e,f,g,h" data-answer="e"></select></div>
+            <div class="answer-row"><span class="ar-num">2</span><span class="ar-txt">Could you look ___ my cat while I’m on holiday?</span><select class="exam-select ans" data-opts="a,b,c,d,e,f,g,h" data-answer="c"></select></div>
+            <div class="answer-row"><span class="ar-num">3</span><span class="ar-txt">We’ve run ___ of milk — can you buy some on your way home?</span><select class="exam-select ans" data-opts="a,b,c,d,e,f,g,h" data-answer="f"></select></div>
+            <div class="answer-row"><span class="ar-num">4</span><span class="ar-txt">She gets ___ really well with her new classmates.</span><select class="exam-select ans" data-opts="a,b,c,d,e,f,g,h" data-answer="b"></select></div>
+          </div>
+          <div class="opt-box">
+            <div class="opt-row"><span class="opt-letter">a</span><span class="opt-body">up</span></div>
+            <div class="opt-row"><span class="opt-letter">b</span><span class="opt-body">on</span></div>
+            <div class="opt-row"><span class="opt-letter">c</span><span class="opt-body">after</span></div>
+            <div class="opt-row"><span class="opt-letter">d</span><span class="opt-body">through</span></div>
+            <div class="opt-row"><span class="opt-letter">e</span><span class="opt-body">off</span></div>
+            <div class="opt-row"><span class="opt-letter">f</span><span class="opt-body">out</span></div>
+            <div class="opt-row"><span class="opt-letter">g</span><span class="opt-body">away</span></div>
+            <div class="opt-row"><span class="opt-letter">h</span><span class="opt-body">over</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="btn-row"><button class="btn btn-ghost" onclick="switchTab('gram')">Next: Грамматика →</button></div>
+    </div>
+  </div><!-- /tab-lex -->
+
+  <!-- ══════════════════════════════════════════════════════════
+       TAB 3 — ГРАММАТИКА
+  ══════════════════════════════════════════════════════════ -->
+  <div class="tab-content" id="tab-gram">
+    <div class="section-head">
+      <h2>Грамматика</h2>
+      <div class="sh-meta">Demo: 11 / 30 &nbsp;·&nbsp; review Задания 19, 20, 22–26</div>
+    </div>
+
+    <!-- Задание 19 -->
+    <div class="exercise">
+      <div class="review-head"><span class="task-num">Задание 19</span><span class="demo-score part">demo 1 / 4</span></div>
+      <h3>Articles: the special cases the exam loves</h3>
+      <div class="talk">💬 Why do we say <i>the Alps</i> but <i>∅ Mount Everest</i>? Try to explain before you look.</div>
+
+      <div class="step-title">1 · Redo the demo item</div>
+      <div class="quiz">
+        <div class="answer-row"><span class="ar-num">1</span><span class="ar-txt">After a week of hiking in <select class="exam-select ans" data-opts="a(n),the,∅" data-answer="the"></select> Alps, they spent two quiet days in Geneva. <span class="demo-tag">demo: ∅</span></span></div>
+        <div class="answer-row"><span class="ar-num">2</span><span class="ar-txt">Last season she was elected <select class="exam-select ans" data-opts="a(n),the,∅" data-answer="∅"></select> captain of the school volleyball team. <span class="demo-tag">demo: a(n)</span></span></div>
+        <div class="answer-row"><span class="ar-num">3</span><span class="ar-txt"><select class="exam-select ans" data-opts="a(n),the,∅" data-answer="a(n)"></select> Mr Jenkins phoned while you were out — does anyone here know somebody by that name? <span class="demo-tag">demo: ∅</span></span></div>
+        <div class="answer-row"><span class="ar-num">4</span><span class="ar-txt">My brother has played <select class="exam-select ans" data-opts="a(n),the,∅" data-answer="the"></select> violin in the city youth orchestra since he was nine.</span></div>
+      </div>
+
+      <div class="logic">
+        <h4>🧠 The rules behind each gap</h4>
+        <div class="tbl-wrap"><table>
+          <tr><th>situation</th><th>article</th><th>examples</th></tr>
+          <tr><td>mountain <b>ranges</b>, rivers, seas, oceans, plural countries</td><td><b>the</b></td><td>the Alps, the Himalayas, the Danube, the Netherlands</td></tr>
+          <tr><td><b>single</b> mountains, lakes, most countries</td><td><b>∅</b></td><td>Mount Everest, Lake Baikal, France</td></tr>
+          <tr><td>a <b>unique role</b> after <i>elect, appoint, make, become</i></td><td><b>∅</b></td><td>elected captain, appointed head of…</td></tr>
+          <tr><td>a name the speaker <b>doesn’t know</b> (“someone called…”)</td><td><b>a</b></td><td>a Mr Jenkins, a Ms Parker</td></tr>
+          <tr><td><b>playing</b> a musical instrument</td><td><b>the</b></td><td>play the violin / the guitar</td></tr>
+        </table></div>
+        <p style="margin-top:6px">Before you choose, <b>look for the clue</b> in the sentence. In item 3 it is “does anyone here know somebody by that name?”, which is why the answer is <i>a</i>.</p>
+      </div>
+
+      <div class="step-title">2 · New practice</div>
+      <div class="quiz">
+        <div class="answer-row"><span class="ar-num">1</span><span class="ar-txt">We climbed <select class="exam-select ans" data-opts="a(n),the,∅" data-answer="∅"></select> Mount Snowdon last summer.</span></div>
+        <div class="answer-row"><span class="ar-num">2</span><span class="ar-txt"><select class="exam-select ans" data-opts="a(n),the,∅" data-answer="the"></select> Himalayas are the highest mountains in the world.</span></div>
+        <div class="answer-row"><span class="ar-num">3</span><span class="ar-txt">He was appointed <select class="exam-select ans" data-opts="a(n),the,∅" data-answer="∅"></select> head of the science department.</span></div>
+        <div class="answer-row"><span class="ar-num">4</span><span class="ar-txt">There’s <select class="exam-select ans" data-opts="a(n),the,∅" data-answer="a(n)"></select> Ms Parker at the door — she says she’s from the council.</span></div>
+        <div class="answer-row"><span class="ar-num">5</span><span class="ar-txt">She taught herself to play <select class="exam-select ans" data-opts="a(n),the,∅" data-answer="the"></select> guitar from YouTube videos.</span></div>
+        <div class="answer-row"><span class="ar-num">6</span><span class="ar-txt"><select class="exam-select ans" data-opts="a(n),the,∅" data-answer="the"></select> Danube flows through Vienna and Budapest.</span></div>
+      </div>
+    </div>
+
+    <!-- Задание 20 -->
+    <div class="exercise">
+      <div class="review-head"><span class="task-num">Задание 20</span><span class="demo-score part">demo 1 / 4</span></div>
+      <h3>Plurals: use the “two ___” test</h3>
+      <div class="talk">💬 Say “two sheep”, “two advices”, “two gooses”. Which sound right and which sound wrong?</div>
+
+      <div class="step-title">1 · Redo the demo item</div>
+      <div class="quiz">
+        <div class="pair-grid">
+          <div>
+            <div class="answer-row"><span class="ar-num">1</span><span class="ar-txt">crisis</span><select class="exam-select ans" data-opts="a,b,c,d,e" data-answer="c"></select></div>
+            <div class="answer-row"><span class="ar-num">2</span><span class="ar-txt">sheep <span class="demo-tag">demo: e</span></span><select class="exam-select ans" data-opts="a,b,c,d,e" data-answer="d"></select></div>
+            <div class="answer-row"><span class="ar-num">3</span><span class="ar-txt">advice <span class="demo-tag">demo: a</span></span><select class="exam-select ans" data-opts="a,b,c,d,e" data-answer="e"></select></div>
+            <div class="answer-row"><span class="ar-num">4</span><span class="ar-txt">goose <span class="demo-tag">demo: d</span></span><select class="exam-select ans" data-opts="a,b,c,d,e" data-answer="b"></select></div>
+          </div>
+          <div class="opt-box">
+            <div class="opt-row"><span class="opt-letter">a</span><span class="opt-body">Добавление окончания (e)s</span></div>
+            <div class="opt-row"><span class="opt-letter">b</span><span class="opt-body">Изменение корня</span></div>
+            <div class="opt-row"><span class="opt-letter">c</span><span class="opt-body">Заимствованное (греческое/латинское) окончание</span></div>
+            <div class="opt-row"><span class="opt-letter">d</span><span class="opt-body">Форма не меняется</span></div>
+            <div class="opt-row"><span class="opt-letter">e</span><span class="opt-body">Формы множественного числа нет</span></div>
+          </div>
+        </div>
+      </div>
+      <details class="why"><summary>💡 Answer &amp; why</summary><div class="why-body">
+        <p>crisis → crises (Greek) · sheep → two <b>sheep</b> (a plural exists, and it looks the same) · advice → “two advices” ✗, it is uncountable, so you say <i>two pieces of advice</i> · goose → <b>geese</b> (the vowel changes, like foot → feet)</p>
+        <p>You swapped d and e. <b>“No change”</b> means the plural exists but looks the same. <b>“No plural”</b> means you can’t count it at all.</p>
+      </div></details>
+
+      <div class="logic">
+        <h4>🧠 The logic: 3 quick tests</h4>
+        <ol>
+          <li>Can you say <b>“two ___”</b>? If not, it has no plural (advice, information, furniture, luggage, news).</li>
+          <li>If you can, does the word <b>change</b>? two sheep / deer / fish / aircraft → no change. two geese / mice / teeth / women → root change.</li>
+          <li>Does it end in <b>-is, -on, -us, -um</b>? It is often Greek or Latin: crisis → crises, phenomenon → phenomena, cactus → cacti, criterion → criteria.</li>
+        </ol>
+      </div>
+
+      <div class="step-title">2 · New practice: how does each word form its plural?</div>
+      <div class="quiz">
+        <div class="q-grid">
+          <div>
+            <div class="answer-row"><span class="ar-txt">cactus</span><select class="exam-select ans" data-opts="+(e)s,root change,Greek/Latin ending,no change,no plural" data-answer="Greek/Latin ending"></select></div>
+            <div class="answer-row"><span class="ar-txt">deer</span><select class="exam-select ans" data-opts="+(e)s,root change,Greek/Latin ending,no change,no plural" data-answer="no change"></select></div>
+            <div class="answer-row"><span class="ar-txt">information</span><select class="exam-select ans" data-opts="+(e)s,root change,Greek/Latin ending,no change,no plural" data-answer="no plural"></select></div>
+            <div class="answer-row"><span class="ar-txt">tooth</span><select class="exam-select ans" data-opts="+(e)s,root change,Greek/Latin ending,no change,no plural" data-answer="root change"></select></div>
+            <div class="answer-row"><span class="ar-txt">potato</span><select class="exam-select ans" data-opts="+(e)s,root change,Greek/Latin ending,no change,no plural" data-answer="+(e)s"></select></div>
+          </div>
+          <div>
+            <div class="answer-row"><span class="ar-txt">luggage</span><select class="exam-select ans" data-opts="+(e)s,root change,Greek/Latin ending,no change,no plural" data-answer="no plural"></select></div>
+            <div class="answer-row"><span class="ar-txt">criterion</span><select class="exam-select ans" data-opts="+(e)s,root change,Greek/Latin ending,no change,no plural" data-answer="Greek/Latin ending"></select></div>
+            <div class="answer-row"><span class="ar-txt">aircraft</span><select class="exam-select ans" data-opts="+(e)s,root change,Greek/Latin ending,no change,no plural" data-answer="no change"></select></div>
+            <div class="answer-row"><span class="ar-txt">woman</span><select class="exam-select ans" data-opts="+(e)s,root change,Greek/Latin ending,no change,no plural" data-answer="root change"></select></div>
+            <div class="answer-row"><span class="ar-txt">box</span><select class="exam-select ans" data-opts="+(e)s,root change,Greek/Latin ending,no change,no plural" data-answer="+(e)s"></select></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Задание 22 -->
+    <div class="exercise">
+      <div class="review-head"><span class="task-num">Задание 22</span><span class="demo-score part">demo 2 / 4</span></div>
+      <h3>Tenses: find the time marker</h3>
+      <div class="talk">💬 You swapped <i>finished</i> and <i>had finished</i>. Which words in each sentence tell you the tense?</div>
+
+      <div class="step-title">1 · Redo the demo item</div>
+      <div class="quiz">
+        <div class="pair-grid">
+          <div>
+            <div class="answer-row"><span class="ar-num">1</span><span class="ar-txt">By the time you arrive, we ___ dinner, so please don’t be late.</span><select class="exam-select ans" data-opts="a,b,c,d,e,f" data-answer="a"></select></div>
+            <div class="answer-row"><span class="ar-num">2</span><span class="ar-txt">He ___ the city marathon in under four hours last year. <span class="demo-tag">demo: c</span></span><select class="exam-select ans" data-opts="a,b,c,d,e,f" data-answer="b"></select></div>
+            <div class="answer-row"><span class="ar-num">3</span><span class="ar-txt">The film ___ by the time we got to the cinema, so we went for a pizza instead. <span class="demo-tag">demo: b</span></span><select class="exam-select ans" data-opts="a,b,c,d,e,f" data-answer="c"></select></div>
+            <div class="answer-row"><span class="ar-num">4</span><span class="ar-txt">My sister ___ all her homework, so now she can go out with her friends.</span><select class="exam-select ans" data-opts="a,b,c,d,e,f" data-answer="e"></select></div>
+          </div>
+          <div class="opt-box">
+            <div class="opt-row"><span class="opt-letter">a</span><span class="opt-body">will have finished</span></div>
+            <div class="opt-row"><span class="opt-letter">b</span><span class="opt-body">finished</span></div>
+            <div class="opt-row"><span class="opt-letter">c</span><span class="opt-body">had finished</span></div>
+            <div class="opt-row"><span class="opt-letter">d</span><span class="opt-body">was finishing</span></div>
+            <div class="opt-row"><span class="opt-letter">e</span><span class="opt-body">has finished</span></div>
+            <div class="opt-row"><span class="opt-letter">f</span><span class="opt-body">is finished</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="logic">
+        <h4>🧠 The logic: time marker → tense</h4>
+        <div class="tbl-wrap"><table>
+          <tr><th>marker in the sentence</th><th>tense</th></tr>
+          <tr><td><i>last year, ago, in 2019, yesterday</i></td><td>Past Simple: <b>finished</b></td></tr>
+          <tr><td><i>by the time</i> + <b>past</b> (<i>we got</i>), <i>before</i> + past</td><td>Past Perfect: <b>had finished</b>, the earlier of two past actions</td></tr>
+          <tr><td><i>by the time</i> + <b>present</b> (<i>you arrive</i>), <i>by tomorrow</i></td><td>Future Perfect: <b>will have finished</b></td></tr>
+          <tr><td><i>so now, already, just, yet</i> (a result in the present)</td><td>Present Perfect: <b>has finished</b></td></tr>
+        </table></div>
+        <p style="margin-top:6px">Underline the marker <b>before</b> you look at the options.</p>
+      </div>
+
+      <div class="step-title">2 · New practice (2 forms are extra)</div>
+      <div class="quiz">
+        <div class="pair-grid">
+          <div>
+            <div class="answer-row"><span class="ar-num">1</span><span class="ar-txt">When we arrived at the station, the train ___, so we had to wait an hour for the next one.</span><select class="exam-select ans" data-opts="a,b,c,d,e,f" data-answer="c"></select></div>
+            <div class="answer-row"><span class="ar-num">2</span><span class="ar-txt">Hurry up! By the time we get to the stop, the bus ___.</span><select class="exam-select ans" data-opts="a,b,c,d,e,f" data-answer="e"></select></div>
+            <div class="answer-row"><span class="ar-num">3</span><span class="ar-txt">My brother ___ home in 2020 and moved to London.</span><select class="exam-select ans" data-opts="a,b,c,d,e,f" data-answer="b"></select></div>
+            <div class="answer-row"><span class="ar-num">4</span><span class="ar-txt">Where’s Anna? — She ___ already, but she said she’d call you.</span><select class="exam-select ans" data-opts="a,b,c,d,e,f" data-answer="a"></select></div>
+          </div>
+          <div class="opt-box">
+            <div class="opt-row"><span class="opt-letter">a</span><span class="opt-body">has left</span></div>
+            <div class="opt-row"><span class="opt-letter">b</span><span class="opt-body">left</span></div>
+            <div class="opt-row"><span class="opt-letter">c</span><span class="opt-body">had left</span></div>
+            <div class="opt-row"><span class="opt-letter">d</span><span class="opt-body">was leaving</span></div>
+            <div class="opt-row"><span class="opt-letter">e</span><span class="opt-body">will have left</span></div>
+            <div class="opt-row"><span class="opt-letter">f</span><span class="opt-body">leaves</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Задание 23 -->
+    <div class="exercise">
+      <div class="review-head"><span class="task-num">Задание 23</span><span class="demo-score part">demo 1 / 4</span></div>
+      <h3>Modals: must ≠ mustn’t ≠ needn’t</h3>
+      <div class="talk">💬 You matched <b>mustn’t use</b> with “strong certainty”. When does <i>must</i> mean certainty, and what does <i>mustn’t</i> mean?</div>
+
+      <div class="step-title">1 · Redo the demo item</div>
+      <div class="quiz">
+        <div class="pair-grid">
+          <div>
+            <div class="answer-row"><span class="ar-num">1</span><span class="ar-txt">You <b>mustn’t use</b> your phone during the exam. <span class="demo-tag">demo: e</span></span><select class="exam-select ans" data-opts="a,b,c,d,e" data-answer="b"></select></div>
+            <div class="answer-row"><span class="ar-num">2</span><span class="ar-txt">You <b>needn’t have bought</b> any milk — we already had two bottles. <span class="demo-tag">demo: d</span></span><select class="exam-select ans" data-opts="a,b,c,d,e" data-answer="c"></select></div>
+            <div class="answer-row"><span class="ar-num">3</span><span class="ar-txt">Despite the storm, the crew <b>were able to reach</b> the shore. <span class="demo-tag">demo: b</span></span><select class="exam-select ans" data-opts="a,b,c,d,e" data-answer="d"></select></div>
+            <div class="answer-row"><span class="ar-num">4</span><span class="ar-txt">You <b>ought to see</b> a doctor about that cough.</span><select class="exam-select ans" data-opts="a,b,c,d,e" data-answer="a"></select></div>
+          </div>
+          <div class="opt-box">
+            <div class="opt-row"><span class="opt-letter">a</span><span class="opt-body">advice</span></div>
+            <div class="opt-row"><span class="opt-letter">b</span><span class="opt-body">prohibition</span></div>
+            <div class="opt-row"><span class="opt-letter">c</span><span class="opt-body">an unnecessary past action</span></div>
+            <div class="opt-row"><span class="opt-letter">d</span><span class="opt-body">ability in a specific past situation</span></div>
+            <div class="opt-row"><span class="opt-letter">e</span><span class="opt-body">strong certainty about the present</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="logic">
+        <h4>🧠 The logic: meaning map</h4>
+        <div class="tbl-wrap"><table>
+          <tr><td><b>mustn’t</b> do</td><td>prohibition: it is not allowed</td></tr>
+          <tr><td><b>don’t have to / needn’t</b> do</td><td>no obligation: it is not necessary</td></tr>
+          <tr><td><b>needn’t have</b> done</td><td>you <b>did</b> it, but it wasn’t necessary</td></tr>
+          <tr><td><b>must be</b> (+ -ing / adjective)</td><td>certainty about the present: <i>He must be tired.</i></td></tr>
+          <tr><td><b>must have</b> done</td><td>certainty about the past: <i>It must have rained.</i></td></tr>
+          <tr><td><b>was / were able to, managed to</b></td><td>succeeded in one specific past situation</td></tr>
+          <tr><td><b>should / ought to</b></td><td>advice</td></tr>
+        </table></div>
+        <p style="margin-top:6px">⚠ <i>Must</i> means certainty only when it is used about a <b>state</b> (<i>must be</i>). When it is an instruction to someone, <i>mustn’t</i> means “don’t do it”.</p>
+      </div>
+
+      <div class="step-title">2 · New practice (1 meaning is extra)</div>
+      <div class="quiz">
+        <div class="pair-grid">
+          <div>
+            <div class="answer-row"><span class="ar-num">1</span><span class="ar-txt">You <b>don’t have to</b> wear a uniform on Fridays.</span><select class="exam-select ans" data-opts="a,b,c,d,e" data-answer="b"></select></div>
+            <div class="answer-row"><span class="ar-num">2</span><span class="ar-txt">The ground is wet — it <b>must have rained</b> overnight.</span><select class="exam-select ans" data-opts="a,b,c,d,e" data-answer="c"></select></div>
+            <div class="answer-row"><span class="ar-num">3</span><span class="ar-txt">Visitors <b>mustn’t</b> feed the animals.</span><select class="exam-select ans" data-opts="a,b,c,d,e" data-answer="a"></select></div>
+            <div class="answer-row"><span class="ar-num">4</span><span class="ar-txt">You <b>should</b> apologise to her.</span><select class="exam-select ans" data-opts="a,b,c,d,e" data-answer="d"></select></div>
+          </div>
+          <div class="opt-box">
+            <div class="opt-row"><span class="opt-letter">a</span><span class="opt-body">prohibition</span></div>
+            <div class="opt-row"><span class="opt-letter">b</span><span class="opt-body">no obligation</span></div>
+            <div class="opt-row"><span class="opt-letter">c</span><span class="opt-body">certainty about the past</span></div>
+            <div class="opt-row"><span class="opt-letter">d</span><span class="opt-body">advice</span></div>
+            <div class="opt-row"><span class="opt-letter">e</span><span class="opt-body">ability in a specific past situation</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Задание 24 -->
+    <div class="exercise">
+      <div class="review-head"><span class="task-num">Задание 24</span><span class="demo-score part">demo 1 / 4</span></div>
+      <h3>Verb patterns: look at the last word of the beginning</h3>
+      <div class="talk">💬 <i>The teacher made us…</i> and <i>We were made…</i>: one is followed by <i>to</i> and the other isn’t. Which is which?</div>
+
+      <div class="step-title">1 · Redo the demo item</div>
+      <div class="quiz">
+        <div class="pair-grid">
+          <div>
+            <div class="answer-row"><span class="ar-num">1</span><span class="ar-txt">The teacher made us <span class="demo-tag">demo: b</span></span><select class="exam-select ans" data-opts="a,b,c,d,e" data-answer="a"></select></div>
+            <div class="answer-row"><span class="ar-num">2</span><span class="ar-txt">She can’t help <span class="demo-tag">demo: a</span></span><select class="exam-select ans" data-opts="a,b,c,d,e" data-answer="d"></select></div>
+            <div class="answer-row"><span class="ar-num">3</span><span class="ar-txt">We were made <span class="demo-tag">demo: d</span></span><select class="exam-select ans" data-opts="a,b,c,d,e" data-answer="b"></select></div>
+            <div class="answer-row"><span class="ar-num">4</span><span class="ar-txt">The suspect was last seen</span><select class="exam-select ans" data-opts="a,b,c,d,e" data-answer="e"></select></div>
+          </div>
+          <div class="opt-box">
+            <div class="opt-row"><span class="opt-letter">a</span><span class="opt-body">rewrite the whole essay from scratch.</span></div>
+            <div class="opt-row"><span class="opt-letter">b</span><span class="opt-body">to wait outside for over an hour.</span></div>
+            <div class="opt-row"><span class="opt-letter">c</span><span class="opt-body">that the answer was correct.</span></div>
+            <div class="opt-row"><span class="opt-letter">d</span><span class="opt-body">laughing whenever she watches that video.</span></div>
+            <div class="opt-row"><span class="opt-letter">e</span><span class="opt-body">leaving the railway station at midnight.</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="logic">
+        <h4>🧠 The logic</h4>
+        <ol>
+          <li><b>Sort the endings by form</b>: bare verb (<i>rewrite</i>) · <i>to</i> + verb · <i>that</i>-clause · -ing.</li>
+          <li><b>Each beginning needs one form:</b>
+            <div class="tbl-wrap"><table>
+              <tr><td><b>make / let</b> sb + <b>bare verb</b></td><td>made us rewrite, let me stay</td></tr>
+              <tr><td>passive <b>be made / be allowed</b> + <b>to</b></td><td>were made to wait, weren’t allowed to use</td></tr>
+              <tr><td><b>can’t help, avoid, enjoy, keep, look forward to</b> + <b>-ing</b></td><td>can’t help laughing</td></tr>
+              <tr><td><b>see / hear</b> sb (passive: <i>was seen</i>) + <b>-ing</b></td><td>was seen leaving</td></tr>
+            </table></div></li>
+          <li>Match the forms first, then check that the meaning makes sense.</li>
+        </ol>
+      </div>
+
+      <div class="step-title">2 · New practice (1 ending is extra)</div>
+      <div class="quiz">
+        <div class="pair-grid">
+          <div>
+            <div class="answer-row"><span class="ar-num">1</span><span class="ar-txt">My parents let me</span><select class="exam-select ans" data-opts="a,b,c,d,e" data-answer="a"></select></div>
+            <div class="answer-row"><span class="ar-num">2</span><span class="ar-txt">I’m really looking forward to</span><select class="exam-select ans" data-opts="a,b,c,d,e" data-answer="c"></select></div>
+            <div class="answer-row"><span class="ar-num">3</span><span class="ar-txt">We weren’t allowed</span><select class="exam-select ans" data-opts="a,b,c,d,e" data-answer="b"></select></div>
+            <div class="answer-row"><span class="ar-num">4</span><span class="ar-txt">During the lesson he kept</span><select class="exam-select ans" data-opts="a,b,c,d,e" data-answer="d"></select></div>
+          </div>
+          <div class="opt-box">
+            <div class="opt-row"><span class="opt-letter">a</span><span class="opt-body">stay up late on Saturdays.</span></div>
+            <div class="opt-row"><span class="opt-letter">b</span><span class="opt-body">to use our phones in class.</span></div>
+            <div class="opt-row"><span class="opt-letter">c</span><span class="opt-body">seeing my cousins at the weekend.</span></div>
+            <div class="opt-row"><span class="opt-letter">d</span><span class="opt-body">interrupting the teacher.</span></div>
+            <div class="opt-row"><span class="opt-letter">e</span><span class="opt-body">that the test was easy.</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Задание 25 -->
+    <div class="exercise">
+      <div class="review-head"><span class="task-num">Задание 25</span><span class="demo-score part">demo 1 / 4</span></div>
+      <h3>Conditionals: label each half past or present</h3>
+      <div class="talk">💬 In <i>“She didn’t study medicine, so she isn’t a doctor now”</i>, which part is about the past and which is about now?</div>
+
+      <div class="step-title">1 · Redo the three missed items</div>
+      <div class="quiz">
+        <div class="q-grid">
+          <div class="q-card">
+            <p class="q-text">1. <i>I didn’t set an alarm, so I overslept.</i> <span class="demo-tag">demo: B</span></p>
+            <div class="mc-options stack ans" data-correct="c">
+              <label class="mc-option" data-v="a"><span class="mc-bullet">A</span> If I set an alarm, I wouldn’t oversleep.</label>
+              <label class="mc-option" data-v="b"><span class="mc-bullet">B</span> If I had set an alarm, I would oversleep.</label>
+              <label class="mc-option" data-v="c"><span class="mc-bullet">C</span> If I had set an alarm, I wouldn’t have overslept.</label>
+            </div>
+          </div>
+          <div class="q-card">
+            <p class="q-text">2. <i>I’m not tall enough, so I can’t reach the top shelf.</i> <span class="demo-tag">demo: B</span></p>
+            <div class="mc-options stack ans" data-correct="a">
+              <label class="mc-option" data-v="a"><span class="mc-bullet">A</span> If I were taller, I could reach the top shelf.</label>
+              <label class="mc-option" data-v="b"><span class="mc-bullet">B</span> If I had been taller, I could have reached the top shelf.</label>
+              <label class="mc-option" data-v="c"><span class="mc-bullet">C</span> If I am taller, I can reach the top shelf.</label>
+            </div>
+          </div>
+          <div class="q-card">
+            <p class="q-text">3. <i>She didn’t study medicine, so she isn’t a doctor now.</i> <span class="demo-tag">demo: C</span></p>
+            <div class="mc-options stack ans" data-correct="b">
+              <label class="mc-option" data-v="a"><span class="mc-bullet">A</span> If she studied medicine, she would be a doctor now.</label>
+              <label class="mc-option" data-v="b"><span class="mc-bullet">B</span> If she had studied medicine, she would be a doctor now.</label>
+              <label class="mc-option" data-v="c"><span class="mc-bullet">C</span> If she had studied medicine, she would have been a doctor now.</label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="logic">
+        <h4>🧠 The logic: 3 steps</h4>
+        <ol>
+          <li>Label <b>each half</b> of the original: <b>PAST</b> or <b>NOW</b>. (<i>didn’t set</i> = past, <i>overslept</i> = past. <i>am not tall</i> = now, <i>can’t reach</i> = now.)</li>
+          <li>Choose the pattern from the labels:
+            <div class="tbl-wrap"><table>
+              <tr><th>if-part</th><th>result</th><th>pattern</th></tr>
+              <tr><td>NOW</td><td>NOW</td><td>2nd: If + <b>past</b>, would / could + verb</td></tr>
+              <tr><td>PAST</td><td>PAST</td><td>3rd: If + <b>had done</b>, would have done</td></tr>
+              <tr><td>PAST</td><td>NOW</td><td>mixed: If + <b>had done</b>, would + verb (+ <i>now</i>)</td></tr>
+              <tr><td>always true</td><td>always true</td><td>0: If + present, present</td></tr>
+            </table></div></li>
+          <li><b>Flip positive and negative:</b> <i>didn’t set</i> becomes <i>had set</i>, and <i>overslept</i> becomes <i>wouldn’t have overslept</i>. In the demo, option B in item 1 kept <i>would oversleep</i> positive, so it can’t be right.</li>
+        </ol>
+      </div>
+
+      <div class="step-title">2 · New practice</div>
+      <div class="quiz">
+        <div class="q-grid">
+          <div class="q-card">
+            <p class="q-text">1. <i>I don’t have a car, so I take the bus to school.</i></p>
+            <div class="mc-options stack ans" data-correct="a">
+              <label class="mc-option" data-v="a"><span class="mc-bullet">A</span> If I had a car, I wouldn’t take the bus to school.</label>
+              <label class="mc-option" data-v="b"><span class="mc-bullet">B</span> If I had had a car, I wouldn’t have taken the bus to school.</label>
+              <label class="mc-option" data-v="c"><span class="mc-bullet">C</span> If I have a car, I won’t take the bus to school.</label>
+            </div>
+          </div>
+          <div class="q-card">
+            <p class="q-text">2. <i>She forgot her ticket, so she missed the concert.</i></p>
+            <div class="mc-options stack ans" data-correct="b">
+              <label class="mc-option" data-v="a"><span class="mc-bullet">A</span> If she didn’t forget her ticket, she wouldn’t miss the concert.</label>
+              <label class="mc-option" data-v="b"><span class="mc-bullet">B</span> If she hadn’t forgotten her ticket, she wouldn’t have missed the concert.</label>
+              <label class="mc-option" data-v="c"><span class="mc-bullet">C</span> If she hadn’t forgotten her ticket, she would have missed the concert.</label>
+            </div>
+          </div>
+          <div class="q-card">
+            <p class="q-text">3. <i>He didn’t learn to swim as a child, so he is afraid of water now.</i></p>
+            <div class="mc-options stack ans" data-correct="c">
+              <label class="mc-option" data-v="a"><span class="mc-bullet">A</span> If he learned to swim as a child, he wouldn’t be afraid of water now.</label>
+              <label class="mc-option" data-v="b"><span class="mc-bullet">B</span> If he had learned to swim as a child, he wouldn’t have been afraid of water now.</label>
+              <label class="mc-option" data-v="c"><span class="mc-bullet">C</span> If he had learned to swim as a child, he wouldn’t be afraid of water now.</label>
+            </div>
+          </div>
+          <div class="q-card">
+            <p class="q-text">4. <i>Whenever it rains heavily, the streets flood.</i></p>
+            <div class="mc-options stack ans" data-correct="a">
+              <label class="mc-option" data-v="a"><span class="mc-bullet">A</span> If it rains heavily, the streets flood.</label>
+              <label class="mc-option" data-v="b"><span class="mc-bullet">B</span> If it rained heavily, the streets would flood.</label>
+              <label class="mc-option" data-v="c"><span class="mc-bullet">C</span> If it will rain heavily, the streets flood.</label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Задание 26 -->
+    <div class="exercise">
+      <div class="review-head"><span class="task-num">Задание 26</span><span class="demo-score">demo 0 / 2</span></div>
+      <h3>Reported speech: questions and commands</h3>
+      <div class="talk">💬 We covered this in Lesson 6. Your demo answers were <i>“asked me <b>had I</b> ever been”</i> and <i>“<b>said to us</b> that didn’t touch”</i>. What two rules do these break?</div>
+
+      <div class="step-title">1 · Redo the demo item</div>
+      <div class="quiz">
+        <div class="build-item">
+          <p style="margin-bottom:6px;">1. “Have you ever been to Japan?” Tom asked me.</p>
+          <div class="builder ans" data-before="Tom" data-after="."
+               data-tiles="been|me|have|if|Japan|said|asked|you|ever|had|to|I|did|was"
+               data-answer="asked me if I had ever been to Japan"></div>
+        </div>
+        <div class="build-item">
+          <p style="margin-bottom:6px;">2. “Don’t touch the paintings,” the guide said to us.</p>
+          <div class="builder ans" data-before="The guide" data-after="."
+               data-tiles="touch|said|not|the|don’t|us|that|paintings|to|didn’t|told"
+               data-answer="told us not to touch the paintings"></div>
+        </div>
+      </div>
+
+      <div class="logic">
+        <h4>🧠 The logic: two patterns</h4>
+        <ol>
+          <li><b>Reported yes/no question:</b> asked (sb) + <b>if / whether</b> + <b>subject + verb</b>. Use normal statement word order, with no question inversion, and move the tense back.<br>
+            “Have you been…?” → asked me <b>if I had been</b>… (not <i>had I been</i>)<br>
+            “Where are you going?” → asked me <b>where I was going</b> (not <i>where was I going</i>)</li>
+          <li><b>Reported command or request:</b> <b>told / asked</b> + <b>person</b> + <b>(not) to</b> + verb.<br>
+            “Don’t touch…” → told us <b>not to touch</b>… (<i>said</i> is never followed directly by a person)</li>
+          <li>Extra tiles are traps: <i>did, said, don’t, didn’t, was</i>. After you finish, check that every word you used has a job in the sentence.</li>
+        </ol>
+      </div>
+
+      <div class="step-title">2 · New practice (there are extra words)</div>
+      <div class="quiz">
+        <div class="build-item">
+          <p style="margin-bottom:6px;">1. “Do you like pizza?” she asked him.</p>
+          <div class="builder ans" data-before="She" data-after="."
+               data-tiles="liked|him|does|if|pizza|asked|he|did|like|said"
+               data-answer="asked him if he liked pizza"></div>
+        </div>
+        <div class="build-item">
+          <p style="margin-bottom:6px;">2. “Where are you going?” Mum asked me.</p>
+          <div class="builder ans" data-before="Mum" data-after="."
+               data-tiles="was|me|am|going|where|asked|I|did|told"
+               data-answer="asked me where I was going"></div>
+        </div>
+        <div class="build-item">
+          <p style="margin-bottom:6px;">3. “Don’t be late,” the teacher told us.</p>
+          <div class="builder ans" data-before="The teacher" data-after="."
+               data-tiles="late|us|don’t|to|be|said|told|that|not|were"
+               data-answer="told us not to be late"></div>
+        </div>
+        <div class="build-item">
+          <p style="margin-bottom:6px;">4. “Please close the door,” she said to me.</p>
+          <div class="builder ans" data-before="She" data-after="."
+               data-tiles="door|said|me|close|the|to|closed|asked|that"
+               data-answer="asked me to close the door"></div>
+        </div>
+      </div>
+      <div class="btn-row"><button class="btn btn-ghost" onclick="switchTab('cult')">Next: Культура →</button></div>
+    </div>
+  </div><!-- /tab-gram -->
+
+  <!-- ══════════════════════════════════════════════════════════
+       TAB 4 — ЛИНГВОСТРАНОВЕДЕНИЕ
+  ══════════════════════════════════════════════════════════ -->
+  <div class="tab-content" id="tab-cult">
+    <div class="section-head">
+      <h2>Лингвострановедение</h2>
+      <div class="sh-meta">Demo: 15 / 20 &nbsp;·&nbsp; review Задания 27 and 30</div>
+    </div>
+
+    <!-- Задание 27 -->
+    <div class="exercise">
+      <div class="review-head"><span class="task-num">Задание 27</span><span class="demo-score part">demo 3 / 5</span></div>
+      <h3>Pictures: look for clues before you guess</h3>
+      <div class="talk">💬 You mixed up these two pictures. What can you see in each one? Look at the colours, the kind of picture, the weather, and any vehicles or flags.</div>
+
+      <div class="step-title">1 · Redo the two missed pictures</div>
+      <div class="quiz">
+        <div class="pic-grid">
+          <div class="pic-card"><img src="images/usa/09-delaware.jpg" alt="Picture 2">
+            <div class="pic-foot"><span class="ar-num">2</span><select class="exam-select ans" data-opts="a,b,c,d,e,f,g" data-answer="f"></select><span class="demo-tag">demo: e</span></div></div>
+          <div class="pic-card"><img src="images/culture/15-blitz.jpg" alt="Picture 4">
+            <div class="pic-foot"><span class="ar-num">4</span><select class="exam-select ans" data-opts="a,b,c,d,e,f,g" data-answer="e"></select><span class="demo-tag">demo: a</span></div></div>
+        </div>
+        <div class="opt-box" style="margin-top:14px;">
+          <div class="opt-row"><span class="opt-letter">a</span><span class="opt-body">The Boston Tea Party</span></div>
+          <div class="opt-row"><span class="opt-letter">b</span><span class="opt-body">The Battle of Hastings</span></div>
+          <div class="opt-row"><span class="opt-letter">c</span><span class="opt-body">The Defeat of the Spanish Armada</span></div>
+          <div class="opt-row"><span class="opt-letter">d</span><span class="opt-body">The Battle of Bosworth Field</span></div>
+          <div class="opt-row"><span class="opt-letter">e</span><span class="opt-body">The Blitz</span></div>
+          <div class="opt-row"><span class="opt-letter">f</span><span class="opt-body">Washington Crossing the Delaware</span></div>
+          <div class="opt-row"><span class="opt-letter">g</span><span class="opt-body">The Battle of Trafalgar</span></div>
+        </div>
+      </div>
+      <details class="why"><summary>💡 Answer &amp; the clues</summary><div class="why-body">
+        <p><b>Picture 2 → f.</b> A small boat, <b>ice</b> in the river (the crossing happened on Christmas night, 1776), a <b>flag with stars and stripes</b>, and 18th-century hats. It is a painting of the American Revolution.</p>
+        <p><b>Picture 4 → e.</b> A <b>black-and-white photograph</b> taken from the air. A <b>bomber plane</b> is flying over a winding river, the Thames in London. Planes and photographs mean the 20th century, so it is the Blitz (1940–41).</p>
+      </div></details>
+
+      <div class="logic">
+        <h4>🧠 The logic: 4 clue questions</h4>
+        <ol>
+          <li><b>What kind of picture is it?</b> A photograph means after about 1850, and black-and-white suggests a 20th-century war. A painting or engraving means earlier.</li>
+          <li><b>What technology is there?</b> Swords and armour, sailing ships, muskets, or aeroplanes?</li>
+          <li><b>Where is it?</b> Look for flags, landscape, weather, and buildings.</li>
+          <li><b>Is there any text?</b> Captions and names in the picture are the strongest clue.</li>
+        </ol>
+      </div>
+
+      <div class="step-title">2 · New practice (2 events are extra)</div>
+      <div class="quiz">
+        <div class="pic-grid">
+          <div class="pic-card"><img src="images/culture/12-great-fire.jpg" alt="Picture 1">
+            <div class="pic-foot"><span class="ar-num">1</span><select class="exam-select ans" data-opts="a,b,c,d,e,f" data-answer="b"></select></div></div>
+          <div class="pic-card"><img src="images/culture/10-gunpowder-plot.jpg" alt="Picture 2">
+            <div class="pic-foot"><span class="ar-num">2</span><select class="exam-select ans" data-opts="a,b,c,d,e,f" data-answer="f"></select></div></div>
+          <div class="pic-card"><img src="images/culture/05-magna-carta.jpg" alt="Picture 3">
+            <div class="pic-foot"><span class="ar-num">3</span><select class="exam-select ans" data-opts="a,b,c,d,e,f" data-answer="c"></select></div></div>
+          <div class="pic-card"><img src="images/usa/07-tea-party.jpg" alt="Picture 4">
+            <div class="pic-foot"><span class="ar-num">4</span><select class="exam-select ans" data-opts="a,b,c,d,e,f" data-answer="e"></select></div></div>
+        </div>
+        <div class="opt-box" style="margin-top:14px;">
+          <div class="opt-row"><span class="opt-letter">a</span><span class="opt-body">The Black Death</span></div>
+          <div class="opt-row"><span class="opt-letter">b</span><span class="opt-body">The Great Fire of London</span></div>
+          <div class="opt-row"><span class="opt-letter">c</span><span class="opt-body">The Sealing of Magna Carta</span></div>
+          <div class="opt-row"><span class="opt-letter">d</span><span class="opt-body">The Battle of Bosworth Field</span></div>
+          <div class="opt-row"><span class="opt-letter">e</span><span class="opt-body">The Boston Tea Party</span></div>
+          <div class="opt-row"><span class="opt-letter">f</span><span class="opt-body">The Gunpowder Plot</span></div>
+        </div>
+      </div>
+      <details class="why"><summary>💡 The clues</summary><div class="why-body">
+        <p>1: a city on fire by a river, with the Tower of London on the right. 2: a group of men in 17th-century hats, with the name <b>Guido Fawkes</b> written above them. 3: a king in a crown <b>at a table with a document</b>, surrounded by knights in chain mail. 4: men on a ship <b>throwing boxes</b> (of tea) into a harbour.</p>
+      </div></details>
+
+      <div class="step-title">3 · Timeline: in which century did it happen?</div>
+      <div class="quiz">
+        <div class="q-grid">
+          <div>
+            <div class="answer-row"><span class="ar-txt">The Battle of Hastings</span><select class="exam-select ans" data-opts="11th,13th,16th,17th,18th,19th,20th" data-answer="11th"></select></div>
+            <div class="answer-row"><span class="ar-txt">Magna Carta</span><select class="exam-select ans" data-opts="11th,13th,16th,17th,18th,19th,20th" data-answer="13th"></select></div>
+            <div class="answer-row"><span class="ar-txt">The Spanish Armada</span><select class="exam-select ans" data-opts="11th,13th,16th,17th,18th,19th,20th" data-answer="16th"></select></div>
+            <div class="answer-row"><span class="ar-txt">The Great Fire of London</span><select class="exam-select ans" data-opts="11th,13th,16th,17th,18th,19th,20th" data-answer="17th"></select></div>
+          </div>
+          <div>
+            <div class="answer-row"><span class="ar-txt">The Boston Tea Party</span><select class="exam-select ans" data-opts="11th,13th,16th,17th,18th,19th,20th" data-answer="18th"></select></div>
+            <div class="answer-row"><span class="ar-txt">Washington crosses the Delaware</span><select class="exam-select ans" data-opts="11th,13th,16th,17th,18th,19th,20th" data-answer="18th"></select></div>
+            <div class="answer-row"><span class="ar-txt">The Battle of Trafalgar</span><select class="exam-select ans" data-opts="11th,13th,16th,17th,18th,19th,20th" data-answer="19th"></select></div>
+            <div class="answer-row"><span class="ar-txt">The Blitz</span><select class="exam-select ans" data-opts="11th,13th,16th,17th,18th,19th,20th" data-answer="20th"></select></div>
+          </div>
+        </div>
+      </div>
+      <details class="why"><summary>💡 Dates</summary><div class="why-body">
+        <p>Hastings 1066 · Magna Carta 1215 · Armada 1588 · Great Fire 1666 · Boston Tea Party 1773 · Delaware crossing 1776 · Trafalgar 1805 · Blitz 1940–41</p>
+      </div></details>
+    </div>
+
+    <!-- Задание 30 -->
+    <div class="exercise">
+      <div class="review-head"><span class="task-num">Задание 30</span><span class="demo-score part">demo 2 / 5</span></div>
+      <h3>Idioms in a text: grammar first, then meaning</h3>
+      <div class="talk">💬 Read gap 2 with your demo answer: “the team felt they were <i>burn the midnight oil</i>”. Does that work grammatically?</div>
+
+      <div class="step-title">1 · Redo the demo item</div>
+      <div class="quiz">
+        <div class="passage-box" style="line-height:2.3; margin-bottom:14px;">
+          When Jake was invited to join the school robotics team, he nearly
+          (1) <select class="exam-select ans" data-opts="a,b,c,d,e,f,g" data-answer="d"></select> <span class="demo-tag">demo: f</span>
+          — he had never built anything more complicated than a model plane. […] A week before the competition their robot stopped working
+          completely, and the team felt they were
+          (2) <select class="exam-select ans" data-opts="a,b,c,d,e,f,g" data-answer="b"></select> <span class="demo-tag">demo: c</span>.
+          Jake wanted to
+          (3) <select class="exam-select ans" data-opts="a,b,c,d,e,f,g" data-answer="e"></select>,
+          but Lily wouldn’t hear of it, so they decided to
+          (4) <select class="exam-select ans" data-opts="a,b,c,d,e,f,g" data-answer="c"></select> <span class="demo-tag">demo: b</span>,
+          staying in the lab late every evening. In the end the robot passed the final test
+          (5) <select class="exam-select ans" data-opts="a,b,c,d,e,f,g" data-answer="g"></select>
+          and the team won first prize.
+        </div>
+        <div class="opt-box">
+          <div class="opt-row"><span class="opt-letter">a</span><span class="opt-body">a piece of cake</span></div>
+          <div class="opt-row"><span class="opt-letter">b</span><span class="opt-body">back to square one</span></div>
+          <div class="opt-row"><span class="opt-letter">c</span><span class="opt-body">burn the midnight oil</span></div>
+          <div class="opt-row"><span class="opt-letter">d</span><span class="opt-body">got cold feet</span></div>
+          <div class="opt-row"><span class="opt-letter">e</span><span class="opt-body">throw in the towel</span></div>
+          <div class="opt-row"><span class="opt-letter">f</span><span class="opt-body">the icing on the cake</span></div>
+          <div class="opt-row"><span class="opt-letter">g</span><span class="opt-body">with flying colours</span></div>
+        </div>
+      </div>
+      <details class="why"><summary>💡 Answer &amp; why</summary><div class="why-body">
+        <p>(1) “he nearly ___” needs a <b>past verb</b>. Only <b>got cold feet</b> is past tense, so grammar gives the answer immediately.<br>
+           (2) “they were ___” needs a phrase that can follow <i>were</i>: <i>back to square one</i> or <i>a piece of cake</i>. The robot broke, so the answer is <b>back to square one</b>.<br>
+           (3) and (4) “to ___” needs a <b>base verb</b>: <i>throw in the towel</i> or <i>burn the midnight oil</i>. “Wanted to give up” is <b>throw in the towel</b>. “Staying late every evening” is <b>burn the midnight oil</b>.<br>
+           (5) “passed ___” needs an adverbial phrase: <b>with flying colours</b>.</p>
+      </div></details>
+
+      <div class="logic">
+        <h4>🧠 The logic: sort the idioms before reading for meaning</h4>
+        <ol>
+          <li>Label each idiom by its grammar: <b>past verb</b> (got cold feet) · <b>base verb</b> (burn…, throw…) · <b>noun / adjective phrase</b> (a piece of cake, back to square one) · <b>adverbial</b> (with flying colours).</li>
+          <li>Label each gap by what the grammar needs: <i>nearly ___</i>, <i>were ___</i>, <i>to ___</i>, <i>passed the test ___</i>.</li>
+          <li>Match labels first. This usually leaves 1–2 idioms per gap, and the meaning decides the rest.</li>
+        </ol>
+      </div>
+
+      <div class="step-title">2 · New practice (2 idioms are extra)</div>
+      <div class="quiz">
+        <div class="passage-box" style="line-height:2.3; margin-bottom:14px;">
+          Maya had always been
+          (1) <select class="exam-select ans" data-opts="a,b,c,d,e,f,g" data-answer="c"></select>
+          about joining the drama club, but this year she finally
+          (2) <select class="exam-select ans" data-opts="a,b,c,d,e,f,g" data-answer="b"></select>
+          and signed up. At the first rehearsal she didn’t know anyone and felt like
+          (3) <select class="exam-select ans" data-opts="a,b,c,d,e,f,g" data-answer="f"></select>.
+          Luckily, the director told her that learning lines is
+          (4) <select class="exam-select ans" data-opts="a,b,c,d,e,f,g" data-answer="a"></select>
+          once you find the right method. By the night of the show, she knew her part
+          (5) <select class="exam-select ans" data-opts="a,b,c,d,e,f,g" data-answer="e"></select>.
+        </div>
+        <div class="opt-box">
+          <div class="opt-row"><span class="opt-letter">a</span><span class="opt-body">a piece of cake</span></div>
+          <div class="opt-row"><span class="opt-letter">b</span><span class="opt-body">took the plunge</span></div>
+          <div class="opt-row"><span class="opt-letter">c</span><span class="opt-body">on the fence</span></div>
+          <div class="opt-row"><span class="opt-letter">d</span><span class="opt-body">break a leg</span></div>
+          <div class="opt-row"><span class="opt-letter">e</span><span class="opt-body">inside out</span></div>
+          <div class="opt-row"><span class="opt-letter">f</span><span class="opt-body">a fish out of water</span></div>
+          <div class="opt-row"><span class="opt-letter">g</span><span class="opt-body">once in a blue moon</span></div>
+        </div>
+      </div>
+      <details class="why"><summary>💡 Why</summary><div class="why-body">
+        <p>(2) “she finally ___ and signed up” needs a past verb, so the answer is <b>took the plunge</b>. <i>Break a leg</i> is about theatre, which makes it tempting, but it is a base form and doesn’t fit the grammar.<br>
+           (1) been <b>on the fence</b> = undecided · (3) felt like <b>a fish out of water</b> = uncomfortable, out of place · (4) <b>a piece of cake</b> = easy · (5) knew it <b>inside out</b> = perfectly</p>
+      </div></details>
+    </div>
+
+    <div class="exercise">
+      <div class="exercise-label">Wrap-up</div>
+      <h3>🎯 Your three rules for the real round</h3>
+      <ol style="padding-left:22px; line-height:1.9;">
+        <li><b>Use grammar before meaning.</b> Check articles, tense, and the words around the gap to cut the options first.</li>
+        <li><b>Base answers on evidence.</b> Count syllables, check spellings, and find the r + vowel. Don’t choose something because it looks hard or familiar.</li>
+        <li><b>Do the sure answers first, then eliminate.</b> Every answer you are sure of makes the remaining ones easier.</li>
+      </ol>
+      <div class="btn-row">
+        <button class="btn btn-ghost" onclick="switchTab('plan')">← Back to Game plan</button>
+        <button class="btn btn-danger" onclick="resetAll()">Clear all my answers</button>
+      </div>
+    </div>
+  </div><!-- /tab-cult -->
+
+</div><!-- /container -->
+
+<div class="save-indicator" id="saveIndicator">✓ Saved</div>
+
+<script>
+const LESSON_KEY = 'lesson-08';
+let data = {};
+try { data = JSON.parse(localStorage.getItem(LESSON_KEY)) || {}; } catch(e) {}
+
+function save(patch) {
+  Object.assign(data, patch);
+  try { localStorage.setItem(LESSON_KEY, JSON.stringify(data)); } catch(e) {}
+  const el = document.getElementById('saveIndicator');
+  el.classList.add('show');
+  clearTimeout(save.t);
+  save.t = setTimeout(() => el.classList.remove('show'), 1400);
+}
+
+// ── TABS ───────────────────────────────────────────────────────
+function showTab(name) {
+  const btn = document.querySelector('.tab-btn[onclick*="\'' + name + '\'"]');
+  if (!btn) return;
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  btn.classList.add('active');
+}
+function switchTab(name) {
+  showTab(name);
+  save({ activeTab: name });
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ── PRETTY AUDIO PLAYERS (same as lesson 7) ────────────────────
+function fmtT(t) { t = Math.max(0, Math.floor(t || 0)); return Math.floor(t / 60) + ':' + String(t % 60).padStart(2, '0'); }
+document.querySelectorAll('.audio-wrap audio').forEach(audio => {
+  const wrap = audio.parentElement;
+  const task = wrap.closest('.exercise').querySelector('.task-num').textContent;
+  const kind = /\/l7-/.test(audio.getAttribute('src')) ? 'Demo recording' : 'New recording';
+  audio.removeAttribute('controls');
+  audio.preload = 'metadata';
+  const pl = document.createElement('div');
+  pl.className = 'player';
+  pl.innerHTML =
+    '<button type="button" class="pl-btn" aria-label="Play">' +
+      '<svg class="i-play" viewBox="0 0 24 24"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.2-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z"/></svg>' +
+      '<svg class="i-pause" viewBox="0 0 24 24"><rect x="6" y="5" width="4.2" height="14" rx="1.2"/><rect x="13.8" y="5" width="4.2" height="14" rx="1.2"/></svg>' +
+    '</button>' +
+    '<div class="pl-main">' +
+      '<div class="pl-top"><span class="pl-label"><span class="eq"><i></i><i></i><i></i><i></i></span>' + kind + ' · ' + task +
+        ' <span class="pl-plays"></span></span><span class="pl-time">0:00</span></div>' +
+      '<div class="pl-track"><div class="pl-fill"></div><div class="pl-knob"></div></div>' +
+    '</div>' +
+    '<button type="button" class="pl-replay" title="Play from the start">↺</button>';
+  wrap.replaceWith(pl);
+  pl.appendChild(audio);
+
+  const fill = pl.querySelector('.pl-fill'), knob = pl.querySelector('.pl-knob');
+  const time = pl.querySelector('.pl-time'), track = pl.querySelector('.pl-track');
+  const plays = pl.querySelector('.pl-plays');
+  let count = 0;
+  const paint = () => {
+    const pct = audio.duration ? audio.currentTime / audio.duration * 100 : 0;
+    fill.style.width = pct + '%'; knob.style.left = pct + '%';
+    time.textContent = fmtT(audio.currentTime) + ' / ' + fmtT(audio.duration);
+  };
+  const play = () => {
+    document.querySelectorAll('.player audio').forEach(a => { if (a !== audio) a.pause(); });
+    audio.play();
+  };
+  pl.querySelector('.pl-btn').addEventListener('click', () => audio.paused ? play() : audio.pause());
+  pl.querySelector('.pl-replay').addEventListener('click', () => { audio.currentTime = 0; play(); });
+  track.addEventListener('click', e => {
+    if (!audio.duration) return;
+    const r = track.getBoundingClientRect();
+    audio.currentTime = Math.min(1, Math.max(0, (e.clientX - r.left) / r.width)) * audio.duration;
+    paint();
+  });
+  audio.addEventListener('play',  () => pl.classList.add('playing'));
+  audio.addEventListener('pause', () => pl.classList.remove('playing'));
+  audio.addEventListener('ended', () => {
+    pl.classList.remove('playing');
+    count++; plays.textContent = '· played ' + count + '×';
+    audio.currentTime = 0; paint();
+  });
+  audio.addEventListener('timeupdate', paint);
+  audio.addEventListener('loadedmetadata', paint);
+});
+
+// ── BUILD THE CONTROLS ─────────────────────────────────────────
+// Every answer control gets a stable key from its position on the page.
+const QUIZZES = [...document.querySelectorAll('.quiz')];
+QUIZZES.forEach((q, qi) => {
+  q.id = 'q' + qi;
+  q.querySelectorAll('.ans').forEach((el, i) => { el.dataset.key = 'q' + qi + '-' + i; });
+});
+
+const isChecked = q => !!data['chk-' + q.id];
+
+// dropdowns
+document.querySelectorAll('select.ans').forEach(sel => {
+  const blank = document.createElement('option');
+  blank.value = ''; blank.textContent = '—';
+  sel.appendChild(blank);
+  sel.dataset.opts.split(',').forEach(v => {
+    const o = document.createElement('option');
+    o.value = v; o.textContent = v;
+    sel.appendChild(o);
+  });
+  if (data[sel.dataset.key] !== undefined) sel.value = data[sel.dataset.key];
+  sel.addEventListener('change', () => save({ [sel.dataset.key]: sel.value }));
+});
+
+// multiple choice
+document.querySelectorAll('.mc-options.ans').forEach(group => {
+  const key = group.dataset.key;
+  group.querySelectorAll('.mc-option').forEach(label => {
+    if (data[key] === label.dataset.v) label.classList.add('selected');
+    label.addEventListener('click', () => {
+      if (isChecked(group.closest('.quiz'))) return;
+      group.querySelectorAll('.mc-option').forEach(l => l.classList.remove('selected'));
+      label.classList.add('selected');
+      save({ [key]: label.dataset.v });
+    });
+  });
+});
+
+// pick words / items
+const clean = w => w.toLowerCase().replace(/[^a-z’'\-]/g, '').replace(/[’']s$/, '');
+document.querySelectorAll('.pick.ans').forEach(box => {
+  const need = +box.dataset.need, key = box.dataset.key;
+  const chosen = new Set(data[key] || []);
+  const makeChip = (text, value) => {
+    const c = document.createElement('span');
+    c.className = 'chip'; c.textContent = text; c.dataset.v = value;
+    if (chosen.has(value)) c.classList.add('on');
+    c.addEventListener('click', () => {
+      if (isChecked(box.closest('.quiz'))) return;
+      if (c.classList.contains('on')) c.classList.remove('on');
+      else {
+        if (box.querySelectorAll('.chip.on').length >= need) {
+          if (need === 1) box.querySelectorAll('.chip.on').forEach(x => x.classList.remove('on'));
+          else { box.nextElementSibling.textContent = 'You can only choose ' + need + ' — unselect one first.'; box.nextElementSibling.style.color = 'var(--red)'; return; }
+        }
+        c.classList.add('on');
+      }
+      save({ [key]: [...box.querySelectorAll('.chip.on')].map(x => x.dataset.v) });
+      paintCount(box);
+    });
+    return c;
+  };
+  if (box.dataset.words) {
+    box.dataset.words.split(' ').forEach(w => {
+      box.appendChild(makeChip(w, clean(w)));
+      box.appendChild(document.createTextNode(' '));
+    });
+  } else {
+    box.dataset.items.split('|').forEach(t => box.appendChild(makeChip(t, t)));
+  }
+  const cnt = document.createElement('div');
+  cnt.className = 'pick-count';
+  cnt.style.cssText = 'font-size:.85rem;color:var(--muted);margin-top:8px;';
+  box.after(cnt);
+  paintCount(box);
+});
+function paintCount(box) {
+  box.nextElementSibling.textContent = 'Selected ' + box.querySelectorAll('.chip.on').length + ' of ' + box.dataset.need;
+  box.nextElementSibling.style.color = '';
+}
+
+// build-the-phrase
+document.querySelectorAll('.builder.ans').forEach(b => {
+  const tiles = b.dataset.tiles.split('|'), key = b.dataset.key;
+  const line = document.createElement('div'); line.className = 'build-line';
+  line.appendChild(document.createTextNode(b.dataset.before + ' '));
+  const slot = document.createElement('span'); slot.className = 'build-slot';
+  line.appendChild(slot);
+  line.appendChild(document.createTextNode(' ' + b.dataset.after));
+  const bank = document.createElement('div'); bank.className = 'tile-bank';
+  b.appendChild(line); b.appendChild(bank);
+  const bankTiles = tiles.map((t, i) => {
+    const btn = document.createElement('button');
+    btn.type = 'button'; btn.className = 'tile'; btn.textContent = t;
+    btn.addEventListener('click', () => { if (!isChecked(b.closest('.quiz'))) { place(i); persist(); } });
+    bank.appendChild(btn);
+    return btn;
+  });
+  function place(i) {
+    bankTiles[i].classList.add('used');
+    const p = document.createElement('button');
+    p.type = 'button'; p.className = 'tile placed'; p.dataset.i = i; p.textContent = tiles[i];
+    p.addEventListener('click', () => {
+      if (isChecked(b.closest('.quiz'))) return;
+      p.remove(); bankTiles[i].classList.remove('used'); persist();
+    });
+    slot.appendChild(p);
+  }
+  function persist() { save({ [key]: [...slot.children].map(x => +x.dataset.i) }); }
+  (data[key] || []).forEach(place);
+  b._value = () => [...slot.children].map(x => tiles[+x.dataset.i]).join(' ');
+  b._slot = slot;
+  b._clear = () => { slot.innerHTML = ''; bankTiles.forEach(t => t.classList.remove('used')); };
+});
+
+// ── MARKING ────────────────────────────────────────────────────
+// returns [earned, max] and colours the control
+function mark(el) {
+  if (el.tagName === 'SELECT') {
+    const ok = el.dataset.answer.split('|').includes(el.value);
+    el.classList.add(ok ? 'correct' : 'wrong');
+    if (!ok) el.insertAdjacentHTML('afterend', '<span class="key">' + el.dataset.answer.split('|')[0] + '</span>');
+    el.disabled = true;
+    return [ok ? 1 : 0, 1];
+  }
+  if (el.classList.contains('mc-options')) {
+    const correct = el.dataset.correct;
+    const sel = el.querySelector('.mc-option.selected');
+    el.querySelectorAll('.mc-option').forEach(l => {
+      if (l.dataset.v === correct) l.classList.add('correct');
+      else if (l === sel) l.classList.add('wrong');
+    });
+    return [sel && sel.dataset.v === correct ? 1 : 0, 1];
+  }
+  if (el.classList.contains('pick')) {
+    const correct = el.dataset.correct.split(',');
+    let hits = 0;
+    el.querySelectorAll('.chip').forEach(c => {
+      const isC = correct.includes(c.dataset.v);
+      if (c.classList.contains('on')) { c.classList.remove('on'); c.classList.add(isC ? 'ok' : 'no'); if (isC) hits++; }
+      else if (isC) c.classList.add('miss');
+    });
+    return [hits, correct.length];
+  }
+  if (el.classList.contains('builder')) {
+    const val = el._value().toLowerCase();
+    const answers = el.dataset.answer.split('|');
+    const ok = answers.some(a => a.toLowerCase() === val);
+    el._slot.classList.add(ok ? 'correct' : 'wrong');
+    if (!ok) el.querySelector('.build-line').insertAdjacentHTML('beforeend', '<br><span class="key">' + answers[0] + '</span>');
+    el.querySelectorAll('.tile').forEach(t => t.disabled = true);
+    return [ok ? 1 : 0, 1];
+  }
+  return [0, 0];
+}
+function unmark(el) {
+  if (el.tagName === 'SELECT') {
+    el.classList.remove('correct', 'wrong'); el.disabled = false; el.value = '';
+    if (el.nextElementSibling && el.nextElementSibling.classList.contains('key')) el.nextElementSibling.remove();
+  } else if (el.classList.contains('mc-options')) {
+    el.querySelectorAll('.mc-option').forEach(l => l.classList.remove('correct', 'wrong', 'selected'));
+  } else if (el.classList.contains('pick')) {
+    el.querySelectorAll('.chip').forEach(c => c.classList.remove('on', 'ok', 'no', 'miss'));
+    paintCount(el);
+  } else if (el.classList.contains('builder')) {
+    el._slot.classList.remove('correct', 'wrong');
+    el.querySelectorAll('.key').forEach(k => { if (k.previousElementSibling && k.previousElementSibling.tagName === 'BR') k.previousElementSibling.remove(); k.remove(); });
+    el.querySelectorAll('.tile').forEach(t => t.disabled = false);
+    el._clear();
+  }
+}
+
+// ── CHECK / TRY AGAIN BUTTONS ──────────────────────────────────
+QUIZZES.forEach(q => {
+  const foot = document.createElement('div');
+  foot.className = 'quiz-foot';
+  foot.innerHTML = '<button class="btn btn-primary">Check ✓</button>' +
+                   '<button class="btn btn-ghost" style="display:none">Try again ↺</button>' +
+                   '<span class="q-result"></span>';
+  q.appendChild(foot);
+  const [bCheck, bRetry] = foot.querySelectorAll('button');
+  bCheck.addEventListener('click', () => checkQuiz(q, true));
+  bRetry.addEventListener('click', () => retryQuiz(q));
+  q._foot = foot;
+});
+function checkQuiz(q, doSave) {
+  const parts = [...q.querySelectorAll('.ans')].map(mark);
+  const got = parts.reduce((a, [e]) => a + e, 0), max = parts.reduce((a, [, m]) => a + m, 0);
+  const res = q._foot.querySelector('.q-result');
+  res.textContent = got + ' / ' + max + (got === max ? ' — perfect! 🎉' : '');
+  res.className = 'q-result ' + (got === max ? 'full' : got === 0 ? 'zero' : 'part');
+  q._foot.children[0].style.display = 'none';
+  q._foot.children[1].style.display = '';
+  q._score = [got, max];
+  if (doSave) save({ ['chk-' + q.id]: true });
+  updateProgress();
+}
+function retryQuiz(q) {
+  const patch = { ['chk-' + q.id]: false };
+  q.querySelectorAll('.ans').forEach(el => { unmark(el); patch[el.dataset.key] = undefined; });
+  q._foot.querySelector('.q-result').textContent = '';
+  q._foot.children[0].style.display = '';
+  q._foot.children[1].style.display = 'none';
+  q._score = null;
+  save(patch);
+  updateProgress();
+}
+function updateProgress() {
+  const done = QUIZZES.filter(q => q._score);
+  const got = done.reduce((a, q) => a + q._score[0], 0);
+  const max = done.reduce((a, q) => a + q._score[1], 0);
+  document.getElementById('pgCount').textContent = done.length + ' / ' + QUIZZES.length;
+  document.getElementById('pgScore').textContent = got + ' / ' + max;
+  document.getElementById('pgFill').style.width = (done.length / QUIZZES.length * 100) + '%';
+}
+function resetAll() {
+  if (!confirm('Clear every answer on this page?')) return;
+  try { localStorage.removeItem(LESSON_KEY); } catch(e) {}
+  location.reload();
+}
+
+// ── INIT ───────────────────────────────────────────────────────
+if (data.activeTab) showTab(data.activeTab);
+QUIZZES.forEach(q => { if (isChecked(q)) checkQuiz(q, false); });
+updateProgress();
+</script>
+
+</body>
+</html>
