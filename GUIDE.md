@@ -107,6 +107,9 @@ Wait another minute, then do a hard refresh (Cmd+Shift+R / Ctrl+Shift+R). If it 
 polina_classes/
 ├── index.html          ← Home page (list of all lessons)
 ├── style.css           ← All shared styles — do not touch unless redesigning
+├── dictionary.html     ← My Dictionary (Polina's word list, see "My Dictionary")
+├── dictionary.js       ← My Dictionary + the "+ Word" button on every page
+├── dictionary-apps-script.gs ← Saved copy of the Google Sheet script (see "My Dictionary")
 ├── GUIDE.md            ← This file
 └── lessons/
     ├── lesson-template.html   ← Blank template — always copy this for new lessons
@@ -390,6 +393,84 @@ Badge colour classes: `badge-tech` (blue), `badge-music` (purple), `badge-theatr
 - Answers persist between sessions as long as the student uses the **same browser on the same device**
 - If a student switches device or clears their browser data, answers are lost
 - You (the teacher) cannot see students' answers — the site is designed for students to review their own work
+
+---
+
+## My Dictionary
+
+`dictionary.html` is Polina's personal word list: the English word or phrase,
+its Russian translation, an optional note, and a 🔊 button. The home page has
+a **📖 My Dictionary** link to it.
+
+**How she adds words** (on the home page and every lesson page):
+
+- **Select a word or phrase** in any text. An **📖 Add to dictionary** button
+  appears next to it. Tapping it opens the "New word" window with the word
+  filled in and a Russian translation already suggested.
+- The blue **+ Word** button in the bottom-right corner opens the same window empty.
+- Or she types it straight into the form at the top of the dictionary page.
+
+**Good to know:**
+
+- **Where the words are stored:** in the Google Sheet "Polina Dictionary" in
+  your Google Drive (columns `id | word | translation | note | added`). You can
+  open it any time to see, fix or delete words. A copy is also kept in her
+  browser, so the list opens instantly and words added offline are sent later.
+- **Adding words yourself in the sheet:** type the word and translation in a
+  new row, and put anything unique in `id` (e.g. `p1`, `p2`). A row with an
+  empty `id` shows on the site but can't be deleted there.
+- **Translation:** the **Suggest** button asks MyMemory (free) for Russian
+  options. She can also type her own.
+- **Pronunciation:** the 🔊 button plays `lessons/audio/words/<word>.m4a` if
+  that file exists (e.g. `set-off.m4a`), else a real recording from
+  dictionaryapi.dev (single words only), else the browser's English voice.
+- **Settings** are at the top of `dictionary.js`: `API` (the web app URL),
+  `KEY` (must be exactly the same as `SECRET` in the Apps Script) and `LANG`.
+- **New lesson pages:** the template already loads the dictionary. Keep the
+  line `<script src="../dictionary.js"></script>` just before `</body>`.
+- **Turning it off on one page** (e.g. during a mock test, so she can't
+  translate): change that line to `<script src="../dictionary.js" data-off></script>`.
+- **If the dictionary page says "Not connected to the Google Sheet yet"**, the
+  `API` line in `dictionary.js` is still empty. Words are then kept only on her
+  device until you paste the URL in.
+
+### One-time setup: connecting the Google Sheet
+
+1. **Make the sheet.** Go to [sheets.google.com](https://sheets.google.com) →
+   **Blank spreadsheet**. Name it **Polina Dictionary**. In row 1 type, one per
+   column: `id`, `word`, `translation`, `note`, `added` (cells A1 to E1).
+2. **Open the script editor.** In the sheet's menu: **Extensions → Apps Script**.
+   A new tab opens with a file called `Code.gs` containing a few lines.
+3. **Paste the script.** Delete everything in `Code.gs`. Open
+   `dictionary-apps-script.gs` from the website folder (with TextEdit), copy all
+   of it, and paste it in. Click the 💾 **Save** icon. You can rename the
+   project at the top (e.g. "Polina Dictionary script").
+4. **Publish it as a web app.** Click the blue **Deploy** button →
+   **New deployment**. Click the ⚙️ next to "Select type" → **Web app**. Fill in:
+   - Description: `dictionary`
+   - Execute as: **Me**
+   - Who has access: **Anyone**
+
+   Click **Deploy**.
+5. **Allow access.** Google asks for permission: **Authorize access** → choose
+   your account. If you see "Google hasn't verified this app", click
+   **Advanced** → **Go to … (unsafe)** → **Allow**. This is normal: it's your
+   own script asking to edit your own sheet.
+6. **Copy the URL.** Google shows a **Web app URL** that ends in `/exec`. Copy it.
+7. **Paste it into the website.** Open `dictionary.js` and find this line near the top:
+   `const API = '';`
+   Paste the URL between the two quote marks, e.g.
+   `const API = 'https://script.google.com/macros/s/AKfy…/exec';`
+   Save the file.
+8. **Check it.** Paste the URL into your browser and add
+   `?key=` plus the KEY from `dictionary.js` at the end. You should see
+   `{"words":[]}`. If you see `{"error":"wrong key"}`, the KEY and SECRET don't match.
+9. **Publish** with GitHub Desktop (commit + push). Open the dictionary page on
+   the live site, add a test word, and check that it appears in the sheet.
+
+**If you ever change the Apps Script code:** Deploy → **Manage deployments** →
+✏️ edit → Version: **New version** → Deploy. The URL stays the same. (Clicking
+"New deployment" instead gives a new URL, which you'd have to paste again.)
 
 ---
 

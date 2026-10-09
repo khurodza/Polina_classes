@@ -1,0 +1,1372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lesson 9 – Высшая проба Round 2 Demo (9–10)</title>
+  <link rel="stylesheet" href="../style.css">
+  <style>
+    /* ── exam-specific bits (same look as the lesson 3 mock) ───── */
+    .exam-banner {
+      background: rgba(212,87,42,.08);
+      border: 2px dashed var(--primary);
+      border-radius: var(--radius);
+      padding: 16px 20px;
+      margin-bottom: 22px;
+      text-align: center;
+    }
+    .exam-banner strong { color: var(--primary); font-size: 1.05rem; }
+    .exam-banner p { margin: 6px 0 0; color: var(--muted); font-size: .92rem; line-height: 1.6; }
+
+    .progress-wrap {
+      position: sticky; top: 0; z-index: 30;
+      background: var(--bg);
+      padding: 12px 0 14px;
+      margin-bottom: 8px;
+      border-bottom: 1px solid var(--border);
+    }
+    .progress-top {
+      display: flex; justify-content: space-between; align-items: center;
+      gap: 12px; flex-wrap: wrap; margin-bottom: 8px;
+    }
+    .progress-label { font-weight: 600; font-size: .92rem; }
+    .progress-label span { color: var(--primary); }
+    .progress-bar { height: 10px; border-radius: 99px; background: var(--border); overflow: hidden; }
+    .progress-fill {
+      height: 100%; width: 0%; border-radius: 99px;
+      background: linear-gradient(90deg, var(--primary), var(--accent-dk));
+      transition: width .3s ease;
+    }
+
+    .section-head {
+      text-align: center;
+      border-bottom: 3px double var(--border);
+      padding-bottom: 14px;
+      margin-bottom: 22px;
+    }
+    .section-head h2 {
+      font-family: 'Fraunces', Georgia, serif;
+      font-size: 1.6rem; letter-spacing: .12em; text-transform: uppercase;
+      color: var(--primary);
+    }
+    .section-head .sh-meta { color: var(--muted); font-size: .9rem; margin-top: 4px; }
+
+    .task-num {
+      display: inline-block;
+      font-weight: 700; color: var(--accent-dk);
+      background: rgba(201,160,48,.15);
+      padding: 3px 12px; border-radius: 99px;
+      font-size: .85rem; margin-bottom: 10px;
+    }
+    .orig-instr {
+      font-weight: 600;
+      border-left: 3px solid var(--border);
+      padding-left: 14px; margin: 0 0 18px;
+      line-height: 1.7; font-size: .98rem;
+    }
+    .demo-note {
+      display: inline-block; font-size: .84rem; color: var(--blue);
+      background: rgba(95,142,196,.10); border-radius: 8px;
+      padding: 5px 12px; margin: -6px 0 16px; line-height: 1.55;
+    }
+
+    /* timer */
+    .timer-box {
+      display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+      background: var(--card); border: 2px solid var(--border);
+      border-radius: var(--radius); padding: 12px 16px; margin-bottom: 20px;
+    }
+    .timer-clock {
+      font-family: 'Fraunces', Georgia, serif;
+      font-size: 1.5rem; font-weight: 700; color: var(--primary);
+      min-width: 82px; letter-spacing: .04em;
+    }
+    .timer-clock.over { color: var(--red); }
+    .timer-hint { color: var(--muted); font-size: .85rem; flex: 1; min-width: 140px; }
+    .btn-mini {
+      padding: 6px 14px; font-size: .84rem; border-radius: 99px;
+      border: 2px solid var(--border); background: transparent;
+      color: var(--muted); cursor: pointer; font-weight: 600;
+    }
+    .btn-mini:hover { border-color: var(--primary); color: var(--primary); }
+
+    /* MC cards */
+    .q-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+    @media (max-width: 760px) { .q-grid { grid-template-columns: 1fr; } }
+    .q-card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 18px 20px 20px;
+      display: flex; flex-direction: column; gap: 11px;
+    }
+    .q-text { font-weight: 600; line-height: 1.55; }
+    .mc-options.stack { grid-template-columns: 1fr; gap: 8px; margin-top: auto; }
+    .mc-options.stack .mc-option { padding: 11px 15px; font-size: .98rem; }
+
+    /* matching layout */
+    .exam-select {
+      font: inherit; font-weight: 700; text-align: center;
+      padding: 8px 10px; border-radius: 10px;
+      border: 2px solid var(--border); background: var(--card);
+      color: var(--text); cursor: pointer; min-width: 74px;
+    }
+    .exam-select:focus { border-color: var(--primary); outline: none; }
+    .exam-select.correct { border-color: var(--green); color: var(--green); background: rgba(91,140,69,.08); }
+    .exam-select.wrong   { border-color: var(--red);   color: var(--red);   background: rgba(200,64,64,.06); }
+    .exam-select:disabled { cursor: default; opacity: 1; }
+
+    .pair-grid { display: grid; grid-template-columns: 3fr 2fr; gap: 22px; align-items: start; }
+    @media (max-width: 720px) { .pair-grid { grid-template-columns: 1fr; } }
+    .opt-box {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: var(--radius); overflow: hidden;
+    }
+    .opt-row { display: flex; border-bottom: 1px solid var(--border); }
+    .opt-row:last-child { border-bottom: none; }
+    .opt-letter {
+      flex: 0 0 46px; display: flex; align-items: center; justify-content: center;
+      font-weight: 700; color: var(--accent-dk); background: rgba(201,160,48,.10);
+      border-right: 1px solid var(--border);
+    }
+    .opt-body { padding: 10px 14px; line-height: 1.6; }
+    .answer-row {
+      display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+      padding: 10px 0; border-bottom: 1px dashed var(--border);
+    }
+    .answer-row:last-child { border-bottom: none; }
+    .answer-row .ar-num {
+      font-family: 'Fraunces', Georgia, serif; font-weight: 700;
+      color: var(--primary); min-width: 26px;
+    }
+    .answer-row .ar-txt { flex: 1; min-width: 200px; line-height: 1.65; }
+    .ipa { font-family: 'Charis SIL', 'Doulos SIL', 'Lucida Sans Unicode', 'Arial Unicode MS', sans-serif; }
+
+    /* the correct answer next to every gap, revealed only after submitting */
+    .key {
+      display: none; margin-left: 4px; font-size: .85rem;
+      font-weight: 700; color: var(--green);
+      background: rgba(91,140,69,.10); padding: 2px 9px; border-radius: 6px;
+    }
+    body.revealed .key:not(:empty) { display: inline-block; }
+
+    /* pick-the-words / pick-the-sentences */
+    .pick { line-height: 2.5; font-size: 1.02rem; text-align: left; }
+    .pick.items { display: flex; flex-direction: column; gap: 8px; line-height: 1.5; }
+    .pick.list  { display: flex; flex-wrap: wrap; gap: 8px; line-height: 1.5; }
+    .chip {
+      display: inline-block; padding: 3px 8px; margin: 0 1px;
+      border-radius: 8px; border: 2px solid transparent;
+      cursor: pointer; transition: all .15s; user-select: none;
+    }
+    .pick.list .chip, .pick.items .chip {
+      border-color: var(--border); background: var(--card); padding: 9px 15px;
+    }
+    .chip:hover { border-color: var(--primary); }
+    .chip.on { background: var(--primary); border-color: var(--primary); color: #fff; }
+    .chip.ok { background: var(--green); border-color: var(--green); color: #fff; }
+    .chip.no { background: rgba(200,64,64,.10); border-color: var(--red); color: var(--red); }
+    .chip.miss { border-color: var(--green); border-style: dashed; color: var(--green); }
+    .pick-count { font-size: .85rem; color: var(--muted); margin-top: 8px; }
+    .passage-box {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 16px 20px;
+    }
+
+    /* build-the-phrase */
+    .build-item { padding: 14px 0; border-bottom: 1px dashed var(--border); }
+    .build-item:last-child { border-bottom: none; }
+    .build-line { line-height: 2.2; font-size: 1.02rem; }
+    .build-slot {
+      display: inline-flex; flex-wrap: wrap; gap: 5px; align-items: center;
+      min-width: 220px; min-height: 38px; padding: 3px 8px; margin: 0 4px;
+      border-bottom: 2px solid var(--primary); vertical-align: middle;
+    }
+    .build-slot.correct { border-color: var(--green); }
+    .build-slot.wrong   { border-color: var(--red); }
+    .tile {
+      font: inherit; font-size: .95rem; font-weight: 600;
+      padding: 5px 12px; border-radius: 9px; cursor: pointer;
+      border: 2px solid var(--border); background: var(--card); color: var(--text);
+    }
+    .tile:hover { border-color: var(--primary); }
+    .tile.placed { background: rgba(212,87,42,.10); border-color: var(--primary); }
+    .tile.used { visibility: hidden; }
+    .tile b { color: var(--accent-dk); margin-right: 4px; }
+    .tile-bank { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 10px; }
+    .tile:disabled { cursor: default; }
+
+    /* pictures for Задание 27 */
+    .pic-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 16px; }
+    .pic-card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: var(--radius); overflow: hidden;
+      display: flex; flex-direction: column;
+    }
+    .pic-card img { width: 100%; height: 190px; object-fit: cover; display: block; }
+    .pic-foot { display: flex; align-items: center; gap: 10px; padding: 10px 14px; flex-wrap: wrap; }
+    .pic-foot .ar-num { font-family: 'Fraunces', Georgia, serif; font-weight: 700; color: var(--primary); }
+
+    .dialogue p { margin-bottom: 6px; line-height: 1.7; }
+    .tone { color: var(--primary); font-weight: 700; }
+
+    /* results */
+    .locked-card {
+      text-align: center; background: var(--card);
+      border: 2px dashed var(--border); border-radius: var(--radius);
+      padding: 46px 26px;
+    }
+    .locked-card .lock-ico { font-size: 3rem; }
+    .locked-card h3 { font-family: 'Fraunces', Georgia, serif; font-size: 1.4rem; margin: 10px 0 6px; }
+    .locked-card p { color: var(--muted); line-height: 1.7; }
+    .todo-list { list-style: none; margin: 18px auto 0; max-width: 420px; text-align: left; }
+    .todo-list li {
+      display: flex; justify-content: space-between; gap: 10px;
+      padding: 9px 0; border-bottom: 1px dashed var(--border); font-size: .94rem;
+    }
+    .todo-list li.done { color: var(--green); }
+    .todo-list li b { font-variant-numeric: tabular-nums; }
+    .todo-list small { display: block; color: var(--muted); font-size: .8rem; }
+
+    .score-hero { text-align: center; padding: 10px 0 4px; }
+    .score-big {
+      font-family: 'Fraunces', Georgia, serif;
+      font-size: 3.6rem; font-weight: 700; color: var(--primary); line-height: 1;
+    }
+    .score-big small { font-size: 1.4rem; color: var(--muted); font-weight: 400; }
+    .score-verdict { font-size: 1.05rem; margin-top: 8px; color: var(--muted); }
+    .score-rows { margin-top: 26px; }
+    .score-row { margin-bottom: 18px; }
+    .score-row-top {
+      display: flex; justify-content: space-between;
+      font-weight: 600; font-size: .95rem; margin-bottom: 6px;
+    }
+    .score-track { height: 12px; border-radius: 99px; background: var(--border); overflow: hidden; }
+    .score-meter { height: 100%; border-radius: 99px; width: 0; transition: width .6s ease; }
+    .m1 { background: var(--primary); }
+    .m2 { background: var(--blue); }
+    .m3 { background: var(--accent-dk); }
+    .m4 { background: var(--rose); }
+
+    .task-table { display: grid; grid-template-columns: repeat(auto-fill, minmax(92px, 1fr)); gap: 8px; margin-top: 10px; }
+    .tt-cell {
+      border: 2px solid var(--border); border-radius: 10px; padding: 6px 8px;
+      text-align: center; font-size: .82rem; background: var(--card);
+    }
+    .tt-cell b { display: block; font-size: 1rem; font-variant-numeric: tabular-nums; }
+    .tt-cell.full { border-color: var(--green); color: var(--green); }
+    .tt-cell.part { border-color: var(--accent-dk); color: var(--accent-dk); }
+    .tt-cell.zero { border-color: var(--red); color: var(--red); }
+    .tt-sec { font-weight: 700; margin: 20px 0 4px; font-size: .92rem; }
+
+    .script-box { line-height: 1.8; font-size: .95rem; }
+    .script-box p { margin-bottom: 6px; }
+
+    /* custom audio player */
+    .player {
+      display: flex; align-items: center; gap: 14px;
+      background: linear-gradient(135deg, rgba(212,87,42,.09), rgba(201,160,48,.10));
+      border: 2px solid rgba(212,87,42,.25); border-radius: 18px;
+      padding: 12px 16px; margin: 0 0 18px;
+    }
+    .pl-btn {
+      flex: 0 0 52px; width: 52px; height: 52px; border-radius: 50%; border: none;
+      background: var(--primary); color: #fff; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 4px 12px rgba(212,87,42,.35);
+      transition: transform .15s, background .15s;
+    }
+    .pl-btn:hover { transform: scale(1.07); background: var(--primary-dk); }
+    .pl-btn svg { width: 22px; height: 22px; fill: currentColor; }
+    .pl-btn .i-pause { display: none; }
+    .player.playing .pl-btn .i-play  { display: none; }
+    .player.playing .pl-btn .i-pause { display: block; }
+    .pl-main { flex: 1; min-width: 0; }
+    .pl-top { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 8px; }
+    .pl-label { font-weight: 700; font-size: .9rem; color: var(--primary-dk); display: flex; align-items: center; gap: 8px; }
+    .pl-time { font-size: .82rem; color: var(--muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
+    .pl-track {
+      position: relative; height: 8px; border-radius: 99px;
+      background: rgba(44,32,16,.10); cursor: pointer;
+    }
+    .pl-fill {
+      position: absolute; inset: 0 auto 0 0; width: 0; border-radius: 99px;
+      background: linear-gradient(90deg, var(--primary), var(--accent-dk));
+    }
+    .pl-knob {
+      position: absolute; top: 50%; left: 0; width: 16px; height: 16px; margin: -8px 0 0 -8px;
+      border-radius: 50%; background: #fff; border: 3px solid var(--primary);
+      box-shadow: 0 1px 4px rgba(0,0,0,.2); transition: transform .15s;
+    }
+    .pl-track:hover .pl-knob { transform: scale(1.2); }
+    .pl-replay {
+      flex: 0 0 36px; width: 36px; height: 36px; border-radius: 50%;
+      border: 2px solid var(--border); background: var(--card); color: var(--muted);
+      cursor: pointer; font-size: 1.05rem; line-height: 1;
+    }
+    .pl-replay:hover { border-color: var(--primary); color: var(--primary); }
+    .pl-plays { font-size: .75rem; color: var(--muted); font-weight: 600; }
+    /* little equaliser that dances while playing */
+    .eq { display: inline-flex; align-items: flex-end; gap: 2px; height: 14px; }
+    .eq i { width: 3px; height: 4px; border-radius: 2px; background: var(--primary); }
+    .player.playing .eq i { animation: eq .8s ease-in-out infinite; }
+    .player.playing .eq i:nth-child(2) { animation-delay: .2s; }
+    .player.playing .eq i:nth-child(3) { animation-delay: .4s; }
+    .player.playing .eq i:nth-child(4) { animation-delay: .1s; }
+    @keyframes eq { 0%,100% { height: 4px; } 50% { height: 14px; } }
+    @media (max-width: 520px) { .pl-replay { display: none; } .player { gap: 10px; padding: 10px 12px; } }
+
+    /* send-to-teacher box */
+    .send-box {
+      margin-top: 26px; padding: 18px 20px; border-radius: var(--radius);
+      background: rgba(91,140,69,.08); border: 2px solid rgba(91,140,69,.35);
+    }
+    .send-box h4 { font-family: 'Fraunces', Georgia, serif; font-size: 1.1rem; color: var(--green); margin-bottom: 4px; }
+    .send-box p { color: var(--muted); line-height: 1.6; font-size: .93rem; }
+    .send-msg { margin-top: 10px; font-weight: 600; color: var(--green); min-height: 1.2em; }
+    #reportText {
+      display: none; width: 100%; height: 220px; margin-top: 10px; padding: 12px;
+      font: .85rem/1.5 ui-monospace, Menlo, monospace; border-radius: 10px;
+      border: 2px solid var(--border); background: var(--card); color: var(--text);
+    }
+    #reportText.show { display: block; }
+
+    .tab-btn:nth-child(5).active { background: var(--green); border-color: var(--green); }
+
+    /* ── round 2 extras ───────────────────────────────────────── */
+    .gap-passage { line-height: 2.35; font-size: 1.01rem; }
+    .gap-passage p { margin-bottom: 12px; }
+    .gap-passage .blank { width: 170px; text-align: center; font-weight: 600; background: transparent; color: var(--text); }
+    .gap-passage .blank.short { width: 120px; }
+    .gap-passage .exam-select { padding: 4px 8px; font-weight: 600; min-width: 130px; }
+    .gn { font-weight: 700; color: var(--primary); font-size: .85rem; margin-right: 2px; }
+    .stem { font-weight: 700; color: var(--accent-dk); letter-spacing: .02em; }
+    .blank:disabled { opacity: 1; }
+
+    .word-bank { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 18px; }
+    .word-bank span {
+      border: 2px solid var(--border); background: var(--card); border-radius: 9px;
+      padding: 6px 13px; font-weight: 600; font-size: .95rem;
+    }
+
+    .err-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 16px; }
+    .err-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 16px 16px; }
+    .err-card h4 { font-family: 'Fraunces', Georgia, serif; color: var(--primary); margin: 0 0 6px; font-size: 1.15rem; }
+    .err-line { display: flex; gap: 10px; padding: 4px 0; line-height: 1.5; font-size: .96rem; }
+    .err-line b { flex: 0 0 18px; color: var(--accent-dk); }
+    .err-card .answer-row { border-bottom: none; padding-top: 12px; }
+
+    .read-para { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 18px; margin-bottom: 14px; line-height: 1.7; }
+    .read-para .answer-row { border-bottom: none; padding: 0 0 8px; }
+    .order-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 10px; margin-top: 16px; }
+    .order-cell { display: flex; align-items: center; gap: 8px; background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 8px 10px; }
+    .order-cell .ar-num { font-family: 'Fraunces', Georgia, serif; font-weight: 700; color: var(--primary); min-width: 20px; }
+    .order-cell .exam-select { min-width: 60px; }
+
+    .q-list .answer-row { flex-direction: column; align-items: stretch; gap: 6px; }
+    .q-list .blank { width: 100%; max-width: 420px; }
+
+    .player.used .pl-btn { background: var(--border); box-shadow: none; cursor: default; }
+    .player.used .pl-btn:hover { transform: none; }
+    .player .pl-track { cursor: default; }
+  </style>
+</head>
+<body>
+
+<header class="site-header">
+  <h1>Lesson 9 — Olympiad Demo: Высшая проба, Round 2</h1>
+  <a class="back-link" href="../index.html">← All Lessons</a>
+</header>
+
+<div class="container">
+
+  <div class="lesson-meta">
+    <h2>«Высшая проба» · Второй тур отборочного этапа · 9–10 классы</h2>
+    <p>📅 9 October 2026 &nbsp;·&nbsp; Lesson 9</p>
+  </div>
+
+  <div class="exam-banner">
+    <strong>ДЕМОНСТРАЦИОННЫЙ ВАРИАНТ ВТОРОГО ТУРА · АНГЛИЙСКИЙ ЯЗЫК · 9–10 КЛАССЫ</strong>
+    <p>Время выполнения – 60 минут. Максимальное количество баллов – 100.<br>
+       Язык (30) · Чтение (30) · Аудирование (20) · Страноведение (20)</p>
+    <p>10 tasks. Your score stays locked 🔒 until every gap has an answer.
+       Each recording plays <b>once only</b>, just like in the real round.</p>
+  </div>
+
+  <div class="timer-box">
+    <div class="timer-clock" id="clock">60:00</div>
+    <button class="btn-mini" onclick="toggleTimer()" id="tbtn">Start</button>
+    <button class="btn-mini" onclick="resetTimer()">Reset</button>
+    <div class="timer-hint">The real round gives you 60 minutes for all four sections.</div>
+  </div>
+
+  <div class="progress-wrap">
+    <div class="progress-top">
+      <div class="progress-label">Tasks done: <span id="pgCount">0 / 10</span></div>
+      <div class="progress-label" id="pgHint" style="color:var(--muted);font-weight:500;">Score unlocks at 10 / 10</div>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="pgFill"></div></div>
+  </div>
+
+  <div class="tab-bar">
+    <button class="tab-btn active" onclick="switchTab('lang', this)">✏️ Язык</button>
+    <button class="tab-btn"        onclick="switchTab('read', this)">📖 Чтение</button>
+    <button class="tab-btn"        onclick="switchTab('listen', this)">🎧 Аудирование</button>
+    <button class="tab-btn"        onclick="switchTab('cult', this)">🌍 Страноведение</button>
+    <button class="tab-btn"        onclick="switchTab('score',this)">🔒 Результат</button>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════
+       РАЗДЕЛ 1 — ЯЗЫК (30 баллов) · Задания 1–4
+  ══════════════════════════════════════════════════════════ -->
+  <div class="tab-content active" id="tab-lang">
+
+    <div class="section-head">
+      <h2>Раздел 1. Язык</h2>
+      <div class="sh-meta">Задания 1–4 &nbsp;·&nbsp; максимум 30 баллов</div>
+    </div>
+
+    <!-- Задание 1 -->
+    <div class="exercise task" data-task="1" data-sec="lang" data-points="10">
+      <span class="task-num">Задание 1 · 10 баллов</span>
+      <p class="orig-instr">Прочитайте текст и поставьте данные в скобках слова в нужную грамматическую форму таким образом, чтобы они соответствовали содержанию текста.</p>
+      <div class="demo-note">Type your answer in each gap.</div>
+      <div class="passage-box gap-passage">
+        <p>The Indus, or Harappan, people stand out in India’s history. Their existence makes ancient
+          India a unique place. Their time <span class="stem">[EXHIBIT]</span> <span class="gn">1</span><input class="blank ans" id="t1-1" data-answer="exhibited" autocomplete="off" spellcheck="false"> great growth and achievements,
+          including the development of major urban centres. The people of the Indus settled in South
+          Asia, establishing what <span class="stem">[BECOME]</span> <span class="gn">2</span><input class="blank ans" id="t1-2" data-answer="became|would become" autocomplete="off" spellcheck="false"> one of the world’s first civilisations and
+          the foundation of the rich Indian culture that thrives today.</p>
+        <p>The Indus civilisation takes <span class="stem">[IT]</span> <span class="gn">3</span><input class="blank short ans" id="t1-3" data-answer="its" autocomplete="off" spellcheck="false"> name from the Indus River. It is one of the
+          major rivers that <span class="stem">[RUN]</span> <span class="gn">4</span><input class="blank short ans" id="t1-4" data-answer="runs" autocomplete="off" spellcheck="false"> through the region where the Indus people settled. The
+          high point of the civilisation was from approximately 2600 BC to 1700 BC. During that time,
+          the Indus people developed a variety of settlements. <span class="stem">[LARGE]</span> <span class="gn">5</span><input class="blank ans" id="t1-5" data-answer="the largest" autocomplete="off" spellcheck="false"> settlement that
+          has been excavated is Mohenjo-Daro. Harappa was another major Indus city, with a population
+          of roughly 300,000.</p>
+        <p>Sir John Marshall, a British archaeologist, <span class="stem">[HEAD]</span> <span class="gn">6</span><input class="blank ans" id="t1-6" data-answer="headed" autocomplete="off" spellcheck="false"> the Indian Archaeological
+          Survey from 1902 to 1931. He oversaw digs at Harappa and Mohenjo-Daro, <span class="stem">[UNEARTH]</span>
+          <span class="gn">7</span><input class="blank ans" id="t1-7" data-answer="unearthing" autocomplete="off" spellcheck="false"> similar clay seals at both locations. The Indus people used them in trading, as
+          they stamped a seal’s image on pottery or on clay tags.</p>
+        <p>Archaeologists have since recovered thousands of seals. Several are square, measuring
+          approximately 1.9 cm by 1.9 cm. They <span class="stem">[MAKE]</span> <span class="gn">8</span><input class="blank ans" id="t1-8" data-answer="are made|were made" autocomplete="off" spellcheck="false"> of soapstone. The seals feature
+          a variety of figures, including gods and animals. Seals often include writing. To date, no
+          decipherment of the Indus symbol system <span class="stem">[ACHIEVE]</span> <span class="gn">9</span><input class="blank ans" id="t1-9" data-answer="has been achieved" autocomplete="off" spellcheck="false"> by scholars.</p>
+        <p>During the Vedic era, the city life of the Indus civilisation gave way to a more rustic life, as the
+          Indo-Aryans focused on raising cattle. Later, they transitioned to agriculture, cutting down trees
+          in the forest around the Ganges River to farm the land.</p>
+        <p>The Rigveda, a sacred ancient Indian book, discusses the agricultural lifestyle, including how
+          farmers <span class="stem">[USE]</span> <span class="gn">10</span><input class="blank short ans" id="t1-10" data-answer="used" autocomplete="off" spellcheck="false"> plows to harvest the grain. Many Indo-Aryans lived in small
+          tribal groups. Each group had a chief and a ruling counsel. The groups frequently fought one
+          another, battling for property and livestock. Over time, the groups found a way to coexist and
+          form small kingdoms.</p>
+      </div>
+    </div>
+
+    <!-- Задание 2 -->
+    <div class="exercise task" data-task="2" data-sec="lang" data-points="10">
+      <span class="task-num">Задание 2 · 10 баллов</span>
+      <p class="orig-instr">Перетащите слова, лексически подходящие по смыслу в соответствующие пропуски в тексте. Три слова являются лишними.</p>
+      <div class="demo-note">Choose a word for each gap from the list.</div>
+      <div class="word-bank">
+        <span>came up</span><span>discovered</span><span>created</span><span>applied</span>
+        <span>motivated by</span><span>take</span><span>set off</span><span>inspired by</span>
+        <span>keep</span><span>look into</span><span>fight off</span><span>connect</span><span>attach</span>
+      </div>
+      <div class="passage-box gap-passage">
+        <p>Some of the best ideas for technology come from nature. Scientists have been
+          <span class="gn">1</span><select class="exam-select ans" id="t2-1" data-bank="1" data-answer="inspired by"></select> nature for
+          hundreds of years. They study nature to find ways to solve human problems. Then, they mimic
+          nature’s methods. This process is known as biomimicry.</p>
+        <p>An example of biomimicry is the redesigned bullet train in Japan. Earlier bullet trains had flat
+          noses that pushed a wall of air ahead of them. This <span class="gn">2</span><select class="exam-select ans" id="t2-2" data-bank="1" data-answer="set off"></select> booming noises as the train entered
+          tunnels. The noises were so loud that they damaged tunnels.</p>
+        <p>Engineers <span class="gn">3</span><select class="exam-select ans" id="t2-3" data-bank="1" data-answer="came up"></select> with a solution to the problem by watching kingfisher birds. The kingfisher dives
+          into water without making a splash. The bird’s long, narrow beak makes this possible. As the
+          bird dives, water flows smoothly past its beak.</p>
+        <p>Biomimicry has also led to many car designs. One example is the McLaren P1 car. This car
+          was inspired by the sailfish. The sailfish’s scales create small whirls of air. These pockets of
+          air prevent water from touching the fish.</p>
+        <p>Designers <span class="gn">4</span><select class="exam-select ans" id="t2-4" data-bank="1" data-answer="created"></select> similar scales for the McLaren P1. They
+          <span class="gn">5</span><select class="exam-select ans" id="t2-5" data-bank="1" data-answer="applied"></select> the scales to the ducts leading to the
+          engine. Thanks to nature, cars can achieve more power using less energy.</p>
+        <p>The way animals move through water has always fascinated scientists. Many scientists
+          <span class="gn">6</span><select class="exam-select ans" id="t2-6" data-bank="1" data-answer="look into"></select> sea
+          animals to learn from their movements. This gives them ideas for new transportation
+          technology.</p>
+        <p>Sharks are fast swimmers. Scientists studied sharkskin to find out why. The skin is lined with
+          small, tooth-like scales. These structures are called denticles.</p>
+        <p>As a shark swims, the denticles direct water over the shark’s body. This allows for swift, easy
+          movement. It is also able to <span class="gn">7</span><select class="exam-select ans" id="t2-7" data-bank="1" data-answer="keep"></select> tiny sea creatures from attaching to the shark’s body.
+          Scientists made a material that mimics sharkskin. The material can be used on boats and
+          airplanes to <span class="gn">8</span><select class="exam-select ans" id="t2-8" data-bank="1" data-answer="fight off"></select> bacteria.</p>
+        <p>Octopuses have inspired scientists as well. These animals are skilled at escaping predators. An
+          octopus swims headfirst away from danger. To swim, the octopus can
+          <span class="gn">9</span><select class="exam-select ans" id="t2-9" data-bank="1" data-answer="take"></select>
+          water into its body.
+          Then, it squirts the water out through a funnel and changes direction by turning the funnel.</p>
+        <p>Scientists have created a similar system for boats. Four balloon-like containers
+          <span class="gn">10</span><select class="exam-select ans" id="t2-10" data-bank="1" data-answer="attach|connect"></select> to the boat.
+          These containers take in water. Then, a cable around the containers squeezes the water out.
+          This makes the boat move. The new system can be used on a variety of small watercraft.</p>
+      </div>
+    </div>
+
+    <!-- Задание 3 -->
+    <div class="exercise task" data-task="3" data-sec="lang" data-points="5">
+      <span class="task-num">Задание 3 · 5 баллов</span>
+      <p class="orig-instr">Прочитайте тексты. Для каждого текста выберите строку, в которой содержится лексическая или грамматическая ошибка, и укажите букву, соответствующую строке. Если в тексте ошибок нет, то выберите “ОК”.</p>
+      <div class="err-grid">
+        <div class="err-card">
+          <h4>1</h4>
+          <div class="err-line"><b>A.</b><span>Life in the United States in the early 1800s</span></div>
+          <div class="err-line"><b>B.</b><span>was hard, dangerous, and difficult.</span></div>
+          <div class="err-line"><b>C.</b><span>Many people were travelling to the West</span></div>
+          <div class="err-line"><b>D.</b><span>to look new opportunities and start a new life.</span></div>
+          <div class="err-line"><b>E.</b><span>People on the East Coast wanted to keep in contact</span></div>
+          <div class="err-line"><b>F.</b><span>with officials and business partners in the West.</span></div>
+          <div class="answer-row"><span class="ar-txt">Answer:</span>
+            <select class="exam-select ans" id="t3-1" data-opts="A,B,C,D,E,F,OK" data-answer="D"></select></div>
+        </div>
+        <div class="err-card">
+          <h4>2</h4>
+          <div class="err-line"><b>A.</b><span>While there were several services</span></div>
+          <div class="err-line"><b>B.</b><span>that would carry packages and letters by carriage,</span></div>
+          <div class="err-line"><b>C.</b><span>they were unreliable and slowly.</span></div>
+          <div class="err-line"><b>D.</b><span>People living on the East Coast needed to send</span></div>
+          <div class="err-line"><b>E.</b><span>important messages west,</span></div>
+          <div class="err-line"><b>F.</b><span>but there wasn’t a reliable, fast service available.</span></div>
+          <div class="answer-row"><span class="ar-txt">Answer:</span>
+            <select class="exam-select ans" id="t3-2" data-opts="A,B,C,D,E,F,OK" data-answer="C"></select></div>
+        </div>
+        <div class="err-card">
+          <h4>3</h4>
+          <div class="err-line"><b>A.</b><span>In the mid-1800s, the country</span></div>
+          <div class="err-line"><b>B.</b><span>was expanding its territory.</span></div>
+          <div class="err-line"><b>C.</b><span>Many people wanted to start new lives or find gold</span></div>
+          <div class="err-line"><b>D.</b><span>in California and other areas</span></div>
+          <div class="err-line"><b>E.</b><span>on the Pacific coast. To do so,</span></div>
+          <div class="err-line"><b>F.</b><span>they had to travel across the country.</span></div>
+          <div class="answer-row"><span class="ar-txt">Answer:</span>
+            <select class="exam-select ans" id="t3-3" data-opts="A,B,C,D,E,F,OK" data-answer="OK"></select></div>
+        </div>
+        <div class="err-card">
+          <h4>4</h4>
+          <div class="err-line"><b>A.</b><span>On September 9, 1850, California became a state.</span></div>
+          <div class="err-line"><b>B.</b><span>Though many people travelled in and out of</span></div>
+          <div class="err-line"><b>C.</b><span>the state, mail delivery was abysmal.</span></div>
+          <div class="err-line"><b>D.</b><span>It could take weeks for mail to get to</span></div>
+          <div class="err-line"><b>E.</b><span>California, if even arrived at all.</span></div>
+          <div class="err-line"><b>F.</b><span>Sadly, the telegraph didn’t reach all the way to California.</span></div>
+          <div class="answer-row"><span class="ar-txt">Answer:</span>
+            <select class="exam-select ans" id="t3-4" data-opts="A,B,C,D,E,F,OK" data-answer="E"></select></div>
+        </div>
+        <div class="err-card">
+          <h4>5</h4>
+          <div class="err-line"><b>A.</b><span>Many other cities did not have any</span></div>
+          <div class="err-line"><b>B.</b><span>reliable means of communication either.</span></div>
+          <div class="err-line"><b>C.</b><span>To communicate, people trusted others</span></div>
+          <div class="err-line"><b>D.</b><span>to carry their letters on horseback</span></div>
+          <div class="err-line"><b>E.</b><span>or by stagecoach across the wilderness.</span></div>
+          <div class="err-line"><b>F.</b><span>Obviously, a more organised system needed.</span></div>
+          <div class="answer-row"><span class="ar-txt">Answer:</span>
+            <select class="exam-select ans" id="t3-5" data-opts="A,B,C,D,E,F,OK" data-answer="F"></select></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Задание 4 -->
+    <div class="exercise task" data-task="4" data-sec="lang" data-points="5">
+      <span class="task-num">Задание 4 · 5 баллов</span>
+      <p class="orig-instr">Заполните пропуски в тексте, преобразовав данные в скобках слова таким образом, чтобы они лексически и грамматически соответствовали тексту.</p>
+      <div class="demo-note">Type your answer in each gap.</div>
+      <div class="passage-box gap-passage">
+        <p>Theodore “Teddy” Roosevelt was born into a wealthy family. He grew up in a beautiful
+          brownstone mansion in New York City. One morning when he was about seven years old,
+          Teddy’s mother sent him to the market to buy strawberries for breakfast.</p>
+        <p>On his way up Broadway, the city’s main <span class="stem">[COMMERCE]</span> <span class="gn">1</span><input class="blank ans" id="t4-1" data-answer="commercial" autocomplete="off" spellcheck="false"> thoroughfare, Teddy
+          walked past the street stalls where all kinds of fish, meat, fruits, and vegetables were sold.
+          And that’s when he saw it. There, stretched out on a plank of wood, was the most <span class="stem">[MYSTERY]</span>
+          <span class="gn">2</span><input class="blank ans" id="t4-2" data-answer="mysterious" autocomplete="off" spellcheck="false"> creature Teddy had ever seen - a harbour seal, with a dusty spotted coat that
+          glistened in the morning sun.</p>
+        <p>Teddie was mesmerised. He had never seen anything quite like it. The enormous creature
+          looked like it belonged in the <span class="stem">[THRILL]</span> <span class="gn">3</span><input class="blank ans" id="t4-3" data-answer="thrilling" autocomplete="off" spellcheck="false"> adventure stories he read at bedtime.
+          Teddy’s greatest wish was to keep the seal for himself to display it in the museum that he
+          planned on starting with his cousins. It would be an amazing museum with the world’s most
+          fascinating creatures on display.</p>
+        <p>The next day Teddy returned to the market to take another look at the seal and to make
+          <span class="stem">[MEASURE]</span> <span class="gn">4</span><input class="blank ans" id="t4-4" data-answer="measurements" autocomplete="off" spellcheck="false">. But what he saw instead of his new prized possession was an
+          empty display table - the seal was gone. A <span class="stem">[HORROR]</span> <span class="gn">5</span><input class="blank ans" id="t4-5" data-answer="horrified" autocomplete="off" spellcheck="false"> expression took over
+          Teddy’s face. He pleaded with the seller to tell him who had bought the seal but to no avail.
+          However, Teddy wasn’t one to stay sad for long. He was determined to create his museum, and
+          he decided to start small.</p>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-ghost" onclick="switchTabByName('read')">Next: Чтение →</button>
+      </div>
+    </div>
+
+  </div><!-- /tab-lang -->
+
+  <!-- ══════════════════════════════════════════════════════════
+       РАЗДЕЛ 2 — ЧТЕНИЕ (30 баллов) · Задания 5–6
+  ══════════════════════════════════════════════════════════ -->
+  <div class="tab-content" id="tab-read">
+
+    <div class="section-head">
+      <h2>Раздел 2. Чтение</h2>
+      <div class="sh-meta">Задания 5–6 &nbsp;·&nbsp; максимум 30 баллов</div>
+    </div>
+
+    <!-- Задание 5 -->
+    <div class="exercise task" data-task="5" data-sec="read" data-points="20">
+      <span class="task-num">Задание 5 · 20 баллов</span>
+      <p class="orig-instr">Поставьте предложения в логическую цепочку, чтобы получился связный текст. Два предложения являются лишними.</p>
+      <div class="opt-box">
+        <div class="opt-row"><span class="opt-letter">A</span><span class="opt-body">Standing six foot six inches tall and weighing nearly three hundred pounds, the stern disciplinarian looked like a giant.</span></div>
+        <div class="opt-row"><span class="opt-letter">B</span><span class="opt-body">On Sunday evenings, he would gather the boys in the schoolyard and put on an impressive exhibition of batting prowess.</span></div>
+        <div class="opt-row"><span class="opt-letter">C</span><span class="opt-body">One day, Matthias invited George to throw around a ball for a while, and soon they were playing catch every day.</span></div>
+        <div class="opt-row"><span class="opt-letter">D</span><span class="opt-body">Sometimes, George even tried to help some of the smaller kids and take the blame for their misdeeds.</span></div>
+        <div class="opt-row"><span class="opt-letter">E</span><span class="opt-body">Of all the teachers at St Mary’s Reform School for Boys, Brother Matthias made the biggest impression.</span></div>
+        <div class="opt-row"><span class="opt-letter">F</span><span class="opt-body">When George tried on the catcher’s mitt, he noticed a slight problem: he was left-handed, and the mitt was made for a righty.</span></div>
+        <div class="opt-row"><span class="opt-letter">G</span><span class="opt-body">Despite his imposing size, Brother Matthias was a mild-mannered man who seldom raised his voice.</span></div>
+        <div class="opt-row"><span class="opt-letter">H</span><span class="opt-body">Tricks like that, along with his powerful swing, made him one of the team’s stand-out players.</span></div>
+        <div class="opt-row"><span class="opt-letter">I</span><span class="opt-body">All the boys at St Mary’s wore a uniform of jackets and ties, which was an upgrade from Little George’s usual ratty shirt and pants attire.</span></div>
+        <div class="opt-row"><span class="opt-letter">J</span><span class="opt-body">Among the boys clambering to retrieve the balls was Little George, who saw in the burly brother a perfect role model for what he could do if he set his mind to it.</span></div>
+        <div class="opt-row"><span class="opt-letter">K</span><span class="opt-body">Eventually, George learned to catch the ball with his left hand, flip it into the air while discarding the mitt, and then pluck the ball out of the air in time to throw it.</span></div>
+        <div class="opt-row"><span class="opt-letter">L</span><span class="opt-body">When he wasn’t keeping the peace, Brother Matthias liked to teach a master class in his favourite subject: baseball.</span></div>
+      </div>
+      <div class="demo-note" style="margin-top:16px;">Choose the letter of the sentence for each place in the text, 1 to 10.</div>
+      <div class="order-grid">
+        <div class="order-cell"><span class="ar-num">1</span><select class="exam-select ans" id="t5-1"  data-w="2" data-opts="A,B,C,D,E,F,G,H,I,J,K,L" data-answer="E"></select></div>
+        <div class="order-cell"><span class="ar-num">2</span><select class="exam-select ans" id="t5-2"  data-w="2" data-opts="A,B,C,D,E,F,G,H,I,J,K,L" data-answer="A"></select></div>
+        <div class="order-cell"><span class="ar-num">3</span><select class="exam-select ans" id="t5-3"  data-w="2" data-opts="A,B,C,D,E,F,G,H,I,J,K,L" data-answer="G"></select></div>
+        <div class="order-cell"><span class="ar-num">4</span><select class="exam-select ans" id="t5-4"  data-w="2" data-opts="A,B,C,D,E,F,G,H,I,J,K,L" data-answer="L"></select></div>
+        <div class="order-cell"><span class="ar-num">5</span><select class="exam-select ans" id="t5-5"  data-w="2" data-opts="A,B,C,D,E,F,G,H,I,J,K,L" data-answer="B"></select></div>
+        <div class="order-cell"><span class="ar-num">6</span><select class="exam-select ans" id="t5-6"  data-w="2" data-opts="A,B,C,D,E,F,G,H,I,J,K,L" data-answer="J"></select></div>
+        <div class="order-cell"><span class="ar-num">7</span><select class="exam-select ans" id="t5-7"  data-w="2" data-opts="A,B,C,D,E,F,G,H,I,J,K,L" data-answer="C"></select></div>
+        <div class="order-cell"><span class="ar-num">8</span><select class="exam-select ans" id="t5-8"  data-w="2" data-opts="A,B,C,D,E,F,G,H,I,J,K,L" data-answer="F"></select></div>
+        <div class="order-cell"><span class="ar-num">9</span><select class="exam-select ans" id="t5-9"  data-w="2" data-opts="A,B,C,D,E,F,G,H,I,J,K,L" data-answer="K"></select></div>
+        <div class="order-cell"><span class="ar-num">10</span><select class="exam-select ans" id="t5-10" data-w="2" data-opts="A,B,C,D,E,F,G,H,I,J,K,L" data-answer="H"></select></div>
+      </div>
+    </div>
+
+    <!-- Задание 6 -->
+    <div class="exercise task" data-task="6" data-sec="read" data-points="10">
+      <span class="task-num">Задание 6 · 10 баллов</span>
+      <p class="orig-instr">Прочитайте фрагменты текста и подберите заголовок к каждому фрагменту. Два заголовка являются лишними.</p>
+      <div class="opt-box" style="margin-bottom:18px;">
+        <div class="opt-row"><span class="opt-letter">A</span><span class="opt-body">Further Excavations Are Required</span></div>
+        <div class="opt-row"><span class="opt-letter">B</span><span class="opt-body">Looking for Answers in Similar Structures</span></div>
+        <div class="opt-row"><span class="opt-letter">C</span><span class="opt-body">A Matter of Perspective</span></div>
+        <div class="opt-row"><span class="opt-letter">D</span><span class="opt-body">A Mystery without a Solution</span></div>
+        <div class="opt-row"><span class="opt-letter">E</span><span class="opt-body">A Familiar Structure on a Grand Scale</span></div>
+        <div class="opt-row"><span class="opt-letter">F</span><span class="opt-body">Archaeological Research and Restoration</span></div>
+        <div class="opt-row"><span class="opt-letter">G</span><span class="opt-body">A Prevailing Theory Proven Wrong</span></div>
+      </div>
+
+      <div class="read-para">
+        <div class="answer-row"><span class="ar-num">1</span>
+          <select class="exam-select ans" id="t6-1" data-w="2" data-opts="A,B,C,D,E,F,G" data-answer="C"></select></div>
+        What you see when you approach Stonehenge depends on how you look. A quick glance shows
+        a circle of rather tall, greyish, chunky stones, some of which have beams called “lintels” across
+        the top linking two neighbours - like a doorway, or an “H” with the middle line across the top.
+        Look more carefully and you will see similar stones but fallen on the ground. These large pillars
+        are all sarsen – a form of stone made from grains of sand that have hardened and bonded to
+        form a tough kind of sandstone. Once you identify the two kinds of stone, you may begin to
+        notice the care and craft that went into building Stonehenge. The builders worked with stone
+        as if it were wood.
+      </div>
+      <div class="read-para">
+        <div class="answer-row"><span class="ar-num">2</span>
+          <select class="exam-select ans" id="t6-2" data-w="2" data-opts="A,B,C,D,E,F,G" data-answer="E"></select></div>
+        When Stonehenge was in use, the entire outer ring of sarsen beams was connected by lintels.
+        These crossing stones were held in place with a mortise and tenon joint. On the bottom of the
+        lintel, a mortise (the carved-out portion) fits over the standing sarsen’s tenon (the part sticking
+        out of the top). This is similar to the way wooden beams were attached in homes of that time
+        and place. The major difference is that each beam that was raised at Stonehenge weighed 35
+        tons and could hold up a castle or a cathedral.
+      </div>
+      <div class="read-para">
+        <div class="answer-row"><span class="ar-num">3</span>
+          <select class="exam-select ans" id="t6-3" data-w="2" data-opts="A,B,C,D,E,F,G" data-answer="D"></select></div>
+        Since Stonehenge is located on a vast plain, it’s clear that the sarsen beams were brought here
+        for somewhere else. In order to determine where the stones came from, scientists analysed the
+        stone beams and identified them as spotted dolerite. It can be found only in the Preseli Hills of
+        southwest Wales, which means that the stones were brought, or moved by natural forces,
+        approximately 150 miles to the site in Stonehenge. Historians are still unable to figure out how
+        this remarkable feat was accomplished. Since there are no written accounts of the period or
+        remains of the materials that could have been used to move such massive stones over the vast
+        distance, it is unlikely that the answer to this conundrum will ever be found.
+      </div>
+      <div class="read-para">
+        <div class="answer-row"><span class="ar-num">4</span>
+          <select class="exam-select ans" id="t6-4" data-w="2" data-opts="A,B,C,D,E,F,G" data-answer="G"></select></div>
+        While the origin of the stones that make up Stonehenge remains unknown, the purpose of the
+        structure has been agreed upon for over 300 years. In the 1720s, William Stukeley popularised
+        the idea that Stonehenge was a prehistoric temple. He also assumed that the priests who used
+        the site were Druids - people similar to the religious leaders whom Julius Caesar saw when
+        Rome invaded Britain. This theory echoed the conclusions drawn by 17-th century scholar and
+        England’s first professional archaeologist John Aubrey. However, neither Stukeley nor Aubrey
+        could have known that Stonehenge was built more than 2,000 years before the time of the
+        Druids. This discovery was made in the 2010s, thus proving the most common understanding
+        of Stonehenge to be false.
+      </div>
+      <div class="read-para">
+        <div class="answer-row"><span class="ar-num">5</span>
+          <select class="exam-select ans" id="t6-5" data-w="2" data-opts="A,B,C,D,E,F,G" data-answer="B"></select></div>
+        What makes the study of Stonehenge and its origins even trickier is the lack of any remains
+        showing that it was used by people. Luckily, there is quite a large area surrounding Stonehenge,
+        including such sites are Woodhenge and the Southern Circle that resemble Stonehenge in one
+        way or another. The site known as Woodhenge is comprised of concentric circles of timber.
+        There are also markings left behind by rotted wooden pillars that could have been totem poles
+        or pillars that were holding up a roof. The Southern Circle looks a lot like Woodhenge, and
+        archaeologists suspect that it could have been the centre of a large settlement that included up
+        to 1,000 houses. In this case, the wooden structures look like a building plan for northern
+        Europe’s largest Neolithic village. While this doesn’t exactly answer the question of
+        Stonehenge’s purpose, this discovery gives scientists a new direction to look into.
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-ghost" onclick="switchTabByName('listen')">Next: Аудирование →</button>
+      </div>
+    </div>
+
+  </div><!-- /tab-read -->
+
+  <!-- ══════════════════════════════════════════════════════════
+       РАЗДЕЛ 3 — АУДИРОВАНИЕ (20 баллов) · Задания 7–8
+  ══════════════════════════════════════════════════════════ -->
+  <div class="tab-content" id="tab-listen">
+
+    <div class="section-head">
+      <h2>Раздел 3. Аудирование</h2>
+      <div class="sh-meta">Задания 7–8 &nbsp;·&nbsp; максимум 20 баллов</div>
+    </div>
+
+    <!-- Задание 7 -->
+    <div class="exercise task" data-task="7" data-sec="listen" data-points="10">
+      <span class="task-num">Задание 7 · 10 баллов</span>
+      <p class="orig-instr">Ниже представлено семь утверждений. Прослушайте пять аудиотекстов и соотнесите утверждения с информацией, представленной в них. Два утверждения являются лишними. Прослушайте текст 1 раз.</p>
+      <div class="demo-note">Read the statements first. The recording plays once only, and you can’t rewind it.</div>
+      <div class="audio-wrap" style="margin:0 0 16px;"><audio controls preload="none"><source src="audio/l9-task07.mp3" type="audio/mpeg">Your browser does not support audio.</audio></div>
+      <div class="pair-grid">
+        <div>
+          <div class="answer-row"><span class="ar-num">1</span><span class="ar-txt">Speaker 1</span>
+            <select class="exam-select ans" id="t7-1" data-w="2" data-opts="A,B,C,D,E,F,G" data-answer="C"></select></div>
+          <div class="answer-row"><span class="ar-num">2</span><span class="ar-txt">Speaker 2</span>
+            <select class="exam-select ans" id="t7-2" data-w="2" data-opts="A,B,C,D,E,F,G" data-answer="E"></select></div>
+          <div class="answer-row"><span class="ar-num">3</span><span class="ar-txt">Speaker 3</span>
+            <select class="exam-select ans" id="t7-3" data-w="2" data-opts="A,B,C,D,E,F,G" data-answer="F"></select></div>
+          <div class="answer-row"><span class="ar-num">4</span><span class="ar-txt">Speaker 4</span>
+            <select class="exam-select ans" id="t7-4" data-w="2" data-opts="A,B,C,D,E,F,G" data-answer="B"></select></div>
+          <div class="answer-row"><span class="ar-num">5</span><span class="ar-txt">Speaker 5</span>
+            <select class="exam-select ans" id="t7-5" data-w="2" data-opts="A,B,C,D,E,F,G" data-answer="D"></select></div>
+        </div>
+        <div class="opt-box">
+          <div class="opt-row"><span class="opt-letter">A</span><span class="opt-body">The speaker bought the wrong thing because of a misunderstanding.</span></div>
+          <div class="opt-row"><span class="opt-letter">B</span><span class="opt-body">The speaker could not complete a transaction due to a miscommunication.</span></div>
+          <div class="opt-row"><span class="opt-letter">C</span><span class="opt-body">The speaker made an embarrassing comment at the dinner table.</span></div>
+          <div class="opt-row"><span class="opt-letter">D</span><span class="opt-body">The speaker learned a valuable lesson from a misunderstanding.</span></div>
+          <div class="opt-row"><span class="opt-letter">E</span><span class="opt-body">The speaker made everyone laugh because of poor pronunciation.</span></div>
+          <div class="opt-row"><span class="opt-letter">F</span><span class="opt-body">The speaker got into a dangerous situation because of a linguistic misunderstanding.</span></div>
+          <div class="opt-row"><span class="opt-letter">G</span><span class="opt-body">The speaker got lost because of using the wrong intonation.</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Задание 8 -->
+    <div class="exercise task" data-task="8" data-sec="listen" data-points="10">
+      <span class="task-num">Задание 8 · 10 баллов</span>
+      <p class="orig-instr">Ниже представлено пять утверждений. Прослушайте аудиотекст и определите, являются ли утверждения верными или неверными в соответствии с информацией из аудиотекста. Прослушайте текст 1 раз.</p>
+      <div class="demo-note">Read the statements first. The recording plays once only, and you can’t rewind it.</div>
+      <div class="audio-wrap" style="margin:0 0 16px;"><audio controls preload="none"><source src="audio/l9-task08.mp3" type="audio/mpeg">Your browser does not support audio.</audio></div>
+      <div class="answer-row"><span class="ar-num">1</span><span class="ar-txt">Normally teachers cannot navigate without a map.</span>
+        <select class="exam-select ans" id="t8-1" data-w="2" data-opts="True,False" data-answer="False"></select></div>
+      <div class="answer-row"><span class="ar-num">2</span><span class="ar-txt">Language and culture are both highly structured systems.</span>
+        <select class="exam-select ans" id="t8-2" data-w="2" data-opts="True,False" data-answer="False"></select></div>
+      <div class="answer-row"><span class="ar-num">3</span><span class="ar-txt">If “Humpty Dumpty” is sung in Russian, it is clear whether Mr. or Mrs. Dumpty is sitting on the wall.</span>
+        <select class="exam-select ans" id="t8-3" data-w="2" data-opts="True,False" data-answer="True"></select></div>
+      <div class="answer-row"><span class="ar-num">4</span><span class="ar-txt">The story about meeting Uncle Mike on 47th Street could not be told by the Piraha people.</span>
+        <select class="exam-select ans" id="t8-4" data-w="2" data-opts="True,False" data-answer="True"></select></div>
+      <div class="answer-row"><span class="ar-num">5</span><span class="ar-txt">In Piraha, the word “hoi” literally means “two small fish.”</span>
+        <select class="exam-select ans" id="t8-5" data-w="2" data-opts="True,False" data-answer="False"></select></div>
+      <div class="btn-row">
+        <button class="btn btn-ghost" onclick="switchTabByName('cult')">Next: Страноведение →</button>
+      </div>
+    </div>
+
+  </div><!-- /tab-listen -->
+
+  <!-- ══════════════════════════════════════════════════════════
+       РАЗДЕЛ 4 — СТРАНОВЕДЕНИЕ (20 баллов) · Задания 9–10
+  ══════════════════════════════════════════════════════════ -->
+  <div class="tab-content" id="tab-cult">
+
+    <div class="section-head">
+      <h2>Раздел 4. Страноведение</h2>
+      <div class="sh-meta">Задания 9–10 &nbsp;·&nbsp; максимум 20 баллов</div>
+    </div>
+
+    <!-- Задание 9 -->
+    <div class="exercise task" data-task="9" data-sec="cult" data-points="10">
+      <span class="task-num">Задание 9 · 10 баллов</span>
+      <p class="orig-instr">Прочитайте текст и выполните задание к нему.</p>
+      <div class="passage-box" style="line-height:1.75; margin-bottom:18px;">
+        <p>He was born in 1835 in the town of Florida, Missouri, and when he was four his family moved
+          to Hannibal, Missouri.</p>
+        <p>He didn’t like going to school. Instead of sitting in class, he ran around in the woods with
+          friends or explored the river. When he was about 13, he became an apprentice in a print shop,
+          where he learned how to print newspapers. In 1851, he went to work for his brother Orion as a
+          typesetter for a Hannibal newspaper. He also wrote articles, poetry, and made humorous
+          sketches, and used to sign his works with fake names like “Josh” or “Thomas Jefferson
+          Snodgrass”.</p>
+        <p>The next few years he spent travelling and working at newspapers and book publishers. In
+          1857, he boarded a steamboat for New Orleans. He wanted to go to Brazil and see the Amazon
+          River, but instead he pursued his childhood dream of becoming a riverboat pilot, a very
+          prestigious and well-paid job, similar to a commercial jet pilot today. He earned his pilot license
+          in 1859. However, his career as a riverboat pilot ended in 1861 when he was forced to quit due
+          to the Civil War starting.</p>
+        <p>He travelled west to the Territory of Nevada, where he wrote for the Enterprise in Virginia
+          City. His stories became well-known on the West Coast, and it was then that he decided to sign
+          his works with a pen-name, for which he chose a riverboat term for 12 feet of water.</p>
+        <p>He continued to travel and write about his experience. In his lifetime he wrote thousands of
+          articles and more than 30 books. Riverboats, and the wide variety of characters they attracted,
+          were a major part of his writing. Some of his characters reflected social issues. More than
+          anything, though, his books painted an engaging picture of what life was like for young boys,
+          including the two main characters of his most famous novels. His common-man attitude,
+          humour, and wit could be felt on every page. And his truthful take on American life became a
+          national treasure.</p>
+      </div>
+      <div class="q-list">
+        <div class="answer-row"><span class="ar-txt"><b>1.</b> What is the birth name of the person described in the text? Формат написания ответа First Name Last Name</span>
+          <input class="blank ans" id="t9-1" data-w="2" data-answer="samuel clemens|samuel langhorne clemens" autocomplete="off" spellcheck="false"></div>
+        <div class="answer-row"><span class="ar-txt"><b>2.</b> Which river did the person need to sail along to get to New Orleans?</span>
+          <input class="blank ans" id="t9-2" data-w="2" data-answer="mississippi|the mississippi|mississippi river|the mississippi river" autocomplete="off" spellcheck="false"></div>
+        <div class="answer-row"><span class="ar-txt"><b>3.</b> What are the names of “young boys” that are mentioned in the last paragraph? (write the names with an “and”)</span>
+          <input class="blank ans" id="t9-3" data-w="2" data-answer="tom and huck|huck and tom|tom sawyer and huckleberry finn|huckleberry finn and tom sawyer|tom sawyer and huck finn|huck finn and tom sawyer|tom and huckleberry|huckleberry and tom" autocomplete="off" spellcheck="false"></div>
+        <div class="answer-row"><span class="ar-txt"><b>4.</b> What is the modern name of the state mentioned in the penultimate paragraph?</span>
+          <input class="blank ans" id="t9-4" data-w="2" data-answer="nevada" autocomplete="off" spellcheck="false"></div>
+        <div class="answer-row"><span class="ar-txt"><b>5.</b> Which word from the text is connected with the starry sky?</span>
+          <input class="blank ans" id="t9-5" data-w="2" data-answer="orion" autocomplete="off" spellcheck="false"></div>
+      </div>
+    </div>
+
+    <!-- Задание 10 -->
+    <div class="exercise task" data-task="10" data-sec="cult" data-points="10">
+      <span class="task-num">Задание 10 · 10 баллов</span>
+      <p class="orig-instr">Соотнесите события, значимые для стран(ы) изучаемого языка, и века, в которых эти события происходили. Два века не соответствуют ни одному событию.</p>
+      <div class="demo-note">The demo lists ten events, so each one is worth 1 балл here.</div>
+      <div class="answer-row"><span class="ar-txt">Lewis and Clark reaching the Pacific Ocean</span>
+        <select class="exam-select ans" id="t10-1" data-opts="11th,12th,14th,15th,16th,17th,18th,19th,20th,21st" data-answer="19th"></select></div>
+      <div class="answer-row"><span class="ar-txt">The abolition of the Panama Canal Zone</span>
+        <select class="exam-select ans" id="t10-2" data-opts="11th,12th,14th,15th,16th,17th,18th,19th,20th,21st" data-answer="20th"></select></div>
+      <div class="answer-row"><span class="ar-txt">John Cabot’s exploration of North America</span>
+        <select class="exam-select ans" id="t10-3" data-opts="11th,12th,14th,15th,16th,17th,18th,19th,20th,21st" data-answer="15th"></select></div>
+      <div class="answer-row"><span class="ar-txt">The beginning of the Hundred Years’ War</span>
+        <select class="exam-select ans" id="t10-4" data-opts="11th,12th,14th,15th,16th,17th,18th,19th,20th,21st" data-answer="14th"></select></div>
+      <div class="answer-row"><span class="ar-txt">The widespread implementation of facial motion capture in cinema</span>
+        <select class="exam-select ans" id="t10-5" data-opts="11th,12th,14th,15th,16th,17th,18th,19th,20th,21st" data-answer="21st"></select></div>
+      <div class="answer-row"><span class="ar-txt">The birth of Christopher Marlowe</span>
+        <select class="exam-select ans" id="t10-6" data-opts="11th,12th,14th,15th,16th,17th,18th,19th,20th,21st" data-answer="16th"></select></div>
+      <div class="answer-row"><span class="ar-txt">The ratification of the Bill of Rights</span>
+        <select class="exam-select ans" id="t10-7" data-opts="11th,12th,14th,15th,16th,17th,18th,19th,20th,21st" data-answer="18th"></select></div>
+      <div class="answer-row"><span class="ar-txt">The beginning of construction of the first Norman stone castle in Wales</span>
+        <select class="exam-select ans" id="t10-8" data-opts="11th,12th,14th,15th,16th,17th,18th,19th,20th,21st" data-answer="11th"></select></div>
+      <div class="answer-row"><span class="ar-txt">The end of the Tudor dynasty</span>
+        <select class="exam-select ans" id="t10-9" data-opts="11th,12th,14th,15th,16th,17th,18th,19th,20th,21st" data-answer="17th"></select></div>
+      <div class="answer-row"><span class="ar-txt">Henry II’s ascension to the throne</span>
+        <select class="exam-select ans" id="t10-10" data-opts="11th,12th,14th,15th,16th,17th,18th,19th,20th,21st" data-answer="12th"></select></div>
+      <div class="btn-row">
+        <button class="btn btn-ghost" onclick="switchTabByName('score')">Next: Результат →</button>
+      </div>
+    </div>
+
+  </div><!-- /tab-cult -->
+
+  <!-- ══════════════════════════════════════════════════════════
+       РЕЗУЛЬТАТ — locked until all 10 tasks are answered
+  ══════════════════════════════════════════════════════════ -->
+  <div class="tab-content" id="tab-score">
+
+    <div id="scoreLocked">
+      <div class="locked-card">
+        <div class="lock-ico">🔒</div>
+        <h3>Your score is locked</h3>
+        <p>Finish every task first. Then the score appears and all the answers are revealed.<br>
+           Nothing is marked before that, so make a sensible guess rather than leaving a gap!</p>
+        <ul class="todo-list" id="todoList"></ul>
+      </div>
+    </div>
+
+    <div id="scoreReady" style="display:none;">
+      <div class="exercise">
+        <div class="exercise-label">Ready</div>
+        <h3>All 10 tasks are answered. 🎉</h3>
+        <p>Press the button when you want to see how you did. After this, every answer on the page
+          is marked, the correct answers are shown and nothing can be changed.</p>
+        <div class="btn-row">
+          <button class="btn btn-primary" onclick="submitPaper()">Show my score 🏆</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="scoreResult" style="display:none;">
+      <div class="exercise">
+        <div class="exercise-label">Result</div>
+        <div class="score-hero">
+          <div class="score-big"><span id="scTotal">0</span><small> / 100</small></div>
+          <div class="score-verdict" id="scVerdict"></div>
+        </div>
+
+        <div class="score-rows">
+          <div class="score-row">
+            <div class="score-row-top"><span>✏️ Язык (Задания 1–4)</span><span id="sc-lang">0 / 30</span></div>
+            <div class="score-track"><div class="score-meter m1" id="m-lang"></div></div>
+          </div>
+          <div class="score-row">
+            <div class="score-row-top"><span>📖 Чтение (Задания 5–6)</span><span id="sc-read">0 / 30</span></div>
+            <div class="score-track"><div class="score-meter m2" id="m-read"></div></div>
+          </div>
+          <div class="score-row">
+            <div class="score-row-top"><span>🎧 Аудирование (Задания 7–8)</span><span id="sc-listen">0 / 20</span></div>
+            <div class="score-track"><div class="score-meter m3" id="m-listen"></div></div>
+          </div>
+          <div class="score-row">
+            <div class="score-row-top"><span>🌍 Страноведение (Задания 9–10)</span><span id="sc-cult">0 / 20</span></div>
+            <div class="score-track"><div class="score-meter m4" id="m-cult"></div></div>
+          </div>
+        </div>
+
+        <div id="taskBreakdown"></div>
+
+        <p style="margin-top:24px; color:var(--muted); line-height:1.7;">
+          Go back through the four tabs: green = correct, red = wrong, and the green tag next to an
+          answer shows what was expected. Write down every task you lost points on. That list is
+          your revision plan for the real second round.
+        </p>
+
+        <details style="margin-top:18px;">
+          <summary style="cursor:pointer; font-weight:600;">🎧 Audio script, Задание 7</summary>
+          <div class="script-box" style="margin-top:10px;">
+            <p><b>Speaker 1 → C.</b> This happened to me during my Erasmus year in Germany. I’d made friends with a German girl called Lina,
+              and one day she invited me to her grandmother’s house for lunch. As we all sat down at the table, Lina’s grandmother
+              said that she hoped I would enjoy the meal. It’s <i>Guten Appetit</i> in German. I wanted to reply “same to you”, which in
+              German is <i>gleichfalls</i>. Unfortunately I came out with <i>Durchfall</i> instead, which means diarrhoea. Everything went quiet
+              and then Lina told me what I’d said. <b>I nearly died of embarrassment.</b></p>
+            <p><b>Speaker 2 → E.</b> I made a real fool of myself when we were on holiday in Greece one year. I always like to learn a few words
+              of the language when I go abroad, and that year was no exception. When we arrived at our hotel, I walked straight up to
+              reception and said <i>kalamari</i> to the receptionist. My confidence was shattered when <b>she burst out laughing, as did the rest
+              of my family.</b> It turns out that I’d used the word for squid, <i>kalamari</i>, instead of the word for good morning, <i>kalimera</i>.
+              That was the last time I spoke any Greek on that holiday.</p>
+            <p><b>Speaker 3 → F.</b> I was in Venice on an exchange visit, and for some reason or other, I was teaching my host family how to count
+              in Spanish. I was walking backwards, saying the numbers for them to repeat. <i>Seis, seis, siete, siete, ocho, ocho…</i> I couldn’t
+              understand what they were getting so excited about. <b>Suddenly, I was hit by a cart full of fish.</b> The family hadn’t been
+              repeating <i>ocho</i> to mean number eight. They were saying <i>occhio</i>, which means “watch out” in their particular dialect of
+              Italian. The little old man pushing the cart was very apologetic, but I felt like a complete idiot.</p>
+            <p><b>Speaker 4 → B.</b> I had a terribly embarrassing experience once when I was trying to buy a rail ticket in France. I was at a
+              station in Paris, and I wanted to go to Avignon in the south. When it was my turn, I went up to the desk and asked for a
+              return to Avignon. The woman looked at me for a moment and then said, “Pardon?” So I repeated my request. Imagine my
+              surprise when <b>she told me they didn’t sell that kind of ticket at the station.</b> It appears that I hadn’t said Avignon
+              correctly, and she had understood <i>avion</i>, plane. She thought I was trying to buy a plane ticket.</p>
+            <p><b>Speaker 5 → D.</b> I was in China and very proud of my one Chinese word, <i>shuǐ</i>. At a busy market, I got thirsty. I looked at
+              my host mom and said loudly, “Shuǐ, shuǐ.” She smiled and led me through the crowd. I kept repeating it. Suddenly vendors
+              started pointing and laughing. One shouted it back. I felt so embarrassed. My host mom finally explained. My tone was wrong.
+              I wasn’t saying water. I was calling myself a fool in front of the whole market. I wanted to disappear, but I laughed too,
+              and <b>I never mixed up the tone again.</b></p>
+            <p style="color:var(--muted);">Not used: A (nobody buys the wrong thing) and G (Speaker 5’s tone was wrong, but she didn’t get lost).</p>
+          </div>
+        </details>
+
+        <details style="margin-top:12px;">
+          <summary style="cursor:pointer; font-weight:600;">🎧 Audio script, Задание 8</summary>
+          <div class="script-box" style="margin-top:10px;">
+            <p>Let us begin with a scenario. You’re standing next to a six-year-old boy in Pormpuraaw, an isolated Aboriginal community in
+              Australia. When you ask him to point north, he points precisely and without hesitation. Your compass says he’s right. You then
+              ask the same question to a group of your teachers. Not all of them know the answer, and the ones who think they do end up
+              pointing in several different directions before eventually reaching a state of confusion. <b>[1 → False: nothing is said about maps.]</b></p>
+            <p>Why is it that a six-year-old boy in one culture can do something effortlessly that educated, experienced adults in another
+              culture struggle to do? The surprising answer, as Lera Boroditsky reported in the Wall Street Journal in 2010, might be the
+              substantial influence of our native language over our thought processes. I will be using some of her ideas to help me make my points.</p>
+            <p>The relationship between language and thought has provided a rich topic for anthropological, psychological, and linguistic
+              research. Language, like culture, is a system that we all create and define together, <b>but unlike culture, it’s tightly
+              structured.</b> <b>[2 → False]</b> The idea that language might shape thought has often been seen as crazy and irrational and untestable at
+              best. However, a new flurry of cognitive scientific research has caused a shift in consensus and led us to wonder: do the
+              languages we speak have an effect on the way in which we construct our individual perceptions of reality and how we see the world?</p>
+            <p>Consider a snippet from one of the most well-known nursery rhymes in the English-speaking world: “Humpty Dumpty sat on a wall.”
+              From this one line alone, we can reveal so many of the differences between languages. If you were singing Humpty Dumpty in
+              English, you would have to mark the verb for tense and say “sat” rather than “sit” to indicate timing. But in Indonesian, you
+              don’t need to, and in fact, you can’t change the verb to mark tense. <b>In Russian, the verb that you would use would reveal the
+              gender of your protagonist, so your verb would be slightly different if it was Mr. Dumpty than Mrs. Dumpty doing the sitting.</b>
+              <b>[3 → True]</b> Lastly, in Turkish, you would have to include in your verb how you obtained the information that you were talking
+              about, so you would use a slightly different word if you saw Humpty Dumpty sitting with your own eyes than if you read or heard about it.</p>
+            <p>So, as we can see, each language requires very different things from its speakers. But does this mean that speakers of English,
+              Turkish, Russian, and Indonesian end up comprehending their experiences differently just because they speak different languages?</p>
+            <p>Let’s do another one. Suppose that I want to tell you that I saw Uncle Mike on 47th Street. In Mian, which is a language spoken
+              in Papua New Guinea, the verb that I would use would reveal whether the event happened just now, yesterday, or a longer time ago,
+              whereas in Indonesian, it wouldn’t even reveal if it was still going on. In Russian, the verb would reveal my gender, and in
+              Mandarin Chinese, I would have to specify in my word choice for uncle whether my uncle is maternal or paternal, and whether he’s
+              related to me by blood or by marriage.</p>
+            <p>But while the rules of all those languages seem to add specific information to the content of my sentences, some languages
+              actually remove information altogether. <b>In Pirahã, which is a language spoken in the Amazon by a tribe of the same name, I
+              couldn’t say “47th” because the Pirahã have no words for numbers.</b> <b>[4 → True]</b> In fact, in this way and many others, Pirahã
+              departs from what were long thought to be essential features for all languages. As reported in Der Spiegel, the Pirahã use
+              only three pronouns. They hardly use any words associated with time or colour, and past verb conjugations don’t exist. But what
+              has perplexed linguists the most is that the Pirahã appear to have no words for numbers. They don’t use words such as “few” or
+              “many”. <b>There’s one word, <i>hói</i>, which comes close to the numeral one. However, <i>hói</i> can also be used to describe relatively
+              small quantities, such as two small fish as opposed to one big fish.</b> <b>[5 → False: “two small fish” is an example of how it is used, not what it means.]</b></p>
+            <p>Peter Gordon, a psycholinguist at Columbia University, and Daniel Everett from Bentley University visited the Pirahã, attempting
+              to test their mathematical abilities. They were asked to repeat patterns of between one and ten objects, or to remember whether
+              Gordon had placed five or eight objects in a can. The results were fascinating. The Pirahã simply could not grasp the concept of numbers.</p>
+          </div>
+        </details>
+
+        <div class="send-box">
+          <h4>📤 Send your results to your teacher</h4>
+          <p>This makes a short report with your score and every answer you gave, so your teacher can
+            go through your mistakes with you.</p>
+          <div class="btn-row" style="margin-top:10px;">
+            <button class="btn btn-primary" onclick="shareReport()">📤 Send my results</button>
+            <button class="btn btn-ghost" onclick="copyReport()">📋 Copy report</button>
+          </div>
+          <div class="send-msg" id="sendMsg"></div>
+          <textarea id="reportText" readonly></textarea>
+        </div>
+
+        <div class="btn-row">
+          <button class="btn btn-danger" onclick="restartPaper()">Clear everything and start again</button>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /tab-score -->
+
+</div><!-- /container -->
+
+<div class="save-indicator" id="saveIndicator">✓ Saved</div>
+
+<script>
+const LESSON_KEY = 'lesson-09';
+const SECTIONS = [
+  { id: 'lang',   label: '✏️ Язык',           max: 30 },
+  { id: 'read',   label: '📖 Чтение',          max: 30 },
+  { id: 'listen', label: '🎧 Аудирование',     max: 20 },
+  { id: 'cult',   label: '🌍 Страноведение',   max: 20 }
+];
+const WORD_BANK = ['came up','discovered','created','applied','motivated by','take','set off',
+                   'inspired by','keep','look into','fight off','connect','attach'];
+const TASKS = [...document.querySelectorAll('.task')];
+const TOTAL_TASKS = TASKS.length;   // 10
+
+let data = {};
+try { data = JSON.parse(localStorage.getItem(LESSON_KEY)) || {}; } catch(e) {}
+
+function save(patch) {
+  Object.assign(data, patch);
+  try { localStorage.setItem(LESSON_KEY, JSON.stringify(data)); } catch(e) {}
+  flashSaved();
+}
+let saveTimer;
+function flashSaved() {
+  const el = document.getElementById('saveIndicator');
+  el.classList.add('show');
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(() => el.classList.remove('show'), 1600);
+}
+const locked = () => !!data.submitted;
+
+// ── TABS ───────────────────────────────────────────────────────
+function showTab(name) {
+  const btn = document.querySelector('.tab-btn[onclick*="\'' + name + '\'"]');
+  if (!btn) return;
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  btn.classList.add('active');
+}
+function switchTab(name, btn) {
+  showTab(name);
+  save({ activeTab: name });
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+function switchTabByName(name) { switchTab(name); }
+
+// ── ONE-LISTEN AUDIO PLAYERS ───────────────────────────────────
+// Play / pause only: no rewinding, and once a recording has finished it can't be played again.
+function fmtT(t) { t = Math.max(0, Math.floor(t || 0)); return Math.floor(t / 60) + ':' + String(t % 60).padStart(2, '0'); }
+document.querySelectorAll('.audio-wrap audio').forEach(audio => {
+  const wrap = audio.parentElement;
+  const task = wrap.closest('.task').dataset.task;
+  const key = 'played-' + task;
+  audio.removeAttribute('controls');
+  audio.preload = 'metadata';
+  const pl = document.createElement('div');
+  pl.className = 'player';
+  pl.innerHTML =
+    '<button type="button" class="pl-btn" aria-label="Play">' +
+      '<svg class="i-play" viewBox="0 0 24 24"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.2-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z"/></svg>' +
+      '<svg class="i-pause" viewBox="0 0 24 24"><rect x="6" y="5" width="4.2" height="14" rx="1.2"/><rect x="13.8" y="5" width="4.2" height="14" rx="1.2"/></svg>' +
+    '</button>' +
+    '<div class="pl-main">' +
+      '<div class="pl-top"><span class="pl-label"><span class="eq"><i></i><i></i><i></i><i></i></span>Recording · Задание ' + task +
+        ' <span class="pl-plays">· plays once</span></span><span class="pl-time">0:00</span></div>' +
+      '<div class="pl-track"><div class="pl-fill"></div><div class="pl-knob"></div></div>' +
+    '</div>';
+  wrap.replaceWith(pl);
+  pl.appendChild(audio);
+
+  const btn = pl.querySelector('.pl-btn');
+  const fill = pl.querySelector('.pl-fill'), knob = pl.querySelector('.pl-knob');
+  const time = pl.querySelector('.pl-time'), plays = pl.querySelector('.pl-plays');
+  const paint = () => {
+    const pct = audio.duration ? audio.currentTime / audio.duration * 100 : 0;
+    fill.style.width = pct + '%'; knob.style.left = pct + '%';
+    time.textContent = fmtT(audio.currentTime) + ' / ' + fmtT(audio.duration);
+  };
+  const markUsed = () => {
+    pl.classList.add('used'); btn.disabled = true;
+    plays.textContent = '· played ✓';
+    fill.style.width = '100%'; knob.style.left = '100%';
+  };
+  if (data[key]) markUsed();
+  btn.addEventListener('click', () => {
+    if (data[key]) return;
+    if (audio.paused) {
+      document.querySelectorAll('.player audio').forEach(a => { if (a !== audio) a.pause(); });
+      audio.play();
+    } else audio.pause();
+  });
+  audio.addEventListener('play',  () => pl.classList.add('playing'));
+  audio.addEventListener('pause', () => pl.classList.remove('playing'));
+  audio.addEventListener('ended', () => { pl.classList.remove('playing'); save({ [key]: true }); markUsed(); });
+  audio.addEventListener('timeupdate', paint);
+  audio.addEventListener('loadedmetadata', () => { if (!data[key]) paint(); });
+});
+
+// ── BUILD THE CONTROLS ─────────────────────────────────────────
+// dropdowns (data-bank = the Задание 2 word list)
+document.querySelectorAll('select.ans').forEach(sel => {
+  const blank = document.createElement('option');
+  blank.value = ''; blank.textContent = '—';
+  sel.appendChild(blank);
+  (sel.dataset.bank ? WORD_BANK : sel.dataset.opts.split(',')).forEach(v => {
+    const o = document.createElement('option');
+    o.value = v; o.textContent = v;
+    sel.appendChild(o);
+  });
+  if (data[sel.id] !== undefined) sel.value = data[sel.id];
+  sel.addEventListener('change', () => { save({ [sel.id]: sel.value }); updateProgress(); });
+});
+
+// typed gaps
+document.querySelectorAll('input.blank.ans').forEach(inp => {
+  if (data[inp.id] !== undefined) inp.value = data[inp.id];
+  inp.addEventListener('input', () => { save({ [inp.id]: inp.value }); updateProgress(); });
+});
+
+// ── ANSWERED / MARKING PER CONTROL ─────────────────────────────
+// typed answers: ignore capitals, curly quotes, extra spaces and end punctuation
+const norm = s => s.toLowerCase().replace(/[’‘`]/g, "'").replace(/[.,!?;:"“”]/g, ' ').replace(/\s+/g, ' ').trim();
+const keys = el => el.dataset.answer.split('|');
+const isRight = el => el.tagName === 'SELECT'
+  ? keys(el).includes(el.value)
+  : keys(el).some(k => norm(k) === norm(el.value));
+const weight = el => +(el.dataset.w || 1);
+
+function isAnswered(el) { return el.value.trim() !== ''; }
+// returns points earned; with paint=true it also colours the control
+function mark(el, paint) {
+  const ok = isRight(el);
+  if (paint) {
+    el.classList.add(ok ? 'correct' : 'wrong');
+    el.insertAdjacentHTML('afterend', '<span class="key">' + keys(el).join(' / ') + '</span>');
+  }
+  return ok ? weight(el) : 0;
+}
+function taskDone(t) { return [...t.querySelectorAll('.ans')].every(isAnswered); }
+function taskScore(t, paint) {
+  return [...t.querySelectorAll('.ans')].reduce((a, el) => a + mark(el, paint), 0);
+}
+
+// ── PROGRESS ───────────────────────────────────────────────────
+function updateProgress() {
+  const done = TASKS.filter(taskDone).length;
+  document.getElementById('pgCount').textContent = done + ' / ' + TOTAL_TASKS;
+  document.getElementById('pgFill').style.width = (done / TOTAL_TASKS * 100) + '%';
+
+  const complete = done === TOTAL_TASKS;
+  const scoreBtn = document.querySelectorAll('.tab-btn')[4];
+  if (!locked()) {
+    document.getElementById('pgHint').textContent =
+      complete ? '✅ All done — open «Результат»' : 'Score unlocks at ' + TOTAL_TASKS + ' / ' + TOTAL_TASKS;
+    scoreBtn.textContent = complete ? '🏆 Результат' : '🔒 Результат';
+    document.getElementById('scoreLocked').style.display = complete ? 'none'  : 'block';
+    document.getElementById('scoreReady').style.display  = complete ? 'block' : 'none';
+  }
+
+  const list = document.getElementById('todoList');
+  list.innerHTML = '';
+  SECTIONS.forEach(s => {
+    const ts = TASKS.filter(t => t.dataset.sec === s.id);
+    const d = ts.filter(taskDone);
+    const missing = ts.filter(t => !taskDone(t)).map(t => t.dataset.task);
+    const li = document.createElement('li');
+    li.className = d.length === ts.length ? 'done' : '';
+    li.innerHTML = '<span>' + (d.length === ts.length ? '✓ ' : '') + s.label +
+      (missing.length ? '<small>Not finished: Задание ' + missing.join(', ') + '</small>' : '') +
+      '</span><b>' + d.length + ' / ' + ts.length + '</b>';
+    list.appendChild(li);
+  });
+}
+
+// ── SUBMIT & RESULT ────────────────────────────────────────────
+function lockAll() {
+  document.querySelectorAll('select.ans, input.blank.ans').forEach(el => el.disabled = true);
+}
+function markEverything() {
+  const perTask = {};
+  TASKS.forEach(t => { perTask[t.dataset.task] = taskScore(t, true); });
+  document.body.classList.add('revealed');
+  return perTask;
+}
+function showResult(perTask) {
+  let total = 0;
+  const bd = document.getElementById('taskBreakdown');
+  bd.innerHTML = '';
+  SECTIONS.forEach(s => {
+    const ts = TASKS.filter(t => t.dataset.sec === s.id);
+    const got = ts.reduce((a, t) => a + perTask[t.dataset.task], 0);
+    total += got;
+    document.getElementById('sc-' + s.id).textContent = got + ' / ' + s.max;
+    document.getElementById('m-' + s.id).style.width = (got / s.max * 100) + '%';
+
+    const h = document.createElement('div'); h.className = 'tt-sec';
+    h.textContent = s.label + ' — ' + got + ' / ' + s.max;
+    const grid = document.createElement('div'); grid.className = 'task-table';
+    ts.forEach(t => {
+      const g = perTask[t.dataset.task], m = +t.dataset.points;
+      const c = document.createElement('div');
+      c.className = 'tt-cell ' + (g === m ? 'full' : g === 0 ? 'zero' : 'part');
+      c.innerHTML = 'Задание ' + t.dataset.task + '<b>' + g + ' / ' + m + '</b>';
+      grid.appendChild(c);
+    });
+    bd.appendChild(h); bd.appendChild(grid);
+  });
+
+  document.getElementById('scTotal').textContent = total;
+  document.getElementById('scVerdict').textContent =
+    total >= 85 ? 'Excellent — that is a very strong second-round result. 🌟' :
+    total >= 70 ? 'Strong work — polish the weakest section and you are there. 💪' :
+    total >= 50 ? 'A solid base. Look at the lowest bars below and drill those. 📌' :
+                  'Good that you did the whole paper — now we know exactly what to work on. 🔧';
+
+  document.getElementById('scoreLocked').style.display = 'none';
+  document.getElementById('scoreReady').style.display  = 'none';
+  document.getElementById('scoreResult').style.display = 'block';
+  document.querySelectorAll('.tab-btn')[4].textContent = '🏆 Результат';
+  document.getElementById('pgHint').textContent = 'Paper handed in — ' + total + ' / 100';
+}
+function submitPaper() {
+  if (TASKS.filter(taskDone).length < TOTAL_TASKS) { updateProgress(); return; }   // safety net
+  save({ submitted: true });
+  lockAll();
+  showResult(markEverything());
+}
+
+// ── REPORT FOR THE TEACHER ─────────────────────────────────────
+function describe(el) {
+  return { given: el.value.trim() || '—', key: keys(el)[0], ok: isRight(el) };
+}
+function buildReport() {
+  let name = '';
+  try { name = localStorage.getItem('studentName') || ''; } catch(e) {}
+  const perTask = {};
+  TASKS.forEach(t => { perTask[t.dataset.task] = taskScore(t, false); });
+  const total = Object.values(perTask).reduce((a, b) => a + b, 0);
+  const L = [];
+  L.push('Lesson 9 — Высшая проба Round 2 demo (9–10)');
+  if (name) L.push('Student: ' + name);
+  L.push('Date: ' + new Date().toLocaleString('ru-RU'));
+  L.push('TOTAL: ' + total + ' / 100');
+  SECTIONS.forEach(s => {
+    const got = TASKS.filter(t => t.dataset.sec === s.id).reduce((a, t) => a + perTask[t.dataset.task], 0);
+    L.push('  ' + s.label + ': ' + got + ' / ' + s.max);
+  });
+  const lost = TASKS.filter(t => perTask[t.dataset.task] < +t.dataset.points);
+  L.push('');
+  L.push(lost.length ? 'MISTAKES (✗ = student’s answer → correct answer)' : 'No mistakes — full marks! 🎉');
+  lost.forEach(t => {
+    L.push('');
+    L.push('Задание ' + t.dataset.task + ' — ' + perTask[t.dataset.task] + ' / ' + t.dataset.points);
+    [...t.querySelectorAll('.ans')].forEach((el, i) => {
+      const d = describe(el);
+      L.push('  ' + (i + 1) + ') ' + (d.ok ? '✓ ' + d.given : '✗ ' + d.given + '  →  ' + d.key));
+    });
+  });
+  L.push('');
+  L.push('All answers in brief:');
+  TASKS.forEach(t => {
+    const parts = [...t.querySelectorAll('.ans')].map(describe);
+    L.push('  ' + t.dataset.task + '. ' + parts.map(d => (d.ok ? '' : '✗') + d.given).join(' | '));
+  });
+  return L.join('\n');
+}
+function showReportBox(msg) {
+  const ta = document.getElementById('reportText');
+  ta.value = buildReport(); ta.classList.add('show');
+  document.getElementById('sendMsg').textContent = msg || '';
+  return ta;
+}
+async function copyReport() {
+  const ta = showReportBox();
+  try {
+    await navigator.clipboard.writeText(ta.value);
+    document.getElementById('sendMsg').textContent = '✓ Copied! Now paste it into your chat with your teacher.';
+  } catch (e) {
+    ta.focus(); ta.select();
+    document.getElementById('sendMsg').textContent = 'Select all the text below, copy it and send it to your teacher.';
+  }
+}
+async function shareReport() {
+  const text = buildReport();
+  if (navigator.share) {
+    try { await navigator.share({ title: 'My olympiad demo results', text }); showReportBox('✓ Sent!'); return; }
+    catch (e) { if (e.name === 'AbortError') return; }
+  }
+  copyReport();   // computers without a share menu: copy instead
+}
+
+function restartPaper() {
+  if (!confirm('This clears every answer, your score and the “played” recordings. Start the whole paper again?')) return;
+  try { localStorage.removeItem(LESSON_KEY); } catch(e) {}
+  location.reload();
+}
+
+// ── 60-MINUTE TIMER ────────────────────────────────────────────
+let tLeft = 60 * 60, tId = null;
+function fmt(s) {
+  const neg = s < 0; s = Math.abs(s);
+  return (neg ? '-' : '') + String(Math.floor(s / 60)).padStart(2, '0') + ':' + String(s % 60).padStart(2, '0');
+}
+function paintTimer() {
+  const el = document.getElementById('clock');
+  el.textContent = fmt(tLeft);
+  el.classList.toggle('over', tLeft <= 0);
+}
+function toggleTimer() {
+  const btn = document.getElementById('tbtn');
+  if (tId) { clearInterval(tId); tId = null; btn.textContent = 'Start'; }
+  else { btn.textContent = 'Pause'; tId = setInterval(() => { tLeft--; paintTimer(); }, 1000); }
+}
+function resetTimer() {
+  if (tId) clearInterval(tId);
+  tId = null; tLeft = 60 * 60;
+  document.getElementById('tbtn').textContent = 'Start';
+  paintTimer();
+}
+
+// ── INIT ───────────────────────────────────────────────────────
+if (data.activeTab) showTab(data.activeTab);
+updateProgress();
+if (locked()) { lockAll(); showResult(markEverything()); }
+</script>
+
+<script src="../dictionary.js"></script>
+</body>
+</html>

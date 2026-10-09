@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Dictionary</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <h1 id="dictTitle">📖 My Dictionary</h1>
+  <a class="back-link" href="index.html">← All Lessons</a>
+</header>
+
+<!-- Everything inside #dictPage is filled in by dictionary.js -->
+<div class="container" id="dictPage">
+
+  <div class="lesson-meta">
+    <h2>Every new word in one place</h2>
+    <p>With its Russian translation and how it sounds.</p>
+  </div>
+
+  <div class="exercise">
+    <div class="exercise-label">Add a new word</div>
+    <form class="dict-form" autocomplete="off"></form>
+    <p class="dict-tip">On a lesson page, <b>select a word</b> in the text and tap <b>📖 Add to dictionary</b>, or use the <b>+ Word</b> button in the corner.</p>
+  </div>
+
+  <div class="exercise">
+    <div class="dict-head">
+      <span class="exercise-label">My words · <span class="dict-count">0 words</span></span>
+      <input type="search" class="dict-search" placeholder="Search…" aria-label="Search my words">
+    </div>
+    <p class="dict-status"></p>
+    <div class="dict-list"></div>
+  </div>
+
+</div>
+
+<footer class="dict-footer">Translations suggested by <a href="https://mymemory.translated.net/">MyMemory</a> · Recordings from <a href="https://dictionaryapi.dev/">Free Dictionary API</a></footer>
+
+<script>
+  // "Polina's Dictionary" once she has typed her name on the home page
+  try {
+    const name = localStorage.getItem('studentName');
+    if (name) document.getElementById('dictTitle').textContent = '📖 ' + name + '’s Dictionary';
+  } catch (e) {}
+</script>
+<script src="dictionary.js"></script>
+</body>
+</html>

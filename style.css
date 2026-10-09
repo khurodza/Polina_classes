@@ -480,3 +480,133 @@ a:hover { text-decoration: underline; }
   .lesson-card  { padding: 16px 18px 16px 62px; }
   .lesson-stamp { width: 38px; height: 38px; font-size: 1rem; left: 12px; }
 }
+
+/* =================================================================
+   MY DICTIONARY (dictionary.html + the "+ Word" button, dictionary.js)
+   Every class starts with dict- so nothing clashes with lesson styles.
+================================================================= */
+.dict-home-link {
+  display: flex; align-items: center; gap: 14px;
+  background: var(--card); border: 2px solid var(--border); border-radius: var(--radius);
+  padding: 14px 20px; margin: 10px 0 22px; box-shadow: var(--shadow); color: var(--text);
+}
+.dict-home-link:hover { text-decoration: none; border-color: var(--blue); }
+.dict-home-link .dh-icon { font-size: 1.8rem; line-height: 1; }
+.dict-home-link b { display: block; font-family: 'Fraunces', Georgia, serif; font-size: 1.15rem; }
+.dict-home-link small { color: var(--muted); font-size: .85rem; }
+
+/* form */
+.dict-field { display: block; margin: 0 0 14px; text-align: left; }
+.dict-field > span:first-child { display: block; font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1.2px; color: var(--muted); margin-bottom: 6px; }
+.dict-field i { text-transform: none; letter-spacing: 0; }
+.dict-input-row { display: flex; gap: 8px; align-items: center; }
+.dict-field input {
+  flex: 1; min-width: 0; width: 100%; font: inherit; font-size: 1.05rem; font-weight: 600; color: var(--text);
+  border: 2px solid var(--border); border-radius: 12px; padding: 9px 14px; background: var(--bg); outline: none;
+}
+.dict-field input:focus { border-color: var(--blue); background: #fff; }
+.dict-shake { animation: dictShake .3s; border-color: var(--red) !important; }
+@keyframes dictShake { 0%,100% { transform: translateX(0); } 25% { transform: translateX(-6px); } 75% { transform: translateX(6px); } }
+.dict-suggest { flex-shrink: 0; padding: 9px 16px; }
+.dict-suggest:disabled { opacity: .6; cursor: default; transform: none; }
+.dict-suggestions { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin: -6px 0 14px; }
+.dict-suggestions[hidden] { display: none; }
+.dict-sug-label { font-size: .8rem; font-weight: 700; color: var(--muted); margin-right: 2px; }
+.dict-chip {
+  font: inherit; font-size: .92rem; font-weight: 600; padding: 4px 14px; border-radius: 100px; cursor: pointer;
+  border: 2px solid var(--border); background: var(--card); color: var(--text);
+}
+.dict-chip:hover { border-color: var(--blue); color: var(--blue); }
+.dict-msg { margin: 0; font-size: .88rem; font-weight: 600; }
+.dict-msg.warn { color: var(--accent-dk); background: rgba(201,160,48,.14); border-radius: 10px; padding: 6px 12px; margin-bottom: 6px; }
+.dict-form .btn-row { margin-top: 8px; }
+
+/* 🔊 button */
+.dict-say {
+  width: 44px; height: 44px; flex-shrink: 0; border-radius: 50%; cursor: pointer;
+  display: inline-flex; align-items: center; justify-content: center;
+  background: var(--blue); border: none; box-shadow: 0 3px 10px rgba(95,142,196,.35);
+}
+.dict-say::before {
+  content: ""; width: 22px; height: 22px; background: #fff;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M4 9v6h4l5 4V5L8 9H4zm12.5 3a4.5 4.5 0 0 0-2.5-4v8a4.5 4.5 0 0 0 2.5-4zM14 3.2v2.1a7 7 0 0 1 0 13.4v2.1a9 9 0 0 0 0-17.6z'/%3E%3C/svg%3E") center/contain no-repeat;
+          mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M4 9v6h4l5 4V5L8 9H4zm12.5 3a4.5 4.5 0 0 0-2.5-4v8a4.5 4.5 0 0 0 2.5-4zM14 3.2v2.1a7 7 0 0 1 0 13.4v2.1a9 9 0 0 0 0-17.6z'/%3E%3C/svg%3E") center/contain no-repeat;
+}
+.dict-say:hover { transform: translateY(-1px); }
+.dict-say.playing { background: var(--primary); }
+
+/* pop-up window on lesson pages */
+body.dict-open { overflow: hidden; }
+.dict-overlay {
+  position: fixed; inset: 0; z-index: 1000; display: flex; align-items: center; justify-content: center; padding: 16px;
+  background: rgba(44,32,16,.5); backdrop-filter: blur(5px); animation: dictFade .2s ease;
+}
+.dict-overlay.closing { opacity: 0; transition: opacity .2s ease; }
+.dict-dialog {
+  position: relative; width: 100%; max-width: 480px; max-height: calc(100vh - 32px); overflow-y: auto;
+  background: var(--card); border-radius: 20px; padding: 24px 22px 20px;
+  box-shadow: 0 24px 60px rgba(44,32,16,.35); animation: dictPop .25s ease;
+}
+.dict-dialog h2 { font-family: 'Fraunces', Georgia, serif; font-size: 1.5rem; color: var(--primary); margin-bottom: 16px; padding-right: 40px; }
+.dict-dialog .btn-row .btn-primary { width: 100%; }
+.dict-close {
+  position: absolute; top: 14px; right: 14px; width: 36px; height: 36px; border-radius: 50%;
+  border: 2px solid var(--border); background: transparent; color: var(--muted); font-size: 1.3rem; line-height: 1; cursor: pointer;
+}
+.dict-close:hover { color: var(--text); border-color: var(--muted); }
+.dict-open-link { display: block; margin-top: 14px; text-align: center; font-size: .88rem; font-weight: 600; }
+@keyframes dictFade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes dictPop  { from { transform: translateY(12px) scale(.97); opacity: 0; } to { transform: none; opacity: 1; } }
+
+/* "+ Word" corner button (bottom-right) */
+.dict-fab {
+  position: fixed; right: 16px; bottom: 16px; z-index: 900; cursor: pointer;
+  font: inherit; font-weight: 700; font-size: .95rem; padding: 11px 20px; border-radius: 100px; border: none;
+  background: var(--blue); color: #fff; box-shadow: 0 8px 20px rgba(95,142,196,.45);
+}
+.dict-fab:hover { transform: translateY(-1px); }
+
+/* "Add to dictionary" bubble under selected text */
+.dict-pop {
+  position: fixed; z-index: 950; left: 0; top: 0; cursor: pointer; white-space: nowrap;
+  font: inherit; font-weight: 700; font-size: .92rem; padding: 8px 16px; border-radius: 100px; border: none;
+  background: var(--blue); color: #fff; box-shadow: 0 6px 18px rgba(95,142,196,.45); animation: dictFade .15s ease;
+}
+.dict-pop[hidden] { display: none; }
+
+/* small message at the bottom */
+.dict-toast {
+  position: fixed; left: 50%; bottom: 80px; transform: translateX(-50%) translateY(20px); z-index: 1100;
+  background: var(--green); color: #fff; padding: 10px 22px; border-radius: 100px; font-weight: 600;
+  opacity: 0; pointer-events: none; transition: .25s ease;
+}
+.dict-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* word list (dictionary.html) */
+.dict-head { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; justify-content: space-between; }
+.dict-head .exercise-label { margin-bottom: 0; }
+.dict-search {
+  flex: 0 1 260px; min-width: 0; font: inherit; border: 2px solid var(--border); border-radius: 100px;
+  padding: 7px 16px; background: var(--bg); outline: none; color: var(--text);
+}
+.dict-search:focus { background: #fff; border-color: var(--blue); }
+.dict-status { font-size: .8rem; font-weight: 600; color: var(--muted); margin: 10px 0 4px; min-height: 1.6em; }
+.dict-status.offline, .dict-status.notset { color: var(--accent-dk); }
+.dict-list { display: flex; flex-direction: column; }
+.dict-item { display: flex; align-items: center; gap: 14px; padding: 12px 0; border-top: 1px solid var(--border); }
+.dict-item:first-child { border-top: none; }
+.dict-text { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.dict-word { font-family: 'Fraunces', Georgia, serif; font-size: 1.2rem; font-weight: 700; line-height: 1.25; overflow-wrap: anywhere; }
+.dict-tr { font-weight: 600; color: var(--muted); overflow-wrap: anywhere; }
+.dict-tr::before { content: '= '; color: var(--blue); font-weight: 700; }
+.dict-note { font-size: .82rem; color: var(--muted); font-style: italic; margin-top: 2px; }
+.dict-side { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+.dict-date { font-size: .75rem; font-weight: 600; color: var(--muted); white-space: nowrap; }
+.dict-del {
+  width: 30px; height: 30px; border-radius: 50%; border: 2px solid var(--border); background: transparent;
+  color: var(--muted); font-size: 1.1rem; line-height: 1; cursor: pointer;
+}
+.dict-del:hover { color: var(--red); border-color: var(--red); }
+.dict-empty { color: var(--muted); text-align: center; padding: 30px 10px; }
+.dict-tip { margin-top: 14px; font-size: .88rem; color: var(--muted); }
+.dict-footer { text-align: center; color: var(--muted); font-size: .8rem; padding: 10px 16px 80px; }
