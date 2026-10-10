@@ -1,0 +1,1039 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lesson 10 – ОГЭ: What to Expect</title>
+  <link rel="stylesheet" href="../style.css">
+  <style>
+    /* ── same look as lessons 8–9 ───────────────────────────── */
+    .section-head { text-align: center; border-bottom: 3px double var(--border); padding-bottom: 14px; margin-bottom: 22px; }
+    .section-head h2 { font-family: 'Fraunces', Georgia, serif; font-size: 1.5rem; letter-spacing: .1em; text-transform: uppercase; color: var(--primary); }
+    .section-head .sh-meta { color: var(--muted); font-size: .9rem; margin-top: 4px; }
+
+    .exam-select {
+      font: inherit; font-weight: 700; text-align: center;
+      padding: 7px 10px; border-radius: 10px;
+      border: 2px solid var(--border); background: var(--card);
+      color: var(--text); cursor: pointer; min-width: 64px;
+    }
+    .exam-select:focus { border-color: var(--primary); outline: none; }
+    .exam-select.correct, .blank.correct { border-color: var(--green); color: var(--green); background: rgba(91,140,69,.08); }
+    .exam-select.wrong,   .blank.wrong   { border-color: var(--red);   color: var(--red);   background: rgba(200,64,64,.06); }
+    .blank { min-width: 150px; font-weight: 600; border: 2px solid var(--border); border-radius: 10px; padding: 6px 10px; background: var(--card); }
+    .blank:focus { border-color: var(--primary); outline: none; }
+
+    .answer-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; padding: 9px 0; border-bottom: 1px dashed var(--border); }
+    .answer-row:last-child { border-bottom: none; }
+    .ar-num { font-family: 'Fraunces', Georgia, serif; font-weight: 700; color: var(--primary); min-width: 26px; }
+    .ar-txt { flex: 1; min-width: 200px; line-height: 1.65; }
+    .cue { font-weight: 700; letter-spacing: .06em; color: var(--accent-dk); background: rgba(201,160,48,.14); padding: 2px 10px; border-radius: 6px; font-size: .88rem; white-space: nowrap; }
+    .key { margin-left: 4px; font-size: .82rem; font-weight: 700; color: var(--green); background: rgba(91,140,69,.10); padding: 2px 8px; border-radius: 6px; }
+
+    .pair-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; align-items: start; }
+    @media (max-width: 760px) { .pair-grid { grid-template-columns: 1fr; } }
+    .opt-box { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+    .opt-row { display: flex; border-bottom: 1px solid var(--border); }
+    .opt-row:last-child { border-bottom: none; }
+    .opt-letter { flex: 0 0 44px; display: flex; align-items: center; justify-content: center; font-weight: 700; color: var(--accent-dk); background: rgba(201,160,48,.10); border-right: 1px solid var(--border); }
+    .opt-body { padding: 9px 14px; line-height: 1.55; }
+
+    .read-box { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px 20px; line-height: 1.75; margin-bottom: 14px; }
+    .read-box p { margin-bottom: 10px; }
+    .read-box h4 { font-family: 'Fraunces', Georgia, serif; text-align: center; font-size: 1.15rem; margin-bottom: 8px; }
+    .text-card { display: flex; gap: 12px; padding: 10px 0; border-bottom: 1px dashed var(--border); }
+    .text-card:last-child { border-bottom: none; }
+    .text-card b.tl { font-family: 'Fraunces', Georgia, serif; color: var(--primary); min-width: 20px; }
+
+    .step-title { font-weight: 700; font-size: .8rem; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin: 22px 0 10px; display: flex; align-items: center; gap: 8px; }
+    .step-title::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+    .task-num { font-weight: 700; color: var(--accent-dk); background: rgba(201,160,48,.15); padding: 3px 12px; border-radius: 99px; font-size: .85rem; }
+    .pts { font-weight: 700; font-size: .82rem; padding: 3px 10px; border-radius: 99px; color: var(--blue); background: rgba(95,142,196,.12); }
+    .review-head { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 6px; }
+    .instr { margin: 10px 0 8px; color: var(--text); font-size: 1rem; line-height: 1.7; }
+    .facts { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 16px; }
+    .fact { display: inline-flex; align-items: center; gap: 4px; padding: 5px 13px; border-radius: 99px; font-size: .86rem; font-weight: 700; color: #fff; background: var(--primary); box-shadow: 0 2px 6px rgba(44,32,16,.12); }
+    .fact:nth-child(4n+2) { background: var(--blue); }
+    .fact:nth-child(4n+3) { background: var(--rose); }
+    .fact:nth-child(4n+4) { background: var(--green); }
+
+    .talk { background: rgba(95,142,196,.09); border-left: 4px solid var(--blue); border-radius: 0 10px 10px 0; padding: 10px 14px; margin: 10px 0; line-height: 1.6; font-size: .97rem; }
+    /* hints: closed until she taps them */
+    details.logic { background: rgba(201,160,48,.09); border: 2px solid rgba(201,160,48,.35); border-radius: var(--radius); margin-top: 12px; overflow: hidden; }
+    details.logic summary { list-style: none; cursor: pointer; display: flex; align-items: center; gap: 10px; padding: 11px 16px; font-weight: 700; color: var(--accent-dk); user-select: none; transition: background .15s; }
+    details.logic summary::-webkit-details-marker { display: none; }
+    details.logic summary:hover { background: rgba(201,160,48,.12); }
+    details.logic summary::after { content: '▾'; margin-left: auto; font-size: 1.1rem; transition: transform .2s; }
+    details.logic[open] summary::after { transform: rotate(180deg); }
+    details.logic[open] summary { border-bottom: 1px dashed rgba(201,160,48,.45); }
+    .hint-ico { font-size: 1.15rem; }
+    .hint-txt { font-family: 'Fraunces', Georgia, serif; font-size: 1.02rem; }
+    .logic-body { padding: 12px 18px 12px; animation: hintIn .2s ease; }
+    @keyframes hintIn { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: none; } }
+    .logic ol, .logic ul { padding-left: 22px; line-height: 1.7; }
+    .logic li { margin-bottom: 4px; }
+
+    .tbl-wrap { overflow-x: auto; }
+    table.info { border-collapse: collapse; width: 100%; font-size: .95rem; margin: 6px 0; }
+    table.info td, table.info th { border: 1px solid var(--border); padding: 7px 10px; text-align: left; vertical-align: top; background: var(--card); }
+    table.info th { background: rgba(212,87,42,.08); }
+    table.info tr.total td { font-weight: 700; background: rgba(201,160,48,.12); }
+
+    .grade-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 8px 0; }
+    @media (max-width: 620px) { .grade-grid { grid-template-columns: repeat(2, 1fr); } }
+    .grade { border-radius: 12px; padding: 12px; text-align: center; border: 2px solid var(--border); background: var(--card); }
+    .grade b { display: block; font-family: 'Fraunces', Georgia, serif; font-size: 1.6rem; }
+    .grade span { font-size: .85rem; color: var(--muted); font-weight: 600; }
+    .grade.g2 b { color: var(--red); } .grade.g3 b { color: var(--accent-dk); } .grade.g4 b { color: var(--blue); } .grade.g5 b { color: var(--green); }
+
+    .rule-list { list-style: none; }
+    .rule-list li { display: flex; gap: 12px; padding: 10px 0; border-bottom: 1px dashed var(--border); line-height: 1.55; }
+    .rule-list li:last-child { border-bottom: none; }
+    .rule-list .ri { font-size: 1.4rem; line-height: 1.2; }
+
+    /* listening scripts appear only after Check */
+    details.script { display: none; margin-top: 14px; border: 2px solid rgba(95,142,196,.35); border-radius: 12px; background: rgba(95,142,196,.05); }
+    .quiz.checked details.script { display: block; }
+    details.script summary { cursor: pointer; padding: 9px 14px; font-weight: 700; color: var(--blue); }
+    details.script .sc-body { padding: 2px 16px 12px; line-height: 1.7; font-size: .95rem; }
+    details.script .sc-body p { margin-bottom: 8px; }
+
+    .quiz-foot { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-top: 14px; }
+    .q-result { font-weight: 700; }
+    .q-result.full { color: var(--green); } .q-result.part { color: var(--accent-dk); } .q-result.zero { color: var(--red); }
+
+    .progress-wrap { position: sticky; top: 0; z-index: 30; background: var(--bg); padding: 10px 0 12px; margin-bottom: 8px; border-bottom: 1px solid var(--border); }
+    .progress-top { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 7px; font-weight: 600; font-size: .92rem; }
+    .progress-top span { color: var(--primary); }
+    .progress-bar { height: 9px; border-radius: 99px; background: var(--border); overflow: hidden; }
+    .progress-fill { height: 100%; width: 0%; border-radius: 99px; background: linear-gradient(90deg, var(--primary), var(--accent-dk)); transition: width .3s ease; }
+
+    /* email */
+    .email-box { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 18px; font-size: .97rem; line-height: 1.65; }
+    .email-box .em-head { color: var(--muted); font-size: .88rem; border-bottom: 1px dashed var(--border); padding-bottom: 6px; margin-bottom: 8px; }
+    .mail { border: 1px solid var(--border); border-radius: 16px; overflow: hidden; background: #fff; box-shadow: var(--shadow); }
+    .mail-bar { display: flex; align-items: center; gap: 6px; padding: 9px 14px; background: var(--bg); border-bottom: 1px solid var(--border); }
+    .mail-bar .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--border); }
+    .mail-bar .dot:nth-child(1) { background: #E0786A; } .mail-bar .dot:nth-child(2) { background: #E6BF5C; } .mail-bar .dot:nth-child(3) { background: #8DBA74; }
+    .mail-bar-t { margin-left: 8px; font-size: .8rem; font-weight: 700; color: var(--muted); letter-spacing: .05em; text-transform: uppercase; }
+    .mail-head { padding: 10px 18px; border-bottom: 1px dashed var(--border); font-size: .88rem; line-height: 1.7; }
+    .mail-head span { display: inline-block; min-width: 64px; color: var(--muted); font-weight: 600; }
+    .mail-body { padding: 14px 18px 6px; }
+    .m-row { display: flex; gap: 14px; align-items: flex-start; padding: 6px 0 6px 12px; margin-bottom: 8px; border-left: 4px solid var(--border); }
+    .m-row.tight { margin-bottom: 0; }
+    .m-row p { flex: 1; line-height: 1.7; margin: 0; font-family: Georgia, 'Times New Roman', serif; font-size: 1.02rem; }
+    .m-tag { flex: 0 0 172px; font-size: .74rem; font-weight: 700; letter-spacing: .03em; text-transform: uppercase; padding: 3px 9px; border-radius: 6px; text-align: center; margin-top: 3px; }
+    .m-row.k1 { border-color: var(--primary); } .m-row.k1 .m-tag { color: var(--primary-dk); background: rgba(212,87,42,.10); }
+    .m-row.ans { border-color: var(--blue); } .m-row.ans .m-tag { color: #3E6A9C; background: rgba(95,142,196,.14); }
+    .m-row.k2 { border-color: var(--rose); } .m-row.k2 .m-tag { color: #9A4F6B; background: rgba(196,122,150,.14); }
+    .lnk { font-weight: 700; color: var(--accent-dk); background: rgba(201,160,48,.14); padding: 0 3px; border-radius: 4px; }
+    .mail-foot { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; padding: 10px 18px; background: var(--bg); border-top: 1px solid var(--border); font-size: .82rem; }
+    .wc-pill { font-weight: 700; color: var(--green); background: rgba(91,140,69,.12); padding: 3px 11px; border-radius: 99px; }
+    .legend { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; color: var(--muted); font-weight: 600; }
+    .legend .lg { width: 12px; height: 12px; border-radius: 3px; display: inline-block; margin-left: 6px; }
+    .legend .lg.k1 { background: var(--primary); } .legend .lg.ans { background: var(--blue); } .legend .lg.k2 { background: var(--rose); }
+    @media (max-width: 600px) { .m-row { flex-direction: column-reverse; gap: 4px; } .m-tag { flex: none; align-self: flex-start; } }
+    .free-write { min-height: 260px; }
+    .wc { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-top: 8px; font-weight: 700; }
+    .wc-num { font-family: 'Fraunces', Georgia, serif; font-size: 1.4rem; }
+    .wc-msg { font-size: .9rem; }
+    .wc.bad .wc-num, .wc.bad .wc-msg { color: var(--red); }
+    .wc.ok .wc-num, .wc.ok .wc-msg { color: var(--accent-dk); }
+    .wc.good .wc-num, .wc.good .wc-msg { color: var(--green); }
+    .check-list { list-style: none; margin-top: 6px; }
+    .check-list li { padding: 7px 0; border-bottom: 1px dashed var(--border); }
+    .check-list li:last-child { border-bottom: none; }
+    .check-list label { display: flex; gap: 10px; align-items: flex-start; cursor: pointer; line-height: 1.5; }
+    .check-list input { width: 18px; height: 18px; margin-top: 3px; accent-color: var(--green); flex-shrink: 0; }
+
+    /* speaking */
+    .speak-tools { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin: 12px 0; }
+    .timer { font-family: 'Fraunces', Georgia, serif; font-size: 1.6rem; font-weight: 700; min-width: 78px; color: var(--primary); font-variant-numeric: tabular-nums; }
+    .timer.done { color: var(--red); }
+    .timer-label { font-size: .85rem; color: var(--muted); font-weight: 600; }
+    .rec-btn.recording { background: var(--red); color: #fff; box-shadow: 0 3px 10px rgba(200,64,64,.35); }
+    .rec-out { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .rec-out:not(:empty) { margin: 2px 0 12px; }
+    .rec-audio { flex: 1 1 260px; max-width: 420px; }
+    .rec-del { padding: 8px 16px; }
+    .plan-list { padding-left: 22px; line-height: 1.8; }
+
+    /* self-study plan */
+    .week { margin-bottom: 18px; }
+    .week-head { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; margin-bottom: 6px; }
+    .week-head h3 { margin: 0 !important; }
+    .week-link { font-size: .82rem; font-weight: 700; color: var(--rose); background: rgba(196,122,150,.12); padding: 2px 10px; border-radius: 99px; }
+    .session { display: flex; gap: 12px; padding: 12px 0; border-top: 1px dashed var(--border); align-items: flex-start; }
+    .session input[type=checkbox] { width: 22px; height: 22px; margin-top: 2px; accent-color: var(--green); flex-shrink: 0; cursor: pointer; }
+    .session .ss-body { flex: 1; line-height: 1.6; }
+    .session .ss-title { font-weight: 700; }
+    .session .ss-time { font-size: .8rem; color: var(--muted); font-weight: 600; margin-left: 6px; }
+    .session ol { padding-left: 20px; margin-top: 4px; font-size: .96rem; }
+    .session.done .ss-title { color: var(--green); text-decoration: line-through; text-decoration-thickness: 2px; }
+    .olymp { font-size: .88rem; color: var(--rose); font-weight: 600; margin-top: 4px; }
+
+
+    /* audio player (same look as lesson 8), with ⏪ / ⏩ */
+    .player { display: flex; align-items: center; gap: 12px; background: linear-gradient(135deg, rgba(212,87,42,.09), rgba(201,160,48,.10)); border: 2px solid rgba(212,87,42,.25); border-radius: 18px; padding: 12px 16px; margin: 4px 0 16px; }
+    .pl-btn { flex: 0 0 52px; width: 52px; height: 52px; border-radius: 50%; border: none; background: var(--primary); color: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(212,87,42,.35); transition: transform .15s, background .15s; }
+    .pl-btn:hover { transform: scale(1.07); background: var(--primary-dk); }
+    .pl-btn svg { width: 22px; height: 22px; fill: currentColor; }
+    .pl-btn .i-pause { display: none; }
+    .player.playing .pl-btn .i-play { display: none; }
+    .player.playing .pl-btn .i-pause { display: block; }
+    .pl-main { flex: 1; min-width: 0; }
+    .pl-top { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 8px; }
+    .pl-label { font-weight: 700; font-size: .9rem; color: var(--primary-dk); display: flex; align-items: center; gap: 8px; }
+    .pl-time { font-size: .82rem; color: var(--muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
+    .pl-track { position: relative; height: 10px; border-radius: 99px; background: rgba(44,32,16,.10); cursor: pointer; touch-action: none; }
+    .pl-fill { position: absolute; inset: 0 auto 0 0; width: 0; border-radius: 99px; background: linear-gradient(90deg, var(--primary), var(--accent-dk)); }
+    .pl-knob { position: absolute; top: 50%; left: 0; width: 18px; height: 18px; margin: -9px 0 0 -9px; border-radius: 50%; background: #fff; border: 3px solid var(--primary); box-shadow: 0 1px 4px rgba(0,0,0,.2); transition: transform .15s; }
+    .pl-track:hover .pl-knob, .player.dragging .pl-knob { transform: scale(1.25); }
+    .pl-skip { flex: 0 0 auto; height: 36px; padding: 0 10px; border-radius: 99px; border: 2px solid var(--border); background: var(--card); color: var(--muted); cursor: pointer; font: inherit; font-size: .8rem; font-weight: 700; white-space: nowrap; }
+    .pl-skip:hover { border-color: var(--primary); color: var(--primary); }
+    .eq { display: inline-flex; align-items: flex-end; gap: 2px; height: 14px; }
+    .eq i { width: 3px; height: 4px; border-radius: 2px; background: var(--primary); }
+    .player.playing .eq i { animation: eq .8s ease-in-out infinite; }
+    .player.playing .eq i:nth-child(2) { animation-delay: .2s; } .player.playing .eq i:nth-child(3) { animation-delay: .4s; } .player.playing .eq i:nth-child(4) { animation-delay: .1s; }
+    @keyframes eq { 0%,100% { height: 4px; } 50% { height: 14px; } }
+    @media (max-width: 560px) { .player { flex-wrap: wrap; gap: 10px; padding: 10px 12px; } .pl-main { flex-basis: calc(100% - 64px); } .pl-skip { flex: 1; } }
+
+    .tab-btn:nth-child(5).active { background: var(--green); border-color: var(--green); }
+    .tab-btn:nth-child(6).active { background: var(--primary-dk); border-color: var(--primary-dk); }
+    .tab-btn:nth-child(7).active { background: var(--text); border-color: var(--text); }
+  </style>
+</head>
+<body>
+
+<header class="site-header">
+  <h1>Lesson 10 — ОГЭ: What to Expect</h1>
+  <a class="back-link" href="../index.html">← All Lessons</a>
+</header>
+
+<div class="container">
+
+  <div class="lesson-meta">
+    <h2>ОГЭ по английскому языку · a first look at the 2027 exam</h2>
+    <p>📅 12 October 2026 &nbsp;·&nbsp; Lesson 10 &nbsp;·&nbsp; all tasks are from the official ФИПИ demo 2027</p>
+  </div>
+
+  <div class="progress-wrap">
+    <div class="progress-top">
+      <div>Blocks checked: <span id="pgCount">0 / 0</span></div>
+      <div>Points today: <span id="pgScore">0 / 0</span></div>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="pgFill"></div></div>
+  </div>
+
+  <div class="tab-bar">
+    <button class="tab-btn active" onclick="switchTab('map', this)">🧭 Обзор</button>
+    <button class="tab-btn"        onclick="switchTab('listen', this)">🎧 Аудирование</button>
+    <button class="tab-btn"        onclick="switchTab('read', this)">📖 Чтение</button>
+    <button class="tab-btn"        onclick="switchTab('gram', this)">⚙️ Грамматика</button>
+    <button class="tab-btn"        onclick="switchTab('write', this)">✉️ Письмо</button>
+    <button class="tab-btn"        onclick="switchTab('speak', this)">🎤 Устная часть</button>
+    <button class="tab-btn"        onclick="switchTab('plan', this)">🗓 Self-study</button>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════
+       TAB 1 — OVERVIEW
+  ══════════════════════════════════════════════════════════ -->
+  <div class="tab-content active" id="tab-map">
+
+    <div class="exercise">
+      <div class="exercise-label">Структура</div>
+      <h3>The paper, section by section</h3>
+      <div class="tbl-wrap"><table class="info">
+        <tr><th>Раздел</th><th>Задания</th><th>What you do</th><th>Баллы</th><th>Время</th></tr>
+        <tr><td>🎧 Аудирование</td><td>1–4<br>5<br>6–11</td><td>4 short dialogues: choose 1, 2 or 3<br>5 speakers → 6 headings (1 extra)<br>an interview → fill a table, <b>one word</b> each</td><td>4<br>5<br>6</td><td rowspan="1">30 min<br><small>(you hear everything <b>twice</b>)</small></td></tr>
+        <tr><td>📖 Чтение</td><td>12<br>13–19</td><td>6 short texts → 7 questions (1 extra)<br>a story → True / False / Not stated</td><td>6<br>7</td><td>30 min</td></tr>
+        <tr><td>⚙️ Грамматика и лексика</td><td>20–28<br>29–34</td><td>put the word in the right <b>grammar form</b><br><b>word formation</b> (INFORM → information)</td><td>9<br>6</td><td>30 min</td></tr>
+        <tr><td>✉️ Письмо</td><td>35</td><td>an <b>email</b> to a pen-friend: answer 3 questions, 100–120 words</td><td>10</td><td>30 min</td></tr>
+        <tr><td>🎤 Устная часть</td><td>1<br>2<br>3</td><td>read a text aloud<br>answer 6 questions of a phone survey<br>a 2-minute talk with a plan</td><td>2<br>6<br>7</td><td>15 min</td></tr>
+        <tr class="total"><td>Итого</td><td>35 + 3</td><td></td><td>68</td><td>2 h + 15 min</td></tr>
+      </table></div>
+    </div>
+
+    <div class="exercise">
+      <div class="exercise-label">Оценка</div>
+      <h3>Points → mark (official 2026 scale)</h3>
+      <div class="grade-grid">
+        <div class="grade g2"><b>«2»</b><span>0–28</span></div>
+        <div class="grade g3"><b>«3»</b><span>29–45</span></div>
+        <div class="grade g4"><b>«4»</b><span>46–57</span></div>
+        <div class="grade g5"><b>«5»</b><span>58–68</span></div>
+      </div>
+      <p style="font-size:.9rem;color:var(--muted)">The 2027 scale is published closer to the exam. It has stayed the same for several years.</p>
+    </div>
+
+    <div class="exercise">
+      <div class="exercise-label">Where points disappear</div>
+      <h3>Six rules to know before you start</h3>
+      <ul class="rule-list">
+        <li><span class="ri">✍️</span><span><b>Spelling counts.</b> A word answer with one wrong letter = 0 points.</span></li>
+        <li><span class="ri">🔢</span><span><b>Numbers in words.</b> In tasks 6–11 write <i>twelve</i>, not <i>12</i>.</span></li>
+        <li><span class="ri">📋</span><span><b>Answer sheet (бланк № 1).</b> Every answer is copied onto the sheet, with no spaces or commas: <i>did not mind</i> → <b>didnotmind</b>. Copying takes time, so leave 5 minutes.</span></li>
+        <li><span class="ri">🧮</span><span><b>Tasks 5 and 12 lose a point per mistake</b> (out of 5 and 6), so one wrong guess doesn’t ruin the whole task.</span></li>
+        <li><span class="ri">📏</span><span><b>The email must be 90–132 words.</b> Under 90 = 0 points for the whole task. After word 120, nothing is read.</span></li>
+        <li><span class="ri">🗣</span><span><b>Oral answers must be full sentences.</b> A one-word answer in the survey = 0 for that question.</span></li>
+      </ul>
+    </div>
+
+    <div class="exercise">
+      <div class="exercise-label">Quick check</div>
+      <h3>Do you know the rules?</h3>
+      <div class="quiz">
+        <div class="answer-row"><span class="ar-num">1</span><span class="ar-txt">How many times do you hear each listening recording?</span><select class="exam-select ans" data-opts="once,twice,three times" data-answer="twice"></select></div>
+        <div class="answer-row"><span class="ar-num">2</span><span class="ar-txt">In the interview table (tasks 6–11) the answer is “12 jobs”. You write…</span><select class="exam-select ans" data-opts="12,twelve,12 jobs" data-answer="twelve"></select></div>
+        <div class="answer-row"><span class="ar-num">3</span><span class="ar-txt">Your email is 85 words long. How many points can it get?</span><select class="exam-select ans" data-opts="0,5,10" data-answer="0"></select></div>
+        <div class="answer-row"><span class="ar-num">4</span><span class="ar-txt">You wrote <i>infomation</i> instead of <i>information</i>. The answer is…</span><select class="exam-select ans" data-opts="correct,half a point,wrong" data-answer="wrong"></select></div>
+        <div class="answer-row"><span class="ar-num">5</span><span class="ar-txt">In the phone survey you answer “Two.” to “How many lessons do you usually have?”. You get…</span><select class="exam-select ans" data-opts="1 point,0 points" data-answer="0 points"></select></div>
+        <div class="answer-row"><span class="ar-num">6</span><span class="ar-txt">What is the minimum score for a «5»?</span><select class="exam-select ans" data-opts="46,52,58,64" data-answer="58"></select></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════
+       TAB 2 — LISTENING
+  ══════════════════════════════════════════════════════════ -->
+  <div class="tab-content" id="tab-listen">
+    <div class="section-head"><h2>Раздел 1 · Аудирование</h2><div class="sh-meta">Задания 1–11 · 15 баллов · 30 минут</div></div>
+    <div class="talk">💬 These are the <b>official ФИПИ recordings</b>. Each one already plays the texts <b>twice</b>, with the exam pauses. Drag the bar or use ⏪ / ⏩ to go back and forth. When you’ve checked your answers, the script opens below the task.</div>
+
+    <!-- 1–4 -->
+    <div class="exercise">
+      <div class="review-head"><span class="task-num">Задания 1–4</span><span class="pts">4 × 1 балл</span></div>
+      <div class="player" data-src="audio/l10-task01-04.mp3" data-label="Задания 1–4"></div>
+      <p class="instr">Вы услышите четыре коротких текста, обозначенных буквами А, B, C, D. В заданиях 1–4 запишите в поле ответа цифру 1, 2 или 3, соответствующую выбранному Вами варианту ответа. Вы услышите запись дважды.</p>
+      <div class="facts"><span class="fact">🎧 2 plays</span><span class="fact">✍️ write 1, 2 or 3</span><span class="fact">📝 4 points</span></div>
+      <div class="quiz">
+        <div class="answer-row"><span class="ar-num">1</span><span class="ar-txt">The hiking instructor advises the hikers on …<br>1) how to cook food on a fire. &nbsp;2) what to wear on the hiking trip. &nbsp;3) how to find the way through the forest.</span><select class="exam-select ans" data-opts="1,2,3" data-answer="2"></select></div>
+        <div class="answer-row"><span class="ar-num">2</span><span class="ar-txt">What present does Mary suggest buying for their mother?<br>1) A pot plant. &nbsp;2) An umbrella. &nbsp;3) A cherry cake.</span><select class="exam-select ans" data-opts="1,2,3" data-answer="1"></select></div>
+        <div class="answer-row"><span class="ar-num">3</span><span class="ar-txt">Nancy doesn’t want to participate in the family business because …<br>1) she is allergic to cats. &nbsp;2) she doesn’t like animals. &nbsp;3) she’s chosen another profession.</span><select class="exam-select ans" data-opts="1,2,3" data-answer="3"></select></div>
+        <div class="answer-row"><span class="ar-num">4</span><span class="ar-txt">What are Alice and Ron going to have for lunch?<br>1) Pancakes. &nbsp;2) Spaghetti. &nbsp;3) Sandwiches.</span><select class="exam-select ans" data-opts="1,2,3" data-answer="2"></select></div>
+        <details class="script"><summary>📜 Script (Texts A–D)</summary><div class="sc-body">
+          <p><b>Text A.</b> Hi, everyone! I’d like to give you some advice on our hiking holiday. Tomorrow, I’ll be waiting for you at the railway station at 8 am. It’s hot… but, anyway, don’t go with bare legs. Our route goes through bushes and rocky hills. <u>Wear comfortable jeans or sport trousers</u> – if you don’t want your legs to be scratched and mosquito-bitten. Do not forget water, but don’t take much food. We’ll be taking breaks at places equipped with barbeques where we can enjoy baked and grilled food.</p>
+          <p><b>Text B.</b> Hi, Steve! It’s Mary. I’ve already ordered a cherry cake for mum’s birthday so don’t worry about it. Now I’m in the shopping centre looking for a present for mum. From both of us. I’ve found nothing except <u>a large indoor plant in a ceramic pot</u>. At first, I wanted to buy her an umbrella, but they all had an awful flower print, which I think she won’t like. As for the green plant – she’s always liked things like that. If you agree, I’ll pay and order the delivery. Bye!</p>
+          <p><b>Text C.</b> <i>Max:</i> You are always busy at weekends, Nancy. What’s wrong? <i>Nancy:</i> Nothing, Max. I just have to help my mum in her vet clinic. They are doing some renovations there. <i>Max:</i> Oh, yeah. A small family business always requires time and effort! Are you going to work as a vet too? Together with your mum? <i>Nancy:</i> She’d be happy! My sister is allergic to cats, dogs and whatever. So, I’m mum’s only hope of taking over the clinic which she’s so proud of. But... <i>Max:</i> Don’t tell me you don’t like animals! <i>Nancy:</i> Of course, I do! But <u>I’ve always dreamed of a career in professional sports</u>, which can’t be combined with running a clinic. <i>Max:</i> No, it can’t.</p>
+          <p><b>Text D.</b> <i>Alice:</i> It’s almost lunch time. Are you hungry, Ron? <i>Ron:</i> No, Alice, not really. Though I wouldn’t mind some pancakes with strawberry jam. <i>Alice:</i> I wouldn’t mind pancakes either but sorry – we’ve got neither eggs nor milk to make them. What we can make is either spaghetti or sandwiches with ham and cheese. <i>Ron:</i> You know what I’ll choose, don’t you? <i>Alice:</i> Oh, yeah! I know that you’re happy to eat spaghetti three times a day. Ok. <u>I’ll have it too</u>, so as not to cook anything else. Would you like your spaghetti with some sauce or with salad? <i>Ron:</i> With tomato sauce, please. <i>Alice:</i> It would be nice of you to help me set the table.</p>
+        </div></details>
+      </div>
+      <details class="logic"><summary><span class="hint-ico">💡</span><span class="hint-txt">Hint · The trap</span></summary><div class="logic-body"><p>Often two or three options are <b>mentioned</b> (cake, umbrella and plant are all in Text B). Listen for what is <b>decided</b>: <i>“At first I wanted… but…”</i> means that option is out.</p></div></details>
+    </div>
+
+    <!-- 5 -->
+    <div class="exercise">
+      <div class="review-head"><span class="task-num">Задание 5</span><span class="pts">5 баллов, −1 за ошибку</span></div>
+      <div class="player" data-src="audio/l10-task05.mp3" data-label="Задание 5"></div>
+      <p class="instr">Вы готовите тематическую радиопередачу с высказываниями пяти разных людей, обозначенных буквами А, В, С, D, Е. Подберите к каждому высказыванию соответствующую его содержанию рубрику из списка 1–6. Используйте каждую рубрику из списка только один раз. В списке есть одна лишняя рубрика. Вы услышите запись дважды.</p>
+      <div class="facts"><span class="fact">🎧 2 plays</span><span class="fact">🔢 6 headings, 1 extra</span><span class="fact">📝 5 points, −1 per mistake</span></div>
+      <div class="quiz">
+        <div class="pair-grid">
+          <div>
+            <div class="answer-row"><span class="ar-num">A</span><span class="ar-txt">Speaker A</span><select class="exam-select ans" data-opts="1,2,3,4,5,6" data-answer="3"></select></div>
+            <div class="answer-row"><span class="ar-num">B</span><span class="ar-txt">Speaker B</span><select class="exam-select ans" data-opts="1,2,3,4,5,6" data-answer="2"></select></div>
+            <div class="answer-row"><span class="ar-num">C</span><span class="ar-txt">Speaker C</span><select class="exam-select ans" data-opts="1,2,3,4,5,6" data-answer="6"></select></div>
+            <div class="answer-row"><span class="ar-num">D</span><span class="ar-txt">Speaker D</span><select class="exam-select ans" data-opts="1,2,3,4,5,6" data-answer="1"></select></div>
+            <div class="answer-row"><span class="ar-num">E</span><span class="ar-txt">Speaker E</span><select class="exam-select ans" data-opts="1,2,3,4,5,6" data-answer="4"></select></div>
+          </div>
+          <div class="opt-box">
+            <div class="opt-row"><span class="opt-letter">1</span><span class="opt-body">I avoid these kinds of films</span></div>
+            <div class="opt-row"><span class="opt-letter">2</span><span class="opt-body">I choose wisely</span></div>
+            <div class="opt-row"><span class="opt-letter">3</span><span class="opt-body">I dislike cinemas</span></div>
+            <div class="opt-row"><span class="opt-letter">4</span><span class="opt-body">I find cinemas expensive</span></div>
+            <div class="opt-row"><span class="opt-letter">5</span><span class="opt-body">I learn from these films</span></div>
+            <div class="opt-row"><span class="opt-letter">6</span><span class="opt-body">I recommend this film</span></div>
+          </div>
+        </div>
+        <details class="script"><summary>📜 Script (Speakers A–E)</summary><div class="sc-body">
+          <p><b>A.</b> Don’t get me wrong, I love watching films on a big screen, but <u>the rest of the experience is pretty awful</u>. Just imagine. You’re in the cinema, ready to see the film and someone next to you has a bag of popcorn or a bag of sweets. So they open it up halfway through the film and, to make things worse, they start chewing loudly. That drives me mad. Or even worse, they talk on their cell phones through the entire movie and start kicking the back of my chair, accidentally or otherwise.</p>
+          <p><b>B.</b> There are different ways to choose a good film to watch. Personally, <u>I always read the official reviews</u> on the Internet. I believe the things that professional critics say about the plot, the acting and the shooting. If they say the film is worth seeing, I go and see it. Apart from that, <u>I rely on my friends’ opinions</u>, as our tastes in films are quite similar. They know what genres I like and which I don’t. In most cases these recommendations are more than enough for me.</p>
+          <p><b>C.</b> I am sure that it is one of the most celebrated films in the entire history of filmmaking. A great all-time classic! It has everything that makes it just fantastic: a talented director, a perfect cast, a great soundtrack, a touching story, you name it. The shooting and acting are superb! It’s not an epic, nor a horror, but a drama that will suit most viewers’ tastes. <u>It is absolutely essential to watch it at least once.</u> Personally, I watch it every time I feel sad or disappointed. It just lifts up my mood.</p>
+          <p><b>D.</b> I am a great cinema and film fan. However, <u>there are some genres I never watch</u>. Like, I don’t watch horror films. They seem to be all about the scare factor and in most cases, they don’t have a good story or plot. You’ll never see me watching an action film, either. They are almost always the same. The good guys try to save the world. No special characters, nothing that makes me interested in the story. And I am not interested in seeing fights and car races for hours and hours.</p>
+          <p><b>E.</b> I don’t like going to the cinema. I haven’t been there almost 10 years. I don’t do well sitting and doing one thing for an hour and a half – I don’t feel safe. Plus, <u>I can’t make myself pay for a ticket, and spend that much money on snacks</u>, only to sit in the dark and focus on one thing. When I’m in my room or in the kitchen, I can do other things while I’m watching a movie, like having a snack or making dinner. Then I can pause it any time I need, so it’s really convenient.</p>
+        </div></details>
+      </div>
+      <details class="logic"><summary><span class="hint-ico">💡</span><span class="hint-txt">Hint · The trap</span></summary><div class="logic-body"><p>Speakers A and E both complain about cinemas. Decide on the <b>main reason</b>: A is annoyed by <b>people</b> (3 — I dislike cinemas); E mentions feeling unsafe, but the heading that fits is the <b>money</b> (4). The extra heading here is 5.</p></div></details>
+    </div>
+
+    <!-- 6–11 -->
+    <div class="exercise">
+      <div class="review-head"><span class="task-num">Задания 6–11</span><span class="pts">6 × 1 балл</span></div>
+      <div class="player" data-src="audio/l10-task06-11.mp3" data-label="Задания 6–11"></div>
+      <p class="instr">Вы помогаете своему другу, юному радиожурналисту, проанализировать подготовленное им для передачи интервью. Прослушайте аудиозапись интервью и занесите данные в таблицу. Вы можете вписать не более одного слова (без артиклей) из прозвучавшего текста. Числа необходимо записывать буквами. Вы услышите запись дважды.</p>
+      <div class="facts"><span class="fact">🎧 2 plays</span><span class="fact">✍️ one word, no articles</span><span class="fact">🔢 numbers in letters</span></div>
+      <div class="quiz">
+        <div class="answer-row"><span class="ar-num">6</span><span class="ar-txt">Current job</span><input class="blank ans" data-answer="librarian" autocomplete="off" spellcheck="false"></div>
+        <div class="answer-row"><span class="ar-num">7</span><span class="ar-txt">Number of jobs he/she has done</span><input class="blank ans" data-answer="twelve" autocomplete="off" spellcheck="false"></div>
+        <div class="answer-row"><span class="ar-num">8</span><span class="ar-txt">The foreign language he/she speaks</span><input class="blank ans" data-answer="Chinese" autocomplete="off" spellcheck="false"></div>
+        <div class="answer-row"><span class="ar-num">9</span><span class="ar-txt">Hobby</span><input class="blank ans" data-answer="travelling|traveling" autocomplete="off" spellcheck="false"></div>
+        <div class="answer-row"><span class="ar-num">10</span><span class="ar-txt">The musical instrument he/she plays</span><input class="blank ans" data-answer="piano" autocomplete="off" spellcheck="false"></div>
+        <div class="answer-row"><span class="ar-num">11</span><span class="ar-txt">Regular sports activity</span><input class="blank ans" data-answer="jogging" autocomplete="off" spellcheck="false"></div>
+        <details class="script"><summary>📜 Script (the interview)</summary><div class="sc-body">
+          <p><i>Interviewer:</i> First of all, I would like to thank you for agreeing to take part in our survey. It’s really very important for us. <i>Respondent:</i> My pleasure. <i>Interviewer:</i> I see that you’ve just left the library. Do you often go there to borrow books? <i>Respondent:</i> In fact... I was in the library for a different reason. I work there. <u>I’m a librarian.</u></p>
+          <p><i>Interviewer:</i> So, you are a librarian, aren’t you? OK. Have you ever worked in any other places? <i>Respondent:</i> Of course. I’ve worked as a waitress, a secretary, an office manager and whatever! <u>This is my twelfth job</u>, in fact. <i>Interviewer:</i> You’ve already tried twelve different jobs?! Fantastic! <i>Respondent:</i> Yes, I enjoy trying new things and learning new skills.</p>
+          <p><i>Interviewer:</i> Right. Can I ask you about the foreign languages you speak? <i>Respondent:</i> Of course. <u>The language I learned in college was Chinese.</u> And I’m still learning it, because you can never speak Chinese well enough. <i>Interviewer:</i> Oh, it’s so difficult! Why didn’t you choose Spanish or German? <i>Respondent:</i> I don’t know why. I just wanted to learn Chinese.</p>
+          <p><i>Interviewer:</i> What is your hobby? What do you do for pleasure? Do you like drawing or dancing? <i>Respondent:</i> Hmm, no! <u>I like travelling. It’s my real hobby.</u> And my favourite destination is China. I’ve been there several times and will go again. It’s an amazing country and you can see much more there if you speak their language. <i>Interviewer:</i> Right. <i>Respondent:</i> Chinese culture, art and music are very different from ours.</p>
+          <p><i>Interviewer:</i> Can you play any traditional musical instruments? <i>Respondent:</i> Do you mean the Chinese bamboo flute? No! But <u>I play the piano</u>. Well enough. I took piano classes when I was at school, and my teacher was very good. She taught me to feel and love music. <i>Interviewer:</i> And what about sports? What do you do to keep fit? <i>Respondent:</i> Hmm. <u>I go jogging.</u> I would like to go swimming but there’s no swimming pool nearby, so I jog almost every evening. <i>Interviewer:</i> Evening? <i>Respondent:</i> Yes. I prefer jogging in the evening, not in the morning like most people do. I hate getting up early and evenings are better for me. <i>Interviewer:</i> I see. And one more question...</p>
+        </div></details>
+      </div>
+      <details class="logic"><summary><span class="hint-ico">💡</span><span class="hint-txt">Hint · The traps</span></summary><div class="logic-body"><ul>
+        <li>The word you need is often said <b>after a “no”</b>: “Do you like drawing? — No! I like <b>travelling</b>.”</li>
+        <li>“twelfth job” → the table asks for the <b>number</b> → <b>twelve</b>, in letters.</li>
+        <li>Swimming is mentioned but she <b>doesn’t</b> do it: “I would like to go swimming <b>but</b>…”</li>
+      </ul></div></details>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════
+       TAB 3 — READING
+  ══════════════════════════════════════════════════════════ -->
+  <div class="tab-content" id="tab-read">
+    <div class="section-head"><h2>Раздел 2 · Чтение</h2><div class="sh-meta">Задания 12–19 · 13 баллов · 30 минут</div></div>
+
+    <!-- 12 -->
+    <div class="exercise">
+      <div class="review-head"><span class="task-num">Задание 12</span><span class="pts">6 баллов, −1 за ошибку</span></div>
+      <p class="instr">Вы проводите информационный поиск в ходе выполнения проектной работы. Определите, в каком из текстов A–F содержатся ответы на интересующие Вас вопросы 1–7. Один из вопросов останется без ответа. Занесите Ваши ответы в таблицу.</p>
+      <div class="facts"><span class="fact">📖 6 texts</span><span class="fact">❓ 7 questions, 1 extra</span><span class="fact">📝 6 points, −1 per mistake</span></div>
+      <div class="opt-box" style="margin-bottom:14px">
+        <div class="opt-row"><span class="opt-letter">1</span><span class="opt-body">What goods were made from the plant, the symbol of Scotland?</span></div>
+        <div class="opt-row"><span class="opt-letter">2</span><span class="opt-body">What is the national sporting event of the country?</span></div>
+        <div class="opt-row"><span class="opt-letter">3</span><span class="opt-body">What endangered plants grow in the Scottish Highlands?</span></div>
+        <div class="opt-row"><span class="opt-letter">4</span><span class="opt-body">What plant brings luck and success?</span></div>
+        <div class="opt-row"><span class="opt-letter">5</span><span class="opt-body">What is the stereotype of Scotland like?</span></div>
+        <div class="opt-row"><span class="opt-letter">6</span><span class="opt-body">Why is Scotland an attractive place for those who love sports?</span></div>
+        <div class="opt-row"><span class="opt-letter">7</span><span class="opt-body">What is the modern profile of Scotland like?</span></div>
+      </div>
+      <div class="quiz">
+        <div class="read-box">
+          <div class="text-card"><b class="tl">A</b><div><p>Thanks to television and films, Scotland is often seen by the rest of the world as a magical country, a land of misty mountains and the home of a lake creature called Nessie. This is the image most people have in mind. The truth, however, is completely different from the way the world thinks of Scotland. You may be surprised to find out that most Scots live in the lowlands and don’t believe in Nessie.</p><select class="exam-select ans" data-opts="1,2,3,4,5,6,7" data-answer="5"></select></div></div>
+          <div class="text-card"><b class="tl">B</b><div><p>Scotland is much more than green hills and picturesque valleys. It’s dynamic and cosmopolitan, with a colourful history of invention and innovation. It’s the home of big businesses and a centre of new medical and scientific development. Each year, it hosts the world’s biggest contemporary arts festivals.</p><select class="exam-select ans" data-opts="1,2,3,4,5,6,7" data-answer="7"></select></div></div>
+          <div class="text-card"><b class="tl">C</b><div><p>Scottish heather, a small bush with flowers, is the floral symbol of the country. The colour of the flowers usually varies from purple to lilac, but they can also be white. In the past, the Scots believed that they would never be captured by enemies and would win victories if they wore white heather. Today, when getting married, girls add white heather to bouquets to bring fortune to their family.</p><select class="exam-select ans" data-opts="1,2,3,4,5,6,7" data-answer="4"></select></div></div>
+          <div class="text-card"><b class="tl">D</b><div><p>Heather has grown in Scotland as far back as its history goes. It is an essential thing for any household. Famous heather honey is rich in minerals, and was traditionally used in medicinal drinks. Traditionally dried heather was used to make perfumes, and the tough stems were used to make ropes. On many of the northern Scottish islands, heather was used in the construction of houses.</p><select class="exam-select ans" data-opts="1,2,3,4,5,6,7" data-answer="1"></select></div></div>
+          <div class="text-card"><b class="tl">E</b><div><p>Scotland is an excellent destination for open-air activities all year round. Its lakes and coastline are ideal for boating and rowing and have some of the best sea-kayaking in the world. The rivers are perfect for fishing and the mountains are wonderful for hill climbing and skiing. Scotland is also good for walkers. You can enjoy easy family walks or more difficult mountain hikes.</p><select class="exam-select ans" data-opts="1,2,3,4,5,6,7" data-answer="6"></select></div></div>
+          <div class="text-card"><b class="tl">F</b><div><p>The history of Scotland is rich in armed conflicts. The Scots have always valued physical power and the skills needed for battle and survival. That’s why the Highland Games were very popular. They date back to long before Scotland’s written history. The Games are still held today and include the athletic competitions in their original form as well as dancing contests. Traditional bagpipe music accompanies all the events.</p><select class="exam-select ans" data-opts="1,2,3,4,5,6,7" data-answer="2"></select></div></div>
+        </div>
+      </div>
+      <details class="logic"><summary><span class="hint-ico">💡</span><span class="hint-txt">Hint · The method (same as the Olympiad headings task)</span></summary><div class="logic-body"><ol>
+        <li>Read the 7 questions first and underline the <b>key word</b> in each (goods, sporting event, endangered, luck…).</li>
+        <li>Two texts about one topic (C and D, both heather)? Find what makes them <b>different</b>: luck (C) vs. things made from it (D).</li>
+        <li>The extra question uses words from the texts but asks something <b>no text answers</b>: nobody talks about <i>endangered</i> plants (3).</li>
+      </ol></div></details>
+    </div>
+
+    <!-- 13–19 -->
+    <div class="exercise">
+      <div class="review-head"><span class="task-num">Задания 13–19</span><span class="pts">7 × 1 балл</span></div>
+      <p class="instr">Прочитайте текст. Определите, какие из приведённых утверждений 13–19 соответствуют содержанию текста (1 – True), какие не соответствуют (2 – False) и о чём в тексте не сказано, то есть на основании текста нельзя дать ни положительного, ни отрицательного ответа (3 – Not stated).</p>
+      <div class="facts"><span class="fact">✅ 1 = True</span><span class="fact">❌ 2 = False</span><span class="fact">❔ 3 = Not stated</span></div>
+      <div class="read-box">
+        <h4>Running the Thames</h4>
+        <p>Three friends Alan, Tom and Martin decided to run 184 miles along the most famous British river – from the beginning of the Thames down to its mouth, where the river runs into the sea.</p>
+        <p>Their preparations for the marathon didn’t take long and they set out. It was not easy to find the place marked on the map as the official source of the river Thames. In reality, it was an old stone under a big tree. Surprisingly, there was practically no water at the source, just a small pit. However, at the end of the first day they came to a narrow stream running under a wooden bridge.</p>
+        <p>The runners were lucky with the weather; it was cool and bright for the whole week. Soft winds blew and the sun shone. In spite of the weather, the start of the marathon was not very promising. On the first day, Martin accidentally fell over a tree root and hurt his foot. In addition to that, Alan said he had damaged his rucksack during their preparation. However, the friends went on running.</p>
+        <p>They passed lovely houses and some wonderful nature. The Thames had grown from a small river into a strong stream. Hypnotised by the view of the river, Tom missed the path and fell into the mud. Cold and angry, he was a real trouble the first day. In the evening, the runners reached the point where the river became possible to navigate. The friends were so tired that they stopped at a cheap hotel for food, drink and sleep.</p>
+        <p>The second day they ran along arched stone bridges and through forty-five river locks, each one having its own history. The runners stopped at the first lock to take a photo by the 19th century statue of Old Father Thames. The other locks and the bridges, dating from the 13th century, could have told much about British royal families, writers and inventors, battles and victories. So the runners spent the second day exploring the locks and the old bridges and taking photos.</p>
+        <p>The next few days Alan, Tom and Martin ran through quiet and peaceful places in Oxfordshire. The calm river occupied all their thoughts and they left their troubles behind them. They spent nights at small Bed-and-Breakfasts with unusual foreign guests who were discovering the old British towns, castles and churches.</p>
+        <p>Closer to London the Thames changed its character. It became wide and busy with numerous boats and ships. The banks were full of grand houses with green lawns, street markets and modern walkways.</p>
+        <p>On the seventh day the runners followed the river as it cut the capital in two. The friends made their way past famous London sights such as The Tower, The London Eye and Greenwich.</p>
+        <p>Finally the friends got to The Thames Barrier, where the river ran into the sea. The marathon was over.</p>
+      </div>
+      <div class="quiz">
+        <div class="answer-row"><span class="ar-num">13</span><span class="ar-txt">There was a natural mark which indicated the start of the river Thames.</span><select class="exam-select ans" data-opts="1 True,2 False,3 Not stated" data-answer="1 True"></select></div>
+        <div class="answer-row"><span class="ar-num">14</span><span class="ar-txt">During the marathon the weather was fine.</span><select class="exam-select ans" data-opts="1 True,2 False,3 Not stated" data-answer="1 True"></select></div>
+        <div class="answer-row"><span class="ar-num">15</span><span class="ar-txt">After the accident with Martin’s leg, Tom carried his rucksack.</span><select class="exam-select ans" data-opts="1 True,2 False,3 Not stated" data-answer="3 Not stated"></select></div>
+        <div class="answer-row"><span class="ar-num">16</span><span class="ar-txt">During the marathon the friends spent all their nights in the tent.</span><select class="exam-select ans" data-opts="1 True,2 False,3 Not stated" data-answer="2 False"></select></div>
+        <div class="answer-row"><span class="ar-num">17</span><span class="ar-txt">There were a lot of tourists near the statue of Old Father Thames.</span><select class="exam-select ans" data-opts="1 True,2 False,3 Not stated" data-answer="3 Not stated"></select></div>
+        <div class="answer-row"><span class="ar-num">18</span><span class="ar-txt">Near London the Thames was closed to navigation.</span><select class="exam-select ans" data-opts="1 True,2 False,3 Not stated" data-answer="2 False"></select></div>
+        <div class="answer-row"><span class="ar-num">19</span><span class="ar-txt">The marathon route went through London.</span><select class="exam-select ans" data-opts="1 True,2 False,3 Not stated" data-answer="1 True"></select></div>
+      </div>
+      <details class="logic"><summary><span class="hint-ico">💡</span><span class="hint-txt">Hint · False or Not stated?</span></summary><div class="logic-body"><ul>
+        <li><b>False</b>: the text says the <b>opposite</b>. “All nights in a tent” vs. <i>a cheap hotel… Bed-and-Breakfasts</i>.</li>
+        <li><b>Not stated</b>: the text talks about the topic but <b>never answers</b> the question. Who carried the rucksack? We don’t know.</li>
+        <li>Test: can you <b>underline a sentence</b> that proves it wrong? Yes → False. No → Not stated.</li>
+      </ul></div></details>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════
+       TAB 4 — GRAMMAR & VOCABULARY
+  ══════════════════════════════════════════════════════════ -->
+  <div class="tab-content" id="tab-gram">
+    <div class="section-head"><h2>Раздел 3 · Грамматика и лексика</h2><div class="sh-meta">Задания 20–34 · 15 баллов · 30 минут</div></div>
+    <div class="talk">💬 This is the same skill as <b>Задание 1</b> (forms) and <b>Задание 4</b> (word formation) in the Olympiad, just easier. Type the answer as words with spaces; on the real answer sheet you would write them <b>without</b> spaces.</div>
+
+    <div class="exercise">
+      <div class="review-head"><span class="task-num">Задания 20–28</span><span class="pts">9 × 1 балл</span></div>
+      <p class="instr">Прочитайте приведённый ниже текст. Преобразуйте слова, напечатанные заглавными буквами в конце строк, обозначенных номерами 20–28, так, чтобы они грамматически соответствовали содержанию текста. Заполните пропуски полученными словами.</p>
+      <div class="facts"><span class="fact">⚙️ change the word in CAPITALS</span><span class="fact">✍️ spelling counts</span><span class="fact">📝 9 points</span></div>
+      <div class="quiz">
+        <div class="answer-row"><span class="ar-num">20</span><span class="ar-txt">It was a great day yesterday. My friends and I <input class="blank ans" data-answer="went" autocomplete="off" spellcheck="false"> to see a performance at the Bolshoi Theatre.</span><span class="cue">GO</span></div>
+        <div class="answer-row"><span class="ar-num">21</span><span class="ar-txt">You certainly know that the Bolshoi Theatre is the <input class="blank ans" data-answer="most famous" autocomplete="off" spellcheck="false"> theatre in Russia and probably in the world.</span><span class="cue">FAMOUS</span></div>
+        <div class="answer-row"><span class="ar-num">22</span><span class="ar-txt">But not everyone <input class="blank ans" data-answer="knows" autocomplete="off" spellcheck="false"> the history of the Bolshoi Theatre.</span><span class="cue">KNOW</span></div>
+        <div class="answer-row"><span class="ar-num">23</span><span class="ar-txt">According to historical documents, it <input class="blank ans" data-answer="began" autocomplete="off" spellcheck="false"> in March 1776 when Prince Pyotr Urusov was granted Royal permission to build a public theatre in Moscow.</span><span class="cue">BEGIN</span></div>
+        <div class="answer-row"><span class="ar-num">24</span><span class="ar-txt">Catherine II, Empress of Russia, was fond of arts. She <input class="blank ans" data-answer="did not mind|didn't mind" autocomplete="off" spellcheck="false"> having a new theatre in her country.</span><span class="cue">NOT MIND</span></div>
+        <div class="answer-row"><span class="ar-num">25</span><span class="ar-txt">The original building of the theatre had a hall with almost 1,000 seats, a stage and an orchestra pit. Directly over the stage there <input class="blank ans" data-answer="were" autocomplete="off" spellcheck="false"> boxes where the most noble fans of the theatre had their seats.</span><span class="cue">BE</span></div>
+        <div class="answer-row"><span class="ar-num">26</span><span class="ar-txt">The theatre has changed several times during <input class="blank ans" data-answer="its" autocomplete="off" spellcheck="false"> history.</span><span class="cue">IT</span></div>
+        <div class="answer-row"><span class="ar-num">27</span><span class="ar-txt">The building we can see today opened in 1825. It <input class="blank ans" data-answer="was designed" autocomplete="off" spellcheck="false"> by architect Andrei Mikhailov who was also the architect of the Maly Theatre.</span><span class="cue">DESIGN</span></div>
+        <div class="answer-row"><span class="ar-num">28</span><span class="ar-txt">Since that time, the building has been rebuilt and renovated several times. Now it looks beautiful from the inside and outside. If I <input class="blank ans" data-answer="had" autocomplete="off" spellcheck="false"> the opportunity to go there more often, I would do it every week.</span><span class="cue">HAVE</span></div>
+      </div>
+      <details class="logic"><summary><span class="hint-ico">💡</span><span class="hint-txt">Hint · What gets tested here, every year</span></summary><div class="logic-body"><ul>
+        <li>past forms of irregular verbs (<i>went, began</i>) · 3rd person -s (<i>knows</i>) · comparatives / superlatives (<i>the most famous</i>)</li>
+        <li>passive (<i>was designed</i> + by) · conditionals (<i>If I had…, I would…</i>) · <i>there was / there were</i> · pronouns (<i>its</i>, not <i>it’s</i>)</li>
+        <li>Find the time marker first (<i>yesterday, in 1776, by architect…</i>), then choose the form.</li>
+      </ul></div></details>
+    </div>
+
+    <div class="exercise">
+      <div class="review-head"><span class="task-num">Задания 29–34</span><span class="pts">6 × 1 балл</span></div>
+      <p class="instr">Прочитайте приведённый ниже текст. Преобразуйте слова, напечатанные заглавными буквами в конце строк, обозначенных номерами 29–34, так, чтобы они грамматически и лексически соответствовали содержанию текста. Заполните пропуски полученными словами.</p>
+      <div class="facts"><span class="fact">🧩 make a new word from the CAPITALS</span><span class="fact">✍️ spelling counts</span><span class="fact">📝 6 points</span></div>
+      <div class="quiz">
+        <div class="answer-row"><span class="ar-num">29</span><span class="ar-txt">There are lots of products that help us fight bad moods and depression. If you feel down and <input class="blank ans" data-answer="sleepy" autocomplete="off" spellcheck="false">, just get a bar of dark chocolate from the fridge.</span><span class="cue">SLEEP</span></div>
+        <div class="answer-row"><span class="ar-num">30</span><span class="ar-txt">Chocolate will improve your mood and you’ll feel <input class="blank ans" data-answer="cheerful" autocomplete="off" spellcheck="false"> and happy again.</span><span class="cue">CHEER</span></div>
+        <div class="answer-row"><span class="ar-num">31</span><span class="ar-txt">This <input class="blank ans" data-answer="information" autocomplete="off" spellcheck="false"> is often used in chocolate adverts.</span><span class="cue">INFORM</span></div>
+        <div class="answer-row"><span class="ar-num">32</span><span class="ar-txt">Unfortunately, we can’t use this method too often. The positive effect does not last long. Meanwhile chocolate is not <input class="blank ans" data-answer="harmless" autocomplete="off" spellcheck="false"> food.</span><span class="cue">HARM</span></div>
+        <div class="answer-row"><span class="ar-num">33</span><span class="ar-txt">It contains fat and sugar which can make you overweight. Some people may also be allergic to chocolate and it can affect their <input class="blank ans" data-answer="appearance" autocomplete="off" spellcheck="false">, causing skin problems.</span><span class="cue">APPEAR</span></div>
+        <div class="answer-row"><span class="ar-num">34</span><span class="ar-txt">The alternative and <input class="blank ans" data-answer="absolutely" autocomplete="off" spellcheck="false"> safe method to fight depression is doing sport. It can be recommended to everyone!</span><span class="cue">ABSOLUTE</span></div>
+      </div>
+      <details class="logic"><summary><span class="hint-ico">💡</span><span class="hint-txt">Hint · Ask two questions for every gap</span></summary><div class="logic-body"><ol>
+        <li><b>What part of speech?</b> after <i>feel</i> → adjective; after <i>this</i> → noun; before an adjective (<i>safe</i>) → adverb.</li>
+        <li><b>Positive or negative?</b> “chocolate is <b>not</b> ___ food”, and the next sentence lists its dangers → it is not <b>harm<u>less</u></b>.</li>
+      </ol><p>Most common endings: <b>-y, -ful, -less, -ous, -able</b> (adj) · <b>-tion, -ance, -ment, -ness, -er</b> (noun) · <b>-ly</b> (adverb) · <b>un-, dis-, im-, in-</b> (opposite).</p></div></details>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════
+       TAB 5 — WRITING
+  ══════════════════════════════════════════════════════════ -->
+  <div class="tab-content" id="tab-write">
+    <div class="section-head"><h2>Раздел 4 · Письмо</h2><div class="sh-meta">Задание 35 · 10 баллов · 30 минут</div></div>
+
+    <div class="exercise">
+      <div class="review-head"><span class="task-num">Задание 35</span><span class="pts">10 баллов</span></div>
+      <p class="instr">Напишите текст своего ответного электронного письма зарубежному другу по переписке.</p>
+      <div class="facts"><span class="fact">✉️ reply to Mary</span><span class="fact">❓ 3 questions</span><span class="fact">📏 100–120 words</span><span class="fact">⏱ 30 min</span></div>
+      <p style="margin-bottom:8px">You have received an email message from your English-speaking pen-friend Mary:</p>
+      <div class="email-box">
+        <div class="em-head">From: Mary@mail.uk &nbsp;·&nbsp; To: Russian_friend@oge.ru &nbsp;·&nbsp; Subject: Russian towns</div>
+        <p>…My teacher told me that Russia has many beautiful small towns. I’d love to travel and see some of them.</p>
+        <p>…<b>What small Russian towns would you recommend visiting and why? What is the best way to travel around Russia? Where would you prefer to live, in a big city or in a town, and why?</b>…</p>
+      </div>
+      <p style="margin-top:10px"><b>Write a message to Mary and answer her 3 questions. Write 100–120 words. Remember the rules of email writing.</b></p>
+    </div>
+
+    <div class="exercise">
+      <div class="exercise-label">How it’s marked</div>
+      <h3>10 points = 4 criteria</h3>
+      <div class="tbl-wrap"><table class="info">
+        <tr><th>Критерий</th><th>Max</th><th>What the examiner checks</th></tr>
+        <tr><td>К1 Содержание</td><td>3</td><td>All <b>3 questions answered</b> fully · <b>thanks</b> for the email · hope to <b>keep in touch</b> · greeting, closing phrase, <b>first name only</b> as signature.</td></tr>
+        <tr><td>К2 Организация</td><td>2</td><td>Paragraphs · linking words · greeting, closing phrase and name each <b>on a separate line</b>.</td></tr>
+        <tr><td>К3 Лексика и грамматика</td><td>3</td><td>max 1 mistake for full marks</td></tr>
+        <tr><td>К4 Орфография и пунктуация</td><td>2</td><td>max 1–2 mistakes for full marks</td></tr>
+      </table></div>
+      <p style="font-size:.9rem;color:var(--muted);margin-top:6px">Word count: <b>every</b> word counts, including <i>Dear Mary</i> and your name. <i>I’ve</i>, <i>English-speaking</i>, <i>TV</i> and <i>2026</i> each count as one word.</p>
+    </div>
+
+    <div class="exercise">
+      <div class="exercise-label">A model to copy</div>
+      <h3>A full-mark answer to Mary</h3>
+      <div class="mail">
+        <div class="mail-bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="mail-bar-t">Reply</span></div>
+        <div class="mail-head">
+          <div><span>From:</span> Russian_friend@oge.ru</div>
+          <div><span>To:</span> Mary@mail.uk</div>
+          <div><span>Subject:</span> Re: Russian towns</div>
+        </div>
+        <div class="mail-body" id="modelMail">
+          <div class="m-row k2"><p>Dear Mary,</p><span class="m-tag">Greeting · own line</span></div>
+          <div class="m-row k1"><p>Thank you for your email. It was great to hear from you!</p><span class="m-tag">Thanks</span></div>
+          <div class="m-row ans"><p><b class="lnk">As for</b> small towns, I would recommend visiting Suzdal and Plyos. Suzdal has beautiful old churches, <b class="lnk">and</b> Plyos stands on the Volga, <b class="lnk">so</b> the views there are amazing.</p><span class="m-tag">Answer 1 + reason</span></div>
+          <div class="m-row ans"><p><b class="lnk">In my opinion,</b> the best way to travel around Russia is by train. It is comfortable and not very expensive, <b class="lnk">and</b> you can see a lot from the window.</p><span class="m-tag">Answer 2</span></div>
+          <div class="m-row ans"><p><b class="lnk">Personally,</b> I would prefer to live in a big city <b class="lnk">because</b> there are more opportunities to study and have fun. <b class="lnk">However,</b> small towns are much quieter.</p><span class="m-tag">Answer 3 + reason</span></div>
+          <div class="m-row k1"><p>I hope to hear from you soon.</p><span class="m-tag">Keep in touch</span></div>
+          <div class="m-row k2 tight"><p>Best wishes,</p><span class="m-tag">Closing · own line</span></div>
+          <div class="m-row k2 tight"><p>Polina</p><span class="m-tag">First name only</span></div>
+        </div>
+        <div class="mail-foot"><span class="wc-pill" id="modelWc"></span><span class="legend"><i class="lg k1"></i>polite phrases <i class="lg ans"></i>answers <i class="lg k2"></i>layout <b class="lnk">linking words</b></span></div>
+      </div>
+      <p style="margin-top:10px;font-size:.93rem">More linking words that score in К2: <i>To begin with, Besides, Also, What is more, That’s why, All in all</i>.</p>
+    </div>
+
+    <div class="exercise">
+      <div class="exercise-label">Your turn</div>
+      <h3>Write your answer to Mary</h3>
+      <textarea class="free-write" id="email35" placeholder="Dear Mary,&#10;&#10;Thank you for your email…" spellcheck="false"></textarea>
+      <div class="wc" id="wc"><span class="wc-num">0</span><span>words</span><span class="wc-msg"></span></div>
+      <div class="step-title">Check before you hand it in</div>
+      <ul class="check-list" id="emailChecks">
+        <li><label><input type="checkbox"> <span>Greeting on its own line: <i>Dear Mary,</i> / <i>Hi Mary,</i></span></label></li>
+        <li><label><input type="checkbox"> <span>Thanks for her email</span></label></li>
+        <li><label><input type="checkbox"> <span>Question 1 answered, with a reason (<i>because…</i>)</span></label></li>
+        <li><label><input type="checkbox"> <span>Question 2 answered</span></label></li>
+        <li><label><input type="checkbox"> <span>Question 3 answered, with a reason</span></label></li>
+        <li><label><input type="checkbox"> <span>Hope to keep in touch (<i>Write back soon!</i>)</span></label></li>
+        <li><label><input type="checkbox"> <span>Closing phrase and first name, each on its own line</span></label></li>
+        <li><label><input type="checkbox"> <span>Paragraphs + at least 3 linking words</span></label></li>
+        <li><label><input type="checkbox"> <span>100–120 words</span></label></li>
+      </ul>
+      <div class="btn-row"><button class="btn btn-primary" onclick="copyEmail()">📋 Copy my email for my teacher</button><span id="copyMsg" style="align-self:center;font-weight:600;color:var(--green)"></span></div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════
+       TAB 6 — SPEAKING
+  ══════════════════════════════════════════════════════════ -->
+  <div class="tab-content" id="tab-speak">
+    <div class="section-head"><h2>Устная часть</h2><div class="sh-meta">3 задания · 15 баллов · 15 минут · everything is recorded</div></div>
+    <div class="talk">💬 Use 🎙 <b>Record</b> to hear yourself afterwards. The recording stays on this page only and disappears when you leave it.</div>
+
+    <div class="exercise">
+      <div class="review-head"><span class="task-num">Task 1 · Reading aloud</span><span class="pts">2 балла</span></div>
+      <p class="instr">You are going to read the text aloud. You have 1.5 minutes to read the text silently, and then be ready to read it aloud. Remember that you will not have more than 2 minutes for reading aloud.</p>
+      <div class="facts"><span class="fact">⏱ 1.5 min to prepare</span><span class="fact">🗣 2 min to read aloud</span><span class="fact">📝 2 points</span></div>
+      <div class="read-box"><p>Bicycles or bikes are an important means of transportation in many parts of the world. The first bicycles turned up in Europe in the first half of the 19th century but the word “bicycle” only appeared later, in 1868. There are more bicycles in the world than cars. A lot of people have realized that cycling is an easy way to get around and a great way to cut down on pollution. More and more cities have special places where people can borrow a bike and ride around the city. Over the past few years, a bicycle infrastructure has been created in Moscow. Cycling in the centre of Moscow in summer is one of the most pleasant and quickest ways of seeing the city.</p></div>
+      <div class="speak-tools" data-steps="Preparation:90,Read aloud:120"></div>
+      <details class="logic"><summary><span class="hint-ico">💡</span><span class="hint-txt">Hint · What loses points</span></summary><div class="logic-body"><p>Long pauses and wrong stress. Up to 5 small pronunciation mistakes still get 2 points. Check these before you start: <i>means, transportation, 19th (nineteenth), 1868 (eighteen sixty-eight), realized, pollution, infrastructure, quickest</i>.</p></div></details>
+    </div>
+
+    <div class="exercise">
+      <div class="review-head"><span class="task-num">Task 2 · Telephone survey</span><span class="pts">6 × 1 балл</span></div>
+      <p class="instr">You are going to take part in a telephone survey. You have to answer six questions. Give full answers to the questions. Remember that you have 40 seconds to answer each question.</p>
+      <div class="facts"><span class="fact">❓ 6 questions</span><span class="fact">⏱ 40 sec each</span><span class="fact">🗣 full sentences</span></div>
+      <p style="margin-bottom:8px">Play the official recording and answer each question <b>in the pause after it</b> (40 seconds). In the exam you only <i>hear</i> the questions, so try it without reading them first.</p>
+      <div class="player" data-src="audio/l10-oral-task2.mp3" data-label="Task 2 · survey"></div>
+      <div class="speak-tools" id="surveyTools"></div>
+      <details class="script" style="display:block"><summary>📜 The six questions</summary><div class="sc-body"><ol style="padding-left:20px">
+        <li>How many lessons do you usually have?</li>
+        <li>What do you usually do after lessons?</li>
+        <li>How much time do you need to do your homework?</li>
+        <li>Who helps you to do your homework?</li>
+        <li>Do you use the Internet when you do your homework? What for?</li>
+        <li>What would you recommend to a student who wants to spend less time on his/her homework?</li>
+      </ol></div></details>
+      <details class="logic"><summary><span class="hint-ico">💡</span><span class="hint-txt">Hint · 1 point each, if…</span></summary><div class="logic-body"><p>…the answer is a <b>full sentence</b> (2–3 is safest) and answers <b>this</b> question.<br>❌ “Six.” → 0 &nbsp; ✅ “I usually have six or seven lessons a day. On Fridays I have only five.”</p></div></details>
+    </div>
+
+    <div class="exercise">
+      <div class="review-head"><span class="task-num">Task 3 · Monologue</span><span class="pts">7 баллов</span></div>
+      <p class="instr">You are going to give a talk about your school. You will have to start in 1.5 minutes and speak for not more than 2 minutes (10–12 sentences). You have to talk continuously.</p>
+      <div class="facts"><span class="fact">⏱ 1.5 min to prepare</span><span class="fact">🗣 2 min, 10–12 sentences</span><span class="fact">📝 7 points</span></div>
+      <p><b>Remember to say:</b></p>
+      <ul class="plan-list">
+        <li>what your typical school day is like;</li>
+        <li>what your favourite subject is, and why;</li>
+        <li>what you like most about your school;</li>
+        <li>what your attitude to your school life is.</li>
+      </ul>
+      <div class="speak-tools" data-steps="Preparation:90,Talk:120"></div>
+      <details class="logic"><summary><span class="hint-ico">💡</span><span class="hint-txt">Hint · For 7/7</span></summary><div class="logic-body"><ul>
+        <li><b>All 4 points</b> of the plan, <b>10–12 sentences</b> (8–9 sentences already lose a point).</li>
+        <li>An <b>opening</b> (<i>I’d like to tell you about my school.</i>) and a <b>conclusion</b> (<i>All in all, …</i>): without them К2 drops.</li>
+        <li>Link the parts: <i>To begin with… As for my favourite subject… What I like most is… To sum up…</i></li>
+      </ul></div></details>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════
+       TAB 7 — SELF-STUDY PLAN
+  ══════════════════════════════════════════════════════════ -->
+  <div class="tab-content" id="tab-plan">
+
+    <div class="exercise">
+      <div class="exercise-label">How it works</div>
+      <h3>🗓 Your ОГЭ head start: 7 weeks, 2 × 25 minutes</h3>
+      <p>We start ОГЭ preparation together at the end of November. Until then, do <b>two short sessions a week</b> on your own. Each one practises an ОГЭ task <b>with the same skill we’re training for the Olympiad that week</b>, so it helps both.</p>
+      <ul class="rule-list">
+        <li><span class="ri">⏱</span><span>Set a timer for <b>25 minutes</b>. If you finish early, stop: short and regular beats long and rare.</span></li>
+        <li><span class="ri">🌐</span><span>Most sessions use <a href="https://en-oge.sdamgia.ru/prob_catalog" target="_blank" rel="noopener">Решу ОГЭ → Каталог заданий</a>. The task numbers there are the same as in the exam. Choose a number, tick 5–10 tasks, and the site checks them for you.</span></li>
+        <li><span class="ri">📖</span><span>Every word you got wrong or didn’t know goes into <a href="../dictionary.html">My Dictionary</a>.</span></li>
+        <li><span class="ri">✅</span><span>Tick the session when you finish. Tell me your score in the next lesson, e.g. “20–28: 7/9”.</span></li>
+      </ul>
+      <p style="margin-top:8px"><b>Done: <span id="ssCount">0 / 14</span></b></p>
+    </div>
+
+    <div class="exercise week">
+      <div class="week-head"><h3>Week 1</h3><span class="week-link">Olympiad: history & past tenses</span></div>
+      <div class="session"><input type="checkbox" data-ss="1"><div class="ss-body"><span class="ss-title">Grammar forms: the demo</span><span class="ss-time">25 min</span>
+        <ol><li>Do <b>Задания 20–34</b> in the ⚙️ Грамматика tab of this page and check them.</li><li>For each mistake, write the rule in one line (e.g. <i>by + person → passive</i>).</li></ol>
+        <div class="olymp">🔗 Same skill as Olympiad Задание 1 (forms) and 4 (word formation).</div></div></div>
+      <div class="session"><input type="checkbox" data-ss="2"><div class="ss-body"><span class="ss-title">Past tenses & irregular verbs</span><span class="ss-time">25 min</span>
+        <ol><li>Решу ОГЭ → задания <b>20–28</b>: do 9 tasks, any mix.</li><li>Write the 10 irregular verbs you find hardest as <i>go – went – gone</i>, and say them aloud twice.</li></ol>
+        <div class="olymp">🔗 Narrative tenses: Past Simple / Past Continuous / Past Perfect.</div></div></div>
+    </div>
+
+    <div class="exercise week">
+      <div class="week-head"><h3>Week 2</h3><span class="week-link">Olympiad: biographies & text order</span></div>
+      <div class="session"><input type="checkbox" data-ss="3"><div class="ss-body"><span class="ss-title">True / False / Not stated: the demo</span><span class="ss-time">20 min</span>
+        <ol><li>Do <b>Задания 13–19</b> in the 📖 Чтение tab (“Running the Thames”) in 12 minutes.</li><li>For every False, underline the sentence that proves it.</li></ol>
+        <div class="olymp">🔗 Reading for detail, like the Olympiad texts.</div></div></div>
+      <div class="session"><input type="checkbox" data-ss="4"><div class="ss-body"><span class="ss-title">Matching questions to texts</span><span class="ss-time">25 min</span>
+        <ol><li>Do <b>Задание 12</b> in the 📖 Чтение tab (Scotland) if you haven’t yet.</li><li>Решу ОГЭ → задание <b>12</b>: do one more set in 15 minutes.</li></ol>
+        <div class="olymp">🔗 Same method as Olympiad Задание 6 (headings).</div></div></div>
+    </div>
+
+    <div class="exercise week">
+      <div class="week-head"><h3>Week 3</h3><span class="week-link">Olympiad: science & the passive</span></div>
+      <div class="session"><input type="checkbox" data-ss="5"><div class="ss-body"><span class="ss-title">The passive in context</span><span class="ss-time">25 min</span>
+        <ol><li>Решу ОГЭ → задания <b>20–28</b>: 9 new tasks. Mark every passive form you write (<i>was designed, is made</i>).</li><li>Write 5 sentences about an invention in the passive: <i>The telephone was invented by…</i></li></ol>
+        <div class="olymp">🔗 Olympiad Задания 1–3 love the passive.</div></div></div>
+      <div class="session"><input type="checkbox" data-ss="6"><div class="ss-body"><span class="ss-title">Listening for one word</span><span class="ss-time">25 min</span>
+        <ol><li>Решу ОГЭ → задания <b>6–11</b>: one interview, listen <b>twice</b> only.</li><li>Check spelling letter by letter, and write numbers in letters.</li></ol>
+        <div class="olymp">🔗 Practice for listening only once in the Olympiad (Задания 7–8).</div></div></div>
+    </div>
+
+    <div class="exercise week">
+      <div class="week-head"><h3>Week 4</h3><span class="week-link">Olympiad: language & communication</span></div>
+      <div class="session"><input type="checkbox" data-ss="7"><div class="ss-body"><span class="ss-title">Short dialogues + speakers</span><span class="ss-time">25 min</span>
+        <ol><li>Решу ОГЭ → задания <b>1–4</b> (one set) and <b>5</b> (one set).</li><li>For each mistake, find the “trap” in the script: <i>at first… but…</i></li></ol>
+        <div class="olymp">🔗 Same as Olympiad Задание 7 (five speakers).</div></div></div>
+      <div class="session"><input type="checkbox" data-ss="8"><div class="ss-body"><span class="ss-title">Your first email</span><span class="ss-time">30 min</span>
+        <ol><li>Read the ✉️ Письмо tab: the marking criteria and the model.</li><li>Write your answer to Mary there (100–120 words), go through the checklist, and copy it for me.</li></ol>
+        <div class="olymp">🔗 ОГЭ only, not in the Olympiad, so we start it early.</div></div></div>
+    </div>
+
+    <div class="exercise week">
+      <div class="week-head"><h3>Week 5</h3><span class="week-link">Olympiad: word formation</span></div>
+      <div class="session"><input type="checkbox" data-ss="9"><div class="ss-body"><span class="ss-title">Word formation × 2</span><span class="ss-time">25 min</span>
+        <ol><li>Решу ОГЭ → задания <b>29–34</b>: 12 tasks.</li><li>Make a table in your notebook: <i>-ful, -less, -ness, -ment, -tion, -ance, -ly, un-, dis-, im-</i>, with 2 examples each from today.</li></ol>
+        <div class="olymp">🔗 Exactly Olympiad Задание 4.</div></div></div>
+      <div class="session"><input type="checkbox" data-ss="10"><div class="ss-body"><span class="ss-title">False vs. Not stated</span><span class="ss-time">20 min</span>
+        <ol><li>Решу ОГЭ → задания <b>13–19</b>: one text in 12 minutes.</li><li>Every “Not stated”: say out loud what the text <b>does</b> say about it.</li></ol>
+        <div class="olymp">🔗 Careful reading for the Olympiad texts.</div></div></div>
+    </div>
+
+    <div class="exercise week">
+      <div class="week-head"><h3>Week 6</h3><span class="week-link">Olympiad: errors & headings</span></div>
+      <div class="session"><input type="checkbox" data-ss="11"><div class="ss-body"><span class="ss-title">Email no. 2, timed</span><span class="ss-time">30 min</span>
+        <ol><li>Решу ОГЭ → задание <b>35</b>: choose a new letter and write it in <b>30 minutes</b>, using the word counter in the ✉️ tab.</li><li>Check it against the list, then copy it for me.</li></ol>
+        <div class="olymp">🔗 Hunting for your own mistakes, like Olympiad Задание 3.</div></div></div>
+      <div class="session"><input type="checkbox" data-ss="12"><div class="ss-body"><span class="ss-title">Reading aloud</span><span class="ss-time">20 min</span>
+        <ol><li>🎤 tab → Task 1: 1.5 minutes silent, then read and <b>record</b>.</li><li>Listen back. Find 3 words you’re unsure of and check them with 🔊 in My Dictionary. Record again.</li></ol>
+        <div class="olymp">🔗 Phonetics, like in the school-stage Olympiad.</div></div></div>
+    </div>
+
+    <div class="exercise week">
+      <div class="week-head"><h3>Week 7</h3><span class="week-link">Olympiad week: keep it light</span></div>
+      <p style="font-size:.93rem;color:var(--muted);margin-bottom:6px">If the Olympiad falls this week, these two can wait until after it.</p>
+      <div class="session"><input type="checkbox" data-ss="13"><div class="ss-body"><span class="ss-title">Phone survey</span><span class="ss-time">15 min</span>
+        <ol><li>🎤 tab → Task 2: press 🎙 Record, play the official recording and answer each question in the pause, in full sentences.</li><li>Listen back: did every answer have 2 sentences?</li></ol></div></div>
+      <div class="session"><input type="checkbox" data-ss="14"><div class="ss-body"><span class="ss-title">Talk about your school</span><span class="ss-time">20 min</span>
+        <ol><li>🎤 tab → Task 3: 1.5 minutes to plan, 2 minutes to talk. Record it.</li><li>Count your sentences (10–12?) and check all 4 plan points.</li></ol></div></div>
+    </div>
+  </div>
+
+  <div class="btn-row" style="margin:6px 0 30px">
+    <button class="btn btn-danger" onclick="resetAll()">Clear all my answers</button>
+  </div>
+
+</div>
+
+<div class="save-indicator" id="saveIndicator">✓ Saved</div>
+
+<script>
+const LESSON_KEY = 'lesson-10';
+let data = {};
+try { data = JSON.parse(localStorage.getItem(LESSON_KEY)) || {}; } catch(e) {}
+
+function save(patch) {
+  Object.assign(data, patch);
+  try { localStorage.setItem(LESSON_KEY, JSON.stringify(data)); } catch(e) {}
+  const el = document.getElementById('saveIndicator');
+  el.classList.add('show');
+  clearTimeout(save.t);
+  save.t = setTimeout(() => el.classList.remove('show'), 1400);
+}
+
+// ── TABS ───────────────────────────────────────────────────────
+function showTab(name) {
+  const btn = document.querySelector('.tab-btn[onclick*="\'' + name + '\'"]');
+  if (!btn) return;
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  btn.classList.add('active');
+}
+function switchTab(name) {
+  showTab(name);
+  save({ activeTab: name });
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ── BUILD THE CONTROLS ─────────────────────────────────────────
+const QUIZZES = [...document.querySelectorAll('.quiz')];
+QUIZZES.forEach((q, qi) => {
+  q.id = 'q' + qi;
+  q.querySelectorAll('.ans').forEach((el, i) => { el.dataset.key = 'q' + qi + '-' + i; });
+});
+const isChecked = q => !!data['chk-' + q.id];
+
+document.querySelectorAll('select.ans').forEach(sel => {
+  const blank = document.createElement('option');
+  blank.value = ''; blank.textContent = '—';
+  sel.appendChild(blank);
+  sel.dataset.opts.split(',').forEach(v => {
+    const o = document.createElement('option');
+    o.value = v; o.textContent = v;
+    sel.appendChild(o);
+  });
+  if (data[sel.dataset.key] !== undefined) sel.value = data[sel.dataset.key];
+  sel.addEventListener('change', () => save({ [sel.dataset.key]: sel.value }));
+});
+document.querySelectorAll('input.blank.ans').forEach(inp => {
+  if (data[inp.dataset.key] !== undefined) inp.value = data[inp.dataset.key];
+  inp.addEventListener('input', () => save({ [inp.dataset.key]: inp.value }));
+});
+
+// ── MARKING ────────────────────────────────────────────────────
+// typed answers: capitals, curly apostrophes and extra spaces don't matter; spelling does
+const norm = s => s.toLowerCase().replace(/[’‘`]/g, "'").replace(/[.,!?;:"“”]/g, ' ').replace(/\s+/g, ' ').trim();
+function mark(el) {
+  const keys = el.dataset.answer.split('|');
+  const ok = el.tagName === 'SELECT' ? keys.includes(el.value) : keys.some(k => norm(k) === norm(el.value));
+  el.classList.add(ok ? 'correct' : 'wrong');
+  // the correct answer next to every gap
+  el.insertAdjacentHTML('afterend', '<span class="key">' + keys.join(' / ') + '</span>');
+  el.disabled = true;
+  return ok ? 1 : 0;
+}
+function unmark(el) {
+  el.classList.remove('correct', 'wrong'); el.disabled = false; el.value = '';
+  if (el.nextElementSibling && el.nextElementSibling.classList.contains('key')) el.nextElementSibling.remove();
+}
+
+// ── CHECK / TRY AGAIN ──────────────────────────────────────────
+QUIZZES.forEach(q => {
+  const foot = document.createElement('div');
+  foot.className = 'quiz-foot';
+  foot.innerHTML = '<button class="btn btn-primary">Check ✓</button>' +
+                   '<button class="btn btn-ghost" style="display:none">Try again ↺</button>' +
+                   '<span class="q-result"></span>';
+  const script = q.querySelector('details.script');
+  script ? q.insertBefore(foot, script) : q.appendChild(foot);
+  const [bCheck, bRetry] = foot.querySelectorAll('button');
+  bCheck.addEventListener('click', () => checkQuiz(q, true));
+  bRetry.addEventListener('click', () => retryQuiz(q));
+  q._foot = foot;
+});
+function checkQuiz(q, doSave) {
+  const els = [...q.querySelectorAll('.ans')];
+  const got = els.reduce((a, el) => a + mark(el), 0), max = els.length;
+  const res = q._foot.querySelector('.q-result');
+  res.textContent = got + ' / ' + max + (got === max ? ' — perfect! 🎉' : '');
+  res.className = 'q-result ' + (got === max ? 'full' : got === 0 ? 'zero' : 'part');
+  q._foot.children[0].style.display = 'none';
+  q._foot.children[1].style.display = '';
+  q.classList.add('checked');
+  q._score = [got, max];
+  if (doSave) save({ ['chk-' + q.id]: true });
+  updateProgress();
+}
+function retryQuiz(q) {
+  const patch = { ['chk-' + q.id]: false };
+  q.querySelectorAll('.ans').forEach(el => { unmark(el); patch[el.dataset.key] = undefined; });
+  q._foot.querySelector('.q-result').textContent = '';
+  q._foot.children[0].style.display = '';
+  q._foot.children[1].style.display = 'none';
+  q.classList.remove('checked');
+  q._score = null;
+  save(patch);
+  updateProgress();
+}
+function updateProgress() {
+  const done = QUIZZES.filter(q => q._score);
+  const got = done.reduce((a, q) => a + q._score[0], 0);
+  const max = done.reduce((a, q) => a + q._score[1], 0);
+  document.getElementById('pgCount').textContent = done.length + ' / ' + QUIZZES.length;
+  document.getElementById('pgScore').textContent = got + ' / ' + max;
+  document.getElementById('pgFill').style.width = (done.length / QUIZZES.length * 100) + '%';
+}
+
+// ── EMAIL: word count (ФИПИ rules) + checklist ─────────────────
+// a "word" is anything between spaces that has a letter or digit: I've, e-mail, TV, 2026 = 1 word each
+const email = document.getElementById('email35');
+const countWords = t => t.split(/\s+/).filter(w => /[\p{L}\p{N}]/u.test(w)).length;
+function paintWc() {
+  const n = countWords(email.value), wc = document.getElementById('wc');
+  wc.querySelector('.wc-num').textContent = n;
+  let cls = 'bad', msg = n ? 'under 90 words = 0 points' : '';
+  if (n >= 100 && n <= 120) { cls = 'good'; msg = '✓ perfect length'; }
+  else if (n >= 90 && n < 100) { cls = 'ok'; msg = 'allowed, but aim for 100–120'; }
+  else if (n > 120 && n <= 132) { cls = 'ok'; msg = 'allowed, but only the first 120 words are read'; }
+  else if (n > 132) { cls = 'bad'; msg = 'too long: only the first 120 words are marked'; }
+  wc.className = 'wc ' + (n ? cls : '');
+  wc.querySelector('.wc-msg').textContent = msg;
+}
+email.value = data.email || '';
+email.addEventListener('input', () => { save({ email: email.value }); paintWc(); });
+paintWc();
+document.getElementById('modelWc').textContent = '✓ ' + countWords([...document.querySelectorAll('#modelMail p')].map(p => p.textContent).join(' ')) + ' words';
+document.querySelectorAll('#emailChecks input').forEach((c, i) => {
+  c.checked = !!data['ec-' + i];
+  c.addEventListener('change', () => save({ ['ec-' + i]: c.checked }));
+});
+function copyEmail() {
+  let name = '';
+  try { name = localStorage.getItem('studentName') || ''; } catch(e) {}
+  const text = 'Lesson 10 — ОГЭ email (Задание 35)' + (name ? ' — ' + name : '') + '\nWords: ' + countWords(email.value) + '\n\n' + email.value;
+  const done = () => { document.getElementById('copyMsg').textContent = '✓ Copied: paste it into our chat'; };
+  if (navigator.clipboard) navigator.clipboard.writeText(text).then(done, () => fallbackCopy(text, done));
+  else fallbackCopy(text, done);
+}
+function fallbackCopy(text, done) {
+  const t = document.createElement('textarea'); t.value = text; document.body.appendChild(t);
+  t.select(); try { document.execCommand('copy'); done(); } catch(e) {} t.remove();
+}
+
+// ── SPEAKING: timers + record yourself ─────────────────────────
+const fmt = s => Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0');
+let recorder = null;
+function addRecorder(box) {
+  if (!navigator.mediaDevices || !window.MediaRecorder) return;
+  const btn = document.createElement('button');
+  btn.className = 'btn btn-ghost rec-btn'; btn.textContent = '🎙 Record';
+  const out = document.createElement('div');
+  out.className = 'rec-out';
+  box.append(btn); box.after(out);
+  // remove the old recording (and free its memory)
+  const clear = () => {
+    const old = out.querySelector('audio');
+    if (old) { old.pause(); URL.revokeObjectURL(old.src); }
+    out.innerHTML = '';
+  };
+  let chunks = [], stream = null;
+  btn.addEventListener('click', async () => {
+    if (btn._rec) { btn._rec.stop(); return; }
+    try { stream = await navigator.mediaDevices.getUserMedia({ audio: true }); }
+    catch (e) { btn.textContent = '🎙 Microphone blocked'; return; }
+    chunks = [];
+    const rec = new MediaRecorder(stream);
+    rec.ondataavailable = e => chunks.push(e.data);
+    rec.onstop = () => {
+      stream.getTracks().forEach(t => t.stop());
+      clear();
+      const a = document.createElement('audio');
+      a.controls = true; a.className = 'rec-audio';
+      a.src = URL.createObjectURL(new Blob(chunks, { type: rec.mimeType }));
+      const del = document.createElement('button');
+      del.type = 'button'; del.className = 'btn btn-danger rec-del'; del.textContent = '🗑 Delete';
+      del.addEventListener('click', () => {
+        if (!confirm('Delete this recording?')) return;
+        clear();
+        btn.textContent = '🎙 Record';
+      });
+      out.append(a, del);
+      btn._rec = null; btn.classList.remove('recording'); btn.textContent = '🎙 Record again';
+    };
+    rec.start();
+    btn._rec = rec; btn.classList.add('recording'); btn.textContent = '■ Stop recording';
+  });
+  box._recBtn = btn;
+}
+document.querySelectorAll('.speak-tools[data-steps]').forEach(box => {
+  const steps = box.dataset.steps.split(',').map(s => { const [label, sec] = s.split(':'); return { label, sec: +sec }; });
+  box.innerHTML = '<button class="btn btn-primary">▶ Start timer</button><span class="timer">' + fmt(steps[0].sec) +
+                  '</span><span class="timer-label">' + steps[0].label + '</span>';
+  const [start] = box.querySelectorAll('button');
+  const timer = box.querySelector('.timer'), label = box.querySelector('.timer-label');
+  let id = null;
+  start.addEventListener('click', () => {
+    if (id) { clearInterval(id); id = null; start.textContent = '▶ Start timer'; timer.textContent = fmt(steps[0].sec); label.textContent = steps[0].label; timer.classList.remove('done'); return; }
+    let i = 0, left = steps[0].sec;
+    start.textContent = '■ Stop';
+    timer.classList.remove('done');
+    id = setInterval(() => {
+      left--;
+      if (left <= 0) {
+        i++;
+        if (i >= steps.length) { clearInterval(id); id = null; timer.textContent = '0:00'; timer.classList.add('done'); label.textContent = 'Time’s up'; start.textContent = '▶ Start timer'; return; }
+        left = steps[i].sec; label.textContent = steps[i].label + ': go!';
+      }
+      timer.textContent = fmt(left);
+    }, 1000);
+  });
+  addRecorder(box);
+});
+
+addRecorder(document.getElementById('surveyTools'));
+
+// ── AUDIO PLAYERS: play/pause, drag or click the bar, ⏪ 10 s / ⏩ 10 s ──
+document.querySelectorAll('.player[data-src]').forEach(pl => {
+  const audio = new Audio(pl.dataset.src);
+  audio.preload = 'metadata';
+  pl.innerHTML =
+    '<button type="button" class="pl-btn" aria-label="Play">' +
+      '<svg class="i-play" viewBox="0 0 24 24"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.2-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z"/></svg>' +
+      '<svg class="i-pause" viewBox="0 0 24 24"><rect x="6" y="5" width="4.2" height="14" rx="1.2"/><rect x="13.8" y="5" width="4.2" height="14" rx="1.2"/></svg>' +
+    '</button>' +
+    '<div class="pl-main">' +
+      '<div class="pl-top"><span class="pl-label"><span class="eq"><i></i><i></i><i></i><i></i></span>ФИПИ recording · ' + pl.dataset.label + '</span>' +
+        '<span class="pl-time">0:00</span></div>' +
+      '<div class="pl-track"><div class="pl-fill"></div><div class="pl-knob"></div></div>' +
+    '</div>' +
+    '<button type="button" class="pl-skip" data-s="-10" title="Back 10 seconds">⏪ 10</button>' +
+    '<button type="button" class="pl-skip" data-s="10" title="Forward 10 seconds">10 ⏩</button>';
+  pl.appendChild(audio);
+  const fill = pl.querySelector('.pl-fill'), knob = pl.querySelector('.pl-knob');
+  const time = pl.querySelector('.pl-time'), track = pl.querySelector('.pl-track');
+  const paint = () => {
+    const pct = audio.duration ? audio.currentTime / audio.duration * 100 : 0;
+    fill.style.width = pct + '%'; knob.style.left = pct + '%';
+    time.textContent = fmt(Math.floor(audio.currentTime)) + ' / ' + (audio.duration ? fmt(Math.floor(audio.duration)) : '…');
+  };
+  const play = () => {
+    document.querySelectorAll('.player audio').forEach(a => { if (a !== audio) a.pause(); });
+    audio.play();
+  };
+  pl.querySelector('.pl-btn').addEventListener('click', () => audio.paused ? play() : audio.pause());
+  pl.querySelectorAll('.pl-skip').forEach(b => b.addEventListener('click', () => {
+    if (!audio.duration) return;
+    audio.currentTime = Math.min(audio.duration, Math.max(0, audio.currentTime + +b.dataset.s));
+    paint();
+  }));
+  // click or drag anywhere on the bar to jump there
+  const seek = e => {
+    if (!audio.duration) return;
+    const r = track.getBoundingClientRect();
+    audio.currentTime = Math.min(1, Math.max(0, (e.clientX - r.left) / r.width)) * audio.duration;
+    paint();
+  };
+  track.addEventListener('pointerdown', e => { track.setPointerCapture(e.pointerId); pl.classList.add('dragging'); seek(e); });
+  track.addEventListener('pointermove', e => { if (pl.classList.contains('dragging')) seek(e); });
+  track.addEventListener('pointerup', () => pl.classList.remove('dragging'));
+  track.addEventListener('pointercancel', () => pl.classList.remove('dragging'));
+  audio.addEventListener('play',  () => pl.classList.add('playing'));
+  audio.addEventListener('pause', () => pl.classList.remove('playing'));
+  audio.addEventListener('ended', () => pl.classList.remove('playing'));
+  audio.addEventListener('timeupdate', paint);
+  audio.addEventListener('loadedmetadata', paint);
+});
+
+// ── SELF-STUDY CHECKBOXES ──────────────────────────────────────
+const ss = [...document.querySelectorAll('.session input[data-ss]')];
+function paintSs() {
+  ss.forEach(c => c.closest('.session').classList.toggle('done', c.checked));
+  document.getElementById('ssCount').textContent = ss.filter(c => c.checked).length + ' / ' + ss.length;
+}
+ss.forEach(c => {
+  c.checked = !!data['ss-' + c.dataset.ss];
+  c.addEventListener('change', () => { save({ ['ss-' + c.dataset.ss]: c.checked }); paintSs(); });
+});
+paintSs();
+
+function resetAll() {
+  if (!confirm('Clear every answer on this page, including your email and ticked sessions?')) return;
+  try { localStorage.removeItem(LESSON_KEY); } catch(e) {}
+  location.reload();
+}
+
+// ── INIT ───────────────────────────────────────────────────────
+if (data.activeTab) showTab(data.activeTab);
+QUIZZES.forEach(q => { if (isChecked(q)) checkQuiz(q, false); });
+updateProgress();
+</script>
+
+<script src="../dictionary.js"></script>
+</body>
+</html>
