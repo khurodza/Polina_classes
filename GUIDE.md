@@ -423,8 +423,9 @@ a **📖 My Dictionary** link to it.
 - **Adding words yourself in the sheet:** type the word and translation in a
   new row, and put anything unique in `id` (e.g. `p1`, `p2`). A row with an
   empty `id` shows on the site but can't be deleted there.
-- **Translation:** the **Suggest** button asks MyMemory (free) for Russian
-  options. She can also type her own.
+- **Translation:** the **Suggest** button asks Google Translate (free) for Russian
+  options: the main translation first, then dictionary alternatives. If Google can't be
+  reached, it asks MyMemory instead. She can also type her own.
 - **Pronunciation:** the 🔊 button plays `lessons/audio/words/<word>.mp3` if that file exists
   (every flashcard word has one), else Google Translate’s British voice (works for phrases too,
   needs internet), else the device’s own English voice. Google’s voice is a free service without

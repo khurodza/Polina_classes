@@ -134,17 +134,29 @@
     sync();
   }
 
-  /* ---- translation suggestions (MyMemory, free, no key); only answers in Russian letters ---- */
+  /* ---- translation suggestions: Google Translate (free, no key), MyMemory if Google is unreachable;
+          only answers in Russian letters ---- */
   async function suggest(text) {
-    const url = 'https://api.mymemory.translated.net/get?langpair=en|' + LANG + '&q=' + encodeURIComponent(text);
-    const res = await (await fetch(url)).json();
     const out = [];
     const push = t => {
       t = String(t || '').trim();
       if (t && !/MYMEMORY|QUERY LENGTH/i.test(t) && /[а-яё]/i.test(t) && !out.some(o => o.toLowerCase() === t.toLowerCase())) out.push(t);
     };
-    push(res.responseData && res.responseData.translatedText);
-    (res.matches || []).sort((a, b) => b.match - a.match).forEach(m => push(m.translation));
+    try {
+      // dt=t → the main translation, dt=bd → dictionary alternatives (by part of speech, most common first)
+      const url = 'https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=' + LANG + '&dt=t&dt=bd&dj=1&q=' + encodeURIComponent(text);
+      const res = await (await fetch(url)).json();
+      push((res.sentences || []).map(s => s.trans || '').join(''));
+      const alts = [];
+      (res.dict || []).forEach(d => (d.entry || []).forEach(e => alts.push(e)));
+      alts.sort((a, b) => (b.score || 0) - (a.score || 0)).forEach(e => push(e.word));
+    } catch (e) { /* fall through to MyMemory */ }
+    if (!out.length) {
+      const url = 'https://api.mymemory.translated.net/get?langpair=en|' + LANG + '&q=' + encodeURIComponent(text);
+      const res = await (await fetch(url)).json();
+      push(res.responseData && res.responseData.translatedText);
+      (res.matches || []).sort((a, b) => b.match - a.match).forEach(m => push(m.translation));
+    }
     return out.slice(0, 4);
   }
 
