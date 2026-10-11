@@ -9,8 +9,8 @@
    words added offline are sent the next time the site is online.
 
    Pronunciation: a recording from lessons/audio/words/ if there is
-   one, else a real recording from dictionaryapi.dev (single words
-   only), else the browser's own English voice.
+   one (every flashcard word has one), else Google's British voice
+   (words and phrases), else the device's own English voice.
 
    To switch the buttons off on one page (e.g. during a mock test),
    load the script with data-off:  <script src="../dictionary.js" data-off></script>
@@ -24,7 +24,6 @@
 
   const CACHE_KEY = 'polina-dictionary-words';
   const QUEUE_KEY = 'polina-dictionary-queue';
-  const AUDIO_KEY = 'polina-dictionary-audio';
 
   const SCRIPT = document.currentScript;
   const here = path => SCRIPT && SCRIPT.src ? new URL(path, SCRIPT.src).href : path;
@@ -150,7 +149,14 @@
   }
 
   /* ---- pronunciation ---- */
-  const audioUrls = readJSON(AUDIO_KEY, {});   // word → recording URL ('' = none found)
+  // Google's British voice refuses requests that say which website they come from, so this page
+  // doesn't send its address with requests (nothing else on the site needs it).
+  if (!document.querySelector('meta[name="referrer"]')) {
+    const m = document.createElement('meta');
+    m.name = 'referrer'; m.content = 'no-referrer';
+    document.head.prepend(m);
+  }
+  const googleVoice = text => 'https://translate.googleapis.com/translate_tts?ie=UTF-8&client=gtx&tl=en-GB&q=' + encodeURIComponent(text.slice(0, 190));
   let current = null, currentBtn = null, playToken = 0;
 
   function stop() {
@@ -165,44 +171,26 @@
     return text.toLowerCase().replace(/[’']/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
   }
 
+  // last resort: the device's own voice. Prefer the natural-sounding ones where the device has them.
+  const GOOD_VOICE = /natural|neural|premium|enhanced|google uk english|daniel|serena|kate|arthur|martha|libby|sonia|ryan/i;
   function tts(text, done) {
     if (!window.speechSynthesis) { done(); return; }
     const u = new SpeechSynthesisUtterance(text);
-    const voices = speechSynthesis.getVoices();
-    const v = voices.find(v => v.lang === 'en-GB') || voices.find(v => /^en/.test(v.lang));
+    const en = speechSynthesis.getVoices().filter(v => /^en/i.test(v.lang));
+    const gb = en.filter(v => /GB/i.test(v.lang));
+    const v = gb.find(v => GOOD_VOICE.test(v.name)) || en.find(v => GOOD_VOICE.test(v.name)) || gb[0] || en[0];
     if (v) u.voice = v;
     u.lang = v ? v.lang : 'en-GB';
-    u.rate = 0.85;
+    u.rate = 0.9;
     u.onend = u.onerror = done;
     speechSynthesis.speak(u);
   }
 
-  async function onlineRecording(text) {
-    const w = text.trim().toLowerCase();
-    if (!/^[a-z][a-z'-]*$/.test(w)) return '';   // phrases: no recordings exist
-    if (w in audioUrls) return audioUrls[w];
-    let url = '';
-    try {
-      // give up after 3 s (the service is sometimes down and then hangs for 20 s) and use the browser voice
-      const ctrl = new AbortController();
-      const t = setTimeout(() => ctrl.abort(), 3000);
-      const r = await fetch('https://api.dictionaryapi.dev/api/v2/entries/en/' + encodeURIComponent(w), { signal: ctrl.signal });
-      clearTimeout(t);
-      if (r.ok) {
-        const all = (await r.json()).flatMap(e => e.phonetics || []).map(p => p.audio).filter(Boolean);
-        url = all.find(a => /-uk\.mp3$/.test(a)) || all[0] || '';
-      }
-    } catch (e) { return ''; }   // offline or too slow: don't remember "no recording"
-    audioUrls[w] = url;
-    writeJSON(AUDIO_KEY, audioUrls);
-    return url;
-  }
-
-  function playUrl(url) {
+  function playUrl(url, wait) {
     return new Promise((resolve, reject) => {
       const a = new Audio(url);
       current = a;
-      const slow = setTimeout(() => { a.pause(); reject(); }, 4000);   // recording won't start: move on
+      const slow = setTimeout(() => { a.pause(); reject(); }, wait);   // won't start in time: move on
       a.onplaying = () => clearTimeout(slow);
       a.onended = () => resolve(true);
       a.onerror = () => { clearTimeout(slow); reject(); };
@@ -218,14 +206,13 @@
     currentBtn = btn || null;
     if (btn) btn.classList.add('playing');
     const done = () => { if (btn) btn.classList.remove('playing'); if (currentBtn === btn) currentBtn = null; };
-    const tryUrl = async url => {
-      if (!url || mine !== playToken) return false;
-      try { await playUrl(url); return true; } catch (e) { return false; }
+    const tryUrl = async (url, wait) => {
+      if (mine !== playToken) return false;
+      try { await playUrl(url, wait); return true; } catch (e) { return false; }
     };
-    if (await tryUrl(WORDS_AUDIO + fileName(text) + '.m4a')) { done(); return; }
-    const online = await onlineRecording(text);
-    if (mine !== playToken) return;
-    if (await tryUrl(online)) { done(); return; }
+    // 1. our own recording (every flashcard word has one) · 2. Google's British voice · 3. the device's voice
+    if (await tryUrl(WORDS_AUDIO + fileName(text) + '.mp3', 2500)) { done(); return; }
+    if (await tryUrl(googleVoice(text), 2500)) { done(); return; }
     if (mine !== playToken) return;
     tts(text, done);
   }

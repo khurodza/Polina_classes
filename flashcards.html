@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Flashcards</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <h1>🃏 Flashcards</h1>
+  <a class="back-link" href="index.html">← All Lessons</a>
+</header>
+
+<div class="container">
+  <div class="lesson-meta">
+    <h2>Olympiad vocabulary, B2–C1</h2>
+    <p>Choose a deck. Flip the cards, then practise in Learn, Match and Test. Your progress is saved on this device.</p>
+  </div>
+
+  <!-- the deck list is drawn from decks.js -->
+  <div class="fc-decks" id="deckList"></div>
+  <div id="deckApp"></div>
+</div>
+
+<script src="decks.js"></script>
+<script>
+  // ?deck=v8 opens that deck; otherwise the first one
+  const want = new URLSearchParams(location.search).get('deck');
+  const current = (DECKS.find(d => d.id === want) || DECKS[0]).id;
+  const list = document.getElementById('deckList');
+  DECKS.forEach(d => {
+    let known = 0;
+    try { const st = JSON.parse(localStorage.getItem('fc-' + d.id)) || {}; known = d.cards.filter(c => (st.stage || {})[c.w] === 2 || (st.known || {})[c.w]).length; } catch (e) {}
+    const a = document.createElement('a');
+    a.className = 'fc-deck-card' + (d.id === current ? ' active' : '');
+    a.href = '?deck=' + d.id;
+    a.innerHTML = '<b>' + d.name + '</b><small>' + d.cards.length + ' cards · ' + d.lesson + '</small>' +
+                  '<div class="fc-deck-bar"><i style="width:' + (known / d.cards.length * 100) + '%"></i></div>';
+    list.appendChild(a);
+  });
+  const app = document.createElement('div');
+  app.className = 'fc-app'; app.dataset.deck = current;
+  document.getElementById('deckApp').appendChild(app);
+</script>
+<script src="flashcards.js"></script>
+<script src="dictionary.js"></script>
+</body>
+</html>

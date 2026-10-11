@@ -110,6 +110,10 @@ polina_classes/
 ├── dictionary.html     ← My Dictionary (Polina's word list, see "My Dictionary")
 ├── dictionary.js       ← My Dictionary + the "+ Word" button on every page
 ├── dictionary-apps-script.gs ← Saved copy of the Google Sheet script (see "My Dictionary")
+├── flashcards.html     ← Flashcards page: all decks (see "Flashcards")
+├── flashcards.js       ← Flashcard engine: Flashcards / Learn / Match / Test
+├── choices.js          ← Multiple-choice gaps as question cards with A/B/C tiles
+├── decks.js            ← The words of every deck (History, People, Science, Nature, Culture, Mind)
 ├── GUIDE.md            ← This file
 └── lessons/
     ├── lesson-template.html   ← Blank template — always copy this for new lessons
@@ -421,9 +425,10 @@ a **📖 My Dictionary** link to it.
   empty `id` shows on the site but can't be deleted there.
 - **Translation:** the **Suggest** button asks MyMemory (free) for Russian
   options. She can also type her own.
-- **Pronunciation:** the 🔊 button plays `lessons/audio/words/<word>.m4a` if
-  that file exists (e.g. `set-off.m4a`), else a real recording from
-  dictionaryapi.dev (single words only), else the browser's English voice.
+- **Pronunciation:** the 🔊 button plays `lessons/audio/words/<word>.mp3` if that file exists
+  (every flashcard word has one), else Google Translate’s British voice (works for phrases too,
+  needs internet), else the device’s own English voice. Google’s voice is a free service without
+  a contract: if it ever stops working, the device voice takes over automatically.
 - **Settings** are at the top of `dictionary.js`: `API` (the web app URL),
   `KEY` (must be exactly the same as `SECRET` in the Apps Script) and `LANG`.
 - **New lesson pages:** the template already loads the dictionary. Keep the
@@ -471,6 +476,38 @@ a **📖 My Dictionary** link to it.
 **If you ever change the Apps Script code:** Deploy → **Manage deployments** →
 ✏️ edit → Version: **New version** → Deploy. The URL stays the same. (Clicking
 "New deployment" instead gives a new URL, which you'd have to paste again.)
+
+---
+
+## Flashcards
+
+`flashcards.html` shows every deck in `decks.js`, Quizlet-style, with four modes:
+**Flashcards** (flip, 🔊, ✓ know / ✗ still learning), **Learn** (choose the translation, then type the
+English word; a card is 🏆 mastered after both), **Match** (timed game) and **Test** (12 mixed questions).
+Progress is saved in her browser, per deck.
+
+- **Put a deck inside a lesson:** add `<div class="fc-app" data-deck="v8"></div>` where you want it, and
+  these three lines before `</body>` (lesson pages): `<script src="../decks.js"></script>`,
+  `<script src="../flashcards.js"></script>` (and keep `../dictionary.js`).
+- **Word list of a deck:** `<div class="fc-list" data-deck="v8"></div>` shows every word of the deck, grouped
+  B2 · C1 · phrasal verbs, with 🔊, translation and example, plus a “Hide Russian” self-test button.
+  Put it right after the first flashcards block of a lesson.
+- **Add a deck or a word:** open `decks.js`, copy a deck block (or one card line) and change it.
+  `w` = English, `t` = Russian, `e` = example, `l` = level, `p` = part of speech, `n` = optional pattern.
+- **Sound:** every card has a recording in `lessons/audio/words/<word>.mp3` (British voice). New words
+  without a recording use the browser voice until a file is added.
+- **Quizlet / Excel copy:** `Desktop/Высшая проба/Round 2 plan/Round2-Vocabulary-V8-V13.xlsx` has the same
+  words (one sheet per deck). Copy columns A–B into Quizlet → Import.
+
+---
+
+## Multiple-choice question cards (choices.js)
+
+In practice lessons, every multiple-choice gap (`<select class="exam-select ans" data-opts="a,b,c" data-answer="b">`)
+becomes a question card: the sentence on top, the options as lettered tiles (A, B, C) below, and the `___` in the sentence shows the chosen answer. After Check the right
+button turns green and a wrong choice red. Nothing else changes: write the gaps as before and add
+`<script src="../choices.js"></script>` before `</body>` (after the lesson's own script).
+Mock tests (Lessons 7 and 9) don't load it, so they keep the exam look. Word-box gaps (`data-bank`) keep their pill menus.
 
 ---
 

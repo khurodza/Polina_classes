@@ -1,0 +1,1019 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lesson 11 – History & Heritage · Narrative Tenses</title>
+  <link rel="stylesheet" href="../style.css">
+  <style>
+    .exam-select {
+      font: inherit; font-weight: 700; text-align: center; padding: 7px 10px; border-radius: 10px;
+      border: 2px solid var(--border); background: var(--card); color: var(--text); cursor: pointer; min-width: 64px;
+    }
+    .exam-select:focus { border-color: var(--primary); outline: none; }
+    .exam-select.correct, .blank.correct { border-color: var(--green); color: var(--green); background: rgba(91,140,69,.08); }
+    .exam-select.wrong,   .blank.wrong   { border-color: var(--red);   color: var(--red);   background: rgba(200,64,64,.06); }
+    .blank { min-width: 130px; font-weight: 600; border: 2px solid var(--border); border-radius: 10px; padding: 5px 10px; background: var(--card); }
+    .blank.short { min-width: 100px; width: 120px; }
+    .blank:focus { border-color: var(--primary); outline: none; }
+    .key { margin-left: 4px; font-size: .82rem; font-weight: 700; color: var(--green); background: rgba(91,140,69,.10); padding: 2px 8px; border-radius: 6px; }
+
+    .answer-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; padding: 9px 0; border-bottom: 1px dashed var(--border); }
+    .answer-row:last-child { border-bottom: none; }
+    .ar-num { font-family: 'Fraunces', Georgia, serif; font-weight: 700; color: var(--primary); min-width: 26px; }
+    .ar-txt { flex: 1; min-width: 200px; line-height: 1.75; }
+    .cue { font-weight: 700; letter-spacing: .04em; color: var(--accent-dk); background: rgba(201,160,48,.14); padding: 1px 8px; border-radius: 6px; font-size: .86rem; white-space: nowrap; }
+    .gap-text { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px 20px; line-height: 2.3; font-size: 1.02rem; }
+    .gap-text .gn { font-family: 'Fraunces', Georgia, serif; font-weight: 700; color: var(--primary); font-size: .85rem; margin-right: 2px; }
+    .gap-text h4 { font-family: 'Fraunces', Georgia, serif; text-align: center; font-size: 1.15rem; margin-bottom: 4px; line-height: 1.5; }
+    /* word box: a word crosses itself out when it's used in a gap (or when she taps it) */
+    .bank { display: flex; flex-wrap: wrap; gap: 8px; padding: 14px 16px; margin-bottom: 14px; border: 2px dashed rgba(201,160,48,.55); border-radius: 14px; background: rgba(201,160,48,.07); }
+    .bank span { position: relative; font-weight: 700; padding: 5px 14px; border-radius: 99px; background: #fff; border: 2px solid var(--border); cursor: pointer; user-select: none; transition: .2s; }
+    .bank span:hover { border-color: var(--accent); }
+    .bank span.used, .bank span.struck { color: var(--muted); background: transparent; border-style: dashed; text-decoration: line-through; text-decoration-thickness: 2px; text-decoration-color: var(--primary); opacity: .75; }
+    .bank span.used::after { content: attr(data-gap); position: absolute; top: -8px; right: -6px; min-width: 18px; height: 18px; padding: 0 4px; border-radius: 99px; background: var(--primary); color: #fff; font-size: .68rem; line-height: 18px; text-align: center; text-decoration: none; display: inline-block; }
+    .bank-hint { font-size: .82rem; color: var(--muted); margin: -8px 0 12px; }
+
+    /* gaps in a word-box text: number badge + pill-shaped choice */
+    .gap { display: inline-flex; align-items: center; white-space: nowrap; margin: 0 2px; vertical-align: middle; }
+    .gap .gn { display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; border-radius: 50%; background: var(--primary); color: #fff !important; font-family: 'DM Sans', system-ui, sans-serif !important; font-size: .74rem !important; font-weight: 700; margin-right: -6px; position: relative; z-index: 1; box-shadow: 0 0 0 3px var(--card); }
+    .gap select.exam-select {
+      appearance: none; -webkit-appearance: none; min-width: 138px; padding: 4px 30px 4px 16px; border-radius: 99px;
+      font-weight: 700; text-align: left; color: var(--primary-dk); background-color: #fff;
+      border: 2px dashed rgba(212,87,42,.45);
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%23D4572A' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat; background-position: right 11px center; background-size: 11px 8px;
+    }
+    .gap select.exam-select:hover:not(:disabled) { border-color: var(--primary); }
+    .gap select.exam-select.filled { border-style: solid; border-color: var(--blue); color: var(--text); background-color: #EAF2FB; }
+    .gap select.exam-select.correct { border-style: solid; border-color: var(--green); color: var(--green); background-color: rgba(91,140,69,.10); background-image: none; padding-right: 16px; }
+    .gap select.exam-select.wrong { border-style: solid; border-color: var(--red); color: var(--red); background-color: rgba(200,64,64,.07); background-image: none; padding-right: 16px; }
+
+    .step-title { font-weight: 700; font-size: .8rem; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin: 22px 0 10px; display: flex; align-items: center; gap: 8px; }
+    .step-title::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+    .task-num { font-weight: 700; color: var(--accent-dk); background: rgba(201,160,48,.15); padding: 3px 12px; border-radius: 99px; font-size: .85rem; }
+    .pts { font-weight: 700; font-size: .82rem; padding: 3px 10px; border-radius: 99px; color: var(--blue); background: rgba(95,142,196,.12); }
+    .review-head { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 6px; }
+    .talk { background: rgba(95,142,196,.09); border-left: 4px solid var(--blue); border-radius: 0 10px 10px 0; padding: 10px 14px; margin: 10px 0; line-height: 1.6; font-size: .97rem; }
+    .book { display: inline-flex; align-items: center; gap: 6px; font-size: .88rem; font-weight: 700; color: var(--rose); background: rgba(196,122,150,.12); padding: 4px 12px; border-radius: 99px; margin-top: 10px; }
+
+    /* instruction + key-fact chips (as in lesson 10) */
+    .instr { margin: 10px 0 8px; color: var(--text); font-size: 1rem; line-height: 1.7; }
+    .facts { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 16px; }
+    .fact { display: inline-flex; align-items: center; gap: 4px; padding: 5px 13px; border-radius: 99px; font-size: .86rem; font-weight: 700; color: #fff; background: var(--primary); box-shadow: 0 2px 6px rgba(44,32,16,.12); }
+    .fact:nth-child(4n+2) { background: var(--blue); } .fact:nth-child(4n+3) { background: var(--rose); } .fact:nth-child(4n+4) { background: var(--green); }
+
+    /* hints: closed until she taps them (as in lesson 10) */
+    details.logic { background: rgba(201,160,48,.09); border: 2px solid rgba(201,160,48,.35); border-radius: var(--radius); margin-top: 12px; overflow: hidden; }
+    details.logic summary { list-style: none; cursor: pointer; display: flex; align-items: center; gap: 10px; padding: 11px 16px; font-weight: 700; color: var(--accent-dk); user-select: none; }
+    details.logic summary::-webkit-details-marker { display: none; }
+    details.logic summary:hover { background: rgba(201,160,48,.12); }
+    details.logic summary::after { content: '▾'; margin-left: auto; font-size: 1.1rem; transition: transform .2s; }
+    details.logic[open] summary::after { transform: rotate(180deg); }
+    details.logic[open] summary { border-bottom: 1px dashed rgba(201,160,48,.45); }
+    .hint-txt { font-family: 'Fraunces', Georgia, serif; font-size: 1.02rem; }
+    .logic-body { padding: 12px 18px; line-height: 1.7; }
+    .logic-body ul, .logic-body ol { padding-left: 22px; }
+
+    /* the rule table stays open: it is the lesson */
+    .rule-table { border-collapse: collapse; width: 100%; font-size: .95rem; }
+    .rule-table th, .rule-table td { border: 1px solid var(--border); padding: 8px 10px; text-align: left; vertical-align: top; background: #fff; }
+    .rule-table th { background: rgba(212,87,42,.08); }
+    .rule-table td:first-child { font-weight: 700; white-space: nowrap; }
+    .rule-table i { color: var(--primary-dk); font-style: normal; font-weight: 600; }
+    .tbl-wrap { overflow-x: auto; }
+
+    /* revealed after Check */
+    .after-check { display: none; margin-top: 14px; }
+    .quiz.checked .after-check { display: block; }
+    details.script { border: 2px solid rgba(95,142,196,.35); border-radius: 12px; background: rgba(95,142,196,.05); }
+    details.script summary { cursor: pointer; padding: 9px 14px; font-weight: 700; color: var(--blue); }
+    details.script .sc-body { padding: 2px 16px 12px; line-height: 1.7; }
+
+    .timeline { list-style: none; border-left: 3px solid var(--primary); margin-left: 8px; }
+    .timeline li { position: relative; padding: 6px 0 6px 18px; line-height: 1.5; }
+    .timeline li::before { content: ''; position: absolute; left: -8px; top: 12px; width: 13px; height: 13px; border-radius: 50%; background: #fff; border: 3px solid var(--primary); }
+    .timeline b { font-family: 'Fraunces', Georgia, serif; color: var(--primary); margin-right: 6px; }
+
+
+    /* ── guided discovery (grammar) ── */
+    .part-head { display: flex; align-items: center; gap: 10px; margin: 30px 0 14px; font-family: 'Fraunces', Georgia, serif; font-size: 1.35rem; font-weight: 700; color: var(--text); }
+    .part-head:first-child { margin-top: 4px; }
+    .part-head span { font-family: 'DM Sans', system-ui, sans-serif; font-size: .75rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: #fff; background: var(--text); padding: 4px 10px; border-radius: 99px; }
+    .story { background: #fff; border: 1px solid var(--border); border-radius: var(--radius); padding: 18px 22px; line-height: 2; font-size: 1.04rem; box-shadow: 0 2px 10px rgba(44,32,16,.05); }
+    .story.small { line-height: 1.9; margin-bottom: 6px; }
+    .story h4 { font-family: 'Fraunces', Georgia, serif; text-align: center; font-size: 1.2rem; margin-bottom: 6px; }
+    .story p { margin-bottom: 8px; }
+    .v { font-weight: 700; padding: 1px 7px; border-radius: 6px; white-space: nowrap; }
+    .v-ps  { color: #3F6E2B; background: rgba(91,140,69,.16); }
+    .v-pc  { color: #2F5F96; background: rgba(95,142,196,.18); }
+    .v-pp  { color: #9A3F64; background: rgba(196,122,150,.20); }
+    .v-pres { color: #8A6A10; background: rgba(201,160,48,.20); }
+    .v-prp { color: #7A4FB0; background: rgba(140,100,200,.15); }
+    .v-pas { color: #B5481F; background: rgba(212,87,42,.13); }
+    .legend3 { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 6px; font-size: .85rem; }
+    .rule-box { background: linear-gradient(160deg, #fff, rgba(95,142,196,.07)); border: 2px solid rgba(95,142,196,.45); border-radius: var(--radius); padding: 16px 18px; }
+    @keyframes hintIn { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: none; } }
+    .rule-title { font-family: 'Fraunces', Georgia, serif; font-size: 1.15rem; font-weight: 700; color: var(--blue); margin-bottom: 12px; }
+    .rule-box .rule-table { margin: 6px 0 10px; }
+    .rule-box .rule-table td:first-child { white-space: normal; }
+    .ru-note { background: rgba(196,122,150,.09); border-left: 4px solid var(--rose); border-radius: 0 10px 10px 0; padding: 9px 14px; font-size: .93rem; line-height: 1.6; margin-top: 8px; }
+    .rule-tip { margin-top: 10px; font-size: .95rem; line-height: 1.7; }
+    /* timeline */
+    .tl { position: relative; height: 128px; margin: 4px 0 14px; }
+    .tl-line { position: absolute; left: 0; right: 0; top: 64px; height: 3px; background: var(--text); border-radius: 2px; }
+    .tl-line::after { content: ''; position: absolute; right: -2px; top: -6px; border: 7px solid transparent; border-left: 11px solid var(--text); }
+    .tl-pp, .tl-pc, .tl-ps, .tl-now { position: absolute; font-size: .82rem; text-align: center; }
+    .tl small { display: block; color: var(--muted); font-weight: 600; margin-top: 3px; }
+    .tl-pp { left: 0; width: 18%; top: 18px; }
+    .tl-pp::after { content: ''; position: absolute; left: 50%; top: 40px; width: 12px; height: 12px; margin-left: -6px; border-radius: 50%; background: var(--rose); }
+    .tl-pc { left: 26%; width: 62%; top: 82px; }
+    .tl-pc::before { content: ''; position: absolute; left: 0; right: 0; top: -22px; height: 12px; border-radius: 99px; background: rgba(95,142,196,.55); }
+    .tl-ps { left: 40%; width: 46%; top: 6px; }
+    .tl-ps i { position: absolute; top: 52px; width: 12px; height: 12px; margin-left: -6px; border-radius: 50%; background: var(--green); }
+    .tl-ps i:nth-child(1) { left: 10%; } .tl-ps i:nth-child(2) { left: 37%; } .tl-ps i:nth-child(3) { left: 64%; } .tl-ps i:nth-child(4) { left: 91%; }
+    .tl-now { right: 0; top: 74px; font-weight: 700; color: var(--muted); }
+    @media (max-width: 560px) { .tl { height: 150px; } .tl .v { white-space: normal; } .tl-pp { width: 24%; } }
+    /* passive pairs */
+    .pairs { display: flex; flex-direction: column; gap: 10px; margin-bottom: 14px; }
+    .pair { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    @media (max-width: 640px) { .pair { grid-template-columns: 1fr; } }
+    .pa, .pp { background: #fff; border: 1px solid var(--border); border-radius: 12px; padding: 10px 14px; line-height: 1.7; }
+    .pp { border-color: rgba(212,87,42,.4); background: rgba(212,87,42,.04); }
+    .pa small, .pp small { display: block; font-size: .7rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+    .pp small { color: var(--primary); }
+    .formula { display: flex; align-items: center; justify-content: center; gap: 10px; flex-wrap: wrap; font-size: 1.15rem; margin: 4px 0 12px; }
+    .f-be, .f-v3 { font-family: 'Fraunces', Georgia, serif; font-weight: 700; color: #fff; padding: 4px 16px; border-radius: 10px; }
+    .f-be { background: var(--blue); } .f-v3 { background: var(--primary); }
+    .f-plus { color: var(--muted); font-weight: 700; }
+    .quiz-foot { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-top: 14px; }
+    .q-result { font-weight: 700; }
+    .q-result.full { color: var(--green); } .q-result.part { color: var(--accent-dk); } .q-result.zero { color: var(--red); }
+    .progress-wrap { position: sticky; top: 0; z-index: 30; background: var(--bg); padding: 10px 0 12px; margin-bottom: 8px; border-bottom: 1px solid var(--border); }
+    .progress-top { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 7px; font-weight: 600; font-size: .92rem; }
+    .progress-top span { color: var(--primary); }
+    .progress-bar { height: 9px; border-radius: 99px; background: var(--border); overflow: hidden; }
+    .progress-fill { height: 100%; width: 0%; border-radius: 99px; background: linear-gradient(90deg, var(--primary), var(--accent-dk)); transition: width .3s ease; }
+
+    /* audio player: play/pause, drag the bar, ⏪ 10 s / ⏩ 10 s (as in lesson 10) */
+    .player { display: flex; align-items: center; gap: 12px; background: linear-gradient(135deg, rgba(212,87,42,.09), rgba(201,160,48,.10)); border: 2px solid rgba(212,87,42,.25); border-radius: 18px; padding: 12px 16px; margin: 4px 0 16px; }
+    .pl-btn { flex: 0 0 52px; width: 52px; height: 52px; border-radius: 50%; border: none; background: var(--primary); color: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(212,87,42,.35); }
+    .pl-btn:hover { background: var(--primary-dk); }
+    .pl-btn svg { width: 22px; height: 22px; fill: currentColor; }
+    .pl-btn .i-pause { display: none; }
+    .player.playing .pl-btn .i-play { display: none; } .player.playing .pl-btn .i-pause { display: block; }
+    .pl-main { flex: 1; min-width: 0; }
+    .pl-top { display: flex; justify-content: space-between; gap: 10px; margin-bottom: 8px; font-size: .88rem; }
+    .pl-label { font-weight: 700; color: var(--primary-dk); }
+    .pl-time { color: var(--muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
+    .pl-track { position: relative; height: 10px; border-radius: 99px; background: rgba(44,32,16,.10); cursor: pointer; touch-action: none; }
+    .pl-fill { position: absolute; inset: 0 auto 0 0; width: 0; border-radius: 99px; background: linear-gradient(90deg, var(--primary), var(--accent-dk)); }
+    .pl-knob { position: absolute; top: 50%; left: 0; width: 18px; height: 18px; margin: -9px 0 0 -9px; border-radius: 50%; background: #fff; border: 3px solid var(--primary); box-shadow: 0 1px 4px rgba(0,0,0,.2); transition: transform .15s; }
+    .pl-track:hover .pl-knob, .player.dragging .pl-knob { transform: scale(1.25); }
+    .pl-skip { flex: 0 0 auto; height: 36px; padding: 0 10px; border-radius: 99px; border: 2px solid var(--border); background: var(--card); color: var(--muted); cursor: pointer; font: inherit; font-size: .8rem; font-weight: 700; white-space: nowrap; }
+    .pl-skip:hover { border-color: var(--primary); color: var(--primary); }
+    @media (max-width: 560px) { .player { flex-wrap: wrap; gap: 10px; padding: 10px 12px; } .pl-main { flex-basis: calc(100% - 64px); } .pl-skip { flex: 1; } }
+
+    /* homework checklist + writing */
+    .hw-list { list-style: none; }
+    .hw-list li { padding: 10px 0; border-bottom: 1px dashed var(--border); }
+    .hw-list li:last-child { border-bottom: none; }
+    .hw-list label { display: flex; gap: 12px; align-items: flex-start; cursor: pointer; line-height: 1.55; }
+    .hw-list input { width: 22px; height: 22px; accent-color: var(--green); flex-shrink: 0; margin-top: 1px; }
+    .hw-list .min { font-size: .8rem; font-weight: 700; color: #fff; background: var(--blue); padding: 1px 8px; border-radius: 99px; margin-left: 6px; }
+    .hw-list li.done span.t { color: var(--green); text-decoration: line-through; }
+    .free-write { min-height: 170px; }
+    .video-wrap { margin: 6px 0 14px; }
+    .video-wrap video { width: 100%; border-radius: 14px; background: #000; box-shadow: 0 6px 20px rgba(44,32,16,.18); display: block; }
+    .video-credit { font-size: .78rem; color: var(--muted); margin-top: 6px; }
+    .use-words { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; padding: 10px 14px; border-radius: 12px; background: rgba(201,160,48,.08); border: 2px dashed rgba(201,160,48,.45); margin-bottom: 4px; }
+    .use-words b { margin-right: 4px; font-size: .9rem; }
+    .use-words span { font-weight: 700; font-size: .88rem; padding: 2px 10px; border-radius: 99px; background: #fff; border: 1px solid var(--border); }
+    .use-words span.used { background: var(--green); border-color: var(--green); color: #fff; }
+    .self-check { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+    .sc-item { font-size: .86rem; font-weight: 700; padding: 5px 12px; border-radius: 99px; border: 2px solid var(--border); color: var(--muted); background: #fff; }
+    .sc-item.ok { border-color: var(--green); color: var(--green); background: rgba(91,140,69,.08); }
+    .self-check-note { font-size: .78rem; color: var(--muted); margin-top: 6px; }
+
+    .tab-btn:nth-child(5).active { background: var(--green); border-color: var(--green); }
+    .tab-btn:nth-child(6).active { background: var(--primary-dk); border-color: var(--primary-dk); }
+  </style>
+</head>
+<body>
+
+<header class="site-header">
+  <h1>Lesson 11 — History & Heritage</h1>
+  <a class="back-link" href="../index.html">← All Lessons</a>
+</header>
+
+<div class="container">
+
+  <div class="lesson-meta">
+    <h2>«Высшая проба» Round 2 · History vocabulary + narrative tenses</h2>
+    <p>📅 16 October 2026 &nbsp;·&nbsp; Lesson 11 &nbsp;·&nbsp; trains Задание 1 (forms) and Задание 2 (word bank)</p>
+  </div>
+
+  <div class="progress-wrap">
+    <div class="progress-top">
+      <div>Blocks checked: <span id="pgCount">0 / 0</span></div>
+      <div>Points today: <span id="pgScore">0 / 0</span></div>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="pgFill"></div></div>
+  </div>
+
+  <div class="tab-bar">
+    <button class="tab-btn active" onclick="switchTab('warm', this)">🔁 Warm-up</button>
+    <button class="tab-btn"        onclick="switchTab('vocab', this)">📚 Vocabulary</button>
+    <button class="tab-btn"        onclick="switchTab('gram', this)">⚙️ Grammar</button>
+    <button class="tab-btn"        onclick="switchTab('z1', this)">📝 Задание 1</button>
+    <button class="tab-btn"        onclick="switchTab('cult', this)">🌍 Culture</button>
+    <button class="tab-btn"        onclick="switchTab('hw', this)">🏠 Homework</button>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════
+       TAB 1 — WARM-UP (8 min): the Задание 1 forms from the demo
+  ══════════════════════════════════════════════════════════ -->
+  <div class="tab-content active" id="tab-warm">
+    <div class="exercise">
+      <div class="exercise-label">Retrieval · 8 min</div>
+      <h3>Remember the demo? Same forms, new sentences</h3>
+      <p class="instr">Put the word in brackets into the correct form. Write one word or a short form (e.g. <i>has been</i>).</p>
+      <div class="facts"><span class="fact">⚙️ form of the word</span><span class="fact">⏱ 5 min</span><span class="fact">✍️ spelling counts</span></div>
+      <div class="quiz">
+        <div class="answer-row"><span class="ar-num">1</span><span class="ar-txt">The museum <input class="blank ans" data-answer="opened" autocomplete="off" spellcheck="false"> <span class="cue">OPEN</span> in 1852 and still attracts thousands of visitors.</span></div>
+        <div class="answer-row"><span class="ar-num">2</span><span class="ar-txt">To date, the project <input class="blank ans" data-answer="has raised" autocomplete="off" spellcheck="false"> <span class="cue">RAISE</span> over £2 million.</span></div>
+        <div class="answer-row"><span class="ar-num">3</span><span class="ar-txt">The castle and <input class="blank short ans" data-answer="its" autocomplete="off" spellcheck="false"> <span class="cue">IT</span> gardens are open every day.</span></div>
+        <div class="answer-row"><span class="ar-num">4</span><span class="ar-txt">It is <input class="blank ans" data-answer="the largest" autocomplete="off" spellcheck="false"> <span class="cue">LARGE</span> Roman villa ever found in the region.</span></div>
+        <div class="answer-row"><span class="ar-num">5</span><span class="ar-txt">The coins in this case <input class="blank ans" data-answer="are made|were made" autocomplete="off" spellcheck="false"> <span class="cue">MAKE</span> of silver.</span></div>
+        <div class="answer-row"><span class="ar-num">6</span><span class="ar-txt">A team of experts, <input class="blank ans" data-answer="headed|led" autocomplete="off" spellcheck="false"> <span class="cue">HEAD</span> by Dr Lee, studied the finds.</span></div>
+      </div>
+      <details class="logic"><summary><span>💡</span><span class="hint-txt">Hint · the demo traps</span></summary><div class="logic-body"><ul>
+        <li><b>To date / so far / since</b> → present perfect (<i>has raised</i>).</li>
+        <li><b>The + superlative</b>: the article is part of the answer (<i>the largest</i>).</li>
+        <li><b>its</b> = belonging to it; <b>it’s</b> = it is.</li>
+        <li>A noun + <b>-ed</b> form after a comma = a shortened passive (<i>headed by</i> = <i>who was headed by</i>).</li>
+      </ul></div></details>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════
+       TAB 2 — VOCABULARY (Block A, 35 min)
+  ══════════════════════════════════════════════════════════ -->
+  <div class="tab-content" id="tab-vocab">
+
+    <div class="exercise">
+      <div class="exercise-label">Step 1 · Meet the words · 8 min</div>
+      <h3>History & heritage: the words</h3>
+      <p class="instr">Go through the cards: say the word, guess the translation, then flip. Mark each card ✓ or ✗.</p>
+      <div class="fc-app" data-deck="v8"></div>
+    </div>
+
+    <div class="exercise">
+      <div class="exercise-label">Step 2 · Your word list</div>
+      <h3>All the new words in one place</h3>
+      <p class="instr">Read through the list and listen to any word you’re unsure of. Then press <b>🙈 Hide Russian</b> and test yourself: tap a blurred translation to check.</p>
+      <div class="fc-list" data-deck="v8"></div>
+    </div>
+
+    <div class="exercise">
+      <div class="exercise-label">Step 3 · Collocations</div>
+      <h3>Which word goes with it?</h3>
+      <p class="instr">Complete each phrase with one word from today’s word list.</p>
+      <div class="facts"><span class="fact">✍️ one word</span><span class="fact">🧠 from memory</span><span class="fact">📚 today’s flashcards</span></div>
+      <div class="quiz">
+        <div class="answer-row"><span class="ar-num">1</span><span class="ar-txt">The two kings signed a peace <input class="blank ans" data-answer="treaty" autocomplete="off" spellcheck="false"> in 1328.</span></div>
+        <div class="answer-row"><span class="ar-num">2</span><span class="ar-txt">After the war, the empire went into <input class="blank ans" data-answer="decline" autocomplete="off" spellcheck="false">.</span></div>
+        <div class="answer-row"><span class="ar-num">3</span><span class="ar-txt">She <input class="blank ans" data-answer="traced" autocomplete="off" spellcheck="false"> her family back to a medieval village.</span></div>
+        <div class="answer-row"><span class="ar-num">4</span><span class="ar-txt">The English <input class="blank ans" data-answer="established" autocomplete="off" spellcheck="false"> their first colony in America in 1607.</span></div>
+        <div class="answer-row"><span class="ar-num">5</span><span class="ar-txt">Theatre flourished during the <input class="blank ans" data-answer="reign" autocomplete="off" spellcheck="false"> of Elizabeth I.</span></div>
+        <div class="answer-row"><span class="ar-num">6</span><span class="ar-txt">Castles and cathedrals are part of the country’s national <input class="blank ans" data-answer="heritage" autocomplete="off" spellcheck="false">.</span></div>
+        <div class="answer-row"><span class="ar-num">7</span><span class="ar-txt">The Hundred Years’ War <input class="blank ans" data-answer="broke" autocomplete="off" spellcheck="false"> out in 1337.</span></div>
+        <div class="answer-row"><span class="ar-num">8</span><span class="ar-txt">The country declared its <input class="blank ans" data-answer="independence" autocomplete="off" spellcheck="false"> in 1776.</span></div>
+      </div>
+      <details class="logic"><summary><span>💡</span><span class="hint-txt">Hint · learn the partner words</span></summary><div class="logic-body">
+        <p>Olympiad gaps test <b>collocations</b>, not just meanings: <i>sign</i> a treaty, <i>go into</i> decline, <i>declare / gain</i> independence, <i>trace</i> sth <i>back to</i>, <i>during the reign of</i>, war <i>breaks out</i>. Learn the whole phrase, not the single word.</p>
+      </div></details>
+    </div>
+
+    <div class="exercise">
+      <div class="review-head"><span class="task-num">Задание 2 format</span><span class="pts">10 gaps · 3 extra words</span></div>
+      <h3>Rome in Britain</h3>
+      <p class="instr">Read the text and fill in the gaps with the words from the box. There are three words you do not need. Use each word only once.</p>
+      <div class="facts"><span class="fact">🧩 13 words, 10 gaps</span><span class="fact">✍️ the form is already given</span><span class="fact">⏱ 8 min</span></div>
+      <div class="bank"><span>conquered</span><span>decline</span><span>empire</span><span>established</span><span>flourished</span><span>handed down</span><span>invasion</span><span>legacy</span><span>reign</span><span>remains</span><span>traced</span><span>treaty</span><span>wiped out</span></div>
+      <p class="bank-hint">A word is crossed out when you use it (in the list it gets a ✓). You can also tap a word to cross it out yourself.</p>
+      <div class="quiz">
+        <div class="gap-text">
+          In AD 43 the Roman army landed in Kent and began the <span class="gap"><span class="gn">1</span><select class="exam-select ans" data-bank="1" data-answer="invasion"></select></span> of Britain.
+          Within forty years the Romans had <span class="gap"><span class="gn">2</span><select class="exam-select ans" data-bank="1" data-answer="conquered"></select></span> most of what is now England and Wales.
+          Not everyone accepted Roman rule: in AD 60 Queen Boudica led a revolt, and her army <span class="gap"><span class="gn">3</span><select class="exam-select ans" data-bank="1" data-answer="wiped out"></select></span> the new town of Londinium.
+          But the rebellion failed, and Britain remained a province of the <span class="gap"><span class="gn">4</span><select class="exam-select ans" data-bank="1" data-answer="empire"></select></span> for nearly four hundred years.
+          The Romans <span class="gap"><span class="gn">5</span><select class="exam-select ans" data-bank="1" data-answer="established"></select></span> towns, roads and baths, and trade <span class="gap"><span class="gn">6</span><select class="exam-select ans" data-bank="1" data-answer="flourished"></select></span>.
+          In AD 122 Emperor Hadrian ordered a wall to protect the northern border; long sections of it still stand, and the <span class="gap"><span class="gn">7</span><select class="exam-select ans" data-bank="1" data-answer="remains"></select></span> of its forts attract thousands of visitors.
+          In the early fifth century, as the empire went into <span class="gap"><span class="gn">8</span><select class="exam-select ans" data-bank="1" data-answer="decline"></select></span>, the last Roman soldiers left.
+          Yet their <span class="gap"><span class="gn">9</span><select class="exam-select ans" data-bank="1" data-answer="legacy"></select></span> is everywhere: many English place names can be <span class="gap"><span class="gn">10</span><select class="exam-select ans" data-bank="1" data-answer="traced"></select></span> back to Latin, such as Chester, from <i>castra</i>, “a camp”.
+        </div>
+      </div>
+      <details class="logic"><summary><span>💡</span><span class="hint-txt">Hint · grammar first, then meaning</span></summary><div class="logic-body"><ol>
+        <li>Before reading, label every word in the box: <b>noun</b> (invasion, empire…), <b>past form</b> (conquered, flourished…), <b>phrasal verb</b> (wiped out, handed down).</li>
+        <li>For each gap ask: after <i>the</i> → noun; after <i>had</i> or <i>can be</i> → past participle; between subject and object → verb.</li>
+        <li>Only then choose by meaning. The 3 extra words fit the grammar of some gap but not its meaning.</li>
+      </ol></div></details>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════
+       TAB 3 — GRAMMAR (Block B, 35 min)
+  ══════════════════════════════════════════════════════════ -->
+  <div class="tab-content" id="tab-gram">
+
+    <!-- ══ PART 1 · NARRATIVE TENSES: discover → rule → practice ══ -->
+    <div class="part-head"><span>Part 1</span> Telling a story in the past</div>
+
+    <div class="exercise">
+      <div class="exercise-label">Discover · step 1</div>
+      <h3>Read the story. Look at the coloured verbs.</h3>
+      <div class="story">
+        <h4>“Wonderful things”</h4>
+        <p>In November 1922, the British archaeologist Howard Carter <span class="v v-pc">was working</span> in the Valley of the Kings in Egypt. He <span class="v v-pp">had been</span> there for five years, but he <span class="v v-pp">had found</span> almost nothing. Lord Carnarvon, who was paying for the dig, <span class="v v-pp">had decided</span> that this would be the last season.</p>
+        <p>On 4 November, while the workers <span class="v v-pc">were clearing</span> sand, a boy <span class="v v-ps">found</span> a stone step. The team <span class="v v-ps">dug</span> down, and three weeks later they <span class="v v-ps">reached</span> a sealed door. Carter <span class="v v-ps">made</span> a small hole and <span class="v v-ps">looked</span> inside with a candle. When Carnarvon <span class="v v-ps">asked</span> if he could see anything, Carter <span class="v v-ps">answered</span>: “Yes, wonderful things.” It <span class="v v-ps">was</span> the tomb of Tutankhamun.</p>
+        <div class="legend3"><span class="v v-ps">green verbs</span><span class="v v-pc">blue verbs</span><span class="v v-pp">pink verbs</span></div>
+      </div>
+    </div>
+
+    <div class="exercise">
+      <div class="exercise-label">Discover · step 2</div>
+      <h3>Answer the questions: they lead you to the rule</h3>
+      <p class="instr">Answer from the story, then press Check. The rule opens after you check.</p>
+      <div class="facts"><span class="fact">🔎 think, don’t guess</span><span class="fact">7 questions</span></div>
+      <div class="quiz">
+        <div class="answer-row"><span class="ar-num">1</span><span class="ar-txt">Look at the <span class="v v-ps">green</span> verbs: <i>found, dug, reached, made, looked</i>. Are they in the order they happened?</span><select class="exam-select ans" data-opts="yes: one after another,no: the order is mixed" data-answer="yes: one after another"></select></div>
+        <div class="answer-row"><span class="ar-num">2</span><span class="ar-txt">“While the workers <span class="v v-pc">were clearing</span> sand, a boy <span class="v v-ps">found</span> a step.” Which action was already going on?</span><select class="exam-select ans" data-opts="were clearing,found" data-answer="were clearing"></select></div>
+        <div class="answer-row"><span class="ar-num">3</span><span class="ar-txt">When the boy found the step, had the clearing finished?</span><select class="exam-select ans" data-opts="no: it was still going on,yes: it was finished" data-answer="no: it was still going on"></select></div>
+        <div class="answer-row"><span class="ar-num">4</span><span class="ar-txt">“He <span class="v v-pp">had found</span> almost nothing.” Did this happen before or after November 1922?</span><select class="exam-select ans" data-opts="before,after" data-answer="before"></select></div>
+        <div class="answer-row"><span class="ar-num">5</span><span class="ar-txt">Which colour tells the <b>main events</b>, one after another?</span><select class="exam-select ans" data-opts="green,blue,pink" data-answer="green"></select></div>
+        <div class="answer-row"><span class="ar-num">6</span><span class="ar-txt">Which colour describes the <b>background</b>: an action in progress?</span><select class="exam-select ans" data-opts="green,blue,pink" data-answer="blue"></select></div>
+        <div class="answer-row"><span class="ar-num">7</span><span class="ar-txt">Which colour takes us <b>further back</b>, to something that happened before the story?</span><select class="exam-select ans" data-opts="green,blue,pink" data-answer="pink"></select></div>
+        <div class="after-check">
+          <div class="rule-box">
+            <div class="rule-title">📏 The rule you’ve just found</div>
+            <div class="tl">
+              <div class="tl-line"></div>
+              <div class="tl-pp"><span class="v v-pp">had found</span><small>earlier</small></div>
+              <div class="tl-pc"><span class="v v-pc">was working · were clearing</span><small>going on</small></div>
+              <div class="tl-ps"><i></i><i></i><i></i><i></i><span class="v v-ps">found → dug → reached → looked</span><small>the story</small></div>
+              <div class="tl-now">NOW →</div>
+            </div>
+            <div class="tbl-wrap"><table class="rule-table">
+              <tr><th>Tense</th><th>Form</th><th>Use it for</th><th>Signal words</th></tr>
+              <tr><td><span class="v v-ps">Past Simple</span></td><td>V2 / -ed: <i>found, looked</i></td><td>the <b>main events</b>, in order</td><td><i>then, when, in 1922, ago, three weeks later</i></td></tr>
+              <tr><td><span class="v v-pc">Past Continuous</span></td><td><b>was / were</b> + V-ing</td><td>the <b>background</b>: an action in progress when something else happened</td><td><i>while, as, at that moment</i></td></tr>
+              <tr><td><span class="v v-pp">Past Perfect</span></td><td><b>had</b> + V3: <i>had found</i></td><td>something <b>earlier</b> than the story (“the past of the past”)</td><td><i>before, already, by then, by the time</i></td></tr>
+            </table></div>
+            <div class="ru-note">🇷🇺 В русском одно прошедшее время, а в английском время показывает <b>порядок событий</b>. «Нашёл» может быть <i>found</i> (событие истории) или <i>had found</i> (раньше, чем остальные события). «Шёл, расчищал» (процесс) — это <i>was going, were clearing</i>.</div>
+            <div class="rule-tip">💡 A classic pair: <b>while</b> + <span class="v v-pc">was / were -ing</span>, <b>when</b> + <span class="v v-ps">past simple</span>. <i>While they <b>were clearing</b> sand, a boy <b>found</b> a step.</i></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="exercise">
+      <div class="exercise-label">Practice 1</div>
+      <h3>Main event, background or earlier?</h3>
+      <p class="instr">Choose the correct form. First decide: is it the main event, the background, or something earlier?</p>
+      <div class="quiz">
+        <div class="answer-row"><span class="ar-num">1</span><span class="ar-txt">When the volcano erupted, many people in Pompeii ___ lunch.</span><select class="exam-select ans" data-opts="ate,were eating,had eaten" data-answer="were eating"></select></div>
+        <div class="answer-row"><span class="ar-num">2</span><span class="ar-txt">Within a few hours, the ash ___ the whole city.</span><select class="exam-select ans" data-opts="covered,was covering,had covered" data-answer="covered"></select></div>
+        <div class="answer-row"><span class="ar-num">3</span><span class="ar-txt">While she ___ in the garden, she found an old coin.</span><select class="exam-select ans" data-opts="dug,was digging,had dug" data-answer="was digging"></select></div>
+        <div class="answer-row"><span class="ar-num">4</span><span class="ar-txt">When the archaeologists opened the tomb, they saw that robbers ___ it centuries earlier.</span><select class="exam-select ans" data-opts="emptied,were emptying,had emptied" data-answer="had emptied"></select></div>
+        <div class="answer-row"><span class="ar-num">5</span><span class="ar-txt">Carter made a hole, ___ a candle and looked inside.</span><select class="exam-select ans" data-opts="lit,was lighting,had lit" data-answer="lit"></select></div>
+        <div class="answer-row"><span class="ar-num">6</span><span class="ar-txt">By the time the Romans arrived, the Celts ___ in Britain for centuries.</span><select class="exam-select ans" data-opts="lived,were living,had lived" data-answer="had lived"></select></div>
+      </div>
+    </div>
+
+    <!-- ══ PART 2 · PAST OR PRESENT IN A HISTORY TEXT ══ -->
+    <div class="part-head"><span>Part 2</span> Not everything in a history text is past</div>
+
+    <div class="exercise">
+      <div class="exercise-label">Discover</div>
+      <h3>Stonehenge: four sentences, three tenses</h3>
+      <div class="story small">
+        <p><b>a</b> &nbsp;Stonehenge <span class="v v-pres">is</span> about 5,000 years old.</p>
+        <p><b>b</b> &nbsp;The builders <span class="v v-ps">brought</span> some of the stones from Wales.</p>
+        <p><b>c</b> &nbsp;Since 1986, Stonehenge <span class="v v-prp">has been</span> a World Heritage Site.</p>
+        <p><b>d</b> &nbsp;Over the years, millions of tourists <span class="v v-prp">have visited</span> it.</p>
+      </div>
+      <p class="instr">Answer the questions, then check. The rule opens after you check.</p>
+      <div class="quiz">
+        <div class="answer-row"><span class="ar-num">1</span><span class="ar-txt">Sentence <b>a</b>: is Stonehenge still old today?</span><select class="exam-select ans" data-opts="yes: it's true now,no: only in the past" data-answer="yes: it's true now"></select></div>
+        <div class="answer-row"><span class="ar-num">2</span><span class="ar-txt">Sentence <b>b</b>: is the bringing of the stones finished?</span><select class="exam-select ans" data-opts="yes: finished long ago,no: still happening" data-answer="yes: finished long ago"></select></div>
+        <div class="answer-row"><span class="ar-num">3</span><span class="ar-txt">Sentence <b>c</b>: is Stonehenge still a World Heritage Site now?</span><select class="exam-select ans" data-opts="yes,no" data-answer="yes"></select></div>
+        <div class="answer-row"><span class="ar-num">4</span><span class="ar-txt">Sentences <b>c</b> and <b>d</b> connect the past with…</span><select class="exam-select ans" data-opts="now,a finished date" data-answer="now"></select></div>
+        <div class="answer-row"><span class="ar-num">5</span><span class="ar-txt">Which words go with <span class="v v-prp">has been / have visited</span>?</span><select class="exam-select ans" data-opts="since / over the years,in 1986 / ago" data-answer="since / over the years"></select></div>
+        <div class="after-check">
+          <div class="rule-box">
+            <div class="rule-title">📏 The rule you’ve just found</div>
+            <div class="tbl-wrap"><table class="rule-table">
+              <tr><th>Tense</th><th>Use it for</th><th>Signal words</th></tr>
+              <tr><td><span class="v v-pres">Present Simple</span></td><td>a fact that is <b>still true</b> (age, size, place)</td><td><i>today, still, now</i></td></tr>
+              <tr><td><span class="v v-ps">Past Simple</span></td><td>a <b>finished</b> event</td><td><i>in 1986, ago, last century, then</i></td></tr>
+              <tr><td><span class="v v-prp">Present Perfect</span><br><small>have / has + V3</small></td><td>from the past <b>up to now</b>: the result counts today</td><td><i>since, to date, so far, over the years, ever</i></td></tr>
+            </table></div>
+            <div class="rule-tip">💡 Exam trap: <b>in</b> 1986 → <i>became</i>; <b>since</b> 1986 → <i>has been</i>. One small word changes the tense.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="exercise">
+      <div class="exercise-label">Practice 2</div>
+      <h3>Mixed: find the marker, choose the tense</h3>
+      <p class="instr">Choose the correct form. Underline the time marker first.</p>
+      <div class="facts"><span class="fact">🔎 find the marker</span><span class="fact">8 sentences</span></div>
+      <div class="quiz">
+        <div class="answer-row"><span class="ar-num">1</span><span class="ar-txt">Hadrian’s Wall ___ about 117 kilometres across northern England.</span><select class="exam-select ans" data-opts="stretches,stretched,has stretched" data-answer="stretches"></select></div>
+        <div class="answer-row"><span class="ar-num">2</span><span class="ar-txt">The Romans ___ the wall in AD 122.</span><select class="exam-select ans" data-opts="began,have begun,had begun" data-answer="began"></select></div>
+        <div class="answer-row"><span class="ar-num">3</span><span class="ar-txt">To date, archaeologists ___ thousands of objects at the fort.</span><select class="exam-select ans" data-opts="found,have found,had found" data-answer="have found"></select></div>
+        <div class="answer-row"><span class="ar-num">4</span><span class="ar-txt">While the workers ___ a new road, they found a Roman coin.</span><select class="exam-select ans" data-opts="dug,were digging,have dug" data-answer="were digging"></select></div>
+        <div class="answer-row"><span class="ar-num">5</span><span class="ar-txt">King John ___ to the Magna Carta in 1215.</span><select class="exam-select ans" data-opts="agreed,has agreed,had agreed" data-answer="agreed"></select></div>
+        <div class="answer-row"><span class="ar-num">6</span><span class="ar-txt">Stonehenge ___ about 5,000 years old.</span><select class="exam-select ans" data-opts="is,was,has been" data-answer="is"></select></div>
+        <div class="answer-row"><span class="ar-num">7</span><span class="ar-txt">Since 1986, Stonehenge ___ a World Heritage Site.</span><select class="exam-select ans" data-opts="is,was,has been" data-answer="has been"></select></div>
+        <div class="answer-row"><span class="ar-num">8</span><span class="ar-txt">The Tower of London ___ a World Heritage Site in 1988.</span><select class="exam-select ans" data-opts="became,has become,had become" data-answer="became"></select></div>
+      </div>
+    </div>
+
+    <!-- ══ PART 3 · THE PASSIVE ══ -->
+    <div class="part-head"><span>Part 3</span> The passive: when the thing matters more than the person</div>
+
+    <div class="exercise">
+      <div class="exercise-label">Discover</div>
+      <h3>Compare the sentences in each pair</h3>
+      <div class="pairs">
+        <div class="pair"><div class="pa"><small>active</small><b>William the Conqueror</b> built the White Tower.</div><div class="pp"><small>passive</small><b>The White Tower</b> <span class="v v-pas">was built</span> by William the Conqueror.</div></div>
+        <div class="pair"><div class="pa"><small>active</small>Guards <b>keep</b> the Crown Jewels in the Tower.</div><div class="pp"><small>passive</small><b>The Crown Jewels</b> <span class="v v-pas">are kept</span> in the Tower.</div></div>
+        <div class="pair"><div class="pa"><small>active</small>In 1671 a man tried to steal the Crown Jewels. <b>Someone</b> caught him near the Tower.</div><div class="pp"><small>passive</small>In 1671 a man tried to steal the Crown Jewels. <b>He</b> <span class="v v-pas">was caught</span> near the Tower.</div></div>
+        <div class="pair"><div class="pa"><small>active</small><b>People</b> have used the Tower as a prison.</div><div class="pp"><small>passive</small><b>The Tower</b> <span class="v v-pas">has been used</span> as a prison.</div></div>
+      </div>
+      <p class="instr">Answer the questions, then check. The rule opens after you check.</p>
+      <div class="quiz">
+        <div class="answer-row"><span class="ar-num">1</span><span class="ar-txt">“The White Tower <span class="v v-pas">was built</span> by William.” Who did the building?</span><select class="exam-select ans" data-opts="William,the Tower" data-answer="William"></select></div>
+        <div class="answer-row"><span class="ar-num">2</span><span class="ar-txt">So in a passive sentence, the subject (the first noun) is…</span><select class="exam-select ans" data-opts="the person who acts,the thing the action happens to" data-answer="the thing the action happens to"></select></div>
+        <div class="answer-row"><span class="ar-num">3</span><span class="ar-txt">“He <span class="v v-pas">was caught</span> near the Tower.” Does the sentence say who caught him?</span><select class="exam-select ans" data-opts="no: it isn't important,yes" data-answer="no: it isn't important"></select></div>
+        <div class="answer-row"><span class="ar-num">4</span><span class="ar-txt">Look at <i>was built, are kept, has been used</i>. Which part changes with the tense?</span><select class="exam-select ans" data-opts="the form of BE,the last word" data-answer="the form of BE"></select></div>
+        <div class="answer-row"><span class="ar-num">5</span><span class="ar-txt">What always comes after <i>be</i> in the passive?</span><select class="exam-select ans" data-opts="the 3rd form (V3),the -ing form,to + verb" data-answer="the 3rd form (V3)"></select></div>
+        <div class="answer-row"><span class="ar-num">6</span><span class="ar-txt">When do we add <b>by + person</b>?</span><select class="exam-select ans" data-opts="only when the person is important,always" data-answer="only when the person is important"></select></div>
+        <div class="after-check">
+          <div class="rule-box">
+            <div class="rule-title">📏 The rule you’ve just found</div>
+            <div class="formula"><span class="f-be">BE</span> <b>in the right tense</b> <span class="f-plus">+</span> <span class="f-v3">V3</span> <span class="f-plus">(+ by …)</span></div>
+            <div class="tbl-wrap"><table class="rule-table">
+              <tr><th>Tense</th><th>be</th><th>Example</th></tr>
+              <tr><td>Present Simple</td><td><b>is / are</b> + V3</td><td>The jewels <span class="v v-pas">are kept</span> in the Tower.</td></tr>
+              <tr><td>Past Simple</td><td><b>was / were</b> + V3</td><td>The tower <span class="v v-pas">was built</span> in the 1070s.</td></tr>
+              <tr><td>Present Perfect</td><td><b>has / have been</b> + V3</td><td>It <span class="v v-pas">has been used</span> as a prison.</td></tr>
+              <tr><td>Past Perfect</td><td><b>had been</b> + V3</td><td>By 1100 it <span class="v v-pas">had been completed</span>.</td></tr>
+            </table></div>
+            <div class="ru-note">🇷🇺 По-русски: «башня <b>была построена</b>», «драгоценности <b>хранятся</b>», «его <b>поймали</b>». Подлежащее — не тот, кто делает, а то, с чем это происходит.</div>
+            <div class="rule-tip">💡 In Задание 1, ask: <b>can the subject do this action?</b> “The Tower (USE) as a prison”: a tower can’t use anything → passive: <i>has been used</i>.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="exercise">
+      <div class="exercise-label">Practice 3</div>
+      <h3>Make it passive</h3>
+      <p class="instr">Complete the second sentence so that it means the same as the first. Keep the same tense.</p>
+      <div class="facts"><span class="fact">BE + V3</span><span class="fact">same tense</span><span class="fact">✍️ 2–3 words</span></div>
+      <div class="quiz">
+        <div class="answer-row"><span class="ar-num">1</span><span class="ar-txt">The Romans built Hadrian’s Wall. → Hadrian’s Wall <input class="blank ans" data-answer="was built" autocomplete="off" spellcheck="false"> by the Romans.</span></div>
+        <div class="answer-row"><span class="ar-num">2</span><span class="ar-txt">They keep the Crown Jewels in the Tower. → The Crown Jewels <input class="blank ans" data-answer="are kept" autocomplete="off" spellcheck="false"> in the Tower.</span></div>
+        <div class="answer-row"><span class="ar-num">3</span><span class="ar-txt">Archaeologists have found thousands of coins. → Thousands of coins <input class="blank ans" data-answer="have been found" autocomplete="off" spellcheck="false">.</span></div>
+        <div class="answer-row"><span class="ar-num">4</span><span class="ar-txt">A farmer discovered the treasure in 1992. → The treasure <input class="blank ans" data-answer="was discovered" autocomplete="off" spellcheck="false"> by a farmer in 1992.</span></div>
+        <div class="answer-row"><span class="ar-num">5</span><span class="ar-txt">People speak English all over the world. → English <input class="blank ans" data-answer="is spoken" autocomplete="off" spellcheck="false"> all over the world.</span></div>
+        <div class="answer-row"><span class="ar-num">6</span><span class="ar-txt">By 1100, workers had completed the tower. → By 1100, the tower <input class="blank ans" data-answer="had been completed" autocomplete="off" spellcheck="false">.</span></div>
+      </div>
+    </div>
+
+    <div class="exercise">
+      <div class="exercise-label">Practice 4</div>
+      <h3>Active or passive?</h3>
+      <p class="instr">Choose the correct form. Ask: can the subject do the action?</p>
+      <div class="facts"><span class="fact">🔎 who does it?</span><span class="fact">6 sentences</span></div>
+      <div class="quiz">
+        <div class="answer-row"><span class="ar-num">1</span><span class="ar-txt">The castle ___ in 1078.</span><select class="exam-select ans" data-opts="built,was built" data-answer="was built"></select></div>
+        <div class="answer-row"><span class="ar-num">2</span><span class="ar-txt">William ___ a castle in London.</span><select class="exam-select ans" data-opts="built,was built" data-answer="built"></select></div>
+        <div class="answer-row"><span class="ar-num">3</span><span class="ar-txt">Hundreds of objects ___ under the car park.</span><select class="exam-select ans" data-opts="found,were found" data-answer="were found"></select></div>
+        <div class="answer-row"><span class="ar-num">4</span><span class="ar-txt">The team ___ a gold ring on the last day.</span><select class="exam-select ans" data-opts="found,was found" data-answer="found"></select></div>
+        <div class="answer-row"><span class="ar-num">5</span><span class="ar-txt">Today the museum ___ by a million people a year.</span><select class="exam-select ans" data-opts="visits,is visited" data-answer="is visited"></select></div>
+        <div class="answer-row"><span class="ar-num">6</span><span class="ar-txt">Over the years, the Tower ___ as a palace, a prison and a zoo.</span><select class="exam-select ans" data-opts="has used,has been used" data-answer="has been used"></select></div>
+      </div>
+    </div>
+
+    <!-- ══ PART 4 · SHORT FORMS + ALL TOGETHER ══ -->
+    <div class="part-head"><span>Part 4</span> Putting it together</div>
+
+    <div class="exercise">
+      <div class="exercise-label">Practice 5</div>
+      <h3>Short forms: participle clauses</h3>
+      <p class="instr">Writers shorten sentences: <i>The White Tower, <b>which was built</b> in the 1070s, …</i> → <i><b>Built</b> in the 1070s, the White Tower …</i> Choose the right participle. Ask: is the subject doing the action (active → <b>-ing</b>) or is it done to it (passive → <b>V3</b>)?</p>
+      <div class="facts"><span class="fact">-ing = active</span><span class="fact">-ed / 3rd form = passive</span><span class="fact">having + 3rd form = earlier</span></div>
+      <div class="quiz">
+        <div class="answer-row"><span class="ar-num">1</span><span class="ar-txt">___ in the 1070s, the White Tower is the oldest part of the castle.</span><select class="exam-select ans" data-opts="Built,Building,Having built" data-answer="Built"></select></div>
+        <div class="answer-row"><span class="ar-num">2</span><span class="ar-txt">The Vikings attacked the coast, ___ villages and monasteries.</span><select class="exam-select ans" data-opts="destroying,destroyed,to destroy" data-answer="destroying"></select></div>
+        <div class="answer-row"><span class="ar-num">3</span><span class="ar-txt">___ the battle, William marched to London.</span><select class="exam-select ans" data-opts="Having won,Won,Having been won" data-answer="Having won"></select></div>
+        <div class="answer-row"><span class="ar-num">4</span><span class="ar-txt">The coins, ___ under a car park in 2019, are now in the city museum.</span><select class="exam-select ans" data-opts="finding,found,having found" data-answer="found"></select></div>
+        <div class="answer-row"><span class="ar-num">5</span><span class="ar-txt">___ along the wall, you can see for miles.</span><select class="exam-select ans" data-opts="Walking,Walked,Having walked" data-answer="Walking"></select></div>
+      </div>
+    </div>
+
+    <div class="exercise">
+      <div class="exercise-label">Practice 6 · Olympway style</div>
+      <h3>Elizabeth I: find and correct the mistakes</h3>
+      <p class="instr">Some lines are correct, some have one grammar mistake. Write the correct word, or <b>OK</b> if the line is correct.</p>
+      <div class="facts"><span class="fact">✍️ the correct word or OK</span><span class="fact">9 lines</span><span class="fact">🔗 like Olympiad Задание 3</span></div>
+      <div class="quiz">
+        <div class="answer-row"><span class="ar-num">1</span><span class="ar-txt">Elizabeth I was born in 1533 and became queen in 1558.</span><input class="blank short ans" data-answer="OK" autocomplete="off" spellcheck="false"></div>
+        <div class="answer-row"><span class="ar-num">2</span><span class="ar-txt">She was the daughter of Henry VIII and her second wife, Anne Boleyn.</span><input class="blank short ans" data-answer="his" autocomplete="off" spellcheck="false"></div>
+        <div class="answer-row"><span class="ar-num">3</span><span class="ar-txt">When she was a girl, she has learned Latin, French and Italian.</span><input class="blank short ans" data-answer="learned|learnt" autocomplete="off" spellcheck="false"></div>
+        <div class="answer-row"><span class="ar-num">4</span><span class="ar-txt">Her reign is often called a golden age of English history.</span><input class="blank short ans" data-answer="OK" autocomplete="off" spellcheck="false"></div>
+        <div class="answer-row"><span class="ar-num">5</span><span class="ar-txt">During her reign theatre flourished, and Shakespeare writes many of his plays.</span><input class="blank short ans" data-answer="wrote" autocomplete="off" spellcheck="false"></div>
+        <div class="answer-row"><span class="ar-num">6</span><span class="ar-txt">In 1588 the English navy defeated the Spanish Armada, who had sailed to invade England.</span><input class="blank short ans" data-answer="which|that" autocomplete="off" spellcheck="false"></div>
+        <div class="answer-row"><span class="ar-num">7</span><span class="ar-txt">Elizabeth never married, so she had not children.</span><input class="blank short ans" data-answer="no" autocomplete="off" spellcheck="false"></div>
+        <div class="answer-row"><span class="ar-num">8</span><span class="ar-txt">When she died in 1603, she had ruled England for 44 years.</span><input class="blank short ans" data-answer="OK" autocomplete="off" spellcheck="false"></div>
+        <div class="answer-row"><span class="ar-num">9</span><span class="ar-txt">She is still one of the more famous monarchs in British history.</span><input class="blank short ans" data-answer="most" autocomplete="off" spellcheck="false"></div>
+      </div>
+      <details class="logic"><summary><span>💡</span><span class="hint-txt">Hint · a checklist for every line</span></summary><div class="logic-body"><ol>
+        <li><b>Tense</b> against the time marker (<i>when she was a girl</i> → past simple).</li>
+        <li><b>Pronouns</b>: whose wife? Henry’s → <i>his</i>. Things take <i>which</i>, people take <i>who</i>.</li>
+        <li><b>Negatives</b> with nouns: <i>no children</i> / <i>didn’t have any children</i>.</li>
+        <li><b>one of the … + plural</b> → superlative: <i>one of the most famous</i>.</li>
+      </ol></div></details>
+      <div class="book">📘 In class: Olympway tasks 198 & 199 (PDF p. 155–156), two more biographies in the same format</div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════
+       TAB 4 — ЗАДАНИЕ 1 practice
+  ══════════════════════════════════════════════════════════ -->
+  <div class="tab-content" id="tab-z1">
+    <div class="exercise">
+      <div class="review-head"><span class="task-num">Задание 1 format</span><span class="pts">10 points</span></div>
+      <h3>The Tower of London</h3>
+      <p class="instr">Read the text. Put the words in capitals into the correct form so that they fit grammatically. Some answers need more than one word.</p>
+      <div class="facts"><span class="fact">⚙️ the right form</span><span class="fact">1–3 words</span><span class="fact">⏱ 10 min</span><span class="fact">✍️ spelling counts</span></div>
+      <div class="quiz">
+        <div class="gap-text">
+          <h4>The Tower of London</h4>
+          The Tower of London <span class="gn">1</span><input class="blank ans" data-answer="has stood" autocomplete="off" spellcheck="false"> <span class="cue">STAND</span> on the north bank of the Thames for nearly a thousand years.
+          William the Conqueror <span class="gn">2</span><input class="blank ans" data-answer="ordered" autocomplete="off" spellcheck="false"> <span class="cue">ORDER</span> the White Tower to be built in the 1070s, and it <span class="gn">3</span><input class="blank ans" data-answer="was completed|had been completed" autocomplete="off" spellcheck="false"> <span class="cue">COMPLETE</span> by about 1100.
+          The White Tower is still <span class="gn">4</span><input class="blank ans" data-answer="the oldest" autocomplete="off" spellcheck="false"> <span class="cue">OLD</span> part of the castle.
+          Over the centuries, the Tower <span class="gn">5</span><input class="blank ans" data-answer="has been used" autocomplete="off" spellcheck="false"> <span class="cue">USE</span> as a royal palace, a prison and even a zoo.
+          Anne Boleyn, the second wife of Henry VIII, <span class="gn">6</span><input class="blank ans" data-answer="was executed" autocomplete="off" spellcheck="false"> <span class="cue">EXECUTE</span> there in 1536.
+          Legend says that if the ravens ever <span class="gn">7</span><input class="blank ans" data-answer="leave" autocomplete="off" spellcheck="false"> <span class="cue">LEAVE</span> the Tower, the kingdom will fall.
+          Today the Crown Jewels <span class="gn">8</span><input class="blank ans" data-answer="are kept" autocomplete="off" spellcheck="false"> <span class="cue">KEEP</span> in the Tower, and to date millions of visitors <span class="gn">9</span><input class="blank ans" data-answer="have seen" autocomplete="off" spellcheck="false"> <span class="cue">SEE</span> them.
+          The Tower <span class="gn">10</span><input class="blank ans" data-answer="became" autocomplete="off" spellcheck="false"> <span class="cue">BECOME</span> a UNESCO World Heritage Site in 1988.
+        </div>
+      </div>
+      <details class="logic"><summary><span>💡</span><span class="hint-txt">Hint · how to do Задание 1 in 4 steps</span></summary><div class="logic-body"><ol>
+        <li>Read the whole sentence, and underline the <b>time marker</b> and the <b>subject</b>.</li>
+        <li>Active or passive? Can the subject do the action? (The Tower can’t <i>use</i> anything → passive.)</li>
+        <li>Choose the tense from the marker table.</li>
+        <li>Check agreement and spelling: <i>the jewels <b>are</b></i>, <i>visitors <b>have</b></i>.</li>
+      </ol></div></details>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════
+       TAB 5 — CULTURE: UK timeline 1066–1603
+  ══════════════════════════════════════════════════════════ -->
+  <div class="tab-content" id="tab-cult">
+    <div class="exercise">
+      <div class="review-head"><span class="task-num">Задание 10 format</span><span class="pts">events → centuries</span></div>
+      <h3>England from William the Conqueror to Elizabeth I</h3>
+      <p class="instr">In which century did each event happen? Try without help first. The timeline opens when you check.</p>
+      <div class="facts"><span class="fact">🗓 11th–17th century</span><span class="fact">⚠️ 1066 = 11th century</span><span class="fact">⏱ 4 min</span></div>
+      <div class="quiz">
+        <div class="answer-row"><span class="ar-num">1</span><span class="ar-txt">The Norman Conquest</span><select class="exam-select ans" data-opts="11th,12th,13th,14th,15th,16th,17th" data-answer="11th"></select></div>
+        <div class="answer-row"><span class="ar-num">2</span><span class="ar-txt">The Domesday Book (a survey of all the land in England)</span><select class="exam-select ans" data-opts="11th,12th,13th,14th,15th,16th,17th" data-answer="11th"></select></div>
+        <div class="answer-row"><span class="ar-num">3</span><span class="ar-txt">Henry II becomes the first Plantagenet king</span><select class="exam-select ans" data-opts="11th,12th,13th,14th,15th,16th,17th" data-answer="12th"></select></div>
+        <div class="answer-row"><span class="ar-num">4</span><span class="ar-txt">Thomas Becket is murdered in Canterbury Cathedral</span><select class="exam-select ans" data-opts="11th,12th,13th,14th,15th,16th,17th" data-answer="12th"></select></div>
+        <div class="answer-row"><span class="ar-num">5</span><span class="ar-txt">King John agrees to the Magna Carta</span><select class="exam-select ans" data-opts="11th,12th,13th,14th,15th,16th,17th" data-answer="13th"></select></div>
+        <div class="answer-row"><span class="ar-num">6</span><span class="ar-txt">The Hundred Years’ War breaks out</span><select class="exam-select ans" data-opts="11th,12th,13th,14th,15th,16th,17th" data-answer="14th"></select></div>
+        <div class="answer-row"><span class="ar-num">7</span><span class="ar-txt">The Black Death reaches England</span><select class="exam-select ans" data-opts="11th,12th,13th,14th,15th,16th,17th" data-answer="14th"></select></div>
+        <div class="answer-row"><span class="ar-num">8</span><span class="ar-txt">The Battle of Agincourt</span><select class="exam-select ans" data-opts="11th,12th,13th,14th,15th,16th,17th" data-answer="15th"></select></div>
+        <div class="answer-row"><span class="ar-num">9</span><span class="ar-txt">The Battle of Bosworth: the Tudors take the throne</span><select class="exam-select ans" data-opts="11th,12th,13th,14th,15th,16th,17th" data-answer="15th"></select></div>
+        <div class="answer-row"><span class="ar-num">10</span><span class="ar-txt">The Spanish Armada is defeated</span><select class="exam-select ans" data-opts="11th,12th,13th,14th,15th,16th,17th" data-answer="16th"></select></div>
+        <div class="answer-row"><span class="ar-num">11</span><span class="ar-txt">Elizabeth I dies; James VI of Scotland becomes James I of England</span><select class="exam-select ans" data-opts="11th,12th,13th,14th,15th,16th,17th" data-answer="17th"></select></div>
+        <div class="after-check">
+          <ul class="timeline">
+            <li><b>1066</b> Battle of Hastings: William of Normandy conquers England.</li>
+            <li><b>1086</b> The Domesday Book records who owns every piece of land.</li>
+            <li><b>1154</b> Henry II, the first Plantagenet king, is crowned.</li>
+            <li><b>1170</b> Archbishop Thomas Becket is murdered in Canterbury Cathedral.</li>
+            <li><b>1215</b> King John agrees to the Magna Carta, limiting the king’s power.</li>
+            <li><b>1337</b> The Hundred Years’ War with France breaks out (it ends in 1453).</li>
+            <li><b>1348</b> The Black Death reaches England and wipes out about a third of the population.</li>
+            <li><b>1415</b> Henry V defeats the French at Agincourt.</li>
+            <li><b>1485</b> Henry Tudor wins at Bosworth and becomes Henry VII.</li>
+            <li><b>1588</b> The English navy defeats the Spanish Armada.</li>
+            <li><b>1603</b> Elizabeth I dies; the crowns of England and Scotland are united.</li>
+          </ul>
+        </div>
+      </div>
+      <details class="logic"><summary><span>💡</span><span class="hint-txt">Hint · year → century in one second</span></summary><div class="logic-body">
+        <p>Take the first two digits and <b>add 1</b>: 1<b>3</b>37 → 13 + 1 = <b>14th</b> century. A year ending in 00 belongs to the century before: 1600 → 16th.</p>
+      </div></details>
+      <div class="book">📘 In class: Olympway tasks 92 and 98 (PDF p. 77 and 81) (British history → dates and centuries)</div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════
+       TAB 6 — HOMEWORK (60 min)
+  ══════════════════════════════════════════════════════════ -->
+  <div class="tab-content" id="tab-hw">
+    <div class="exercise">
+      <div class="exercise-label">Homework · 60 min</div>
+      <h3>Tick each part when it’s done</h3>
+      <ul class="hw-list" id="hwList">
+        <li><label><input type="checkbox"> <span class="t">🃏 <b>History & heritage flashcards</b>: <a href="../flashcards.html?deck=v8">Learn mode</a> until at least 15 cards are 🏆 mastered, then one Match game.</span></label></li>
+        <li><label><input type="checkbox"> <span class="t">📝 <b>Задание 1: The Vikings</b> (below), timed: 10 minutes, then check.</span></label></li>
+        <li><label><input type="checkbox"> <span class="t">🎬 <b>Watch and retell</b>: watch the video about history’s first empire (below) with English subtitles, then retell it in 8–10 sentences.</span></label></li>
+        <li><label><input type="checkbox"> <span class="t">🎧 <b>Listening</b>: the Sutton Hoo talk (below). Read the statements first, try to answer after <b>one</b> listening, then replay the parts you’re unsure of.</span></label></li>
+        <li><label><input type="checkbox"> <span class="t">✍️ <b>Write</b> 5 sentences about a museum or historic site you know (below), using the present perfect and <i>to date / since / so far</i>.</span></label></li>
+      </ul>
+    </div>
+
+    <div class="exercise">
+      <div class="review-head"><span class="task-num">Задание 1 format</span><span class="pts">10 points</span></div>
+      <h3>The Vikings in Britain</h3>
+      <p class="instr">Put the words in capitals into the correct form so that they fit grammatically. Some answers need more than one word.</p>
+      <div class="facts"><span class="fact">⚙️ the right form</span><span class="fact">1–3 words</span><span class="fact">⏱ 10 min</span></div>
+      <div class="quiz">
+        <div class="gap-text">
+          <h4>The Vikings in Britain</h4>
+          In 793 Viking raiders <span class="gn">1</span><input class="blank ans" data-answer="attacked" autocomplete="off" spellcheck="false"> <span class="cue">ATTACK</span> the monastery on the island of Lindisfarne.
+          The monks <span class="gn">2</span><input class="blank ans" data-answer="were praying" autocomplete="off" spellcheck="false"> <span class="cue">PRAY</span> when the long ships <span class="gn">3</span><input class="blank ans" data-answer="arrived" autocomplete="off" spellcheck="false"> <span class="cue">ARRIVE</span>.
+          Over the next century the raids grew larger, and by 870 the Vikings <span class="gn">4</span><input class="blank ans" data-answer="had taken" autocomplete="off" spellcheck="false"> <span class="cue">TAKE</span> over much of the north and east of England.
+          This area <span class="gn">5</span><input class="blank ans" data-answer="was known|became known" autocomplete="off" spellcheck="false"> <span class="cue">KNOW</span> as the Danelaw.
+          The Vikings <span class="gn">6</span><input class="blank ans" data-answer="established" autocomplete="off" spellcheck="false"> <span class="cue">ESTABLISH</span> a busy trading town at York, which they called Jorvik.
+          Since the 1970s, archaeologists <span class="gn">7</span><input class="blank ans" data-answer="have discovered|have found" autocomplete="off" spellcheck="false"> <span class="cue">DISCOVER</span> thousands of Viking objects there.
+          Many everyday English words, such as <i>sky</i> and <i>egg</i>, <span class="gn">8</span><input class="blank ans" data-answer="come" autocomplete="off" spellcheck="false"> <span class="cue">COME</span> from the Vikings’ language.
+          In September 1066 the Norwegian king Harald Hardrada <span class="gn">9</span><input class="blank ans" data-answer="was defeated" autocomplete="off" spellcheck="false"> <span class="cue">DEFEAT</span> at Stamford Bridge.
+          Only three days later, William the Conqueror <span class="gn">10</span><input class="blank ans" data-answer="landed" autocomplete="off" spellcheck="false"> <span class="cue">LAND</span> in the south.
+        </div>
+      </div>
+    </div>
+
+    <div class="exercise">
+      <div class="review-head"><span class="task-num">Задание 8 format</span><span class="pts">True / False</span></div>
+      <h3>The Sutton Hoo ship burial</h3>
+      <p class="instr">You will hear a museum curator. Read the statements first (1 minute). Then listen and decide if each statement is True or False. Try it in one go first: in the Olympiad you hear it only once.</p>
+      <div class="facts"><span class="fact">🎧 try it in one go first</span><span class="fact">✅ True / ❌ False</span><span class="fact">⏱ 1 min to read first</span></div>
+      <div class="player" data-src="audio/l11-hw-listening.mp3" data-label="Sutton Hoo talk"></div>
+      <div class="quiz">
+        <div class="answer-row"><span class="ar-num">1</span><span class="ar-txt">The ship was discovered after the Second World War had started.</span><select class="exam-select ans" data-opts="True,False" data-answer="False"></select></div>
+        <div class="answer-row"><span class="ar-num">2</span><span class="ar-txt">Edith Pretty owned the land where the ship was found.</span><select class="exam-select ans" data-opts="True,False" data-answer="True"></select></div>
+        <div class="answer-row"><span class="ar-num">3</span><span class="ar-txt">Most of the ship’s wood had survived.</span><select class="exam-select ans" data-opts="True,False" data-answer="False"></select></div>
+        <div class="answer-row"><span class="ar-num">4</span><span class="ar-txt">The treasure included objects from the Eastern Roman Empire.</span><select class="exam-select ans" data-opts="True,False" data-answer="True"></select></div>
+        <div class="answer-row"><span class="ar-num">5</span><span class="ar-txt">Experts were puzzled because there was no body in the grave.</span><select class="exam-select ans" data-opts="True,False" data-answer="True"></select></div>
+        <div class="answer-row"><span class="ar-num">6</span><span class="ar-txt">Historians are certain that the grave belonged to King Raedwald.</span><select class="exam-select ans" data-opts="True,False" data-answer="False"></select></div>
+        <div class="answer-row"><span class="ar-num">7</span><span class="ar-txt">The helmet in the gallery is the original one.</span><select class="exam-select ans" data-opts="True,False" data-answer="False"></select></div>
+        <div class="after-check">
+          <details class="script"><summary>📜 Script</summary><div class="sc-body">
+            <p>Good afternoon, and welcome to the Sutton Hoo gallery. In the summer of 1939, <u>just weeks before the Second World War broke out</u>, a local archaeologist called Basil Brown began digging in a field in Suffolk. <u>The land belonged to a woman named Edith Pretty</u>, who had always been curious about the large mounds on her estate.</p>
+            <p>What Brown found was extraordinary: the outline of a ship, twenty-seven metres long. <u>The wood had rotted away long ago</u>, but the iron rivets remained in the sand, so the shape of the ship could still be seen.</p>
+            <p>In the middle of the ship was a burial chamber full of treasure: gold buckles, <u>silver bowls from the Eastern Roman Empire</u>, and a famous iron helmet. <u>No body was found, which puzzled experts for years.</u> Today, <u>most historians believe</u> that the ship was the grave of Raedwald, a king of East Anglia who died around the year 624.</p>
+            <p>After the dig, Edith Pretty generously gave the whole treasure to the nation, and it is now on display in the British Museum in London. <u>The helmet you can see in front of you is a copy.</u> The original was found broken into more than five hundred pieces, and it took experts years to put it back together.</p>
+          </div></details>
+        </div>
+      </div>
+      <details class="logic"><summary><span>💡</span><span class="hint-txt">Hint · the True / False traps</span></summary><div class="logic-body"><ul>
+        <li><b>Before / after</b>: “weeks before the war” makes “after the war had started” False.</li>
+        <li><b>Certain vs believe</b>: “most historians believe” ≠ “historians are certain”.</li>
+        <li><b>Copy vs original</b>: listen for the one word that changes everything.</li>
+      </ul></div></details>
+    </div>
+
+    <div class="exercise">
+      <div class="exercise-label">Writing</div>
+      <h3>A place with a history</h3>
+      <p class="instr">Write 5 sentences about a museum, castle or historic site you know. Use the present perfect with <i>to date</i>, <i>since</i>, <i>so far</i> or <i>over the years</i>, and at least 3 words from today’s flashcards.</p>
+      <div class="facts"><span class="fact">5 sentences</span><span class="fact">present perfect</span><span class="fact">3 × new words</span></div>
+      <textarea class="free-write" id="hwWrite" placeholder="The Hermitage has been open to the public since 1852. To date, …" spellcheck="false"></textarea>
+      <div class="btn-row"><button class="btn btn-primary" onclick="copyWriting()">📋 Copy for my teacher</button><span id="copyMsg" style="align-self:center;font-weight:600;color:var(--green)"></span></div>
+    </div>
+
+    <div class="exercise">
+      <div class="exercise-label">Watch and retell</div>
+      <h3>The rise and fall of history’s first empire</h3>
+      <p class="instr">Watch the video with English subtitles (pause and rewind as much as you like). Then retell what happened in <b>8–10 sentences</b>. You don’t have to cover the whole story: choose the parts you find most interesting. Use relative clauses, past tenses, the passive and new words from this lesson.</p>
+      <div class="facts"><span class="fact">🎬 5½ min</span><span class="fact">✍️ 8–10 sentences</span><span class="fact">who / which / where</span><span class="fact">was + V3</span></div>
+      <div class="video-wrap">
+        <video controls preload="metadata" playsinline>
+          <source src="video/l11-first-empire.mp4" type="video/mp4">
+          <track kind="subtitles" src="video/l11-first-empire.en.vtt" srclang="en" label="English" default>
+        </video>
+        <div class="video-credit">Video: “The rise and fall of history’s first empire”, Soraya Field Fiorio, <a href="https://ed.ted.com/" target="_blank" rel="noopener">TED-Ed</a> · licence CC BY-NC-ND 4.0</div>
+      </div>
+
+      <div class="use-words">
+        <b>Words from today you can use:</b>
+        <span>empire</span><span>civilisation</span><span>conquer</span><span>invasion</span><span>flourish</span><span>decline</span><span>legacy</span><span>era</span><span>establish</span><span>wipe out</span><span>take over</span><span>look up to</span>
+      </div>
+
+      <details class="logic"><summary><span>💡</span><span class="hint-txt">Hint · relative clauses in one minute</span></summary><div class="logic-body">
+        <p>A relative clause adds information about a noun, so two short sentences become one longer one:</p>
+        <ul>
+          <li><b>who</b> for people: <i>Sargon was a king <b>who</b> conquered the Sumerian cities.</i></li>
+          <li><b>which / that</b> for things: <i>They built ziggurats, <b>which</b> were temples shaped like stepped pyramids.</i></li>
+          <li><b>where</b> for places: <i>Mesopotamia is the region <b>where</b> the first cities appeared.</i></li>
+          <li><b>whose</b> for possession: <i>Gilgamesh was a king <b>whose</b> story was written on clay tablets.</i></li>
+        </ul>
+        <p>Mix in the other grammar: <i>The cities <b>were built</b> out of mud</i> (passive) · <i>By 1750 BCE the Sumerians <b>had disappeared</b></i> (past perfect) · <i>While scribes <b>were studying</b>, …</i> (past continuous).</p>
+      </div></details>
+
+      <div class="step-title">Your retelling</div>
+      <textarea class="free-write" id="hwStory" placeholder="Sumer was an empire which rose in a hot, dry land between two rivers…" spellcheck="false"></textarea>
+      <div class="self-check" id="selfCheck"></div>
+      <p class="self-check-note">The counter is a rough guide: it looks for typical patterns, so read your sentences yourself too.</p>
+      <div class="btn-row"><button class="btn btn-primary" onclick="copyWriting()">📋 Copy everything for my teacher</button><span id="copyMsg2" style="align-self:center;font-weight:600;color:var(--green)"></span></div>
+    </div>
+  </div>
+
+  <div class="btn-row" style="margin:6px 0 30px">
+    <button class="btn btn-danger" onclick="resetAll()">Clear all my answers</button>
+  </div>
+</div>
+
+<div class="save-indicator" id="saveIndicator">✓ Saved</div>
+
+<script>
+const LESSON_KEY = 'lesson-11';
+let data = {};
+try { data = JSON.parse(localStorage.getItem(LESSON_KEY)) || {}; } catch(e) {}
+
+function save(patch) {
+  Object.assign(data, patch);
+  try { localStorage.setItem(LESSON_KEY, JSON.stringify(data)); } catch(e) {}
+  const el = document.getElementById('saveIndicator');
+  el.classList.add('show');
+  clearTimeout(save.t);
+  save.t = setTimeout(() => el.classList.remove('show'), 1400);
+}
+
+// ── TABS ───────────────────────────────────────────────────────
+function showTab(name) {
+  const btn = document.querySelector('.tab-btn[onclick*="\'' + name + '\'"]');
+  if (!btn) return;
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  btn.classList.add('active');
+}
+function switchTab(name) {
+  showTab(name);
+  save({ activeTab: name });
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ── BUILD THE CONTROLS ─────────────────────────────────────────
+const QUIZZES = [...document.querySelectorAll('.quiz')];
+QUIZZES.forEach((q, qi) => {
+  q.id = 'q' + qi;
+  q.querySelectorAll('.ans').forEach((el, i) => { el.dataset.key = 'q' + qi + '-' + i; });
+});
+const isChecked = q => !!data['chk-' + q.id];
+
+// word-bank gaps take their options from the box above the text
+document.querySelectorAll('select[data-bank]').forEach(sel => {
+  const words = [...sel.closest('.exercise').querySelectorAll('.bank span')].map(s => s.textContent);
+  sel.dataset.opts = words.join(',');
+});
+document.querySelectorAll('select.ans').forEach(sel => {
+  const blank = document.createElement('option');
+  blank.value = ''; blank.textContent = '—';
+  sel.appendChild(blank);
+  sel.dataset.opts.split(',').forEach(v => {
+    const o = document.createElement('option');
+    o.value = v; o.textContent = v;
+    sel.appendChild(o);
+  });
+  if (data[sel.dataset.key] !== undefined) sel.value = data[sel.dataset.key];
+  sel.addEventListener('change', () => save({ [sel.dataset.key]: sel.value }));
+});
+// word box: cross out every word that is already in a gap, with the gap's number
+function paintBank(ex) {
+  const used = {};
+  ex.querySelectorAll('select[data-bank]').forEach(sel => {
+    sel.classList.toggle('filled', !!sel.value);
+    if (sel.value) used[sel.value] = sel.closest('.gap').querySelector('.gn').textContent;
+  });
+  ex.querySelectorAll('.bank span').forEach(w => {
+    const n = used[w.textContent];
+    w.classList.toggle('used', !!n);
+    if (n) w.dataset.gap = n; else delete w.dataset.gap;
+  });
+  ex.querySelectorAll('select[data-bank] option').forEach(o => {
+    if (!o.value) return;
+    o.textContent = (used[o.value] && o.parentElement.value !== o.value ? '✓ ' : '') + o.value;   // ✓ = already used in another gap
+  });
+}
+document.querySelectorAll('.bank').forEach(bank => {
+  const ex = bank.closest('.exercise');
+  bank.querySelectorAll('span').forEach((w, i) => {
+    if (data['strike-' + i]) w.classList.add('struck');
+    w.addEventListener('click', () => { const on = w.classList.toggle('struck'); save({ ['strike-' + i]: on }); });
+  });
+  ex.querySelectorAll('select[data-bank]').forEach(sel => sel.addEventListener('change', () => paintBank(ex)));
+  paintBank(ex);
+});
+document.querySelectorAll('input.blank.ans').forEach(inp => {
+  if (data[inp.dataset.key] !== undefined) inp.value = data[inp.dataset.key];
+  inp.addEventListener('input', () => save({ [inp.dataset.key]: inp.value }));
+});
+
+// ── MARKING ────────────────────────────────────────────────────
+// typed answers: capitals, curly apostrophes and extra spaces don't matter; spelling does
+const norm = s => s.toLowerCase().replace(/[’‘`]/g, "'").replace(/[.,!?;:"“”]/g, ' ').replace(/\s+/g, ' ').trim();
+function given(el) {
+  // first-letter gaps: she types the rest of the word ("reaty"), or the whole word ("treaty")
+  const v = el.value, pre = el.dataset.prefix;
+  return pre && !norm(v).startsWith(pre) ? pre + v : v;
+}
+function mark(el) {
+  const keys = el.dataset.answer.split('|');
+  const ok = el.tagName === 'SELECT' ? keys.includes(el.value) : keys.some(k => norm(k) === norm(given(el)));
+  el.classList.add(ok ? 'correct' : 'wrong');
+  el.insertAdjacentHTML('afterend', '<span class="key">' + keys.join(' / ') + '</span>');   // the correct answer next to every gap
+  el.disabled = true;
+  return ok ? 1 : 0;
+}
+function unmark(el) {
+  el.classList.remove('correct', 'wrong'); el.disabled = false; el.value = '';
+  if (el.nextElementSibling && el.nextElementSibling.classList.contains('key')) el.nextElementSibling.remove();
+}
+
+// ── CHECK / TRY AGAIN ──────────────────────────────────────────
+QUIZZES.forEach(q => {
+  const foot = document.createElement('div');
+  foot.className = 'quiz-foot';
+  foot.innerHTML = '<button class="btn btn-primary">Check ✓</button>' +
+                   '<button class="btn btn-ghost" style="display:none">Try again ↺</button>' +
+                   '<span class="q-result"></span>';
+  const after = q.querySelector('.after-check');
+  after ? q.insertBefore(foot, after) : q.appendChild(foot);
+  const [bCheck, bRetry] = foot.querySelectorAll('button');
+  bCheck.addEventListener('click', () => checkQuiz(q, true));
+  bRetry.addEventListener('click', () => retryQuiz(q));
+  q._foot = foot;
+});
+function checkQuiz(q, doSave) {
+  const els = [...q.querySelectorAll('.ans')];
+  const got = els.reduce((a, el) => a + mark(el), 0), max = els.length;
+  const res = q._foot.querySelector('.q-result');
+  res.textContent = got + ' / ' + max + (got === max ? ' — perfect! 🎉' : '');
+  res.className = 'q-result ' + (got === max ? 'full' : got === 0 ? 'zero' : 'part');
+  q._foot.children[0].style.display = 'none';
+  q._foot.children[1].style.display = '';
+  q.classList.add('checked');
+  q._score = [got, max];
+  if (doSave) save({ ['chk-' + q.id]: true });
+  updateProgress();
+}
+function retryQuiz(q) {
+  const patch = { ['chk-' + q.id]: false };
+  q.querySelectorAll('.ans').forEach(el => { unmark(el); patch[el.dataset.key] = undefined; });
+  q._foot.querySelector('.q-result').textContent = '';
+  const ex = q.closest('.exercise'); if (ex.querySelector('.bank')) paintBank(ex);
+  q._foot.children[0].style.display = '';
+  q._foot.children[1].style.display = 'none';
+  q.classList.remove('checked');
+  q._score = null;
+  save(patch);
+  updateProgress();
+}
+function updateProgress() {
+  const done = QUIZZES.filter(q => q._score);
+  const got = done.reduce((a, q) => a + q._score[0], 0);
+  const max = done.reduce((a, q) => a + q._score[1], 0);
+  document.getElementById('pgCount').textContent = done.length + ' / ' + QUIZZES.length;
+  document.getElementById('pgScore').textContent = got + ' / ' + max;
+  document.getElementById('pgFill').style.width = (done.length / QUIZZES.length * 100) + '%';
+}
+
+// ── AUDIO PLAYER: play/pause, drag or click the bar, ⏪ 10 s / ⏩ 10 s ──
+const fmt = s => Math.floor(s / 60) + ':' + String(Math.floor(s % 60)).padStart(2, '0');
+document.querySelectorAll('.player[data-src]').forEach(pl => {
+  const audio = new Audio(pl.dataset.src);
+  audio.preload = 'metadata';
+  pl.innerHTML =
+    '<button type="button" class="pl-btn" aria-label="Play">' +
+      '<svg class="i-play" viewBox="0 0 24 24"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.2-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z"/></svg>' +
+      '<svg class="i-pause" viewBox="0 0 24 24"><rect x="6" y="5" width="4.2" height="14" rx="1.2"/><rect x="13.8" y="5" width="4.2" height="14" rx="1.2"/></svg>' +
+    '</button>' +
+    '<div class="pl-main"><div class="pl-top"><span class="pl-label">🎧 ' + pl.dataset.label + '</span><span class="pl-time">0:00</span></div>' +
+    '<div class="pl-track"><div class="pl-fill"></div><div class="pl-knob"></div></div></div>' +
+    '<button type="button" class="pl-skip" data-s="-10" title="Back 10 seconds">⏪ 10</button>' +
+    '<button type="button" class="pl-skip" data-s="10" title="Forward 10 seconds">10 ⏩</button>';
+  pl.appendChild(audio);
+  const fill = pl.querySelector('.pl-fill'), knob = pl.querySelector('.pl-knob');
+  const time = pl.querySelector('.pl-time'), track = pl.querySelector('.pl-track');
+  const paint = () => {
+    const pct = audio.duration ? audio.currentTime / audio.duration * 100 : 0;
+    fill.style.width = pct + '%'; knob.style.left = pct + '%';
+    time.textContent = fmt(audio.currentTime) + ' / ' + (audio.duration ? fmt(audio.duration) : '…');
+  };
+  pl.querySelector('.pl-btn').addEventListener('click', () => audio.paused ? audio.play() : audio.pause());
+  pl.querySelectorAll('.pl-skip').forEach(b => b.addEventListener('click', () => {
+    if (!audio.duration) return;
+    audio.currentTime = Math.min(audio.duration, Math.max(0, audio.currentTime + +b.dataset.s));
+    paint();
+  }));
+  const seek = e => {
+    if (!audio.duration) return;
+    const r = track.getBoundingClientRect();
+    audio.currentTime = Math.min(1, Math.max(0, (e.clientX - r.left) / r.width)) * audio.duration;
+    paint();
+  };
+  track.addEventListener('pointerdown', e => { track.setPointerCapture(e.pointerId); pl.classList.add('dragging'); seek(e); });
+  track.addEventListener('pointermove', e => { if (pl.classList.contains('dragging')) seek(e); });
+  track.addEventListener('pointerup', () => pl.classList.remove('dragging'));
+  track.addEventListener('pointercancel', () => pl.classList.remove('dragging'));
+  audio.addEventListener('play', () => pl.classList.add('playing'));
+  audio.addEventListener('pause', () => pl.classList.remove('playing'));
+  audio.addEventListener('ended', () => pl.classList.remove('playing'));
+  audio.addEventListener('timeupdate', paint);
+  audio.addEventListener('loadedmetadata', paint);
+});
+
+// ── HOMEWORK CHECKLIST + WRITING ───────────────────────────────
+document.querySelectorAll('#hwList input').forEach((c, i) => {
+  c.checked = !!data['hw-' + i];
+  c.closest('li').classList.toggle('done', c.checked);
+  c.addEventListener('change', () => { save({ ['hw-' + i]: c.checked }); c.closest('li').classList.toggle('done', c.checked); });
+});
+const hwWrite = document.getElementById('hwWrite');
+hwWrite.value = data.write || '';
+hwWrite.addEventListener('input', () => save({ write: hwWrite.value }));
+const hwStory = document.getElementById('hwStory');
+hwStory.value = data.story || '';
+hwStory.addEventListener('input', () => { save({ story: hwStory.value }); selfCheck(); });
+
+// rough live self-check for the retelling
+const IRREG_V3 = 'built|made|found|known|taken|given|seen|written|done|brought|sold|kept|held|taught|thought|spoken|broken|chosen|driven|eaten|fallen|forgotten|grown|hidden|lost|paid|put|read|run|said|sent|set|shown|stolen|told|understood|won|worn|begun|become|come|gone|left|led|fought|spread|thrown';
+function selfCheck() {
+  const t = hwStory.value, low = t.toLowerCase();
+  const sentences = t.split(/[.!?]+/).filter(x => /[a-z]/i.test(x)).length;
+  const count = re => (low.match(re) || []).length;
+  const rel = count(/\b(who|which|whose|where)\b|,\s*that\b|\b(?:[a-z]+s?)\s+that\s+(?:was|were|had|[a-z]+ed)\b/g);
+  const passive = count(new RegExp('\\b(was|were|been|being|is|are)\\s+(?:[a-z]+ly\\s+)?(?:[a-z]+ed|' + IRREG_V3 + ')\\b', 'g'));
+  const cont = count(/\b(was|were)\s+[a-z]+ing\b/g);
+  const perf = count(/\bhad\s+(?:[a-z]+ly\s+)?(?:[a-z]+ed|been|[a-z]+en|built|made|found|left|taken|become|begun|come|gone|lost|spread|brought|fought|led)\b/g);
+  let words = 0;
+  document.querySelectorAll('.use-words span').forEach(w => {
+    const stem = w.textContent.replace('civilisation', 'civili').replace('conquer', 'conque').replace('invasion', 'inva').replace('decline', 'declin').replace('establish', 'establish').replace('flourish', 'flourish');
+    const parts = stem.split(' ');
+    const re = new RegExp('\\b' + parts[0].slice(0, Math.max(4, parts[0].length - 1)) + '[a-z]*' + (parts[1] ? '\\s+' + parts.slice(1).join('\\s+') : ''), 'i');
+    const on = re.test(t);
+    w.classList.toggle('used', on);
+    if (on) words++;
+  });
+  const items = [
+    ['📝 sentences', sentences, sentences >= 8 && sentences <= 10, '8–10'],
+    ['🔗 relative clauses', rel, rel >= 2, '2+'],
+    ['🏛 passive', passive, passive >= 2, '2+'],
+    ['🔵 was/were + -ing', cont, cont >= 1, '1+'],
+    ['🩷 had + V3', perf, perf >= 1, '1+'],
+    ['📚 new words', words, words >= 4, '4+']
+  ];
+  document.getElementById('selfCheck').innerHTML = items.map(([lab, n, ok, goal]) =>
+    '<span class="sc-item' + (ok ? ' ok' : '') + '">' + (ok ? '✓ ' : '') + lab + ': ' + n + ' <small>(' + goal + ')</small></span>').join('');
+}
+selfCheck();
+function copyWriting() {
+  let name = '';
+  try { name = localStorage.getItem('studentName') || ''; } catch(e) {}
+  const text = 'Lesson 11 — homework writing' + (name ? ' — ' + name : '') + '\n\n' + hwWrite.value + '\n\nVIDEO RETELLING:\n' + hwStory.value;
+  const done = () => { ['copyMsg', 'copyMsg2'].forEach(id => document.getElementById(id).textContent = '✓ Copied: paste it into our chat'); };
+  if (navigator.clipboard) navigator.clipboard.writeText(text).then(done, () => {});
+}
+
+function resetAll() {
+  if (!confirm('Clear every answer on this page (flashcard progress stays)?')) return;
+  try { localStorage.removeItem(LESSON_KEY); } catch(e) {}
+  location.reload();
+}
+
+// ── INIT ───────────────────────────────────────────────────────
+if (data.activeTab) showTab(data.activeTab);
+QUIZZES.forEach(q => { if (isChecked(q)) checkQuiz(q, false); });
+updateProgress();
+</script>
+
+<script src="../decks.js"></script>
+<script src="../flashcards.js"></script>
+<script src="../choices.js"></script>
+<script src="../dictionary.js"></script>
+</body>
+</html>
