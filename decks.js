@@ -65,7 +65,7 @@ window.DECKS = [
     ]
   },
   {
-    id: 'v10', name: 'Science & technology', lesson: 'Lesson 13',
+    id: 'v10', name: 'Science & technology', lesson: 'Lesson 14',
     cards: [
       { w: 'hypothesis', p: 'n', l: 'B2', t: 'гипотеза', e: 'The experiment supported her hypothesis.', n: 'pl. hypotheses' },
       { w: 'conduct', p: 'v', l: 'B2', t: 'проводить (эксперимент, исследование)', e: 'The scientists conducted a series of experiments.', n: 'conduct an experiment / research' },
@@ -93,7 +93,7 @@ window.DECKS = [
     ]
   },
   {
-    id: 'v11', name: 'Nature & the environment', lesson: 'Lesson 14',
+    id: 'v11', name: 'Nature & the environment', lesson: 'Lesson 15',
     cards: [
       { w: 'habitat', p: 'n', l: 'B2', t: 'среда обитания', e: 'Pandas are losing their natural habitat.' },
       { w: 'species', p: 'n', l: 'B2', t: 'вид (животных, растений)', e: 'Over 100 species of birds live on the island.', n: 'pl. species' },
@@ -121,7 +121,7 @@ window.DECKS = [
     ]
   },
   {
-    id: 'v12', name: 'Culture, arts & media', lesson: 'Lesson 15',
+    id: 'v12', name: 'Culture, arts & media', lesson: 'Lesson 17',
     cards: [
       { w: 'exhibit', p: 'v / n', l: 'B2', t: 'выставлять; экспонат', e: 'His paintings were exhibited in Paris.', n: 'exhibition (n) — выставка' },
       { w: 'compose', p: 'v', l: 'B2', t: 'сочинять (музыку)', e: 'Mozart composed his first symphony at the age of eight.', n: 'composer, composition' },
@@ -145,7 +145,7 @@ window.DECKS = [
     ]
   },
   {
-    id: 'v13', name: 'Mind & society', lesson: 'Lesson 16',
+    id: 'v13', name: 'Mind & society', lesson: 'Lesson 18',
     cards: [
       { w: 'anxiety', p: 'n', l: 'B2', t: 'тревога, беспокойство', e: 'Exams cause a lot of anxiety.' },
       { w: 'confidence', p: 'n', l: 'B2', t: 'уверенность (в себе)', e: 'She speaks with confidence.' },

@@ -1,0 +1,1115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lesson 12 – People & Achievement · Sentence Ordering</title>
+  <link rel="stylesheet" href="../style.css">
+  <style>
+    .exam-select {
+      font: inherit; font-weight: 700; text-align: center; padding: 7px 10px; border-radius: 10px;
+      border: 2px solid var(--border); background: var(--card); color: var(--text); cursor: pointer; min-width: 64px;
+    }
+    .exam-select:focus { border-color: var(--primary); outline: none; }
+    .exam-select.correct, .blank.correct { border-color: var(--green); color: var(--green); background: rgba(91,140,69,.08); }
+    .exam-select.wrong,   .blank.wrong   { border-color: var(--red);   color: var(--red);   background: rgba(200,64,64,.06); }
+    .blank { min-width: 130px; font-weight: 600; border: 2px solid var(--border); border-radius: 10px; padding: 5px 10px; background: var(--card); }
+    .blank.short { min-width: 100px; width: 120px; }
+    .blank:focus { border-color: var(--primary); outline: none; }
+    .key { margin-left: 4px; font-size: .82rem; font-weight: 700; color: var(--green); background: rgba(91,140,69,.10); padding: 2px 8px; border-radius: 6px; }
+
+    .answer-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; padding: 9px 0; border-bottom: 1px dashed var(--border); }
+    .answer-row:last-child { border-bottom: none; }
+    .ar-num { font-family: 'Fraunces', Georgia, serif; font-weight: 700; color: var(--primary); min-width: 26px; }
+    .ar-txt { flex: 1; min-width: 200px; line-height: 1.75; }
+    .cue { font-weight: 700; letter-spacing: .04em; color: var(--accent-dk); background: rgba(201,160,48,.14); padding: 1px 8px; border-radius: 6px; font-size: .86rem; white-space: nowrap; }
+    .gap-text { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px 20px; line-height: 2.3; font-size: 1.02rem; }
+    .gap-text .gn { font-family: 'Fraunces', Georgia, serif; font-weight: 700; color: var(--primary); font-size: .85rem; margin-right: 2px; }
+    .gap-text h4 { font-family: 'Fraunces', Georgia, serif; text-align: center; font-size: 1.15rem; margin-bottom: 4px; line-height: 1.5; }
+    /* word box: a word crosses itself out when it's used in a gap (or when she taps it) */
+    .bank { display: flex; flex-wrap: wrap; gap: 8px; padding: 14px 16px; margin-bottom: 14px; border: 2px dashed rgba(201,160,48,.55); border-radius: 14px; background: rgba(201,160,48,.07); }
+    .bank span { position: relative; font-weight: 700; padding: 5px 14px; border-radius: 99px; background: #fff; border: 2px solid var(--border); cursor: pointer; user-select: none; transition: .2s; }
+    .bank span:hover { border-color: var(--accent); }
+    .bank span.used, .bank span.struck { color: var(--muted); background: transparent; border-style: dashed; text-decoration: line-through; text-decoration-thickness: 2px; text-decoration-color: var(--primary); opacity: .75; }
+    .bank span.used::after { content: attr(data-gap); position: absolute; top: -8px; right: -6px; min-width: 18px; height: 18px; padding: 0 4px; border-radius: 99px; background: var(--primary); color: #fff; font-size: .68rem; line-height: 18px; text-align: center; text-decoration: none; display: inline-block; }
+    /* Задание 2 as in the demo: drag a word into a gap (or tap the word, then the gap) */
+    .orig-instr { font-weight: 600; border-left: 3px solid var(--border); padding-left: 14px; margin: 0 0 18px; line-height: 1.7; font-size: .98rem; }
+    .bank.dnd span { cursor: grab; touch-action: none; }
+    .bank.dnd span.picked { border-color: var(--primary); background: rgba(212,87,42,.10); box-shadow: 0 0 0 3px rgba(212,87,42,.18); }
+    .drag-ghost { position: fixed; z-index: 100; pointer-events: none; transform: translate(-50%, -70%); font-weight: 700; padding: 5px 14px; border-radius: 99px; background: #fff; border: 2px solid var(--primary); box-shadow: 0 8px 18px rgba(44,32,16,.22); }
+    .dz { display: inline-block; min-width: 128px; padding: 2px 16px; border-radius: 99px; border: 2px dashed rgba(212,87,42,.45); background: #fff; font-weight: 700; color: var(--text); text-align: center; line-height: 1.6; vertical-align: middle; cursor: pointer; transition: .15s; }
+    .dz.filled { border-style: solid; border-color: var(--blue); background: #EAF2FB; }
+    .dz.over, .picking .dz:not(.filled):not(.locked) { border-color: var(--primary); background: rgba(212,87,42,.08); }
+    .dz.correct { border-style: solid; border-color: var(--green); color: var(--green); background: rgba(91,140,69,.10); }
+    .dz.wrong { border-style: solid; border-color: var(--red); color: var(--red); background: rgba(200,64,64,.07); }
+    .dz.locked { cursor: default; }
+    .bank-hint { font-size: .82rem; color: var(--muted); margin: -8px 0 12px; }
+
+    /* gaps in a word-box text: number badge + pill-shaped choice */
+    .gap { display: inline-flex; align-items: center; white-space: nowrap; margin: 0 2px; vertical-align: middle; }
+    .gap .gn { display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; border-radius: 50%; background: var(--primary); color: #fff !important; font-family: 'DM Sans', system-ui, sans-serif !important; font-size: .74rem !important; font-weight: 700; margin-right: -6px; position: relative; z-index: 1; box-shadow: 0 0 0 3px var(--card); }
+    .gap select.exam-select {
+      appearance: none; -webkit-appearance: none; min-width: 138px; padding: 4px 30px 4px 16px; border-radius: 99px;
+      font-weight: 700; text-align: left; color: var(--primary-dk); background-color: #fff;
+      border: 2px dashed rgba(212,87,42,.45);
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%23D4572A' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat; background-position: right 11px center; background-size: 11px 8px;
+    }
+    .gap select.exam-select:hover:not(:disabled) { border-color: var(--primary); }
+    .gap select.exam-select.filled { border-style: solid; border-color: var(--blue); color: var(--text); background-color: #EAF2FB; }
+    .gap select.exam-select.correct { border-style: solid; border-color: var(--green); color: var(--green); background-color: rgba(91,140,69,.10); background-image: none; padding-right: 16px; }
+    .gap select.exam-select.wrong { border-style: solid; border-color: var(--red); color: var(--red); background-color: rgba(200,64,64,.07); background-image: none; padding-right: 16px; }
+
+    .step-title { font-weight: 700; font-size: .8rem; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin: 22px 0 10px; display: flex; align-items: center; gap: 8px; }
+    .step-title::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+    .task-num { font-weight: 700; color: var(--accent-dk); background: rgba(201,160,48,.15); padding: 3px 12px; border-radius: 99px; font-size: .85rem; }
+    .pts { font-weight: 700; font-size: .82rem; padding: 3px 10px; border-radius: 99px; color: var(--blue); background: rgba(95,142,196,.12); }
+    .review-head { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 6px; }
+    .talk { background: rgba(95,142,196,.09); border-left: 4px solid var(--blue); border-radius: 0 10px 10px 0; padding: 10px 14px; margin: 10px 0; line-height: 1.6; font-size: .97rem; }
+    .book { display: inline-flex; align-items: center; gap: 6px; font-size: .88rem; font-weight: 700; color: var(--rose); background: rgba(196,122,150,.12); padding: 4px 12px; border-radius: 99px; margin-top: 10px; }
+
+    /* instruction + key-fact chips (as in lesson 10) */
+    .instr { margin: 10px 0 8px; color: var(--text); font-size: 1rem; line-height: 1.7; }
+    .facts { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 16px; }
+    .fact { display: inline-flex; align-items: center; gap: 4px; padding: 5px 13px; border-radius: 99px; font-size: .86rem; font-weight: 700; color: #fff; background: var(--primary); box-shadow: 0 2px 6px rgba(44,32,16,.12); }
+    .fact:nth-child(4n+2) { background: var(--blue); } .fact:nth-child(4n+3) { background: var(--rose); } .fact:nth-child(4n+4) { background: var(--green); }
+
+    /* hints: closed until she taps them (as in lesson 10) */
+    details.logic { background: rgba(201,160,48,.09); border: 2px solid rgba(201,160,48,.35); border-radius: var(--radius); margin-top: 12px; overflow: hidden; }
+    details.logic summary { list-style: none; cursor: pointer; display: flex; align-items: center; gap: 10px; padding: 11px 16px; font-weight: 700; color: var(--accent-dk); user-select: none; }
+    details.logic summary::-webkit-details-marker { display: none; }
+    details.logic summary:hover { background: rgba(201,160,48,.12); }
+    details.logic summary::after { content: '▾'; margin-left: auto; font-size: 1.1rem; transition: transform .2s; }
+    details.logic[open] summary::after { transform: rotate(180deg); }
+    details.logic[open] summary { border-bottom: 1px dashed rgba(201,160,48,.45); }
+    .hint-txt { font-family: 'Fraunces', Georgia, serif; font-size: 1.02rem; }
+    .logic-body { padding: 12px 18px; line-height: 1.7; }
+    .logic-body ul, .logic-body ol { padding-left: 22px; }
+
+    /* the rule table stays open: it is the lesson */
+    .rule-table { border-collapse: collapse; width: 100%; font-size: .95rem; }
+    .rule-table th, .rule-table td { border: 1px solid var(--border); padding: 8px 10px; text-align: left; vertical-align: top; background: #fff; }
+    .rule-table th { background: rgba(212,87,42,.08); }
+    .rule-table td:first-child { font-weight: 700; white-space: nowrap; }
+    .rule-table i { color: var(--primary-dk); font-style: normal; font-weight: 600; }
+    .tbl-wrap { overflow-x: auto; }
+
+    /* revealed after Check */
+    .after-check { display: none; margin-top: 14px; }
+    .quiz.checked .after-check { display: block; }
+    details.script { border: 2px solid rgba(95,142,196,.35); border-radius: 12px; background: rgba(95,142,196,.05); }
+    details.script summary { cursor: pointer; padding: 9px 14px; font-weight: 700; color: var(--blue); }
+    details.script .sc-body { padding: 2px 16px 12px; line-height: 1.7; }
+
+    .timeline { list-style: none; border-left: 3px solid var(--primary); margin-left: 8px; }
+    .timeline li { position: relative; padding: 6px 0 6px 18px; line-height: 1.5; }
+    .timeline li::before { content: ''; position: absolute; left: -8px; top: 12px; width: 13px; height: 13px; border-radius: 50%; background: #fff; border: 3px solid var(--primary); }
+    .timeline b { font-family: 'Fraunces', Georgia, serif; color: var(--primary); margin-right: 6px; }
+
+    .quiz-foot { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-top: 14px; }
+    .q-result { font-weight: 700; }
+    .q-result.full { color: var(--green); } .q-result.part { color: var(--accent-dk); } .q-result.zero { color: var(--red); }
+    .progress-wrap { position: sticky; top: 0; z-index: 30; background: var(--bg); padding: 10px 0 12px; margin-bottom: 8px; border-bottom: 1px solid var(--border); }
+    .progress-top { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 7px; font-weight: 600; font-size: .92rem; }
+    .progress-top span { color: var(--primary); }
+    .progress-bar { height: 9px; border-radius: 99px; background: var(--border); overflow: hidden; }
+    .progress-fill { height: 100%; width: 0%; border-radius: 99px; background: linear-gradient(90deg, var(--primary), var(--accent-dk)); transition: width .3s ease; }
+    /* audio player: play/pause, drag the bar, ⏪ 10 s / ⏩ 10 s (as in lesson 10) */
+    .player { display: flex; align-items: center; gap: 12px; background: linear-gradient(135deg, rgba(212,87,42,.09), rgba(201,160,48,.10)); border: 2px solid rgba(212,87,42,.25); border-radius: 18px; padding: 12px 16px; margin: 4px 0 16px; }
+    .pl-btn { flex: 0 0 52px; width: 52px; height: 52px; border-radius: 50%; border: none; background: var(--primary); color: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(212,87,42,.35); }
+    .pl-btn:hover { background: var(--primary-dk); }
+    .pl-btn svg { width: 22px; height: 22px; fill: currentColor; }
+    .pl-btn .i-pause { display: none; }
+    .player.playing .pl-btn .i-play { display: none; } .player.playing .pl-btn .i-pause { display: block; }
+    .pl-main { flex: 1; min-width: 0; }
+    .pl-top { display: flex; justify-content: space-between; gap: 10px; margin-bottom: 8px; font-size: .88rem; }
+    .pl-label { font-weight: 700; color: var(--primary-dk); }
+    .pl-time { color: var(--muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
+    .pl-track { position: relative; height: 10px; border-radius: 99px; background: rgba(44,32,16,.10); cursor: pointer; touch-action: none; }
+    .pl-fill { position: absolute; inset: 0 auto 0 0; width: 0; border-radius: 99px; background: linear-gradient(90deg, var(--primary), var(--accent-dk)); }
+    .pl-knob { position: absolute; top: 50%; left: 0; width: 18px; height: 18px; margin: -9px 0 0 -9px; border-radius: 50%; background: #fff; border: 3px solid var(--primary); box-shadow: 0 1px 4px rgba(0,0,0,.2); transition: transform .15s; }
+    .pl-track:hover .pl-knob, .player.dragging .pl-knob { transform: scale(1.25); }
+    .pl-skip { flex: 0 0 auto; height: 36px; padding: 0 10px; border-radius: 99px; border: 2px solid var(--border); background: var(--card); color: var(--muted); cursor: pointer; font: inherit; font-size: .8rem; font-weight: 700; white-space: nowrap; }
+    .pl-skip:hover { border-color: var(--primary); color: var(--primary); }
+    @media (max-width: 560px) { .player { flex-wrap: wrap; gap: 10px; padding: 10px 12px; } .pl-main { flex-basis: calc(100% - 64px); } .pl-skip { flex: 1; } }
+
+    /* ── History tab ── */
+    .story { background: #fff; border: 1px solid var(--border); border-radius: var(--radius); padding: 18px 22px; line-height: 1.9; font-size: 1.02rem; box-shadow: 0 2px 10px rgba(44,32,16,.05); margin-bottom: 16px; }
+    .story h4 { font-family: 'Fraunces', Georgia, serif; text-align: center; font-size: 1.2rem; margin-bottom: 6px; }
+    .story p { margin-bottom: 8px; }
+    .spine-row { margin: 6px 0 14px; }
+    .spine-row > small { display: block; font-size: .72rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
+    .spine { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+    .spine .h { display: inline-flex; flex-direction: column; align-items: center; padding: 6px 12px; border-radius: 12px; background: rgba(95,142,196,.12); border: 2px solid rgba(95,142,196,.45); line-height: 1.2; }
+    .spine .h b { font-family: 'Fraunces', Georgia, serif; font-size: 1rem; }
+    .spine .h b::first-letter { color: var(--primary); font-size: 1.15em; }
+    .spine .h span { font-size: .78rem; font-weight: 700; color: var(--muted); }
+    .spine .h.old { background: rgba(201,160,48,.12); border-color: rgba(201,160,48,.5); }
+    .spine .arr { color: var(--muted); font-weight: 700; }
+    .mnemo { font-family: 'Fraunces', Georgia, serif; font-size: 1.12rem; text-align: center; padding: 10px; margin: 4px 0 10px; }
+    .mnemo b { color: var(--primary); font-size: 1.2em; }
+    .pre { font-weight: 700; color: var(--primary); margin-right: 1px; }
+    .place-list { list-style: none; border-left: 3px solid var(--primary); margin-left: 8px; }
+    .place-list li { position: relative; padding: 7px 0 7px 18px; line-height: 1.6; }
+    .place-list li::before { content: ''; position: absolute; left: -8px; top: 15px; width: 13px; height: 13px; border-radius: 50%; background: #fff; border: 3px solid var(--primary); }
+    .place-list .yr { display: inline-block; min-width: 92px; font-family: 'Fraunces', Georgia, serif; font-weight: 700; color: var(--primary); }
+
+    /* ── Lesson 12 blocks A/B ── */
+    .tab-btn:nth-child(4).active { background: var(--blue); border-color: var(--blue); }
+    .tab-btn:nth-child(5).active { background: var(--green); border-color: var(--green); }
+    .rule-box { background: linear-gradient(160deg, #fff, rgba(95,142,196,.07)); border: 2px solid rgba(95,142,196,.45); border-radius: var(--radius); padding: 16px 18px; }
+    .rule-title { font-family: 'Fraunces', Georgia, serif; font-size: 1.15rem; font-weight: 700; color: var(--blue); margin-bottom: 12px; }
+    .ru-note { background: rgba(196,122,150,.09); border-left: 4px solid var(--rose); border-radius: 0 10px 10px 0; padding: 9px 14px; font-size: .93rem; line-height: 1.6; margin-top: 8px; }
+    .rule-tip { margin-top: 10px; font-size: .95rem; line-height: 1.7; }
+    .lk { font-weight: 700; padding: 1px 6px; border-radius: 6px; }
+    .lk-pr { color: #2F5F96; background: rgba(95,142,196,.18); }
+    .lk-th { color: #9A3F64; background: rgba(196,122,150,.20); }
+    .lk-the { color: #3F6E2B; background: rgba(91,140,69,.16); }
+    .lk-ln { color: #8A6A10; background: rgba(201,160,48,.22); }
+    .snum { font-family: 'Fraunces', Georgia, serif; font-weight: 700; color: var(--primary); margin-right: 4px; }
+    /* Practice 1: pair cards — tap the first sentence, then the link word */
+    .pp-quiz { display: grid; gap: 14px; }
+    .pp { background: #fff; border: 1px solid var(--border); border-radius: 16px; padding: 14px 16px; box-shadow: 0 2px 10px rgba(44,32,16,.05); }
+    .pp-head { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+    .pp-n { width: 28px; height: 28px; border-radius: 50%; background: var(--primary); color: #fff; font-weight: 700; display: inline-flex; align-items: center; justify-content: center; font-size: .9rem; flex-shrink: 0; }
+    .pp-step { font-size: .88rem; font-weight: 700; color: var(--muted); }
+    .pp-swap { margin-left: auto; display: none; font: inherit; font-size: .8rem; font-weight: 700; color: var(--muted); background: none; border: 2px solid var(--border); border-radius: 99px; padding: 3px 12px; cursor: pointer; }
+    .pp-swap:hover { color: var(--primary); border-color: var(--primary); }
+    .pp.ordered .pp-swap { display: inline-block; }
+    .quiz.checked .pp-swap { display: none; }
+    .pp-ss { display: flex; flex-direction: column; gap: 8px; }
+    .pp-s { display: flex; gap: 12px; align-items: flex-start; padding: 10px 14px; border-radius: 12px; border: 2px solid var(--border); background: var(--bg); line-height: 1.65; transition: .15s; }
+    .pp:not(.ordered) .pp-s { cursor: pointer; }
+    .pp:not(.ordered) .pp-s:hover { border-color: var(--primary); background: rgba(212,87,42,.05); }
+    .pp-b { flex-shrink: 0; min-width: 34px; height: 26px; padding: 0 8px; border-radius: 99px; background: var(--border); color: var(--text); font-size: .78rem; font-weight: 700; display: inline-flex; align-items: center; justify-content: center; margin-top: 1px; }
+    .pp-s.first { border-color: var(--blue); background: #EAF2FB; }
+    .pp-s.first .pp-b { background: var(--blue); color: #fff; }
+    .pp-s.second .pp-b { background: var(--primary); color: #fff; }
+    .pp.ordered .w { cursor: pointer; border-radius: 5px; padding: 0 1px; transition: background .12s; }
+    .pp.ordered .w:hover { background: rgba(201,160,48,.25); }
+    .w.pick { background: rgba(201,160,48,.45); box-shadow: 0 0 0 2px rgba(201,160,48,.6); }
+    .quiz.checked .w { cursor: default; }
+    .quiz.checked .w.is-link { background: rgba(91,140,69,.18); color: #3F6E2B; font-weight: 700; }
+    .quiz.checked .w.pick:not(.is-link) { background: rgba(200,64,64,.15); box-shadow: 0 0 0 2px rgba(200,64,64,.5); }
+    .quiz.checked .pp-s.first.ok { border-color: var(--green); background: rgba(91,140,69,.08); }
+    .quiz.checked .pp-s.first.bad { border-color: var(--red); background: rgba(200,64,64,.06); }
+    .pp-keys { display: none; margin-top: 10px; font-size: .88rem; font-weight: 700; color: var(--muted); }
+    .quiz.checked .pp-keys { display: block; }
+    .pp-keys input { display: none; }
+    .pp-why { font-size: .93rem; line-height: 1.6; background: rgba(95,142,196,.08); border-radius: 10px; padding: 8px 12px; margin-top: 8px; }
+    .bank.sent { flex-direction: column; }
+    .bank.sent span { border-radius: 12px; font-weight: 500; line-height: 1.5; padding: 7px 14px; }
+    .slots .slot { margin: 8px 0; }
+    .slots .gap { display: flex; align-items: flex-start; white-space: normal; }
+    .slots .gap .gn { margin-top: 8px; margin-right: 8px; flex-shrink: 0; }
+    .slots .dz { display: block; flex: 1; text-align: left; border-radius: 12px; padding: 7px 14px; min-height: 40px; font-weight: 500; line-height: 1.5; }
+    .slots .key { display: inline-block; margin-top: 10px; }
+    .why-list { padding-left: 22px; line-height: 1.7; }
+    .use-words { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; padding: 10px 14px; border-radius: 12px; background: rgba(201,160,48,.08); border: 2px dashed rgba(201,160,48,.45); margin: 6px 0; }
+    .use-words span { font-weight: 700; font-size: .9rem; padding: 3px 12px; border-radius: 99px; background: #fff; border: 1px solid var(--border); cursor: pointer; user-select: none; }
+    .use-words span.used { background: var(--green); border-color: var(--green); color: #fff; }
+    .hw-list { list-style: none; }
+    .hw-list li { padding: 10px 0; border-bottom: 1px dashed var(--border); }
+    .hw-list li:last-child { border-bottom: none; }
+    .hw-list label { display: flex; gap: 12px; align-items: flex-start; cursor: pointer; line-height: 1.55; }
+    .hw-list input { width: 22px; height: 22px; accent-color: var(--green); flex-shrink: 0; margin-top: 1px; }
+    .hw-list li.done span.t { color: var(--green); text-decoration: line-through; }
+    .free-write { min-height: 150px; }
+  </style>
+<script src="../sync.js"></script>
+</head>
+<body>
+
+<header class="site-header">
+  <h1>Lesson 12 — People & Achievement</h1>
+  <a class="back-link" href="../index.html">← All Lessons</a>
+</header>
+
+<div class="container">
+
+  <div class="lesson-meta">
+    <h2>«Высшая проба» Round 2 · People & achievement + sentence ordering</h2>
+    <p>📅 19 October 2026 &nbsp;·&nbsp; Lesson 12 &nbsp;·&nbsp; trains Задание 5 (sentence order) and Задание 2 · history era 1</p>
+  </div>
+
+  <div class="progress-wrap">
+    <div class="progress-top">
+      <div>Blocks checked: <span id="pgCount">0 / 0</span></div>
+      <div>Points today: <span id="pgScore">0 / 0</span></div>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="pgFill"></div></div>
+  </div>
+
+  <div class="tab-bar">
+    <button class="tab-btn active" onclick="switchTab('warm', this)">🔁 Warm-up</button>
+    <button class="tab-btn"        onclick="switchTab('vocab', this)">📚 Vocabulary</button>
+    <button class="tab-btn"        onclick="switchTab('z5', this)">🧩 Задание 5</button>
+    <button class="tab-btn"        onclick="switchTab('hist', this)">🏛 History</button>
+    <button class="tab-btn"        onclick="switchTab('hw', this)">🏠 Homework</button>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════
+       TAB 1 — WARM-UP: Lesson 11 grammar (its Part 4 + the Задание 1 tab)
+  ══════════════════════════════════════════════════════════ -->
+  <div class="tab-content active" id="tab-warm">
+
+    <div class="exercise">
+      <div class="exercise-label">Vocabulary check · History &amp; heritage (V8) · 8 min</div>
+      <div class="review-head"><span class="task-num">Задание 2 · 10 баллов</span></div>
+      <h3>Who were your ancestors?</h3>
+      <p class="orig-instr">Перетащите слова, лексически подходящие по смыслу в соответствующие пропуски в тексте. Три слова являются лишними.</p>
+      <div class="facts"><span class="fact">🧠 from memory</span><span class="fact">🧩 13 words, 10 gaps</span><span class="fact">⏱ 8 min</span></div>
+      <div class="bank dnd"><span>brought about</span><span>ancestors</span><span>heritage</span><span>colony</span><span>wiped out</span><span>treaty</span><span>origin</span><span>broke out</span><span>trace</span><span>era</span><span>independence</span><span>medieval</span><span>handed down</span></div>
+      <p class="bank-hint">Drag a word into a gap, or tap a word and then tap the gap. Tap a filled gap to empty it.</p>
+      <div class="quiz">
+        <div class="gap-text">
+          <h4>Who were your ancestors?</h4>
+          Millions of people today are trying to find out who their <span class="gap"><span class="gn">1</span><select class="exam-select ans" data-bank="1" data-answer="ancestors"></select></span> were.
+          Now that old records are online, it is much easier to <span class="gap"><span class="gn">2</span><select class="exam-select ans" data-bank="1" data-answer="trace"></select></span> a family back several generations.
+          Most families also have stories that have been <span class="gap"><span class="gn">3</span><select class="exam-select ans" data-bank="1" data-answer="handed down"></select></span> from grandparents to grandchildren, though not all of them are true.
+          When Sarah Wilson from York began her research, she learned that her surname has its <span class="gap"><span class="gn">4</span><select class="exam-select ans" data-bank="1" data-answer="origin"></select></span> in Old Norse, the language of the Vikings.
+          One branch of the family had lived in the same village since <span class="gap"><span class="gn">5</span><select class="exam-select ans" data-bank="1" data-answer="medieval"></select></span> times.
+          In 1349 the Black Death <span class="gap"><span class="gn">6</span><select class="exam-select ans" data-bank="1" data-answer="wiped out"></select></span> half of the village, but the Wilsons survived.
+          Centuries later, in the Victorian <span class="gap"><span class="gn">7</span><select class="exam-select ans" data-bank="1" data-answer="era"></select></span>, some of them moved to the cities to work in factories, and others sailed to Australia, which was then a British <span class="gap"><span class="gn">8</span><select class="exam-select ans" data-bank="1" data-answer="colony"></select></span>.
+          When the First World War <span class="gap"><span class="gn">9</span><select class="exam-select ans" data-bank="1" data-answer="broke out"></select></span> in 1914, three brothers from the family joined the army.
+          Sarah has given their letters to the local museum, because she believes that stories like theirs are part of our national <span class="gap"><span class="gn">10</span><select class="exam-select ans" data-bank="1" data-answer="heritage"></select></span>.
+        </div>
+      </div>
+    </div>
+
+    <div class="exercise">
+      <div class="exercise-label">Warm-up 1 · from Lesson 11 · 6 min</div>
+      <h3>Short forms: participle clauses</h3>
+      <p class="instr">Writers shorten sentences: <i>The White Tower, <b>which was built</b> in the 1070s, …</i> → <i><b>Built</b> in the 1070s, the White Tower …</i> Choose the right participle. Ask: is the subject doing the action (active → <b>-ing</b>) or is it done to it (passive → <b>V3</b>)?</p>
+      <div class="facts"><span class="fact">-ing = active</span><span class="fact">-ed / 3rd form = passive</span><span class="fact">having + 3rd form = earlier</span></div>
+      <div class="quiz">
+        <div class="answer-row"><span class="ar-num">1</span><span class="ar-txt">___ in the 1070s, the White Tower is the oldest part of the castle.</span><select class="exam-select ans" data-opts="Built,Building,Having built" data-answer="Built"></select></div>
+        <div class="answer-row"><span class="ar-num">2</span><span class="ar-txt">The Vikings attacked the coast, ___ villages and monasteries.</span><select class="exam-select ans" data-opts="destroying,destroyed,to destroy" data-answer="destroying"></select></div>
+        <div class="answer-row"><span class="ar-num">3</span><span class="ar-txt">___ the battle, William marched to London.</span><select class="exam-select ans" data-opts="Having won,Won,Having been won" data-answer="Having won"></select></div>
+        <div class="answer-row"><span class="ar-num">4</span><span class="ar-txt">The coins, ___ under a car park in 2019, are now in the city museum.</span><select class="exam-select ans" data-opts="finding,found,having found" data-answer="found"></select></div>
+        <div class="answer-row"><span class="ar-num">5</span><span class="ar-txt">___ along the wall, you can see for miles.</span><select class="exam-select ans" data-opts="Walking,Walked,Having walked" data-answer="Walking"></select></div>
+      </div>
+    </div>
+
+    <div class="exercise">
+      <div class="exercise-label">Warm-up 2 · Olympway style · 10 min</div>
+      <h3>Elizabeth I: find and correct the mistakes</h3>
+      <p class="instr">Some lines are correct, some have one grammar mistake. Write the correct word, or <b>OK</b> if the line is correct.</p>
+      <div class="facts"><span class="fact">✍️ the correct word or OK</span><span class="fact">9 lines</span><span class="fact">🔗 like Olympiad Задание 3</span></div>
+      <div class="quiz">
+        <div class="answer-row"><span class="ar-num">1</span><span class="ar-txt">Elizabeth I was born in 1533 and became queen in 1558.</span><input class="blank short ans" data-answer="OK" autocomplete="off" spellcheck="false"></div>
+        <div class="answer-row"><span class="ar-num">2</span><span class="ar-txt">She was the daughter of Henry VIII and her second wife, Anne Boleyn.</span><input class="blank short ans" data-answer="his" autocomplete="off" spellcheck="false"></div>
+        <div class="answer-row"><span class="ar-num">3</span><span class="ar-txt">When she was a girl, she has learned Latin, French and Italian.</span><input class="blank short ans" data-answer="learned|learnt" autocomplete="off" spellcheck="false"></div>
+        <div class="answer-row"><span class="ar-num">4</span><span class="ar-txt">Her reign is often called a golden age of English history.</span><input class="blank short ans" data-answer="OK" autocomplete="off" spellcheck="false"></div>
+        <div class="answer-row"><span class="ar-num">5</span><span class="ar-txt">During her reign theatre flourished, and Shakespeare writes many of his plays.</span><input class="blank short ans" data-answer="wrote" autocomplete="off" spellcheck="false"></div>
+        <div class="answer-row"><span class="ar-num">6</span><span class="ar-txt">In 1588 the English navy defeated the Spanish Armada, who had sailed to invade England.</span><input class="blank short ans" data-answer="which|that" autocomplete="off" spellcheck="false"></div>
+        <div class="answer-row"><span class="ar-num">7</span><span class="ar-txt">Elizabeth never married, so she had not children.</span><input class="blank short ans" data-answer="no" autocomplete="off" spellcheck="false"></div>
+        <div class="answer-row"><span class="ar-num">8</span><span class="ar-txt">When she died in 1603, she had ruled England for 44 years.</span><input class="blank short ans" data-answer="OK" autocomplete="off" spellcheck="false"></div>
+        <div class="answer-row"><span class="ar-num">9</span><span class="ar-txt">She is still one of the more famous monarchs in British history.</span><input class="blank short ans" data-answer="most" autocomplete="off" spellcheck="false"></div>
+      </div>
+      <details class="logic"><summary><span>💡</span><span class="hint-txt">Hint · a checklist for every line</span></summary><div class="logic-body"><ol>
+        <li><b>Tense</b> against the time marker (<i>when she was a girl</i> → past simple).</li>
+        <li><b>Pronouns</b>: whose wife? Henry’s → <i>his</i>. Things take <i>which</i>, people take <i>who</i>.</li>
+        <li><b>Negatives</b> with nouns: <i>no children</i> / <i>didn’t have any children</i>.</li>
+        <li><b>one of the … + plural</b> → superlative: <i>one of the most famous</i>.</li>
+      </ol></div></details>
+      <div class="book">📘 In class: Olympway tasks 198 & 199 (PDF p. 155–156), two more biographies in the same format</div>
+    </div>
+    <div class="exercise">
+      <div class="review-head"><span class="task-num">Задание 1 format</span><span class="pts">10 points</span></div>
+      <h3>The Tower of London</h3>
+      <p class="instr">Read the text. Put the words in capitals into the correct form so that they fit grammatically. Some answers need more than one word.</p>
+      <div class="facts"><span class="fact">⚙️ the right form</span><span class="fact">1–3 words</span><span class="fact">⏱ 10 min</span><span class="fact">✍️ spelling counts</span></div>
+      <div class="quiz">
+        <div class="gap-text">
+          <h4>The Tower of London</h4>
+          The Tower of London <span class="gn">1</span><input class="blank ans" data-answer="has stood" autocomplete="off" spellcheck="false"> <span class="cue">STAND</span> on the north bank of the Thames for nearly a thousand years.
+          William the Conqueror <span class="gn">2</span><input class="blank ans" data-answer="ordered" autocomplete="off" spellcheck="false"> <span class="cue">ORDER</span> the White Tower to be built in the 1070s, and it <span class="gn">3</span><input class="blank ans" data-answer="was completed|had been completed" autocomplete="off" spellcheck="false"> <span class="cue">COMPLETE</span> by about 1100.
+          The White Tower is still <span class="gn">4</span><input class="blank ans" data-answer="the oldest" autocomplete="off" spellcheck="false"> <span class="cue">OLD</span> part of the castle.
+          Over the centuries, the Tower <span class="gn">5</span><input class="blank ans" data-answer="has been used" autocomplete="off" spellcheck="false"> <span class="cue">USE</span> as a royal palace, a prison and even a zoo.
+          Anne Boleyn, the second wife of Henry VIII, <span class="gn">6</span><input class="blank ans" data-answer="was executed" autocomplete="off" spellcheck="false"> <span class="cue">EXECUTE</span> there in 1536.
+          Legend says that if the ravens ever <span class="gn">7</span><input class="blank ans" data-answer="leave" autocomplete="off" spellcheck="false"> <span class="cue">LEAVE</span> the Tower, the kingdom will fall.
+          Today the Crown Jewels <span class="gn">8</span><input class="blank ans" data-answer="are kept" autocomplete="off" spellcheck="false"> <span class="cue">KEEP</span> in the Tower, and to date millions of visitors <span class="gn">9</span><input class="blank ans" data-answer="have seen" autocomplete="off" spellcheck="false"> <span class="cue">SEE</span> them.
+          The Tower <span class="gn">10</span><input class="blank ans" data-answer="became" autocomplete="off" spellcheck="false"> <span class="cue">BECOME</span> a UNESCO World Heritage Site in 1988.
+        </div>
+      </div>
+      <details class="logic"><summary><span>💡</span><span class="hint-txt">Hint · how to do Задание 1 in 4 steps</span></summary><div class="logic-body"><ol>
+        <li>Read the whole sentence, and underline the <b>time marker</b> and the <b>subject</b>.</li>
+        <li>Active or passive? Can the subject do the action? (The Tower can’t <i>use</i> anything → passive.)</li>
+        <li>Choose the tense from the marker table.</li>
+        <li>Check agreement and spelling: <i>the jewels <b>are</b></i>, <i>visitors <b>have</b></i>.</li>
+      </ol></div></details>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════
+       TAB 2 — HISTORY, era 1: Britain before 1066 (history plan, Lesson 12)
+  ══════════════════════════════════════════════════════════ -->
+  <div class="tab-content" id="tab-hist">
+
+    <div class="step-title">In class · 6 min</div>
+
+    <div class="exercise">
+      <div class="exercise-label">Hook · 1 min</div>
+      <h3>Vikings in Novgorod, Vikings in England</h3>
+      <p class="instr">The chronicle says that in 862 a Viking called Rurik came to rule Novgorod. In 865 a huge army landed in England. Who do you think they were, and where did they come from?</p>
+      <details class="logic"><summary><span>💡</span><span class="hint-txt">Answer · open after you’ve guessed</span></summary><div class="logic-body">
+        <p>They were <b>Vikings too</b>, from Scandinavia. Swedish Vikings (in Russian, <i>варяги</i>) went <b>east</b> along the rivers to Rus’; Danish and Norwegian Vikings went <b>west</b> to Britain. The same people shaped both countries in the same century.</p>
+      </div></details>
+    </div>
+
+    <div class="exercise">
+      <div class="exercise-label">The spine · 3 min</div>
+      <h3>Three ages, then eight royal houses</h3>
+      <p class="instr">All of British history hangs on one line. Before 1066 there are three ages; from 1066 there are eight royal houses. Every event you learn later goes inside one of them.</p>
+      <div class="spine-row"><small>Before 1066</small><div class="spine">
+        <span class="h old"><b>Roman Britain</b><span>AD 43</span></span> <span class="arr">→</span> <span class="h old"><b>Anglo-Saxon kingdoms</b><span>410</span></span> <span class="arr">→</span> <span class="h old"><b>Kingdom of England</b><span>927</span></span>
+      </div></div>
+      <div class="spine-row"><small>Royal houses from 1066</small><div class="spine">
+        <span class="h"><b>Norman</b><span>1066</span></span> <span class="arr">→</span> <span class="h"><b>Plantagenet</b><span>1154</span></span> <span class="arr">→</span> <span class="h"><b>Lancaster</b><span>1399</span></span> <span class="arr">→</span> <span class="h"><b>York</b><span>1461</span></span> <span class="arr">→</span> <span class="h"><b>Tudor</b><span>1485</span></span> <span class="arr">→</span> <span class="h"><b>Stuart</b><span>1603</span></span> <span class="arr">→</span> <span class="h"><b>Hanover</b><span>1714</span></span> <span class="arr">→</span> <span class="h"><b>Windsor</b><span>1901</span></span>
+      </div></div>
+      <div class="mnemo"><b>N</b>o <b>P</b>lan <b>L</b>ike <b>Y</b>ours <b>T</b>o <b>S</b>tudy <b>H</b>istory <b>W</b>isely</div>
+      <details class="logic"><summary><span>💡</span><span class="hint-txt">Hint · how to remember the years</span></summary><div class="logic-body"><ul>
+        <li><b>1066</b> is the one year everyone in Britain knows: the Battle of Hastings.</li>
+        <li><b>Tudor 1485</b> is five years after Ivan III stopped paying the Golden Horde (1480).</li>
+        <li><b>Stuart 1603</b> is ten years before the first Romanov (1613).</li>
+        <li><b>Windsor</b>: the family was called Saxe-Coburg from 1901 and changed the name to Windsor in 1917.</li>
+      </ul></div></details>
+    </div>
+
+    <div class="exercise">
+      <div class="exercise-label">Rebuild it · 2 min</div>
+      <h3>Scroll the spine out of sight. Write the eight houses in order.</h3>
+      <p class="instr">The first letter is given. Say the sentence to yourself first.</p>
+      <div class="facts"><span class="fact">🧠 from memory</span><span class="fact">8 houses</span></div>
+      <div class="quiz">
+        <div class="answer-row"><span class="ar-num">1</span><span class="ar-txt"><span class="pre">N</span><input class="blank ans" data-prefix="n" data-answer="norman" autocomplete="off" spellcheck="false"> from <b>1066</b></span></div>
+        <div class="answer-row"><span class="ar-num">2</span><span class="ar-txt"><span class="pre">P</span><input class="blank ans" data-prefix="p" data-answer="plantagenet" autocomplete="off" spellcheck="false"> from <b>1154</b></span></div>
+        <div class="answer-row"><span class="ar-num">3</span><span class="ar-txt"><span class="pre">L</span><input class="blank ans" data-prefix="l" data-answer="lancaster" autocomplete="off" spellcheck="false"> from <b>1399</b></span></div>
+        <div class="answer-row"><span class="ar-num">4</span><span class="ar-txt"><span class="pre">Y</span><input class="blank ans" data-prefix="y" data-answer="york" autocomplete="off" spellcheck="false"> from <b>1461</b></span></div>
+        <div class="answer-row"><span class="ar-num">5</span><span class="ar-txt"><span class="pre">T</span><input class="blank ans" data-prefix="t" data-answer="tudor" autocomplete="off" spellcheck="false"> from <b>1485</b></span></div>
+        <div class="answer-row"><span class="ar-num">6</span><span class="ar-txt"><span class="pre">S</span><input class="blank ans" data-prefix="s" data-answer="stuart" autocomplete="off" spellcheck="false"> from <b>1603</b></span></div>
+        <div class="answer-row"><span class="ar-num">7</span><span class="ar-txt"><span class="pre">H</span><input class="blank ans" data-prefix="h" data-answer="hanover" autocomplete="off" spellcheck="false"> from <b>1714</b></span></div>
+        <div class="answer-row"><span class="ar-num">8</span><span class="ar-txt"><span class="pre">W</span><input class="blank ans" data-prefix="w" data-answer="windsor" autocomplete="off" spellcheck="false"> from <b>1901</b></span></div>
+      </div>
+    </div>
+
+    <div class="step-title">At home · 10 min</div>
+
+    <div class="exercise">
+      <div class="exercise-label">Step 1 · Listen once · 3 min</div>
+      <h3>Before 1066: Romans, Saxons and Vikings</h3>
+      <p class="instr">Read the statements first. Then listen <b>once</b> without stopping, as in the Olympiad, and decide if each statement is True or False.</p>
+      <div class="facts"><span class="fact">🎧 once, no stopping</span><span class="fact">✅ True / ❌ False</span><span class="fact">⏱ 2½ min audio</span></div>
+      <div class="player" data-src="audio/l12-before-1066.mp3" data-label="Before 1066"></div>
+      <div class="quiz">
+        <div class="answer-row"><span class="ar-num">1</span><span class="ar-txt">Julius Caesar conquered Britain in 55 BC.</span><select class="exam-select ans" data-opts="True,False" data-answer="False"></select></div>
+        <div class="answer-row"><span class="ar-num">2</span><span class="ar-txt">Boudica’s army burnt London.</span><select class="exam-select ans" data-opts="True,False" data-answer="True"></select></div>
+        <div class="answer-row"><span class="ar-num">3</span><span class="ar-txt">The name “England” comes from the Angles.</span><select class="exam-select ans" data-opts="True,False" data-answer="True"></select></div>
+        <div class="answer-row"><span class="ar-num">4</span><span class="ar-txt">Alfred the Great was the first king of all England.</span><select class="exam-select ans" data-opts="True,False" data-answer="False"></select></div>
+        <div class="answer-row"><span class="ar-num">5</span><span class="ar-txt">Harold fought two battles in 1066.</span><select class="exam-select ans" data-opts="True,False" data-answer="True"></select></div>
+      </div>
+      <details class="logic"><summary><span>💡</span><span class="hint-txt">Hint · the traps</span></summary><div class="logic-body"><ul>
+        <li><b>Came ≠ conquered</b>: Caesar “came twice, but he did not stay”.</li>
+        <li><b>Grandfather or grandson?</b> Alfred stopped the Vikings; his grandson Athelstan became the first King of all England.</li>
+      </ul></div></details>
+    </div>
+
+    <div class="exercise">
+      <div class="exercise-label">Step 2 · Read and place · 4 min</div>
+      <h3>Put the story on your timeline</h3>
+      <p class="instr">Now read the story. Then drag each event to its date (or tap the event, then the date).</p>
+      <div class="story">
+        <h4>Before 1066: Romans, Saxons and Vikings</h4>
+        <p>Five thousand years ago, long before anyone wrote history down, farmers in the south of Britain began building Stonehenge. Britain enters written history much later, in 55 BC, when Julius Caesar crossed the Channel. He came twice, but he did not stay.</p>
+        <p>The real Roman <b>invasion</b> began in AD 43. Within forty years Rome <b>had conquered</b> most of what is now England and Wales. Not everyone accepted it. In AD 60 Boudica, queen of the Iceni, led a revolt and burnt London, but the Romans defeated her. In AD 122 Emperor Hadrian ordered a wall across the north, to keep out the tribes of Scotland. Its <b>remains</b> still stand today.</p>
+        <p>As the <b>empire</b> went into <b>decline</b>, the Romans left. By 410 Britain had to defend itself. Angles, Saxons and Jutes sailed in from Germany and Denmark and set up their own kingdoms. The word <i>England</i> has its <b>origin</b> in their name: the land of the Angles. In 597 a monk called Augustine brought Christianity to Kent, and in 731 Bede, a monk in the north, finished the first history of the English people.</p>
+        <p>Then came the Vikings. In 793 they attacked the monastery of Lindisfarne, and by the 870s they <b>had taken over</b> much of the north and east. Only Wessex survived, under King Alfred the Great, who stopped the Vikings and made peace with them. His grandson Athelstan united the kingdoms and became the first King of all England in 927. But the Vikings were not finished. In 1016 the Danish king Cnut took the English throne.</p>
+        <p>The last Anglo-Saxon king, Edward the Confessor, died in January 1066 without children. Three men wanted his crown. Harold became king and defeated a Norwegian army at Stamford Bridge, but three days later William, Duke of Normandy, landed in the south. On 14 October 1066, at the Battle of Hastings, Harold was killed. William the Conqueror was crowned on Christmas Day, and the Viking age in England was over.</p>
+      </div>
+      <div class="bank dnd"><span>Cnut takes the throne</span><span>the Romans leave</span><span>Boudica burns London</span><span>building of Stonehenge begins</span><span>Vikings attack Lindisfarne</span><span>the Battle of Hastings</span><span>Hadrian orders a wall</span><span>Augustine brings Christianity</span><span>Julius Caesar crosses the Channel</span><span>Athelstan becomes first King of England</span><span>the Roman invasion begins</span></div>
+      <p class="bank-hint">Drag an event to a date, or tap an event and then tap the date. Tap a filled date to empty it.</p>
+      <div class="quiz">
+        <ul class="place-list">
+          <li><span class="yr">c. 3000 BC</span><span class="gap"><span class="gn">1</span><select class="exam-select ans" data-bank="1" data-answer="building of Stonehenge begins"></select></span></li>
+          <li><span class="yr">55 BC</span><span class="gap"><span class="gn">2</span><select class="exam-select ans" data-bank="1" data-answer="Julius Caesar crosses the Channel"></select></span></li>
+          <li><span class="yr">AD 43</span><span class="gap"><span class="gn">3</span><select class="exam-select ans" data-bank="1" data-answer="the Roman invasion begins"></select></span></li>
+          <li><span class="yr">AD 60</span><span class="gap"><span class="gn">4</span><select class="exam-select ans" data-bank="1" data-answer="Boudica burns London"></select></span></li>
+          <li><span class="yr">AD 122</span><span class="gap"><span class="gn">5</span><select class="exam-select ans" data-bank="1" data-answer="Hadrian orders a wall"></select></span></li>
+          <li><span class="yr">410</span><span class="gap"><span class="gn">6</span><select class="exam-select ans" data-bank="1" data-answer="the Romans leave"></select></span></li>
+          <li><span class="yr">597</span><span class="gap"><span class="gn">7</span><select class="exam-select ans" data-bank="1" data-answer="Augustine brings Christianity"></select></span></li>
+          <li><span class="yr">793</span><span class="gap"><span class="gn">8</span><select class="exam-select ans" data-bank="1" data-answer="Vikings attack Lindisfarne"></select></span></li>
+          <li><span class="yr">927</span><span class="gap"><span class="gn">9</span><select class="exam-select ans" data-bank="1" data-answer="Athelstan becomes first King of England"></select></span></li>
+          <li><span class="yr">1016</span><span class="gap"><span class="gn">10</span><select class="exam-select ans" data-bank="1" data-answer="Cnut takes the throne"></select></span></li>
+          <li><span class="yr">1066</span><span class="gap"><span class="gn">11</span><select class="exam-select ans" data-bank="1" data-answer="the Battle of Hastings"></select></span></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="exercise">
+      <div class="review-head"><span class="task-num">Задание 10 format</span><span class="pts">5 events · 7 centuries</span></div>
+      <h3>Step 3 · Events and centuries · 2 min</h3>
+      <p class="orig-instr">Соотнесите события, значимые для стран(ы) изучаемого языка, и века, в которых эти события происходили. Два века не соответствуют ни одному событию.</p>
+      <div class="facts"><span class="fact">🧠 from memory</span><span class="fact">2 centuries are extra</span></div>
+      <div class="quiz">
+        <div class="answer-row"><span class="ar-num">1</span><span class="ar-txt">Vikings attack the monastery of Lindisfarne</span><select class="exam-select ans" data-opts="1st,2nd,5th,6th,8th,9th,10th" data-answer="8th"></select></div>
+        <div class="answer-row"><span class="ar-num">2</span><span class="ar-txt">Hadrian’s Wall is begun</span><select class="exam-select ans" data-opts="1st,2nd,5th,6th,8th,9th,10th" data-answer="2nd"></select></div>
+        <div class="answer-row"><span class="ar-num">3</span><span class="ar-txt">Athelstan becomes the first King of all England</span><select class="exam-select ans" data-opts="1st,2nd,5th,6th,8th,9th,10th" data-answer="10th"></select></div>
+        <div class="answer-row"><span class="ar-num">4</span><span class="ar-txt">The Romans leave Britain</span><select class="exam-select ans" data-opts="1st,2nd,5th,6th,8th,9th,10th" data-answer="5th"></select></div>
+        <div class="answer-row"><span class="ar-num">5</span><span class="ar-txt">Augustine brings Christianity to Kent</span><select class="exam-select ans" data-opts="1st,2nd,5th,6th,8th,9th,10th" data-answer="6th"></select></div>
+      </div>
+      <details class="logic"><summary><span>💡</span><span class="hint-txt">Hint · short years</span></summary><div class="logic-body"><ul>
+        <li>Three-digit year: <b>first digit + 1</b>. 793 → 7 + 1 = <b>8th</b>; 410 → <b>5th</b>.</li>
+        <li>Two-digit year (AD 43, AD 60): the <b>1st</b> century AD. 122 → 1 + 1 = <b>2nd</b>.</li>
+        <li>BC counts backwards: 55 BC is the 1st century BC.</li>
+      </ul></div></details>
+    </div>
+
+    <div class="exercise">
+      <div class="exercise-label">Step 4 · Say it · 1 min</div>
+      <h3>Retell the story aloud, with your timeline in front of you</h3>
+      <p class="instr">One minute, out loud. Follow the line: <b>Romans → Saxons → Vikings → 1066</b>. Use at least three of these: <i>invasion, conquer, empire, decline, remains, origin, take over</i>. Next lesson you’ll retell it without the timeline.</p>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════
+       TAB — VOCABULARY (Block A, 35 min): V9 people & achievement
+  ══════════════════════════════════════════════════════════ -->
+  <div class="tab-content" id="tab-vocab">
+
+    <div class="exercise">
+      <div class="exercise-label">Step 1 · Meet the words · 8 min</div>
+      <h3>People &amp; achievement: the words</h3>
+      <p class="instr">Go through the cards: say the word, guess the translation, then flip. Mark each card ✓ or ✗.</p>
+      <div class="fc-app" data-deck="v9"></div>
+    </div>
+
+    <div class="exercise">
+      <div class="exercise-label">Step 2 · Your word list</div>
+      <h3>All the new words in one place</h3>
+      <p class="instr">Read through the list and listen to any word you’re unsure of. Then press <b>🙈 Hide Russian</b> and test yourself: tap a blurred translation to check.</p>
+      <div class="fc-list" data-deck="v9"></div>
+    </div>
+
+    <div class="exercise">
+      <div class="exercise-label">Step 3 · Collocations · 7 min</div>
+      <h3>Which word goes with it?</h3>
+      <p class="instr">Complete each sentence with one word from today’s list. Look at the grammar around the gap first: it tells you the form.</p>
+      <div class="facts"><span class="fact">✍️ one word</span><span class="fact">🧠 from memory</span><span class="fact">⚙️ the right form</span></div>
+      <div class="quiz">
+        <div class="answer-row"><span class="ar-num">1</span><span class="ar-txt">Having lost the final twice, she refused to <input class="blank ans" data-answer="give" autocomplete="off" spellcheck="false"> up, and four years later she won the gold medal.</span></div>
+        <div class="answer-row"><span class="ar-num">2</span><span class="ar-txt">Marie Curie, who <input class="blank ans" data-answer="devoted" autocomplete="off" spellcheck="false"> her whole life to science, won two Nobel Prizes.</span></div>
+        <div class="answer-row"><span class="ar-num">3</span><span class="ar-txt">The discovery of penicillin is considered one of the greatest medical <input class="blank ans" data-answer="breakthroughs" autocomplete="off" spellcheck="false"> of the twentieth century.</span></div>
+        <div class="answer-row"><span class="ar-num">4</span><span class="ar-txt">He is the kind of player that younger footballers look <input class="blank short ans" data-answer="up" autocomplete="off" spellcheck="false"> to.</span></div>
+        <div class="answer-row"><span class="ar-num">5</span><span class="ar-txt">A lack of <input class="blank ans" data-answer="motivation" autocomplete="off" spellcheck="false"> is the most common reason why people give up learning a language.</span></div>
+        <div class="answer-row"><span class="ar-num">6</span><span class="ar-txt">What makes her paintings stand <input class="blank short ans" data-answer="out" autocomplete="off" spellcheck="false"> is the way she uses colour.</span></div>
+        <div class="answer-row"><span class="ar-num">7</span><span class="ar-txt">It takes years of <input class="blank ans" data-answer="discipline|dedication|determination" autocomplete="off" spellcheck="false"> and hard work to become a top athlete.</span></div>
+        <div class="answer-row"><span class="ar-num">8</span><span class="ar-txt">If she had been less <input class="blank ans" data-answer="persistent|determined" autocomplete="off" spellcheck="false">, she would never have found the answer.</span></div>
+      </div>
+      <details class="logic"><summary><span>💡</span><span class="hint-txt">Hint · let the grammar choose the form</span></summary><div class="logic-body"><ul>
+        <li><b>refuse to</b> + base form; <b>who</b> + a past verb in a story (<i>devoted</i>).</li>
+        <li><b>one of the greatest</b> + a <b>plural</b> noun (<i>breakthroughs</i>).</li>
+        <li><b>a lack of</b> / <b>years of</b> + a noun; <b>be less</b> + an adjective.</li>
+        <li>Phrasal verbs keep their particle: <i>give up, look up to, stand out</i>.</li>
+      </ul></div></details>
+    </div>
+
+    <div class="exercise">
+      <div class="review-head"><span class="task-num">Задание 2 format</span><span class="pts">10 gaps · 3 extra words</span></div>
+      <h3>Step 4 · A pioneer nobody remembered · 10 min</h3>
+      <p class="orig-instr">Перетащите слова, лексически подходящие по смыслу в соответствующие пропуски в тексте. Три слова являются лишними.</p>
+      <div class="facts"><span class="fact">🧩 13 words, 10 gaps</span><span class="fact">✍️ the form is already given</span><span class="fact">⏱ 8 min</span></div>
+      <div class="bank dnd"><span>fame</span><span>struggled</span><span>obstacles</span><span>pioneer</span><span>given up</span><span>recognition</span><span>outstanding</span><span>took up</span><span>devoted</span><span>determination</span><span>breakthrough</span><span>reputation</span><span>influential</span></div>
+      <p class="bank-hint">Drag a word into a gap, or tap a word and then tap the gap. Tap a filled gap to empty it.</p>
+      <div class="quiz">
+        <div class="gap-text">
+          <h4>Mary Anning, the fossil hunter</h4>
+          Mary Anning was born in 1799 in Lyme Regis, a small town on the south coast of England. Her family was poor, and when her father died in 1810, leaving nothing but debts, they <span class="gap"><span class="gn">1</span><select class="exam-select ans" data-bank="1" data-answer="struggled"></select></span> to survive. Mary, who had been collecting fossils on the beach with him since she was a small child, began selling them to tourists.
+          In 1811, when she was only twelve, Mary and her brother dug out the skeleton of a strange sea creature, later named an ichthyosaur. It was the first one ever to be correctly identified, and the find was a real <span class="gap"><span class="gn">2</span><select class="exam-select ans" data-bank="1" data-answer="breakthrough"></select></span> for the young science of geology. Over the next twenty years she made one <span class="gap"><span class="gn">3</span><select class="exam-select ans" data-bank="1" data-answer="outstanding"></select></span> discovery after another, including the first complete plesiosaur.
+          Being a working-class woman, Mary faced enormous <span class="gap"><span class="gn">4</span><select class="exam-select ans" data-bank="1" data-answer="obstacles"></select></span>. She was not allowed to join the Geological Society of London, and wealthy collectors who bought her fossils often wrote about them without mentioning her name. Many people in her position would have <span class="gap"><span class="gn">5</span><select class="exam-select ans" data-bank="1" data-answer="given up"></select></span>, but she <span class="gap"><span class="gn">6</span><select class="exam-select ans" data-bank="1" data-answer="devoted"></select></span> her whole life to her work. Her <span class="gap"><span class="gn">7</span><select class="exam-select ans" data-bank="1" data-answer="determination"></select></span> and her eye for detail gradually earned her a <span class="gap"><span class="gn">8</span><select class="exam-select ans" data-bank="1" data-answer="reputation"></select></span> among scientists, some of whom travelled to Lyme Regis to learn from her.
+          Even so, real <span class="gap"><span class="gn">9</span><select class="exam-select ans" data-bank="1" data-answer="recognition"></select></span> came only long after her death in 1847. In 2010 the Royal Society named her one of the ten British women who had been most <span class="gap"><span class="gn">10</span><select class="exam-select ans" data-bank="1" data-answer="influential"></select></span> in the history of science, and in 2022 a statue of her was finally put up in her home town.
+        </div>
+      </div>
+      <details class="logic"><summary><span>💡</span><span class="hint-txt">Hint · grammar first, then meaning</span></summary><div class="logic-body"><ol>
+        <li>Label the box: <b>nouns</b> (fame, obstacles, pioneer…), <b>past forms</b> (struggled, devoted), <b>V3</b> (given up), <b>adjectives</b> (outstanding, influential), <b>phrasal verbs</b> (took up, given up).</li>
+        <li>For each gap: after <i>would have</i> → V3; after <i>enormous</i> → a plural noun; after <i>most</i> → an adjective; between <i>one … discovery</i> → an adjective.</li>
+        <li>Only then choose by meaning. The 3 extras fit the grammar of some gap but not its meaning.</li>
+      </ol></div></details>
+    </div>
+
+    <div class="exercise">
+      <div class="exercise-label">Step 5 · Retell · 5 min</div>
+      <h3>Tell Mary Anning’s story in your own words</h3>
+      <p class="instr">Close the text. Retell the story aloud in 8–10 sentences. Use at least <b>8</b> of these words; tap each one when you use it. Try one sentence with <i>would have + V3</i> and one with <i>Having …</i> / <i>Being …</i> at the start.</p>
+      <div class="use-words" id="retellWords"><span>pioneer</span><span>struggle</span><span>obstacle</span><span>overcome</span><span>breakthrough</span><span>outstanding</span><span>devote</span><span>determination</span><span>give up</span><span>reputation</span><span>recognition</span><span>influential</span></div>
+      <p class="bank-hint" id="retellCount">0 / 8 words used</p>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════
+       TAB — ЗАДАНИЕ 5 (I) (Block B, 35 min): finding the links
+  ══════════════════════════════════════════════════════════ -->
+  <div class="tab-content" id="tab-z5">
+
+    <div class="exercise">
+      <div class="exercise-label">Discover · step 1</div>
+      <h3>Read the story. Look at the coloured words.</h3>
+      <div class="story">
+        <h4>Shackleton’s Endurance</h4>
+        <p><span class="snum">1</span>Ernest Shackleton was an Irish-born explorer who led three British expeditions to the Antarctic.
+        <span class="snum">2</span>In 1914 <span class="lk lk-pr">he</span> sailed south in a ship called Endurance, hoping to become the first person to cross the continent on foot.
+        <span class="snum">3</span>Before <span class="lk lk-the">the expedition</span> had even reached land, <span class="lk lk-ln">however</span>, <span class="lk lk-the">the ship</span> became trapped in the ice and was slowly crushed.
+        <span class="snum">4</span><span class="lk lk-th">This disaster</span> left twenty-eight men stranded on the frozen sea, hundreds of miles from help.
+        <span class="snum">5</span><span class="lk lk-th">Such a situation</span> would have broken most leaders, but Shackleton kept his men together for almost two years.
+        <span class="snum">6</span><span class="lk lk-ln">Eventually</span>, all of <span class="lk lk-pr">them</span> were rescued, and not a single life was lost.</p>
+        <div class="legend3" style="display:flex;gap:8px;flex-wrap:wrap;font-size:.85rem"><span class="lk lk-pr">blue words</span><span class="lk lk-the">green words</span><span class="lk lk-th">pink words</span><span class="lk lk-ln">yellow words</span></div>
+      </div>
+    </div>
+
+    <div class="exercise">
+      <div class="exercise-label">Discover · step 2</div>
+      <h3>Answer the questions: they lead you to the rule</h3>
+      <p class="instr">Answer from the story, then press Check. The rule opens after you check.</p>
+      <div class="facts"><span class="fact">🔎 think, don’t guess</span><span class="fact">7 questions</span></div>
+      <div class="quiz">
+        <div class="answer-row"><span class="ar-num">1</span><span class="ar-txt">How is the explorer named in sentence 1?</span><select class="exam-select ans" data-opts="by his full name,only as “he”" data-answer="by his full name"></select></div>
+        <div class="answer-row"><span class="ar-num">2</span><span class="ar-txt">In sentence 2, <span class="lk lk-pr">he</span> points back to…</span><select class="exam-select ans" data-opts="Shackleton,the ship" data-answer="Shackleton"></select></div>
+        <div class="answer-row"><span class="ar-num">3</span><span class="ar-txt">Sentence 2 says <i>a ship</i>, sentence 3 says <span class="lk lk-the">the ship</span>. Why <i>the</i>?</span><select class="exam-select ans" data-opts="we already know which ship,it is a famous ship" data-answer="we already know which ship"></select></div>
+        <div class="answer-row"><span class="ar-num">4</span><span class="ar-txt"><span class="lk lk-th">This disaster</span> in sentence 4 sums up…</span><select class="exam-select ans" data-opts="the ship being crushed (3),the voyage south (2)" data-answer="the ship being crushed (3)"></select></div>
+        <div class="answer-row"><span class="ar-num">5</span><span class="ar-txt">Could sentence 5 come straight after sentence 1?</span><select class="exam-select ans" data-opts="no: “such a situation” needs a situation before it,yes" data-answer="no: “such a situation” needs a situation before it"></select></div>
+        <div class="answer-row"><span class="ar-num">6</span><span class="ar-txt"><span class="lk lk-ln">however</span> and <span class="lk lk-ln">eventually</span> are linkers. What do they need?</span><select class="exam-select ans" data-opts="an idea before them to contrast with or follow,nothing: they can start a text" data-answer="an idea before them to contrast with or follow"></select></div>
+        <div class="answer-row"><span class="ar-num">7</span><span class="ar-txt">So a sentence that starts with <i>he / this + noun / such / the + noun</i> can be…</span><select class="exam-select ans" data-opts="the first sentence,anything but the first sentence" data-answer="anything but the first sentence"></select></div>
+        <div class="after-check">
+          <div class="rule-box">
+            <div class="rule-title">📏 The rule you’ve just found: every sentence holds on to the one before</div>
+            <div class="tbl-wrap"><table class="rule-table">
+              <tr><th>Link</th><th>Examples</th><th>Ask yourself</th></tr>
+              <tr><td><span class="lk lk-pr">Pronouns</span></td><td><i>he, she, it, they, him, her, them, his, its, their, there</i></td><td>Who or what has been named already?</td></tr>
+              <tr><td><span class="lk lk-the">the + noun again</span></td><td><i>a ship → the ship; a calculating machine → the machine</i></td><td>Where did this thing appear first, with <i>a</i> or with its name?</td></tr>
+              <tr><td><span class="lk lk-th">this / that / these / such + noun</span></td><td><i>this disaster, these notes, that first ride, such a situation</i></td><td>Which earlier sentence does the noun sum up?</td></tr>
+              <tr><td><span class="lk lk-ln">Linkers and time words</span></td><td><i>however, despite this, eventually, later, by then, five years later</i></td><td>What comes before: a contrast, a cause, an earlier date?</td></tr>
+            </table></div>
+            <div class="ru-note">🇷🇺 В русском те же связки: «он», «эта катастрофа», «такая ситуация», «однако». Но в английском ещё и артикль: <i>a ship</i> — корабль впервые, <i>the ship</i> — тот самый, о котором уже сказали. Это тоже ссылка назад.</div>
+            <div class="rule-tip">💡 The <b>opener</b> names people in full and links to nothing. The <b>two extra sentences</b> in Задание 5 are on topic, but their links point to something that is not in the text.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="exercise">
+      <div class="exercise-label">Practice 1 · Pairs · 8 min</div>
+      <h3>Which sentence comes first, and what holds them together?</h3>
+      <p class="instr">For each pair: <b>①</b> tap the sentence that comes first, then <b>②</b> tap a word in the text that points back to the first sentence.</p>
+      <div class="facts"><span class="fact">① order</span><span class="fact">② the link word</span><span class="fact">6 pairs · 12 points</span></div>
+      <div class="quiz pp-quiz">
+        <div class="pp">
+          <div class="pp-head"><span class="pp-n">1</span><span class="pp-step">① Tap the sentence that comes first</span><button type="button" class="pp-swap" title="Change the order">↕ change</button></div>
+          <div class="pp-ss">
+            <div class="pp-s" data-l="A"><span class="pp-b">A</span><span class="pp-t"><span class="w is-link" data-ph="She">She</span> <span class="w" data-ph="had">had</span> <span class="w" data-ph="always">always</span> <span class="w" data-ph="wanted">wanted</span> <span class="w" data-ph="to">to</span> <span class="w" data-ph="study">study</span> <span class="w" data-ph="science">science,</span> <span class="w" data-ph="but">but</span> <span class="w" data-ph="women">women</span> <span class="w" data-ph="were">were</span> <span class="w" data-ph="not">not</span> <span class="w" data-ph="allowed">allowed</span> <span class="w" data-ph="to">to</span> <span class="w" data-ph="go">go</span> <span class="w" data-ph="to">to</span> <span class="w" data-ph="university">university</span> <span class="w" data-ph="in">in</span> <span class="w" data-ph="Warsaw">Warsaw.</span></span></div>
+            <div class="pp-s" data-l="B"><span class="pp-b">B</span><span class="pp-t"><span class="w" data-ph="Maria">Maria</span> <span class="w" data-ph="Skłodowska">Skłodowska,</span> <span class="w" data-ph="later">later</span> <span class="w" data-ph="known">known</span> <span class="w" data-ph="as">as</span> <span class="w" data-ph="Marie">Marie</span> <span class="w" data-ph="Curie">Curie,</span> <span class="w" data-ph="was">was</span> <span class="w" data-ph="born">born</span> <span class="w" data-ph="in">in</span> <span class="w" data-ph="Warsaw">Warsaw</span> <span class="w" data-ph="in">in</span> <span class="w" data-ph="1867">1867.</span></span></div>
+          </div>
+          <div class="pp-keys">First: <input class="blank ans pp-first" data-answer="B" autocomplete="off"> · Link: <input class="blank ans pp-link" data-answer="She" autocomplete="off"></div>
+          <div class="after-check pp-why">🔗 <b>She</b> = Maria Skłodowska. A pronoun can’t come before the person is named.</div>
+        </div>
+        <div class="pp">
+          <div class="pp-head"><span class="pp-n">2</span><span class="pp-step">① Tap the sentence that comes first</span><button type="button" class="pp-swap" title="Change the order">↕ change</button></div>
+          <div class="pp-ss">
+            <div class="pp-s" data-l="A"><span class="pp-b">A</span><span class="pp-t"><span class="w is-link" data-ph="The machine">The</span> <span class="w is-link" data-ph="The machine">machine</span>, <span class="w" data-ph="which">which</span> <span class="w is-link" data-ph="he">he</span> <span class="w" data-ph="called">called</span> <span class="w" data-ph="the">the</span> <span class="w" data-ph="Difference">Difference</span> <span class="w" data-ph="Engine">Engine,</span> <span class="w" data-ph="was">was</span> <span class="w" data-ph="designed">designed</span> <span class="w" data-ph="to">to</span> <span class="w" data-ph="calculate">calculate</span> <span class="w" data-ph="tables">tables</span> <span class="w" data-ph="of">of</span> <span class="w" data-ph="numbers">numbers</span> <span class="w" data-ph="automatically">automatically.</span></span></div>
+            <div class="pp-s" data-l="B"><span class="pp-b">B</span><span class="pp-t"><span class="w" data-ph="In">In</span> <span class="w" data-ph="the">the</span> <span class="w" data-ph="1820s">1820s</span> <span class="w" data-ph="Charles">Charles</span> <span class="w" data-ph="Babbage">Babbage</span> <span class="w" data-ph="began">began</span> <span class="w" data-ph="work">work</span> <span class="w" data-ph="on">on</span> <span class="w" data-ph="a">a</span> <span class="w" data-ph="calculating">calculating</span> <span class="w" data-ph="machine">machine.</span></span></div>
+          </div>
+          <div class="pp-keys">First: <input class="blank ans pp-first" data-answer="B" autocomplete="off"> · Link: <input class="blank ans pp-link" data-answer="The machine|he" autocomplete="off"></div>
+          <div class="after-check pp-why">🔗 <i>a calculating machine</i> → <b>the machine</b>: the second mention takes <i>the</i>. <b>he</b> = Babbage.</div>
+        </div>
+        <div class="pp">
+          <div class="pp-head"><span class="pp-n">3</span><span class="pp-step">① Tap the sentence that comes first</span><button type="button" class="pp-swap" title="Change the order">↕ change</button></div>
+          <div class="pp-ss">
+            <div class="pp-s" data-l="A"><span class="pp-b">A</span><span class="pp-t"><span class="w is-link" data-ph="This idea">This</span> <span class="w is-link" data-ph="This idea">idea</span>, <span class="w" data-ph="laughed">laughed</span> <span class="w" data-ph="at">at</span> <span class="w" data-ph="by">by</span> <span class="w" data-ph="most">most</span> <span class="w" data-ph="geologists">geologists</span> <span class="w" data-ph="of">of</span> <span class="w is-link" data-ph="his">his</span> <span class="w" data-ph="time">time,</span> <span class="w" data-ph="was">was</span> <span class="w" data-ph="accepted">accepted</span> <span class="w" data-ph="only">only</span> <span class="w" data-ph="decades">decades</span> <span class="w" data-ph="after">after</span> <span class="w is-link" data-ph="his">his</span> <span class="w" data-ph="death">death.</span></span></div>
+            <div class="pp-s" data-l="B"><span class="pp-b">B</span><span class="pp-t"><span class="w" data-ph="In">In</span> <span class="w" data-ph="1912">1912</span> <span class="w" data-ph="Alfred">Alfred</span> <span class="w" data-ph="Wegener">Wegener</span> <span class="w" data-ph="suggested">suggested</span> <span class="w" data-ph="that">that</span> <span class="w" data-ph="the">the</span> <span class="w" data-ph="continents">continents</span> <span class="w" data-ph="had">had</span> <span class="w" data-ph="once">once</span> <span class="w" data-ph="been">been</span> <span class="w" data-ph="joined">joined</span> <span class="w" data-ph="together">together.</span></span></div>
+          </div>
+          <div class="pp-keys">First: <input class="blank ans pp-first" data-answer="B" autocomplete="off"> · Link: <input class="blank ans pp-link" data-answer="This idea|his" autocomplete="off"></div>
+          <div class="after-check pp-why">🔗 <b>This idea</b> sums up what Wegener suggested in the other sentence.</div>
+        </div>
+        <div class="pp">
+          <div class="pp-head"><span class="pp-n">4</span><span class="pp-step">① Tap the sentence that comes first</span><button type="button" class="pp-swap" title="Change the order">↕ change</button></div>
+          <div class="pp-ss">
+            <div class="pp-s" data-l="A"><span class="pp-b">A</span><span class="pp-t"><span class="w" data-ph="In">In</span> <span class="w" data-ph="1901">1901</span> <span class="w" data-ph="Wilbur">Wilbur</span> <span class="w" data-ph="Wright">Wright,</span> <span class="w" data-ph="disappointed">disappointed</span> <span class="w" data-ph="by">by</span> <span class="w" data-ph="a">a</span> <span class="w" data-ph="glider">glider</span> <span class="w" data-ph="that">that</span> <span class="w" data-ph="would">would</span> <span class="w" data-ph="hardly">hardly</span> <span class="w" data-ph="fly">fly,</span> <span class="w" data-ph="said">said</span> <span class="w" data-ph="that">that</span> <span class="w" data-ph="people">people</span> <span class="w" data-ph="would">would</span> <span class="w" data-ph="not">not</span> <span class="w" data-ph="fly">fly</span> <span class="w" data-ph="for">for</span> <span class="w" data-ph="fifty">fifty</span> <span class="w" data-ph="years">years.</span></span></div>
+            <div class="pp-s" data-l="B"><span class="pp-b">B</span><span class="pp-t"><span class="w is-link" data-ph="Two years later">Two</span> <span class="w is-link" data-ph="Two years later">years</span> <span class="w is-link" data-ph="Two years later">later</span>, <span class="w is-link" data-ph="however">however</span>, <span class="w is-link" data-ph="the brothers’">the</span> <span class="w is-link" data-ph="the brothers’">brothers’</span> <span class="w" data-ph="powered">powered</span> <span class="w" data-ph="aeroplane">aeroplane</span> <span class="w" data-ph="left">left</span> <span class="w" data-ph="the">the</span> <span class="w" data-ph="ground">ground</span> <span class="w" data-ph="for">for</span> <span class="w" data-ph="twelve">twelve</span> <span class="w" data-ph="seconds">seconds.</span></span></div>
+          </div>
+          <div class="pp-keys">First: <input class="blank ans pp-first" data-answer="A" autocomplete="off"> · Link: <input class="blank ans pp-link" data-answer="Two years later|however|the brothers’" autocomplete="off"></div>
+          <div class="after-check pp-why">🔗 <b>Two years later</b> needs a date before it (1901); <b>however</b> needs an idea to contrast with.</div>
+        </div>
+        <div class="pp">
+          <div class="pp-head"><span class="pp-n">5</span><span class="pp-step">① Tap the sentence that comes first</span><button type="button" class="pp-swap" title="Change the order">↕ change</button></div>
+          <div class="pp-ss">
+            <div class="pp-s" data-l="A"><span class="pp-b">A</span><span class="pp-t"><span class="w is-link" data-ph="Such patience">Such</span> <span class="w is-link" data-ph="Such patience">patience</span> <span class="w" data-ph="was">was</span> <span class="w" data-ph="rare">rare,</span> <span class="w" data-ph="and">and</span> <span class="w" data-ph="it">it</span> <span class="w" data-ph="made">made</span> <span class="w is-link" data-ph="her">her</span> <span class="w" data-ph="one">one</span> <span class="w" data-ph="of">of</span> <span class="w" data-ph="the">the</span> <span class="w" data-ph="world’s">world’s</span> <span class="w" data-ph="leading">leading</span> <span class="w" data-ph="experts">experts</span> <span class="w" data-ph="on">on</span> <span class="w" data-ph="chimpanzees">chimpanzees.</span></span></div>
+            <div class="pp-s" data-l="B"><span class="pp-b">B</span><span class="pp-t"><span class="w" data-ph="Jane">Jane</span> <span class="w" data-ph="Goodall">Goodall</span> <span class="w" data-ph="spent">spent</span> <span class="w" data-ph="months">months</span> <span class="w" data-ph="sitting">sitting</span> <span class="w" data-ph="quietly">quietly</span> <span class="w" data-ph="in">in</span> <span class="w" data-ph="the">the</span> <span class="w" data-ph="forest">forest</span> <span class="w" data-ph="before">before</span> <span class="w" data-ph="the">the</span> <span class="w" data-ph="chimpanzees">chimpanzees</span> <span class="w" data-ph="allowed">allowed</span> <span class="w" data-ph="her">her</span> <span class="w" data-ph="to">to</span> <span class="w" data-ph="come">come</span> <span class="w" data-ph="close">close.</span></span></div>
+          </div>
+          <div class="pp-keys">First: <input class="blank ans pp-first" data-answer="B" autocomplete="off"> · Link: <input class="blank ans pp-link" data-answer="Such patience|her" autocomplete="off"></div>
+          <div class="after-check pp-why">🔗 <b>Such patience</b> sums up months of sitting quietly in the forest.</div>
+        </div>
+        <div class="pp">
+          <div class="pp-head"><span class="pp-n">6</span><span class="pp-step">① Tap the sentence that comes first</span><button type="button" class="pp-swap" title="Change the order">↕ change</button></div>
+          <div class="pp-ss">
+            <div class="pp-s" data-l="A"><span class="pp-b">A</span><span class="pp-t"><span class="w" data-ph="In">In</span> <span class="w" data-ph="January">January</span> <span class="w" data-ph="1912">1912</span> <span class="w" data-ph="Robert">Robert</span> <span class="w" data-ph="Falcon">Falcon</span> <span class="w" data-ph="Scott">Scott</span> <span class="w" data-ph="and">and</span> <span class="w" data-ph="four">four</span> <span class="w" data-ph="companions">companions</span> <span class="w" data-ph="finally">finally</span> <span class="w" data-ph="reached">reached</span> <span class="w" data-ph="the">the</span> <span class="w" data-ph="South">South</span> <span class="w" data-ph="Pole">Pole.</span></span></div>
+            <div class="pp-s" data-l="B"><span class="pp-b">B</span><span class="pp-t"><span class="w" data-ph="To">To</span> <span class="w is-link" data-ph="their">their</span> <span class="w" data-ph="horror">horror,</span> <span class="w is-link" data-ph="they">they</span> <span class="w" data-ph="found">found</span> <span class="w" data-ph="that">that</span> <span class="w" data-ph="a">a</span> <span class="w" data-ph="Norwegian">Norwegian</span> <span class="w" data-ph="team">team</span> <span class="w" data-ph="led">led</span> <span class="w" data-ph="by">by</span> <span class="w" data-ph="Roald">Roald</span> <span class="w" data-ph="Amundsen">Amundsen</span> <span class="w" data-ph="had">had</span> <span class="w" data-ph="got">got</span> <span class="w is-link" data-ph="there">there</span> <span class="w" data-ph="five">five</span> <span class="w" data-ph="weeks">weeks</span> <span class="w" data-ph="earlier">earlier.</span></span></div>
+          </div>
+          <div class="pp-keys">First: <input class="blank ans pp-first" data-answer="A" autocomplete="off"> · Link: <input class="blank ans pp-link" data-answer="their|they|there" autocomplete="off"></div>
+          <div class="after-check pp-why">🔗 <b>they / their</b> = Scott and his companions; <b>there</b> = the South Pole.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="exercise">
+      <div class="exercise-label">Practice 2 · A chain · 6 min</div>
+      <h3>Ada Lovelace: put six sentences in order</h3>
+      <p class="instr">No extra sentences this time. Find the opener first, then follow the links. Drag each sentence to its place (or tap it, then the place).</p>
+      <div class="facts"><span class="fact">1 opener</span><span class="fact">5 links</span><span class="fact">📖 read it through at the end</span></div>
+      <div class="bank dnd sent"><span>A · To this translation she added her own notes, which turned out to be three times longer than the article itself.</span><span>B · Ada Lovelace, the only daughter of the poet Lord Byron, was born in London in 1815.</span><span>C · In these notes she explained how the machine could be given a series of instructions, and for this reason she is often called the first computer programmer.</span><span>D · Fascinated by the invention, she began writing to him and later translated a French article about his plans for an even more powerful machine.</span><span>E · Her mother, who was determined that Ada should not become a poet like her father, made her study mathematics from an early age.</span><span>F · At the age of seventeen, Ada met the inventor Charles Babbage, who showed her a model of his calculating machine.</span></div>
+      <p class="bank-hint">Tap a filled place to empty it.</p>
+      <div class="quiz">
+        <div class="slots">
+          <div class="slot"><span class="gap"><span class="gn">1</span><select class="exam-select ans" data-bank="1" data-answer="B · Ada Lovelace, the only daughter of the poet Lord Byron, was born in London in 1815."></select></span></div>
+          <div class="slot"><span class="gap"><span class="gn">2</span><select class="exam-select ans" data-bank="1" data-answer="E · Her mother, who was determined that Ada should not become a poet like her father, made her study mathematics from an early age."></select></span></div>
+          <div class="slot"><span class="gap"><span class="gn">3</span><select class="exam-select ans" data-bank="1" data-answer="F · At the age of seventeen, Ada met the inventor Charles Babbage, who showed her a model of his calculating machine."></select></span></div>
+          <div class="slot"><span class="gap"><span class="gn">4</span><select class="exam-select ans" data-bank="1" data-answer="D · Fascinated by the invention, she began writing to him and later translated a French article about his plans for an even more powerful machine."></select></span></div>
+          <div class="slot"><span class="gap"><span class="gn">5</span><select class="exam-select ans" data-bank="1" data-answer="A · To this translation she added her own notes, which turned out to be three times longer than the article itself."></select></span></div>
+          <div class="slot"><span class="gap"><span class="gn">6</span><select class="exam-select ans" data-bank="1" data-answer="C · In these notes she explained how the machine could be given a series of instructions, and for this reason she is often called the first computer programmer."></select></span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="exercise">
+      <div class="review-head"><span class="task-num">Задание 5 format</span><span class="pts">10 places · 2 extra sentences</span></div>
+      <h3>Practice 3 · Amelia Earhart · 12 min</h3>
+      <p class="orig-instr">Поставьте предложения в логическую цепочку, чтобы получился связный текст. Два предложения являются лишними.</p>
+      <div class="facts"><span class="fact">untimed today</span><span class="fact">2 extras</span><span class="fact">🔗 pairs → chains</span></div>
+      <div class="bank dnd sent"><span>A · These Sunday lessons with her younger brother went on for most of that summer.</span><span>B · Within a year she had saved enough to buy her own second-hand plane, a bright yellow biplane which she called “The Canary”.</span><span>C · The flight made her a celebrity on both sides of the ocean, and she used her fame to encourage other women to take up careers in aviation.</span><span>D · Lessons were expensive, however, so she took several jobs, including one as a truck driver, to pay for them.</span><span>E · That first ten-minute ride, in California in 1920, changed her life: by the time the plane had landed, she knew she had to learn to fly.</span><span>F · The second attempt, however, ended in a crash only a few miles from the airfield.</span><span>G · In 1928 she became the first woman to cross the Atlantic by air, but only as a passenger, which made her feel, she said, “like a sack of potatoes”.</span><span>H · In May 1932 she finally achieved this goal, landing in a field in Northern Ireland almost fifteen hours after leaving Newfoundland.</span><span>I · Five years later she set out on her most ambitious journey yet: a flight around the world, close to the equator.</span><span>J · Tragically, she and her navigator disappeared over the Pacific in July 1937, and their plane has never been found.</span><span>K · Amelia Earhart, who would become the most famous female pilot in history, did not fly in an aeroplane until she was twenty-three.</span><span>L · Determined to prove that she could do it on her own, she spent the next four years preparing for a solo flight.</span></div>
+      <p class="bank-hint">Drag a sentence to its place, or tap it and then the place. Tap a filled place to empty it.</p>
+      <div class="quiz">
+        <div class="slots">
+          <div class="slot"><span class="gap"><span class="gn">1</span><select class="exam-select ans" data-bank="1" data-answer="K · Amelia Earhart, who would become the most famous female pilot in history, did not fly in an aeroplane until she was twenty-three."></select></span></div>
+          <div class="slot"><span class="gap"><span class="gn">2</span><select class="exam-select ans" data-bank="1" data-answer="E · That first ten-minute ride, in California in 1920, changed her life: by the time the plane had landed, she knew she had to learn to fly."></select></span></div>
+          <div class="slot"><span class="gap"><span class="gn">3</span><select class="exam-select ans" data-bank="1" data-answer="D · Lessons were expensive, however, so she took several jobs, including one as a truck driver, to pay for them."></select></span></div>
+          <div class="slot"><span class="gap"><span class="gn">4</span><select class="exam-select ans" data-bank="1" data-answer="B · Within a year she had saved enough to buy her own second-hand plane, a bright yellow biplane which she called “The Canary”."></select></span></div>
+          <div class="slot"><span class="gap"><span class="gn">5</span><select class="exam-select ans" data-bank="1" data-answer="G · In 1928 she became the first woman to cross the Atlantic by air, but only as a passenger, which made her feel, she said, “like a sack of potatoes”."></select></span></div>
+          <div class="slot"><span class="gap"><span class="gn">6</span><select class="exam-select ans" data-bank="1" data-answer="L · Determined to prove that she could do it on her own, she spent the next four years preparing for a solo flight."></select></span></div>
+          <div class="slot"><span class="gap"><span class="gn">7</span><select class="exam-select ans" data-bank="1" data-answer="H · In May 1932 she finally achieved this goal, landing in a field in Northern Ireland almost fifteen hours after leaving Newfoundland."></select></span></div>
+          <div class="slot"><span class="gap"><span class="gn">8</span><select class="exam-select ans" data-bank="1" data-answer="C · The flight made her a celebrity on both sides of the ocean, and she used her fame to encourage other women to take up careers in aviation."></select></span></div>
+          <div class="slot"><span class="gap"><span class="gn">9</span><select class="exam-select ans" data-bank="1" data-answer="I · Five years later she set out on her most ambitious journey yet: a flight around the world, close to the equator."></select></span></div>
+          <div class="slot"><span class="gap"><span class="gn">10</span><select class="exam-select ans" data-bank="1" data-answer="J · Tragically, she and her navigator disappeared over the Pacific in July 1937, and their plane has never been found."></select></span></div>
+        </div>
+        <div class="after-check">
+          <details class="logic" open><summary><span>🔗</span><span class="hint-txt">Why this order</span></summary><div class="logic-body">
+            <ul class="why-list">
+            <li><b>1 = K</b>: opener: the full name and who she was</li>
+            <li><b>2 = E</b>: “That first ten-minute ride” = the flight in 1 (that + noun)</li>
+            <li><b>3 = D</b>: “however”: she <i>had to</i> learn, <b>but</b> lessons were expensive</li>
+            <li><b>4 = B</b>: “she had saved enough”: the money from those jobs (past perfect = before buying)</li>
+            <li><b>5 = G</b>: a new stage, with a date; “only as a passenger” prepares 6</li>
+            <li><b>6 = L</b>: “to do it on her own” = to cross the Atlantic herself, not as a passenger</li>
+            <li><b>7 = H</b>: “this goal” = the solo flight in 6 (this + noun)</li>
+            <li><b>8 = C</b>: “The flight” = the one in 7 (the + noun again)</li>
+            <li><b>9 = I</b>: “Five years later” counts from 1932</li>
+            <li><b>10 = J</b>: “Tragically … has never been found”: the end of the story</li>
+            </ul>
+            <p>The extras: <b>A</b> (“These Sunday…”) <b>F</b> (“The second…”). Both point to things the text never mentions (Sunday lessons with a brother, a first attempt).</p>
+          </div></details>
+        </div>
+      </div>
+      <details class="logic"><summary><span>💡</span><span class="hint-txt">Hint · the procedure</span></summary><div class="logic-body"><ol>
+        <li>Find the opener: it names the person in full and links to nothing.</li>
+        <li>Underline every link: <i>she, that first ride, however, this goal, the flight, five years later</i>.</li>
+        <li>Build pairs, then chains. Dates help: 1920 → 1928 → 1932 → 1937.</li>
+        <li>The two extras are on topic but link to nothing in the text.</li>
+        <li>Read the finished text straight through.</li>
+      </ol></div></details>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════
+       TAB — HOMEWORK (60 min)
+  ══════════════════════════════════════════════════════════ -->
+  <div class="tab-content" id="tab-hw">
+    <div class="exercise">
+      <div class="exercise-label">Homework · 60 min</div>
+      <h3>Tick each part when it’s done</h3>
+      <ul class="hw-list" id="hwList">
+        <li><label><input type="checkbox"> <span class="t">🃏 <b>People &amp; achievement flashcards</b> (10 min): <a href="../flashcards.html?deck=v9">Learn mode</a> until at least 15 cards are 🏆 mastered, then one Match game.</span></label></li>
+        <li><label><input type="checkbox"> <span class="t">🧩 <b>Задание 5: Everest</b> (below, 20 min, untimed): order the text, then write down the link that joined each pair.</span></label></li>
+        <li><label><input type="checkbox"> <span class="t">🏛 <b>History · Before 1066</b> (20 min): the <a href="#" onclick="switchTab('hist');return false">History tab</a>, “At home”, steps 1–4. The listening counts as your one-listen audio.</span></label></li>
+        <li><label><input type="checkbox"> <span class="t">✍️ <b>Write</b> (10 min): 5 sentences about someone you look up to (below), with at least 4 words from today’s list and one <i>would have + V3</i>.</span></label></li>
+      </ul>
+    </div>
+
+    <div class="exercise">
+      <div class="review-head"><span class="task-num">Задание 5 format</span><span class="pts">8 places · 2 extra sentences</span></div>
+      <h3>The first men on Everest</h3>
+      <p class="orig-instr">Поставьте предложения в логическую цепочку, чтобы получился связный текст. Два предложения являются лишними.</p>
+      <div class="facts"><span class="fact">untimed</span><span class="fact">2 extras</span><span class="fact">📖 read it through at the end</span></div>
+      <div class="bank dnd sent"><span>A · Edmund Hillary, a beekeeper from New Zealand, took up climbing as a teenager after a school trip to the mountains.</span><span>B · This route, which had been discovered by Swiss climbers a year earlier, is now used by most expeditions.</span><span>C · For many years both men refused to say which of them had stepped onto the summit first: they had done it, they said, as a team.</span><span>D · The expedition, which was led by John Hunt, included hundreds of porters and more than ten climbers.</span><span>E · Among them was Tenzing Norgay, a Sherpa who had already tried to reach the summit six times.</span><span>F · Three days later it was the turn of Hillary and Tenzing, who set off from their tent at half past six in the morning.</span><span>G · Her photographs of the climb were later published all over the world.</span><span>H · By the early 1950s he had become one of the strongest climbers in the world, and in 1953 he was invited to join a British expedition to Mount Everest.</span><span>I · At 11.30 they became the first people known to have stood on the highest point on Earth.</span><span>J · On 26 May the first pair of climbers got within 100 metres of the top, but they were forced to turn back when their oxygen equipment failed.</span></div>
+      <p class="bank-hint">Drag a sentence to its place, or tap it and then the place. Tap a filled place to empty it.</p>
+      <div class="quiz">
+        <div class="slots">
+          <div class="slot"><span class="gap"><span class="gn">1</span><select class="exam-select ans" data-bank="1" data-answer="A · Edmund Hillary, a beekeeper from New Zealand, took up climbing as a teenager after a school trip to the mountains."></select></span></div>
+          <div class="slot"><span class="gap"><span class="gn">2</span><select class="exam-select ans" data-bank="1" data-answer="H · By the early 1950s he had become one of the strongest climbers in the world, and in 1953 he was invited to join a British expedition to Mount Everest."></select></span></div>
+          <div class="slot"><span class="gap"><span class="gn">3</span><select class="exam-select ans" data-bank="1" data-answer="D · The expedition, which was led by John Hunt, included hundreds of porters and more than ten climbers."></select></span></div>
+          <div class="slot"><span class="gap"><span class="gn">4</span><select class="exam-select ans" data-bank="1" data-answer="E · Among them was Tenzing Norgay, a Sherpa who had already tried to reach the summit six times."></select></span></div>
+          <div class="slot"><span class="gap"><span class="gn">5</span><select class="exam-select ans" data-bank="1" data-answer="J · On 26 May the first pair of climbers got within 100 metres of the top, but they were forced to turn back when their oxygen equipment failed."></select></span></div>
+          <div class="slot"><span class="gap"><span class="gn">6</span><select class="exam-select ans" data-bank="1" data-answer="F · Three days later it was the turn of Hillary and Tenzing, who set off from their tent at half past six in the morning."></select></span></div>
+          <div class="slot"><span class="gap"><span class="gn">7</span><select class="exam-select ans" data-bank="1" data-answer="I · At 11.30 they became the first people known to have stood on the highest point on Earth."></select></span></div>
+          <div class="slot"><span class="gap"><span class="gn">8</span><select class="exam-select ans" data-bank="1" data-answer="C · For many years both men refused to say which of them had stepped onto the summit first: they had done it, they said, as a team."></select></span></div>
+        </div>
+      </div>
+      <p class="instr" style="margin-top:14px">Now write the link for each join, e.g. <i>2 → 3: “The expedition” = the British expedition in 2</i>.</p>
+      <textarea class="free-write" id="hwLinks" placeholder="1 → 2: “he” = Edmund Hillary&#10;2 → 3: …" spellcheck="false"></textarea>
+    </div>
+
+    <div class="exercise">
+      <div class="exercise-label">Writing</div>
+      <h3>Someone you look up to</h3>
+      <p class="instr">Write 5 sentences about a person you admire: a scientist, an athlete, a musician or someone you know. Use at least 4 words from today’s list and one sentence with <i>would have + V3</i> (<i>Most people would have given up, but…</i>).</p>
+      <div class="facts"><span class="fact">5 sentences</span><span class="fact">4 × new words</span><span class="fact">would have + V3</span></div>
+      <textarea class="free-write" id="hwWrite" placeholder="I look up to … because …" spellcheck="false"></textarea>
+      <div class="btn-row"><button class="btn btn-primary" onclick="copyWriting()">📋 Copy for my teacher</button><span id="copyMsg" style="align-self:center;font-weight:600;color:var(--green)"></span></div>
+    </div>
+  </div>
+
+  <div class="btn-row" style="margin:6px 0 30px">
+    <button class="btn btn-danger" onclick="resetAll()">Clear all my answers</button>
+  </div>
+</div>
+
+<div class="save-indicator" id="saveIndicator">✓ Saved</div>
+
+<script>
+const LESSON_KEY = 'lesson-12';
+let data = {};
+try { data = JSON.parse(localStorage.getItem(LESSON_KEY)) || {}; } catch(e) {}
+
+function save(patch) {
+  Object.assign(data, patch);
+  try { localStorage.setItem(LESSON_KEY, JSON.stringify(data)); } catch(e) {}
+  const el = document.getElementById('saveIndicator');
+  el.classList.add('show');
+  clearTimeout(save.t);
+  save.t = setTimeout(() => el.classList.remove('show'), 1400);
+}
+
+// ── TABS ───────────────────────────────────────────────────────
+function showTab(name) {
+  const btn = document.querySelector('.tab-btn[onclick*="\'' + name + '\'"]');
+  if (!btn) return;
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  btn.classList.add('active');
+}
+function switchTab(name) {
+  showTab(name);
+  save({ activeTab: name });
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ── BUILD THE CONTROLS ─────────────────────────────────────────
+const QUIZZES = [...document.querySelectorAll('.quiz')];
+QUIZZES.forEach((q, qi) => {
+  q.id = 'q' + qi;
+  q.querySelectorAll('.ans').forEach((el, i) => { el.dataset.key = 'q' + qi + '-' + i; });
+});
+const isChecked = q => !!data['chk-' + q.id];
+
+// word-bank gaps take their options from the box above the text
+document.querySelectorAll('select[data-bank]').forEach(sel => {
+  const words = [...sel.closest('.exercise').querySelectorAll('.bank span')].map(s => s.textContent);
+  sel.dataset.opts = words.join('|');   // sentences contain commas
+});
+document.querySelectorAll('select.ans').forEach(sel => {
+  const blank = document.createElement('option');
+  blank.value = ''; blank.textContent = '—';
+  sel.appendChild(blank);
+  sel.dataset.opts.split(sel.dataset.bank ? '|' : ',').forEach(v => {
+    const o = document.createElement('option');
+    o.value = v; o.textContent = v;
+    sel.appendChild(o);
+  });
+  if (data[sel.dataset.key] !== undefined) sel.value = data[sel.dataset.key];
+  sel.addEventListener('change', () => save({ [sel.dataset.key]: sel.value }));
+});
+// word box: cross out every word that is already in a gap, with the gap's number
+function paintBank(ex) {
+  const used = {};
+  ex.querySelectorAll('select[data-bank]').forEach(sel => {
+    sel.classList.toggle('filled', !!sel.value);
+    if (sel.value) used[sel.value] = sel.closest('.gap').querySelector('.gn').textContent;
+  });
+  ex.querySelectorAll('.bank span').forEach(w => {
+    const n = used[w.textContent];
+    w.classList.toggle('used', !!n);
+    if (n) w.dataset.gap = n; else delete w.dataset.gap;
+  });
+  ex.querySelectorAll('select[data-bank] option').forEach(o => {
+    if (!o.value) return;
+    o.textContent = (used[o.value] && o.parentElement.value !== o.value ? '✓ ' : '') + o.value;   // ✓ = already used in another gap
+  });
+}
+// Задание 2 word box: drag a word into a gap (or tap a word, then tap the gap); tap a filled gap to empty it
+document.querySelectorAll('.bank').forEach(bank => {
+  const ex = bank.closest('.exercise');
+  const sels = [...ex.querySelectorAll('select[data-bank]')];
+  let picked = null;
+  const pick = w => {
+    picked = w;
+    bank.querySelectorAll('span').forEach(s => s.classList.toggle('picked', s === w));
+    ex.classList.toggle('picking', !!w);
+  };
+  const setGap = (sel, word) => { sel.value = word; sel.dispatchEvent(new Event('change')); };
+  const put = (sel, word) => {
+    if (sel.disabled) return;
+    sels.forEach(o => { if (o !== sel && o.value === word) setGap(o, ''); });   // each word goes in one gap only
+    setGap(sel, word);
+  };
+  const paintZone = sel => {
+    const dz = sel._dz;
+    dz.textContent = sel.value || '\u00a0';
+    dz.classList.toggle('filled', !!sel.value);
+    ['correct', 'wrong'].forEach(c => dz.classList.toggle(c, sel.classList.contains(c)));
+    dz.classList.toggle('locked', sel.disabled);
+  };
+  sels.forEach(sel => {
+    const dz = document.createElement('span');
+    dz.className = 'dz';
+    sel.before(dz); sel.hidden = true; sel._dz = dz;
+    dz.addEventListener('click', () => {
+      if (sel.disabled) return;
+      if (picked) { put(sel, picked.textContent); pick(null); }
+      else if (sel.value) setGap(sel, '');
+    });
+    sel.addEventListener('change', () => { paintZone(sel); paintBank(ex); });
+    new MutationObserver(() => paintZone(sel)).observe(sel, { attributes: true, attributeFilter: ['class', 'disabled'] });   // Check / Try again
+    paintZone(sel);
+  });
+  bank.querySelectorAll('span').forEach(w => {
+    w.addEventListener('pointerdown', e => {
+      if (sels[0].disabled) return;
+      e.preventDefault();
+      const x0 = e.clientX, y0 = e.clientY;
+      let ghost = null;
+      const zoneAt = ev => { const el = document.elementFromPoint(ev.clientX, ev.clientY); const dz = el && el.closest('.dz'); return dz && ex.contains(dz) ? dz : null; };
+      const move = ev => {
+        if (!ghost && Math.hypot(ev.clientX - x0, ev.clientY - y0) < 6) return;
+        if (!ghost) { ghost = document.createElement('span'); ghost.className = 'drag-ghost'; ghost.textContent = w.textContent; document.body.appendChild(ghost); pick(null); }
+        ghost.style.left = ev.clientX + 'px'; ghost.style.top = ev.clientY + 'px';
+        const dz = zoneAt(ev);
+        ex.querySelectorAll('.dz').forEach(d => d.classList.toggle('over', d === dz));
+      };
+      const up = ev => {
+        removeEventListener('pointermove', move); removeEventListener('pointerup', up); removeEventListener('pointercancel', up);
+        if (!ghost) { pick(picked === w ? null : w); return; }   // a tap: pick the word
+        ghost.remove();
+        ex.querySelectorAll('.dz.over').forEach(d => d.classList.remove('over'));
+        const dz = ev.type === 'pointerup' && zoneAt(ev);
+        if (dz) put(sels.find(s => s._dz === dz), w.textContent);
+      };
+      addEventListener('pointermove', move); addEventListener('pointerup', up); addEventListener('pointercancel', up);
+    });
+  });
+  paintBank(ex);
+});
+document.querySelectorAll('input.blank.ans').forEach(inp => {
+  if (data[inp.dataset.key] !== undefined) inp.value = data[inp.dataset.key];
+  inp.addEventListener('input', () => save({ [inp.dataset.key]: inp.value }));
+});
+
+// ── MARKING ────────────────────────────────────────────────────
+// typed answers: capitals, curly apostrophes and extra spaces don't matter; spelling does
+const norm = s => s.toLowerCase().replace(/[’‘`]/g, "'").replace(/[.,!?;:"“”]/g, ' ').replace(/\s+/g, ' ').trim();
+function given(el) {
+  // first-letter gaps: she types the rest of the word ("reaty"), or the whole word ("treaty")
+  const v = el.value, pre = el.dataset.prefix;
+  return pre && !norm(v).startsWith(pre) ? pre + v : v;
+}
+function mark(el) {
+  const keys = el.dataset.answer.split('|');
+  const ok = el.tagName === 'SELECT' ? keys.includes(el.value) : keys.some(k => norm(k) === norm(given(el)));
+  el.classList.add(ok ? 'correct' : 'wrong');
+  const shown = el.closest('.slots') ? keys[0].split(' ')[0] : keys.join(' / ');   // sentence places show just the letter
+  el.insertAdjacentHTML('afterend', '<span class="key">' + shown + '</span>');   // the correct answer next to every gap
+  el.disabled = true;
+  return ok ? 1 : 0;
+}
+function unmark(el) {
+  el.classList.remove('correct', 'wrong'); el.disabled = false; el.value = '';
+  if (el.nextElementSibling && el.nextElementSibling.classList.contains('key')) el.nextElementSibling.remove();
+}
+
+// ── CHECK / TRY AGAIN ──────────────────────────────────────────
+QUIZZES.forEach(q => {
+  const foot = document.createElement('div');
+  foot.className = 'quiz-foot';
+  foot.innerHTML = '<button class="btn btn-primary">Check ✓</button>' +
+                   '<button class="btn btn-ghost" style="display:none">Try again ↺</button>' +
+                   '<span class="q-result"></span>';
+  const after = q.querySelector(':scope > .after-check');
+  after ? q.insertBefore(foot, after) : q.appendChild(foot);
+  const [bCheck, bRetry] = foot.querySelectorAll('button');
+  bCheck.addEventListener('click', () => checkQuiz(q, true));
+  bRetry.addEventListener('click', () => retryQuiz(q));
+  q._foot = foot;
+});
+function checkQuiz(q, doSave) {
+  const els = [...q.querySelectorAll('.ans')];
+  const got = els.reduce((a, el) => a + mark(el), 0), max = els.length;
+  const res = q._foot.querySelector('.q-result');
+  res.textContent = got + ' / ' + max + (got === max ? ' — perfect! 🎉' : '');
+  res.className = 'q-result ' + (got === max ? 'full' : got === 0 ? 'zero' : 'part');
+  q._foot.children[0].style.display = 'none';
+  q._foot.children[1].style.display = '';
+  q.classList.add('checked');
+  q._score = [got, max];
+  if (doSave) save({ ['chk-' + q.id]: true });
+  updateProgress();
+}
+function retryQuiz(q) {
+  const patch = { ['chk-' + q.id]: false };
+  q.querySelectorAll('.ans').forEach(el => { unmark(el); patch[el.dataset.key] = undefined; });
+  q._foot.querySelector('.q-result').textContent = '';
+  const ex = q.closest('.exercise'); if (ex.querySelector('.bank')) paintBank(ex);
+  q._foot.children[0].style.display = '';
+  q._foot.children[1].style.display = 'none';
+  q.classList.remove('checked');
+  q._score = null;
+  save(patch);
+  updateProgress();
+}
+function updateProgress() {
+  const done = QUIZZES.filter(q => q._score);
+  const got = done.reduce((a, q) => a + q._score[0], 0);
+  const max = done.reduce((a, q) => a + q._score[1], 0);
+  document.getElementById('pgCount').textContent = done.length + ' / ' + QUIZZES.length;
+  document.getElementById('pgScore').textContent = got + ' / ' + max;
+  document.getElementById('pgFill').style.width = (done.length / QUIZZES.length * 100) + '%';
+}
+
+// ── AUDIO PLAYER: play/pause, drag or click the bar, ⏪ 10 s / ⏩ 10 s ──
+const fmt = s => Math.floor(s / 60) + ':' + String(Math.floor(s % 60)).padStart(2, '0');
+document.querySelectorAll('.player[data-src]').forEach(pl => {
+  const audio = new Audio(pl.dataset.src);
+  audio.preload = 'metadata';
+  pl.innerHTML =
+    '<button type="button" class="pl-btn" aria-label="Play">' +
+      '<svg class="i-play" viewBox="0 0 24 24"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.2-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z"/></svg>' +
+      '<svg class="i-pause" viewBox="0 0 24 24"><rect x="6" y="5" width="4.2" height="14" rx="1.2"/><rect x="13.8" y="5" width="4.2" height="14" rx="1.2"/></svg>' +
+    '</button>' +
+    '<div class="pl-main"><div class="pl-top"><span class="pl-label">🎧 ' + pl.dataset.label + '</span><span class="pl-time">0:00</span></div>' +
+    '<div class="pl-track"><div class="pl-fill"></div><div class="pl-knob"></div></div></div>' +
+    '<button type="button" class="pl-skip" data-s="-10" title="Back 10 seconds">⏪ 10</button>' +
+    '<button type="button" class="pl-skip" data-s="10" title="Forward 10 seconds">10 ⏩</button>';
+  pl.appendChild(audio);
+  const fill = pl.querySelector('.pl-fill'), knob = pl.querySelector('.pl-knob');
+  const time = pl.querySelector('.pl-time'), track = pl.querySelector('.pl-track');
+  const paint = () => {
+    const pct = audio.duration ? audio.currentTime / audio.duration * 100 : 0;
+    fill.style.width = pct + '%'; knob.style.left = pct + '%';
+    time.textContent = fmt(audio.currentTime) + ' / ' + (audio.duration ? fmt(audio.duration) : '…');
+  };
+  pl.querySelector('.pl-btn').addEventListener('click', () => audio.paused ? audio.play() : audio.pause());
+  pl.querySelectorAll('.pl-skip').forEach(b => b.addEventListener('click', () => {
+    if (!audio.duration) return;
+    audio.currentTime = Math.min(audio.duration, Math.max(0, audio.currentTime + +b.dataset.s));
+    paint();
+  }));
+  const seek = e => {
+    if (!audio.duration) return;
+    const r = track.getBoundingClientRect();
+    audio.currentTime = Math.min(1, Math.max(0, (e.clientX - r.left) / r.width)) * audio.duration;
+    paint();
+  };
+  track.addEventListener('pointerdown', e => { track.setPointerCapture(e.pointerId); pl.classList.add('dragging'); seek(e); });
+  track.addEventListener('pointermove', e => { if (pl.classList.contains('dragging')) seek(e); });
+  track.addEventListener('pointerup', () => pl.classList.remove('dragging'));
+  track.addEventListener('pointercancel', () => pl.classList.remove('dragging'));
+  audio.addEventListener('play', () => pl.classList.add('playing'));
+  audio.addEventListener('pause', () => pl.classList.remove('playing'));
+  audio.addEventListener('ended', () => pl.classList.remove('playing'));
+  audio.addEventListener('timeupdate', paint);
+  audio.addEventListener('loadedmetadata', paint);
+});
+
+// ── PRACTICE 1 PAIRS: tap the first sentence, then a link word (values live in hidden inputs) ──
+document.querySelectorAll('.pp').forEach(pp => {
+  const first = pp.querySelector('.pp-first'), link = pp.querySelector('.pp-link');
+  const quiz = pp.closest('.quiz'), step = pp.querySelector('.pp-step');
+  const set = (inp, v) => { inp.value = v; inp.dispatchEvent(new Event('input')); };
+  const paint = () => {
+    const f = first.value;
+    pp.classList.toggle('ordered', !!f);
+    pp.querySelectorAll('.pp-s').forEach(s => {
+      const isF = s.dataset.l === f;
+      s.classList.toggle('first', isF);
+      s.classList.toggle('second', !!f && !isF);
+      s.querySelector('.pp-b').textContent = f ? (isF ? '1st' : '2nd') : s.dataset.l;
+      s.classList.toggle('ok', isF && f === first.dataset.answer);
+      s.classList.toggle('bad', isF && f !== first.dataset.answer);
+    });
+    const box = pp.querySelector('.pp-ss'), sA = box.querySelector('[data-l="A"]'), sB = box.querySelector('[data-l="B"]');
+    if (f === 'B') box.prepend(sB); else box.prepend(sA);   // the chosen sentence moves to the top
+    pp.querySelectorAll('.w').forEach(w => w.classList.toggle('pick', !!link.value && w.dataset.ph === link.value));
+    step.textContent = !f ? '① Tap the sentence that comes first' : !link.value ? '② Now tap the word that links back' : '✓ Done';
+  };
+  pp.querySelectorAll('.pp-s').forEach(s => s.addEventListener('click', () => {
+    if (quiz.classList.contains('checked') || first.value) return;
+    set(first, s.dataset.l); paint();
+  }));
+  pp.querySelectorAll('.w').forEach(w => w.addEventListener('click', e => {
+    if (quiz.classList.contains('checked') || !first.value) return;
+    e.stopPropagation();
+    set(link, link.value === w.dataset.ph ? '' : w.dataset.ph); paint();
+  }));
+  pp.querySelector('.pp-swap').addEventListener('click', () => { set(first, ''); set(link, ''); paint(); });
+  new MutationObserver(paint).observe(quiz, { attributes: true, attributeFilter: ['class'] });   // Check / Try again
+  paint();
+});
+
+// ── RETELL WORDS · HOMEWORK ────────────────────────────────────
+const retell = document.getElementById('retellWords');
+const paintRetell = () => { document.getElementById('retellCount').textContent = retell.querySelectorAll('.used').length + ' / 8 words used'; };
+retell.querySelectorAll('span').forEach((w, i) => {
+  if (data['rw-' + i]) w.classList.add('used');
+  w.addEventListener('click', () => { save({ ['rw-' + i]: w.classList.toggle('used') }); paintRetell(); });
+});
+paintRetell();
+document.querySelectorAll('#hwList input').forEach((c, i) => {
+  c.checked = !!data['hw-' + i];
+  c.closest('li').classList.toggle('done', c.checked);
+  c.addEventListener('change', () => { save({ ['hw-' + i]: c.checked }); c.closest('li').classList.toggle('done', c.checked); });
+});
+['hwLinks', 'hwWrite'].forEach(id => {
+  const el = document.getElementById(id);
+  el.value = data[id] || '';
+  el.addEventListener('input', () => save({ [id]: el.value }));
+});
+function copyWriting() {
+  let name = '';
+  try { name = localStorage.getItem('studentName') || ''; } catch(e) {}
+  const text = 'Lesson 12 — homework' + (name ? ' — ' + name : '') + '\n\nLINKS (Everest):\n' + document.getElementById('hwLinks').value + '\n\nSOMEONE I LOOK UP TO:\n' + document.getElementById('hwWrite').value;
+  if (navigator.clipboard) navigator.clipboard.writeText(text).then(() => { document.getElementById('copyMsg').textContent = '✓ Copied: paste it into our chat'; }, () => {});
+}
+
+function resetAll() {
+  if (!confirm('Clear every answer on this page (flashcard progress stays)?')) return;
+  try { localStorage.removeItem(LESSON_KEY); } catch(e) {}
+  location.reload();
+}
+
+// ── INIT ───────────────────────────────────────────────────────
+if (data.activeTab) showTab(data.activeTab);
+QUIZZES.forEach(q => { if (isChecked(q)) checkQuiz(q, false); });
+updateProgress();
+</script>
+
+<script src="../decks.js"></script>
+<script src="../flashcards.js"></script>
+<script src="../choices.js"></script>
+<script src="../dictionary.js"></script>
+</body>
+</html>

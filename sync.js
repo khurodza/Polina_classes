@@ -8,7 +8,8 @@
 
    It does not change any exercise code. Every page already saves
    its answers into one localStorage key (IS_ANSWERS below says
-   which); this script copies those saves to Firebase. The same
+   which); this script copies those saves to Firebase. Flashcard
+   progress ("fc-<deck>") goes to students/<id>/flashcards/<deck>. The same
    file runs on all four students' sites — only the settings
    block differs.
 
@@ -309,8 +310,10 @@
   }
   Storage.prototype.setItem = function (k, v) {
     const old = this === store && IS_ANSWERS(k) ? rawGet.call(this, k) : null;
+    const old2 = this === store && isFc(k) ? rawGet.call(this, k) : null;
     const r = rawSet.call(this, k, v);
     if (this === store && IS_ANSWERS(k)) { KEY = k; noteChange(old, v); set(metaKey(), String(Date.now())); queueUpload(); }
+    else if (this === store && isFc(k) && fcCore(rawGet.call(this, k)) !== fcCore(old2)) { set(fcMeta(k), String(Date.now())); queueFc(k); }
     return r;
   };
   Storage.prototype.removeItem = function (k) {             // "clear my answers" buttons
@@ -319,6 +322,19 @@
     if (this === store && IS_ANSWERS(k)) { KEY = k; noteChange(old, '{}'); set(metaKey(), String(Date.now())); queueUpload(); }
     return r;
   };
+
+  // flashcard progress (flashcards.js saves it as "fc-<deck>") → students/<id>/flashcards/<deck> for the teacher's dashboard
+  const isFc = k => /^fc-[a-z0-9-]+$/i.test(k), fcMeta = k => 'sync-at-' + k, fcTimers = {};
+  function fcCore(json) {               // only what the teacher sees: known / still learning, Learn stages, best Match time
+    let st = {}; try { st = JSON.parse(json || '{}') || {}; } catch (e) {}
+    return JSON.stringify({ known: st.known || {}, stage: st.stage || {}, best: st.best || null });
+  }
+  function queueFc(k) { clearTimeout(fcTimers[k]); fcTimers[k] = setTimeout(() => uploadFc(k), 800); }
+  function uploadFc(k) {
+    if (!fb) return;                    // not connected yet: start() uploads later
+    fb.db.set(fb.db.ref(fb.d, `students/${STUDENT}/flashcards/${k.slice(3)}`),
+      { json: fcCore(get(k)), at: +get(fcMeta(k)) || Date.now(), page: PAGE }).catch(() => {});
+  }
 
   let fb = null, timer = null;
   function queueUpload() { clearTimeout(timer); timer = setTimeout(upload, 500); }
@@ -390,6 +406,16 @@
       else if (first && KEY && remote && !remote.stats) setTimeout(upload, 800); // older record: add the progress count
       first = false;
     });
+
+    // flashcard progress saved on this device that the teacher hasn't got yet (or older there)
+    for (let i = 0; i < store.length; i++) {
+      const k = store.key(i);
+      if (!isFc(k)) continue;
+      db.get(db.ref(d, `students/${STUDENT}/flashcards/${k.slice(3)}`)).then(s => {
+        const r = s.val(), localAt = +get(fcMeta(k)) || 0;
+        if (!r || localAt > (r.at || 0)) { if (!localAt) set(fcMeta(k), String(Date.now())); uploadFc(k); }
+      }).catch(() => {});
+    }
 
     // the teacher's marks and comments for this page
     db.onValue(db.ref(d, `students/${STUDENT}/notes/${PAGE}`), snap => {

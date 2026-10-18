@@ -195,8 +195,8 @@
     .sc-item.ok { border-color: var(--green); color: var(--green); background: rgba(91,140,69,.08); }
     .self-check-note { font-size: .78rem; color: var(--muted); margin-top: 6px; }
 
-    .tab-btn:nth-child(5).active { background: var(--green); border-color: var(--green); }
-    .tab-btn:nth-child(6).active { background: var(--primary-dk); border-color: var(--primary-dk); }
+    .tab-btn:nth-child(4).active { background: var(--green); border-color: var(--green); }
+    .tab-btn:nth-child(5).active { background: var(--primary-dk); border-color: var(--primary-dk); }
   </style>
 <script src="../sync.js"></script>
 </head>
@@ -226,7 +226,6 @@
     <button class="tab-btn active" onclick="switchTab('warm', this)">🔁 Warm-up</button>
     <button class="tab-btn"        onclick="switchTab('vocab', this)">📚 Vocabulary</button>
     <button class="tab-btn"        onclick="switchTab('gram', this)">⚙️ Grammar</button>
-    <button class="tab-btn"        onclick="switchTab('z1', this)">📝 Задание 1</button>
     <button class="tab-btn"        onclick="switchTab('cult', this)">🌍 Culture</button>
     <button class="tab-btn"        onclick="switchTab('hw', this)">🏠 Homework</button>
   </div>
@@ -510,79 +509,6 @@
         <div class="answer-row"><span class="ar-num">6</span><span class="ar-txt">Over the years, the Tower ___ as a palace, a prison and a zoo.</span><select class="exam-select ans" data-opts="has used,has been used" data-answer="has been used"></select></div>
       </div>
     </div>
-
-    <!-- ══ PART 4 · SHORT FORMS + ALL TOGETHER ══ -->
-    <div class="part-head"><span>Part 4</span> Putting it together</div>
-
-    <div class="exercise">
-      <div class="exercise-label">Practice 5</div>
-      <h3>Short forms: participle clauses</h3>
-      <p class="instr">Writers shorten sentences: <i>The White Tower, <b>which was built</b> in the 1070s, …</i> → <i><b>Built</b> in the 1070s, the White Tower …</i> Choose the right participle. Ask: is the subject doing the action (active → <b>-ing</b>) or is it done to it (passive → <b>V3</b>)?</p>
-      <div class="facts"><span class="fact">-ing = active</span><span class="fact">-ed / 3rd form = passive</span><span class="fact">having + 3rd form = earlier</span></div>
-      <div class="quiz">
-        <div class="answer-row"><span class="ar-num">1</span><span class="ar-txt">___ in the 1070s, the White Tower is the oldest part of the castle.</span><select class="exam-select ans" data-opts="Built,Building,Having built" data-answer="Built"></select></div>
-        <div class="answer-row"><span class="ar-num">2</span><span class="ar-txt">The Vikings attacked the coast, ___ villages and monasteries.</span><select class="exam-select ans" data-opts="destroying,destroyed,to destroy" data-answer="destroying"></select></div>
-        <div class="answer-row"><span class="ar-num">3</span><span class="ar-txt">___ the battle, William marched to London.</span><select class="exam-select ans" data-opts="Having won,Won,Having been won" data-answer="Having won"></select></div>
-        <div class="answer-row"><span class="ar-num">4</span><span class="ar-txt">The coins, ___ under a car park in 2019, are now in the city museum.</span><select class="exam-select ans" data-opts="finding,found,having found" data-answer="found"></select></div>
-        <div class="answer-row"><span class="ar-num">5</span><span class="ar-txt">___ along the wall, you can see for miles.</span><select class="exam-select ans" data-opts="Walking,Walked,Having walked" data-answer="Walking"></select></div>
-      </div>
-    </div>
-
-    <div class="exercise">
-      <div class="exercise-label">Practice 6 · Olympway style</div>
-      <h3>Elizabeth I: find and correct the mistakes</h3>
-      <p class="instr">Some lines are correct, some have one grammar mistake. Write the correct word, or <b>OK</b> if the line is correct.</p>
-      <div class="facts"><span class="fact">✍️ the correct word or OK</span><span class="fact">9 lines</span><span class="fact">🔗 like Olympiad Задание 3</span></div>
-      <div class="quiz">
-        <div class="answer-row"><span class="ar-num">1</span><span class="ar-txt">Elizabeth I was born in 1533 and became queen in 1558.</span><input class="blank short ans" data-answer="OK" autocomplete="off" spellcheck="false"></div>
-        <div class="answer-row"><span class="ar-num">2</span><span class="ar-txt">She was the daughter of Henry VIII and her second wife, Anne Boleyn.</span><input class="blank short ans" data-answer="his" autocomplete="off" spellcheck="false"></div>
-        <div class="answer-row"><span class="ar-num">3</span><span class="ar-txt">When she was a girl, she has learned Latin, French and Italian.</span><input class="blank short ans" data-answer="learned|learnt" autocomplete="off" spellcheck="false"></div>
-        <div class="answer-row"><span class="ar-num">4</span><span class="ar-txt">Her reign is often called a golden age of English history.</span><input class="blank short ans" data-answer="OK" autocomplete="off" spellcheck="false"></div>
-        <div class="answer-row"><span class="ar-num">5</span><span class="ar-txt">During her reign theatre flourished, and Shakespeare writes many of his plays.</span><input class="blank short ans" data-answer="wrote" autocomplete="off" spellcheck="false"></div>
-        <div class="answer-row"><span class="ar-num">6</span><span class="ar-txt">In 1588 the English navy defeated the Spanish Armada, who had sailed to invade England.</span><input class="blank short ans" data-answer="which|that" autocomplete="off" spellcheck="false"></div>
-        <div class="answer-row"><span class="ar-num">7</span><span class="ar-txt">Elizabeth never married, so she had not children.</span><input class="blank short ans" data-answer="no" autocomplete="off" spellcheck="false"></div>
-        <div class="answer-row"><span class="ar-num">8</span><span class="ar-txt">When she died in 1603, she had ruled England for 44 years.</span><input class="blank short ans" data-answer="OK" autocomplete="off" spellcheck="false"></div>
-        <div class="answer-row"><span class="ar-num">9</span><span class="ar-txt">She is still one of the more famous monarchs in British history.</span><input class="blank short ans" data-answer="most" autocomplete="off" spellcheck="false"></div>
-      </div>
-      <details class="logic"><summary><span>💡</span><span class="hint-txt">Hint · a checklist for every line</span></summary><div class="logic-body"><ol>
-        <li><b>Tense</b> against the time marker (<i>when she was a girl</i> → past simple).</li>
-        <li><b>Pronouns</b>: whose wife? Henry’s → <i>his</i>. Things take <i>which</i>, people take <i>who</i>.</li>
-        <li><b>Negatives</b> with nouns: <i>no children</i> / <i>didn’t have any children</i>.</li>
-        <li><b>one of the … + plural</b> → superlative: <i>one of the most famous</i>.</li>
-      </ol></div></details>
-      <div class="book">📘 In class: Olympway tasks 198 & 199 (PDF p. 155–156), two more biographies in the same format</div>
-    </div>
-  </div>
-
-  <!-- ══════════════════════════════════════════════════════════
-       TAB 4 — ЗАДАНИЕ 1 practice
-  ══════════════════════════════════════════════════════════ -->
-  <div class="tab-content" id="tab-z1">
-    <div class="exercise">
-      <div class="review-head"><span class="task-num">Задание 1 format</span><span class="pts">10 points</span></div>
-      <h3>The Tower of London</h3>
-      <p class="instr">Read the text. Put the words in capitals into the correct form so that they fit grammatically. Some answers need more than one word.</p>
-      <div class="facts"><span class="fact">⚙️ the right form</span><span class="fact">1–3 words</span><span class="fact">⏱ 10 min</span><span class="fact">✍️ spelling counts</span></div>
-      <div class="quiz">
-        <div class="gap-text">
-          <h4>The Tower of London</h4>
-          The Tower of London <span class="gn">1</span><input class="blank ans" data-answer="has stood" autocomplete="off" spellcheck="false"> <span class="cue">STAND</span> on the north bank of the Thames for nearly a thousand years.
-          William the Conqueror <span class="gn">2</span><input class="blank ans" data-answer="ordered" autocomplete="off" spellcheck="false"> <span class="cue">ORDER</span> the White Tower to be built in the 1070s, and it <span class="gn">3</span><input class="blank ans" data-answer="was completed|had been completed" autocomplete="off" spellcheck="false"> <span class="cue">COMPLETE</span> by about 1100.
-          The White Tower is still <span class="gn">4</span><input class="blank ans" data-answer="the oldest" autocomplete="off" spellcheck="false"> <span class="cue">OLD</span> part of the castle.
-          Over the centuries, the Tower <span class="gn">5</span><input class="blank ans" data-answer="has been used" autocomplete="off" spellcheck="false"> <span class="cue">USE</span> as a royal palace, a prison and even a zoo.
-          Anne Boleyn, the second wife of Henry VIII, <span class="gn">6</span><input class="blank ans" data-answer="was executed" autocomplete="off" spellcheck="false"> <span class="cue">EXECUTE</span> there in 1536.
-          Legend says that if the ravens ever <span class="gn">7</span><input class="blank ans" data-answer="leave" autocomplete="off" spellcheck="false"> <span class="cue">LEAVE</span> the Tower, the kingdom will fall.
-          Today the Crown Jewels <span class="gn">8</span><input class="blank ans" data-answer="are kept" autocomplete="off" spellcheck="false"> <span class="cue">KEEP</span> in the Tower, and to date millions of visitors <span class="gn">9</span><input class="blank ans" data-answer="have seen" autocomplete="off" spellcheck="false"> <span class="cue">SEE</span> them.
-          The Tower <span class="gn">10</span><input class="blank ans" data-answer="became" autocomplete="off" spellcheck="false"> <span class="cue">BECOME</span> a UNESCO World Heritage Site in 1988.
-        </div>
-      </div>
-      <details class="logic"><summary><span>💡</span><span class="hint-txt">Hint · how to do Задание 1 in 4 steps</span></summary><div class="logic-body"><ol>
-        <li>Read the whole sentence, and underline the <b>time marker</b> and the <b>subject</b>.</li>
-        <li>Active or passive? Can the subject do the action? (The Tower can’t <i>use</i> anything → passive.)</li>
-        <li>Choose the tense from the marker table.</li>
-        <li>Check agreement and spelling: <i>the jewels <b>are</b></i>, <i>visitors <b>have</b></i>.</li>
-      </ol></div></details>
-    </div>
   </div>
 
   <!-- ══════════════════════════════════════════════════════════
@@ -594,7 +520,7 @@
       <h3>England from William the Conqueror to Elizabeth I</h3>
       <p class="instr">In which century did each event happen? Try without help first. The timeline opens when you check.</p>
       <div class="facts"><span class="fact">🗓 11th–17th century</span><span class="fact">⚠️ 1066 = 11th century</span><span class="fact">⏱ 4 min</span></div>
-      <div class="quiz">
+      <div class="quiz" data-qid="q13">
         <div class="answer-row"><span class="ar-num">1</span><span class="ar-txt">The Norman Conquest</span><select class="exam-select ans" data-opts="11th,12th,13th,14th,15th,16th,17th" data-answer="11th"></select></div>
         <div class="answer-row"><span class="ar-num">2</span><span class="ar-txt">The Domesday Book (a survey of all the land in England)</span><select class="exam-select ans" data-opts="11th,12th,13th,14th,15th,16th,17th" data-answer="11th"></select></div>
         <div class="answer-row"><span class="ar-num">3</span><span class="ar-txt">Henry II becomes the first Plantagenet king</span><select class="exam-select ans" data-opts="11th,12th,13th,14th,15th,16th,17th" data-answer="12th"></select></div>
@@ -650,7 +576,7 @@
       <h3>The Vikings in Britain</h3>
       <p class="instr">Put the words in capitals into the correct form so that they fit grammatically. Some answers need more than one word.</p>
       <div class="facts"><span class="fact">⚙️ the right form</span><span class="fact">1–3 words</span><span class="fact">⏱ 10 min</span></div>
-      <div class="quiz">
+      <div class="quiz" data-qid="q14">
         <div class="gap-text">
           <h4>The Vikings in Britain</h4>
           In 793 Viking raiders <span class="gn">1</span><input class="blank ans" data-answer="attacked" autocomplete="off" spellcheck="false"> <span class="cue">ATTACK</span> the monastery on the island of Lindisfarne.
@@ -672,7 +598,7 @@
       <p class="instr">You will hear a museum curator. Read the statements first (1 minute). Then listen and decide if each statement is True or False. Try it in one go first: in the Olympiad you hear it only once.</p>
       <div class="facts"><span class="fact">🎧 try it in one go first</span><span class="fact">✅ True / ❌ False</span><span class="fact">⏱ 1 min to read first</span></div>
       <div class="player" data-src="audio/l11-hw-listening.mp3" data-label="Sutton Hoo talk"></div>
-      <div class="quiz">
+      <div class="quiz" data-qid="q15">
         <div class="answer-row"><span class="ar-num">1</span><span class="ar-txt">The ship was discovered after the Second World War had started.</span><select class="exam-select ans" data-opts="True,False" data-answer="False"></select></div>
         <div class="answer-row"><span class="ar-num">2</span><span class="ar-txt">Edith Pretty owned the land where the ship was found.</span><select class="exam-select ans" data-opts="True,False" data-answer="True"></select></div>
         <div class="answer-row"><span class="ar-num">3</span><span class="ar-txt">Most of the ship’s wood had survived.</span><select class="exam-select ans" data-opts="True,False" data-answer="False"></select></div>
@@ -781,8 +707,8 @@ function switchTab(name) {
 // ── BUILD THE CONTROLS ─────────────────────────────────────────
 const QUIZZES = [...document.querySelectorAll('.quiz')];
 QUIZZES.forEach((q, qi) => {
-  q.id = 'q' + qi;
-  q.querySelectorAll('.ans').forEach((el, i) => { el.dataset.key = 'q' + qi + '-' + i; });
+  q.id = q.dataset.qid || 'q' + qi;   // later quizzes keep their old ids (Part 4 and Задание 1 moved to Lesson 12), so saved answers stay put
+  q.querySelectorAll('.ans').forEach((el, i) => { el.dataset.key = q.id + '-' + i; });
 });
 const isChecked = q => !!data['chk-' + q.id];
 
