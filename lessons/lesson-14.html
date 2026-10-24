@@ -1,0 +1,1428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lesson 14 – Science &amp; Technology · Passive</title>
+  <link rel="stylesheet" href="../style.css">
+  <style>
+    .exam-select {
+      font: inherit; font-weight: 700; text-align: center; padding: 7px 10px; border-radius: 10px;
+      border: 2px solid var(--border); background: var(--card); color: var(--text); cursor: pointer; min-width: 64px;
+    }
+    .exam-select:focus { border-color: var(--primary); outline: none; }
+    .exam-select.correct, .blank.correct { border-color: var(--green); color: var(--green); background: rgba(91,140,69,.08); }
+    .exam-select.wrong,   .blank.wrong   { border-color: var(--red);   color: var(--red);   background: rgba(200,64,64,.06); }
+    .blank { min-width: 130px; font-weight: 600; border: 2px solid var(--border); border-radius: 10px; padding: 5px 10px; background: var(--card); }
+    .blank.short { min-width: 100px; width: 120px; }
+    .blank:focus { border-color: var(--primary); outline: none; }
+    .key { margin-left: 4px; font-size: .82rem; font-weight: 700; color: var(--green); background: rgba(91,140,69,.10); padding: 2px 8px; border-radius: 6px; }
+
+    .answer-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; padding: 9px 0; border-bottom: 1px dashed var(--border); }
+    .answer-row:last-child { border-bottom: none; }
+    .ar-num { font-family: 'Fraunces', Georgia, serif; font-weight: 700; color: var(--primary); min-width: 26px; }
+    .ar-txt { flex: 1; min-width: 200px; line-height: 1.75; }
+    .cue { font-weight: 700; letter-spacing: .04em; color: var(--accent-dk); background: rgba(201,160,48,.14); padding: 1px 8px; border-radius: 6px; font-size: .86rem; white-space: nowrap; }
+    .gap-text { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px 20px; line-height: 2.3; font-size: 1.02rem; }
+    .gap-text .gn { font-family: 'Fraunces', Georgia, serif; font-weight: 700; color: var(--primary); font-size: .85rem; margin-right: 2px; }
+    .gap-text h4 { font-family: 'Fraunces', Georgia, serif; text-align: center; font-size: 1.15rem; margin-bottom: 4px; line-height: 1.5; }
+    /* word box: a word crosses itself out when it's used in a gap (or when she taps it) */
+    .bank { display: flex; flex-wrap: wrap; gap: 8px; padding: 14px 16px; margin-bottom: 14px; border: 2px dashed rgba(201,160,48,.55); border-radius: 14px; background: rgba(201,160,48,.07); }
+    .bank span { position: relative; font-weight: 700; padding: 5px 14px; border-radius: 99px; background: #fff; border: 2px solid var(--border); cursor: pointer; user-select: none; transition: .2s; }
+    .bank span:hover { border-color: var(--accent); }
+    .bank span.used, .bank span.struck { color: var(--muted); background: transparent; border-style: dashed; text-decoration: line-through; text-decoration-thickness: 2px; text-decoration-color: var(--primary); opacity: .75; }
+    .bank span.used::after { content: attr(data-gap); position: absolute; top: -8px; right: -6px; min-width: 18px; height: 18px; padding: 0 4px; border-radius: 99px; background: var(--primary); color: #fff; font-size: .68rem; line-height: 18px; text-align: center; text-decoration: none; display: inline-block; }
+    /* Задание 2 as in the demo: drag a word into a gap (or tap the word, then the gap) */
+    .orig-instr { font-weight: 600; border-left: 3px solid var(--border); padding-left: 14px; margin: 0 0 18px; line-height: 1.7; font-size: .98rem; }
+    .bank.dnd span { cursor: grab; touch-action: none; }
+    .bank.dnd span.picked { border-color: var(--primary); background: rgba(212,87,42,.10); box-shadow: 0 0 0 3px rgba(212,87,42,.18); }
+    .drag-ghost { position: fixed; z-index: 100; pointer-events: none; transform: translate(-50%, -70%); font-weight: 700; padding: 5px 14px; border-radius: 99px; background: #fff; border: 2px solid var(--primary); box-shadow: 0 8px 18px rgba(44,32,16,.22); }
+    .dz { display: inline-block; min-width: 128px; padding: 2px 16px; border-radius: 99px; border: 2px dashed rgba(212,87,42,.45); background: #fff; font-weight: 700; color: var(--text); text-align: center; line-height: 1.6; vertical-align: middle; cursor: pointer; transition: .15s; }
+    .dz.filled { border-style: solid; border-color: var(--blue); background: #EAF2FB; }
+    .dz.over, .picking .dz:not(.filled):not(.locked) { border-color: var(--primary); background: rgba(212,87,42,.08); }
+    .dz.correct { border-style: solid; border-color: var(--green); color: var(--green); background: rgba(91,140,69,.10); }
+    .dz.wrong { border-style: solid; border-color: var(--red); color: var(--red); background: rgba(200,64,64,.07); }
+    .dz.locked { cursor: default; }
+    .bank-hint { font-size: .82rem; color: var(--muted); margin: -8px 0 12px; }
+
+    /* gaps in a word-box text: number badge + pill-shaped choice */
+    .gap { display: inline-flex; align-items: center; white-space: nowrap; margin: 0 2px; vertical-align: middle; }
+    .gap .gn { display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; border-radius: 50%; background: var(--primary); color: #fff !important; font-family: 'DM Sans', system-ui, sans-serif !important; font-size: .74rem !important; font-weight: 700; margin-right: -6px; position: relative; z-index: 1; box-shadow: 0 0 0 3px var(--card); }
+    .gap select.exam-select {
+      appearance: none; -webkit-appearance: none; min-width: 138px; padding: 4px 30px 4px 16px; border-radius: 99px;
+      font-weight: 700; text-align: left; color: var(--primary-dk); background-color: #fff;
+      border: 2px dashed rgba(212,87,42,.45);
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%23D4572A' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat; background-position: right 11px center; background-size: 11px 8px;
+    }
+    .gap select.exam-select:hover:not(:disabled) { border-color: var(--primary); }
+    .gap select.exam-select.filled { border-style: solid; border-color: var(--blue); color: var(--text); background-color: #EAF2FB; }
+    .gap select.exam-select.correct { border-style: solid; border-color: var(--green); color: var(--green); background-color: rgba(91,140,69,.10); background-image: none; padding-right: 16px; }
+    .gap select.exam-select.wrong { border-style: solid; border-color: var(--red); color: var(--red); background-color: rgba(200,64,64,.07); background-image: none; padding-right: 16px; }
+
+    .step-title { font-weight: 700; font-size: .8rem; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin: 22px 0 10px; display: flex; align-items: center; gap: 8px; }
+    .step-title::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+    .task-num { font-weight: 700; color: var(--accent-dk); background: rgba(201,160,48,.15); padding: 3px 12px; border-radius: 99px; font-size: .85rem; }
+    .pts { font-weight: 700; font-size: .82rem; padding: 3px 10px; border-radius: 99px; color: var(--blue); background: rgba(95,142,196,.12); }
+    .review-head { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 6px; }
+    .talk { background: rgba(95,142,196,.09); border-left: 4px solid var(--blue); border-radius: 0 10px 10px 0; padding: 10px 14px; margin: 10px 0; line-height: 1.6; font-size: .97rem; }
+    .book { display: inline-flex; align-items: center; gap: 6px; font-size: .88rem; font-weight: 700; color: var(--rose); background: rgba(196,122,150,.12); padding: 4px 12px; border-radius: 99px; margin-top: 10px; }
+
+    /* instruction + key-fact chips (as in lesson 10) */
+    .instr { margin: 10px 0 8px; color: var(--text); font-size: 1rem; line-height: 1.7; }
+    .facts { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 16px; }
+    .fact { display: inline-flex; align-items: center; gap: 4px; padding: 5px 13px; border-radius: 99px; font-size: .86rem; font-weight: 700; color: #fff; background: var(--primary); box-shadow: 0 2px 6px rgba(44,32,16,.12); }
+    .fact:nth-child(4n+2) { background: var(--blue); } .fact:nth-child(4n+3) { background: var(--rose); } .fact:nth-child(4n+4) { background: var(--green); }
+
+    /* hints: closed until she taps them (as in lesson 10) */
+    details.logic { background: rgba(201,160,48,.09); border: 2px solid rgba(201,160,48,.35); border-radius: var(--radius); margin-top: 12px; overflow: hidden; }
+    details.logic summary { list-style: none; cursor: pointer; display: flex; align-items: center; gap: 10px; padding: 11px 16px; font-weight: 700; color: var(--accent-dk); user-select: none; }
+    details.logic summary::-webkit-details-marker { display: none; }
+    details.logic summary:hover { background: rgba(201,160,48,.12); }
+    details.logic summary::after { content: '▾'; margin-left: auto; font-size: 1.1rem; transition: transform .2s; }
+    details.logic[open] summary::after { transform: rotate(180deg); }
+    details.logic[open] summary { border-bottom: 1px dashed rgba(201,160,48,.45); }
+    .hint-txt { font-family: 'Fraunces', Georgia, serif; font-size: 1.02rem; }
+    .logic-body { padding: 12px 18px; line-height: 1.7; }
+    .logic-body ul, .logic-body ol { padding-left: 22px; }
+
+    /* the rule table stays open: it is the lesson */
+    .rule-table { border-collapse: collapse; width: 100%; font-size: .95rem; }
+    .rule-table th, .rule-table td { border: 1px solid var(--border); padding: 8px 10px; text-align: left; vertical-align: top; background: #fff; }
+    .rule-table th { background: rgba(212,87,42,.08); }
+    .rule-table td:first-child { font-weight: 700; white-space: nowrap; }
+    .rule-table i { color: var(--primary-dk); font-style: normal; font-weight: 600; }
+    .tbl-wrap { overflow-x: auto; }
+
+    /* revealed after Check */
+    .after-check { display: none; margin-top: 14px; }
+    .quiz.checked .after-check { display: block; }
+    details.script { border: 2px solid rgba(95,142,196,.35); border-radius: 12px; background: rgba(95,142,196,.05); }
+    details.script summary { cursor: pointer; padding: 9px 14px; font-weight: 700; color: var(--blue); }
+    details.script .sc-body { padding: 2px 16px 12px; line-height: 1.7; }
+
+    .timeline { list-style: none; border-left: 3px solid var(--primary); margin-left: 8px; }
+    .timeline li { position: relative; padding: 6px 0 6px 18px; line-height: 1.5; }
+    .timeline li::before { content: ''; position: absolute; left: -8px; top: 12px; width: 13px; height: 13px; border-radius: 50%; background: #fff; border: 3px solid var(--primary); }
+    .timeline b { font-family: 'Fraunces', Georgia, serif; color: var(--primary); margin-right: 6px; }
+
+    .quiz-foot { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-top: 14px; }
+    .q-result { font-weight: 700; }
+    .q-result.full { color: var(--green); } .q-result.part { color: var(--accent-dk); } .q-result.zero { color: var(--red); }
+    .progress-wrap { position: sticky; top: 0; z-index: 30; background: var(--bg); padding: 10px 0 12px; margin-bottom: 8px; border-bottom: 1px solid var(--border); }
+    .progress-top { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 7px; font-weight: 600; font-size: .92rem; }
+    .progress-top span { color: var(--primary); }
+    .progress-bar { height: 9px; border-radius: 99px; background: var(--border); overflow: hidden; }
+    .progress-fill { height: 100%; width: 0%; border-radius: 99px; background: linear-gradient(90deg, var(--primary), var(--accent-dk)); transition: width .3s ease; }
+    /* audio player: play/pause, drag the bar, ⏪ 10 s / ⏩ 10 s (as in lesson 10) */
+    .player { display: flex; align-items: center; gap: 12px; background: linear-gradient(135deg, rgba(212,87,42,.09), rgba(201,160,48,.10)); border: 2px solid rgba(212,87,42,.25); border-radius: 18px; padding: 12px 16px; margin: 4px 0 16px; }
+    .pl-btn { flex: 0 0 52px; width: 52px; height: 52px; border-radius: 50%; border: none; background: var(--primary); color: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(212,87,42,.35); }
+    .pl-btn:hover { background: var(--primary-dk); }
+    .pl-btn svg { width: 22px; height: 22px; fill: currentColor; }
+    .pl-btn .i-pause { display: none; }
+    .player.playing .pl-btn .i-play { display: none; } .player.playing .pl-btn .i-pause { display: block; }
+    .pl-main { flex: 1; min-width: 0; }
+    .pl-top { display: flex; justify-content: space-between; gap: 10px; margin-bottom: 8px; font-size: .88rem; }
+    .pl-label { font-weight: 700; color: var(--primary-dk); }
+    .pl-time { color: var(--muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
+    .pl-track { position: relative; height: 10px; border-radius: 99px; background: rgba(44,32,16,.10); cursor: pointer; touch-action: none; }
+    .pl-fill { position: absolute; inset: 0 auto 0 0; width: 0; border-radius: 99px; background: linear-gradient(90deg, var(--primary), var(--accent-dk)); }
+    .pl-knob { position: absolute; top: 50%; left: 0; width: 18px; height: 18px; margin: -9px 0 0 -9px; border-radius: 50%; background: #fff; border: 3px solid var(--primary); box-shadow: 0 1px 4px rgba(0,0,0,.2); transition: transform .15s; }
+    .pl-track:hover .pl-knob, .player.dragging .pl-knob { transform: scale(1.25); }
+    .pl-skip { flex: 0 0 auto; height: 36px; padding: 0 10px; border-radius: 99px; border: 2px solid var(--border); background: var(--card); color: var(--muted); cursor: pointer; font: inherit; font-size: .8rem; font-weight: 700; white-space: nowrap; }
+    .pl-skip:hover { border-color: var(--primary); color: var(--primary); }
+    @media (max-width: 560px) { .player { flex-wrap: wrap; gap: 10px; padding: 10px 12px; } .pl-main { flex-basis: calc(100% - 64px); } .pl-skip { flex: 1; } }
+
+    /* ── History tab ── */
+    .story { background: #fff; border: 1px solid var(--border); border-radius: var(--radius); padding: 18px 22px; line-height: 1.9; font-size: 1.02rem; box-shadow: 0 2px 10px rgba(44,32,16,.05); margin-bottom: 16px; }
+    .story h4 { font-family: 'Fraunces', Georgia, serif; text-align: center; font-size: 1.2rem; margin-bottom: 6px; }
+    .story p { margin-bottom: 8px; }
+    .spine-row { margin: 6px 0 14px; }
+    .spine-row > small { display: block; font-size: .72rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
+    .spine { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+    .spine .h { display: inline-flex; flex-direction: column; align-items: center; padding: 6px 12px; border-radius: 12px; background: rgba(95,142,196,.12); border: 2px solid rgba(95,142,196,.45); line-height: 1.2; }
+    .spine .h b { font-family: 'Fraunces', Georgia, serif; font-size: 1rem; }
+    .spine .h b::first-letter { color: var(--primary); font-size: 1.15em; }
+    .spine .h span { font-size: .78rem; font-weight: 700; color: var(--muted); }
+    .spine .h.old { background: rgba(201,160,48,.12); border-color: rgba(201,160,48,.5); }
+    .spine .arr { color: var(--muted); font-weight: 700; }
+    .mnemo { font-family: 'Fraunces', Georgia, serif; font-size: 1.12rem; text-align: center; padding: 10px; margin: 4px 0 10px; }
+    .mnemo b { color: var(--primary); font-size: 1.2em; }
+    .pre { font-weight: 700; color: var(--primary); margin-right: 1px; }
+    .place-list { list-style: none; border-left: 3px solid var(--primary); margin-left: 8px; }
+    .place-list li { position: relative; padding: 7px 0 7px 18px; line-height: 1.6; }
+    .place-list li::before { content: ''; position: absolute; left: -8px; top: 15px; width: 13px; height: 13px; border-radius: 50%; background: #fff; border: 3px solid var(--primary); }
+    .place-list .yr { display: inline-block; min-width: 92px; font-family: 'Fraunces', Georgia, serif; font-weight: 700; color: var(--primary); }
+
+    /* ── Lesson 12 blocks A/B ── */
+    .tab-btn:nth-child(4).active { background: var(--blue); border-color: var(--blue); }
+    .tab-btn:nth-child(5).active { background: var(--green); border-color: var(--green); }
+    .rule-box { background: linear-gradient(160deg, #fff, rgba(95,142,196,.07)); border: 2px solid rgba(95,142,196,.45); border-radius: var(--radius); padding: 16px 18px; }
+    .rule-title { font-family: 'Fraunces', Georgia, serif; font-size: 1.15rem; font-weight: 700; color: var(--blue); margin-bottom: 12px; }
+    .ru-note { background: rgba(196,122,150,.09); border-left: 4px solid var(--rose); border-radius: 0 10px 10px 0; padding: 9px 14px; font-size: .93rem; line-height: 1.6; margin-top: 8px; }
+    .rule-tip { margin-top: 10px; font-size: .95rem; line-height: 1.7; }
+    .lk { font-weight: 700; padding: 1px 6px; border-radius: 6px; }
+    .lk-pr { color: #2F5F96; background: rgba(95,142,196,.18); }
+    .lk-th { color: #9A3F64; background: rgba(196,122,150,.20); }
+    .lk-the { color: #3F6E2B; background: rgba(91,140,69,.16); }
+    .lk-ln { color: #8A6A10; background: rgba(201,160,48,.22); }
+    .snum { font-family: 'Fraunces', Georgia, serif; font-weight: 700; color: var(--primary); margin-right: 4px; }
+    /* Practice 1: pair cards — tap the first sentence, then the link word */
+    .pp-quiz { display: grid; gap: 14px; }
+    .pp { background: #fff; border: 1px solid var(--border); border-radius: 16px; padding: 14px 16px; box-shadow: 0 2px 10px rgba(44,32,16,.05); }
+    .pp-head { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+    .pp-n { width: 28px; height: 28px; border-radius: 50%; background: var(--primary); color: #fff; font-weight: 700; display: inline-flex; align-items: center; justify-content: center; font-size: .9rem; flex-shrink: 0; }
+    .pp-step { font-size: .88rem; font-weight: 700; color: var(--muted); }
+    .pp-swap { margin-left: auto; display: none; font: inherit; font-size: .8rem; font-weight: 700; color: var(--muted); background: none; border: 2px solid var(--border); border-radius: 99px; padding: 3px 12px; cursor: pointer; }
+    .pp-swap:hover { color: var(--primary); border-color: var(--primary); }
+    .pp.ordered .pp-swap { display: inline-block; }
+    .quiz.checked .pp-swap { display: none; }
+    .pp-ss { display: flex; flex-direction: column; gap: 8px; }
+    .pp-s { display: flex; gap: 12px; align-items: flex-start; padding: 10px 14px; border-radius: 12px; border: 2px solid var(--border); background: var(--bg); line-height: 1.65; transition: .15s; }
+    .pp:not(.ordered) .pp-s { cursor: pointer; }
+    .pp:not(.ordered) .pp-s:hover { border-color: var(--primary); background: rgba(212,87,42,.05); }
+    .pp-b { flex-shrink: 0; min-width: 34px; height: 26px; padding: 0 8px; border-radius: 99px; background: var(--border); color: var(--text); font-size: .78rem; font-weight: 700; display: inline-flex; align-items: center; justify-content: center; margin-top: 1px; }
+    .pp-s.first { border-color: var(--blue); background: #EAF2FB; }
+    .pp-s.first .pp-b { background: var(--blue); color: #fff; }
+    .pp-s.second .pp-b { background: var(--primary); color: #fff; }
+    .pp.ordered .w { cursor: pointer; border-radius: 5px; padding: 0 1px; transition: background .12s; }
+    .pp.ordered .w:hover { background: rgba(201,160,48,.25); }
+    .w.pick { background: rgba(201,160,48,.45); box-shadow: 0 0 0 2px rgba(201,160,48,.6); }
+    .quiz.checked .w { cursor: default; }
+    .quiz.checked .w.is-link { background: rgba(91,140,69,.18); color: #3F6E2B; font-weight: 700; }
+    .quiz.checked .w.pick:not(.is-link) { background: rgba(200,64,64,.15); box-shadow: 0 0 0 2px rgba(200,64,64,.5); }
+    .quiz.checked .pp-s.first.ok { border-color: var(--green); background: rgba(91,140,69,.08); }
+    .quiz.checked .pp-s.first.bad { border-color: var(--red); background: rgba(200,64,64,.06); }
+    .pp-keys { display: none; margin-top: 10px; font-size: .88rem; font-weight: 700; color: var(--muted); }
+    .quiz.checked .pp-keys { display: block; }
+    .pp-keys input { display: none; }
+    .pp-why { font-size: .93rem; line-height: 1.6; background: rgba(95,142,196,.08); border-radius: 10px; padding: 8px 12px; margin-top: 8px; }
+    .bank.sent { flex-direction: column; }
+    .bank.sent span { border-radius: 12px; font-weight: 500; line-height: 1.5; padding: 7px 14px; }
+    .slots .slot { margin: 8px 0; }
+    .slots .gap { display: flex; align-items: flex-start; white-space: normal; }
+    .slots .gap .gn { margin-top: 8px; margin-right: 8px; flex-shrink: 0; }
+    .slots .dz { display: block; flex: 1; text-align: left; border-radius: 12px; padding: 7px 14px; min-height: 40px; font-weight: 500; line-height: 1.5; }
+    .slots .key { display: inline-block; margin-top: 10px; }
+    .why-list { padding-left: 22px; line-height: 1.7; }
+    .use-words { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; padding: 10px 14px; border-radius: 12px; background: rgba(201,160,48,.08); border: 2px dashed rgba(201,160,48,.45); margin: 6px 0; }
+    .use-words span { font-weight: 700; font-size: .9rem; padding: 3px 12px; border-radius: 99px; background: #fff; border: 1px solid var(--border); cursor: pointer; user-select: none; }
+    .use-words span.used { background: var(--green); border-color: var(--green); color: #fff; }
+    .hw-list { list-style: none; }
+    .hw-list li { padding: 10px 0; border-bottom: 1px dashed var(--border); }
+    .hw-list li:last-child { border-bottom: none; }
+    .hw-list label { display: flex; gap: 12px; align-items: flex-start; cursor: pointer; line-height: 1.55; }
+    .hw-list input { width: 22px; height: 22px; accent-color: var(--green); flex-shrink: 0; margin-top: 1px; }
+    .hw-list li.done span.t { color: var(--green); text-decoration: line-through; }
+    .free-write { min-height: 150px; }
+  
+    /* ── Lesson 14 ── */
+    .vt { font-weight: 700; padding: 1px 6px; border-radius: 6px; }
+    .mk { font-weight: 700; color: #8A6A10; border-bottom: 3px solid rgba(201,160,48,.7); }
+    .subj { text-decoration: underline wavy rgba(212,87,42,.7); text-underline-offset: 4px; font-weight: 600; }
+    /* passive: the be-part shows the tense, V3 never changes */
+    .pv { font-weight: 700; white-space: nowrap; }
+    .pv-be { color: #2F5F96; background: rgba(95,142,196,.16); padding: 1px 4px; border-radius: 6px 0 0 6px; }
+    .pv-v3 { color: #9A3F64; background: rgba(196,122,150,.18); padding: 1px 4px; border-radius: 0 6px 6px 0; }
+    .pv-act { color: var(--muted); font-weight: 700; border-bottom: 2px dotted var(--muted); }
+    /* Задание 2: the filled word and the clue around it */
+    .fw { font-weight: 700; color: #3F6E2B; background: rgba(91,140,69,.16); padding: 1px 6px; border-radius: 6px; }
+    .clue { font-weight: 700; color: #8A6A10; border-bottom: 3px solid rgba(201,160,48,.7); }
+    .lbl { display: inline-block; font-size: .72rem; font-weight: 800; letter-spacing: .03em; padding: 1px 7px; border-radius: 99px; margin-left: 4px; vertical-align: 2px; }
+    .lbl-v1 { background: rgba(95,142,196,.18); color: #2F5F96; }
+    .lbl-v2 { background: rgba(196,122,150,.20); color: #9A3F64; }
+    .lbl-ing { background: rgba(91,140,69,.18); color: #3F6E2B; }
+    .lbl-n { background: rgba(201,160,48,.22); color: #8A6A10; }
+    /* timer */
+    .timer { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin: 4px 0 14px; padding: 10px 14px; border-radius: 14px; background: rgba(95,142,196,.08); border: 2px solid rgba(95,142,196,.35); }
+    .timer .btn { padding: 6px 16px; }
+    .tm-clock { font-size: 1.25rem; font-variant-numeric: tabular-nums; min-width: 96px; }
+    .tm-clock b { font-family: 'Fraunces', Georgia, serif; }
+    .timer.running { border-color: var(--blue); }
+    .timer.over { border-color: var(--red); background: rgba(200,64,64,.06); }
+    .timer.over .tm-clock { color: var(--red); }
+    .tm-msg { font-weight: 700; color: var(--green); }
+    /* lists of lettered lines / meanings */
+    .sent-list { list-style: none; margin-bottom: 10px; background: #fff; border: 1px solid var(--border); border-radius: 14px; padding: 6px 14px; }
+    .sent-list li { display: flex; gap: 10px; padding: 5px 0; line-height: 1.55; border-bottom: 1px dashed var(--border); }
+    .sent-list li:last-child { border-bottom: none; }
+    .sl { flex-shrink: 0; width: 26px; height: 26px; border-radius: 50%; background: var(--border); font-weight: 700; font-size: .82rem; display: inline-flex; align-items: center; justify-content: center; }
+    .z3 { background: #fff; border: 1px solid var(--border); border-radius: 16px; padding: 12px 16px; margin-bottom: 12px; }
+    .z3-title { font-weight: 800; margin-bottom: 4px; }
+    .z3 .sent-list { border: none; padding: 0; margin-bottom: 4px; }
+    .answer-row.letters .ch-l { display: none; }
+    .answer-row.letters .ch-group { grid-template-columns: repeat(auto-fill, minmax(52px, 1fr)); }
+    .answer-row.letters .ch-t { text-align: center; width: 100%; font-weight: 700; }
+    .three { line-height: 1.75; }
+    .three span { display: block; }
+    .rule-table.wrap td:first-child { white-space: normal; }
+    .fmt-note { font-size: .85rem; color: var(--muted); font-weight: 600; }
+    /* warm-up: story card + random word check */
+    .scard { background: #fff; border: 2px solid rgba(196,122,150,.45); border-radius: 18px; padding: 14px 18px; margin-bottom: 10px; box-shadow: 0 2px 12px rgba(44,32,16,.06); }
+    .scard-top { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 6px; }
+    .scard-n { font-size: .75rem; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: var(--rose); }
+    .scard h4 { font-family: 'Fraunces', Georgia, serif; font-size: 1.2rem; margin: 0; flex: 1 1 220px; }
+    .scard ul { margin: 4px 0 0 18px; line-height: 1.7; }
+    .draw-btn { margin-left: auto; }
+    .vc-quiz input.blank { width: 250px; max-width: 100%; letter-spacing: .02em; text-align: left; }
+    .vc-quiz input.blank::placeholder { color: #B9AC97; letter-spacing: .06em; font-weight: 600; }
+    .vc-bar { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 10px; }
+    .vc-bar small { color: var(--muted); }
+    .vc-bar .draw-btn { margin-left: 0; }
+    html.watching .draw-btn { display: none; }
+    /* history pictures */
+    .duo { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 6px 0 14px; }
+    .duo figure, .pic { margin: 0; }
+    .duo img { width: 100%; height: 280px; object-fit: cover; object-position: 50% 12%; border-radius: 12px; box-shadow: var(--shadow); display: block; }
+    .duo figcaption, .pic figcaption { font-size: .8rem; color: var(--muted); margin-top: 5px; line-height: 1.35; }
+    .duo figcaption b { color: var(--text); }
+    .pic img { width: 100%; max-height: 300px; object-fit: cover; border-radius: 12px; box-shadow: var(--shadow); display: block; }
+    @media (max-width: 560px) { .duo img { height: 200px; } }
+    .story b.ps { color: #9A3F64; }
+    /* teacher-only: shown only inside teacher.html (sync.js adds html.watching in watch mode) */
+    .teacher-only { display: none; }
+    html.watching .teacher-only { display: block; margin-top: 14px; background: #FDEAF2; border: 2px dashed #D9628F; border-radius: var(--radius); padding: 12px 16px; line-height: 1.75; }
+    .teacher-only .to-label { font-size: .75rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: #B0416C; margin-bottom: 6px; }
+    .teacher-only b { color: #9A3F64; }
+    .teacher-only ul { margin: 4px 0 0 18px; }
+  </style>
+<script src="../sync.js"></script>
+<script src="../decks.js"></script>
+</head>
+<body>
+
+<header class="site-header">
+  <h1>Lesson 14 — Science &amp; Technology · Passive</h1>
+  <a class="back-link" href="../index.html">← All Lessons</a>
+</header>
+
+<div class="container">
+
+  <div class="lesson-meta">
+    <h2>«Высшая проба» Round 2 · Science &amp; technology · Задание 2 · the passive in all tenses</h2>
+    <p>📅 26 October 2026 &nbsp;·&nbsp; Lesson 14 &nbsp;·&nbsp; trains Задание 2 (word bank), Задания 1 and 3 (passive), Задание 10 · history era 3: the Tudors</p>
+  </div>
+
+  <div class="progress-wrap">
+    <div class="progress-top">
+      <div>Blocks checked: <span id="pgCount">0 / 0</span></div>
+      <div>Points today: <span id="pgScore">0 / 0</span></div>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="pgFill"></div></div>
+  </div>
+
+  <div class="tab-bar">
+    <button class="tab-btn active" onclick="switchTab('warm', this)">🔁 Warm-up</button>
+    <button class="tab-btn"        onclick="switchTab('words', this)">🔬 Science words</button>
+    <button class="tab-btn"        onclick="switchTab('pass', this)">⚙️ Passive</button>
+    <button class="tab-btn"        onclick="switchTab('hist', this)">🏛 History</button>
+    <button class="tab-btn"        onclick="switchTab('hw', this)">🏠 Homework</button>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════
+       TAB 1 — WARM-UP (7 min): speaking in the past + random words from Lessons 11–13
+  ══════════════════════════════════════════════════════════ -->
+  <div class="tab-content active" id="tab-warm">
+
+    <div class="exercise">
+      <div class="exercise-label">Warm-up 1 · speaking in the past · 3 min</div>
+      <h3>Tell it in the past: your story card</h3>
+      <p class="instr">Talk for <b>one and a half to two minutes</b> about the card. The questions help you to use the right tense: <b>what happened</b> (past simple), <b>what was going on</b> (past continuous), <b>what had happened before</b> (past perfect). Don’t like the card? Draw another one.</p>
+      <div class="scard" id="storyCard"></div>
+      <div class="use-words" data-need="5"><span>past simple</span><span>past continuous</span><span>past perfect</span><span>past passive</span><span>used to / would</span><span>a linker: however · eventually · by then · despite</span><span>a word from Lessons 11–13</span></div>
+      <p class="bank-hint">0 / 5 used</p>
+      <div class="teacher-only">
+        <div class="to-label">👩‍🏫 Teacher only · what to listen for</div>
+        <ul>
+          <li><b>Past continuous for the main events</b>: <i>*Then I was going to the station</i> → <i>Then I went</i>. It is the background only: <i>I was waiting when…</i></li>
+          <li><b>No past perfect for “before”</b>: <i>*When I arrived, the train already left</i> → <i>had already left</i>.</li>
+          <li><b>State verbs</b> in the continuous: <i>*I was knowing / was having a dog</i> → <i>knew / had</i>.</li>
+          <li><b><i>Ago</i> and <i>before</i></b>: <i>*before two years</i> → <i>two years ago</i>; <i>two years earlier / before</i> inside the story.</li>
+          <li><b>Used to / would</b> for old habits: <i>I used to be scared of… / Every summer we would…</i></li>
+          <li>Ask one follow-up question that needs the past perfect: <i>“What had you expected before you got there?”</i></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="exercise">
+      <div class="exercise-label">Warm-up 2 · random words from Lessons 11–13 · 4 min</div>
+      <h3>Eight random words: history, people, linkers</h3>
+      <p class="instr">Read the Russian and type the English word or phrase. The first letter and the number of letters are shown. Press <b>Check</b>. Then say <b>a past-tense sentence of your own</b> with every word you missed.</p>
+      <div class="vc-bar">
+        <button type="button" class="btn btn-ghost draw-btn" id="vcNew">🎲 New 8 words</button>
+        <small>3 from <i>History &amp; heritage</i> (L11) · 3 from <i>People &amp; achievement</i> (L12) · 2 linkers (L13)</small>
+      </div>
+      <div class="quiz vc-quiz">
+        <div class="vc-rows"></div>
+        <div class="after-check">
+          <details class="logic" open><summary><span>🗣</span><span class="hint-txt">The words in context · now make your own past-tense sentence</span></summary><div class="logic-body"><ul class="why-list vc-why"></ul></div></details>
+        </div>
+      </div>
+<script>
+// Draws 8 random words (3 from V8, 3 from V9, 2 linkers from Lesson 13) before the lesson engine builds the quizzes.
+// The draw is saved with the answers, so the teacher's live view shows the same words; 🎲 draws again.
+(function () {
+  const L13 = [
+    { w: 'despite', a: 'despite|in spite of', p: 'linker', t: 'несмотря на (+ существительное или -ing)', e: 'Despite the storm, she kept swimming for fourteen hours.' },
+    { w: 'however', p: 'linker', t: 'однако', e: 'This time, however, she refused to give up.' },
+    { w: 'eventually', p: 'linker', t: 'в конце концов (после долгих усилий)', e: 'Eventually she walked out of the sea near Dover.' },
+    { w: 'meanwhile', p: 'linker', t: 'тем временем, в это же время', e: 'Meanwhile, a far more dangerous enemy was on its way: the plague.' },
+    { w: 'by then', p: 'linker', t: 'к тому времени', e: 'By then she had beaten the men’s record by two hours.' },
+    { w: 'since then', p: 'linker', t: 'с тех пор', e: 'Since then, no English king has been killed in battle.' },
+    { w: 'as a result', p: 'linker', t: 'в результате', e: 'As a result, she was welcomed home with a huge parade.' },
+    { w: 'in this way', p: 'linker', t: 'таким образом, так', e: 'In this way, the two enemy families were finally joined.' },
+    { w: 'a year earlier', p: 'linker', t: 'годом ранее', e: 'A year earlier she had tried and failed.' },
+    { w: 'although', p: 'linker', t: 'хотя (+ целое предложение)', e: 'Although there was a storm, she kept swimming.' }
+  ];
+  const deck = id => ((window.DECKS || []).find(d => d.id === id) || { cards: [] }).cards;
+  const POOLS = { v8: deck('v8'), v9: deck('v9'), l13: L13 };
+  const PLAN = [['v8', 3], ['v9', 3], ['l13', 2]];
+  const ALT = { civilisation: 'civilisation|civilization' };
+  const shuffle = a => { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+  const card = k => { const [p, i] = String(k).split(':'); return (POOLS[p] || [])[+i]; };
+  window.vcDraw = () => shuffle(PLAN.flatMap(([p, n]) => shuffle([...POOLS[p].keys()]).slice(0, n).map(i => p + ':' + i)));
+
+  let saved = {};
+  try { saved = JSON.parse(localStorage.getItem('lesson-14')) || {}; } catch (e) {}
+  let set = saved['vc-set'];
+  if (!Array.isArray(set) || set.length !== 8 || !set.every(card)) {
+    set = vcDraw();
+    saved['vc-set'] = set;
+    try { localStorage.setItem('lesson-14', JSON.stringify(saved)); } catch (e) {}
+  }
+  const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;');
+  const mask = w => w.split(' ').map(x => x[0] + ' _'.repeat(x.length - 1)).join('    ');
+  const box = document.currentScript.previousElementSibling;
+  box.querySelector('.vc-rows').innerHTML = set.map((k, n) => {
+    const c = card(k);
+    return `<div class="answer-row"><span class="ar-num">${n + 1}</span><span class="ar-txt">${esc(c.t)} <span class="fmt-note">${esc(c.p)}</span></span>` +
+           `<input class="blank ans" data-answer="${esc(c.a || ALT[c.w] || c.w)}" placeholder="${esc(mask(c.w))}" autocomplete="off" spellcheck="false"></div>`;
+  }).join('');
+  box.querySelector('.vc-why').innerHTML = set.map(k => { const c = card(k); return `<li><b>${esc(c.w)}</b> · <i>${esc(c.e)}</i></li>`; }).join('');
+})();
+</script>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════
+       TAB 2 — Block A: science & technology words → Задание 2
+  ══════════════════════════════════════════════════════════ -->
+  <div class="tab-content" id="tab-words">
+
+    <div class="exercise">
+      <div class="exercise-label">Discover · step 1</div>
+      <h3>The words are in. Look at what is around each gap.</h3>
+      <p class="instr">This is a small Задание 2. The <span class="fw">green</span> words came from the box; the <span class="clue">underlined</span> words told us which form we needed.</p>
+      <div class="story">
+        <h4>The picture that showed bones</h4>
+        <div class="facts" style="margin-bottom:8px"><span class="fact">carrying out</span><span class="fact">observed</span><span class="fact">figure out</span><span class="fact">pointed out</span><span class="fact">rely on</span><span class="fact">came up with</span><span class="fact">insight</span></div>
+        <p>In November 1895 the German physicist Wilhelm Röntgen <span class="clue">was</span> <span class="gn">1</span><span class="fw">carrying out</span> experiments with electricity in a dark laboratory.
+        One evening he <span class="gn">2</span><span class="fw">observed</span> a strange green light on a screen on the other side of the room.
+        For weeks he <span class="clue">tried to</span> <span class="gn">3</span><span class="fw">figure out</span> what was causing it, and soon he realised that invisible rays were passing through paper, wood and even his own hand.
+        When he showed his wife a picture of her hand, she <span class="gn">4</span><span class="fw">pointed out</span> <span class="clue">that</span> she could see her own bones. “I have seen my death!” she said.
+        Within a year, doctors all over the world <span class="clue">had begun to</span> <span class="gn">5</span><span class="fw">rely on</span> the new rays, which Röntgen called X-rays.</p>
+      </div>
+    </div>
+
+    <div class="exercise">
+      <div class="exercise-label">Discover · step 2</div>
+      <h3>Answer the questions: they lead you to the rule</h3>
+      <p class="instr">Answer from the text, then press Check. The rule opens after you check.</p>
+      <div class="facts"><span class="fact">🔎 grammar before meaning</span><span class="fact">7 questions</span></div>
+      <div class="quiz">
+        <div class="answer-row"><span class="ar-num">1</span><span class="ar-txt">Gap 1 comes after <span class="clue">was</span>. It needs…</span><select class="exam-select ans" data-opts="an -ing form (was carrying out),a base form (was carry out)" data-answer="an -ing form (was carrying out)"></select></div>
+        <div class="answer-row"><span class="ar-num">2</span><span class="ar-txt">Gaps 3 and 5 come after <span class="clue">to</span>. They need…</span><select class="exam-select ans" data-opts="the base form (V1),the past form (V2)" data-answer="the base form (V1)"></select></div>
+        <div class="answer-row"><span class="ar-num">3</span><span class="ar-txt">Gaps 2 and 4: subject + ___ + object in a past story. They need…</span><select class="exam-select ans" data-opts="the past simple (V2),the -ing form" data-answer="the past simple (V2)"></select></div>
+        <div class="answer-row"><span class="ar-num">4</span><span class="ar-txt">Why can’t <i>came up with</i> go in gap 3?</span><select class="exam-select ans" data-opts="after “tried to” we need V1; came is V2,its meaning is wrong but the form is right" data-answer="after “tried to” we need V1; came is V2"></select></div>
+        <div class="answer-row"><span class="ar-num">5</span><span class="ar-txt">Gap 4 is followed by <span class="clue">that</span> + a sentence. Which phrasal verb works with <i>that</i>?</span><select class="exam-select ans" data-opts="point out (that…),come up with (that…)" data-answer="point out (that…)"></select></div>
+        <div class="answer-row"><span class="ar-num">6</span><span class="ar-txt">Why can’t <i>insight</i> go in any gap?</span><select class="exam-select ans" data-opts="it is a noun and every gap here needs a verb,it is too difficult" data-answer="it is a noun and every gap here needs a verb"></select></div>
+        <div class="answer-row"><span class="ar-num">7</span><span class="ar-txt">So what is the first thing to do in Задание 2?</span><select class="exam-select ans" data-opts="label the form of every word in the box,read the text and look for meaning" data-answer="label the form of every word in the box"></select></div>
+        <div class="after-check">
+          <div class="rule-box">
+            <div class="rule-title">📏 The rule: label every word in the box before you read</div>
+            <div class="tbl-wrap"><table class="rule-table wrap">
+              <tr><th>Label</th><th>Looks like</th><th>Fits after…</th></tr>
+              <tr><td><span class="lbl lbl-v1">V1</span> base</td><td><i>figure out, rely on, enhance</i></td><td><i>to · can / could / will / must / should · did / didn’t · let / make sb</i></td></tr>
+              <tr><td><span class="lbl lbl-v2">V2 / V3</span> past or participle</td><td><i>observed, pointed out, verified</i></td><td>V2: a subject in a past story (<i>he ___ a light</i>). V3: <i>has / had / was / were / been</i> (perfect and passive)</td></tr>
+              <tr><td><span class="lbl lbl-ing">-ing</span></td><td><i>carrying out, observing</i></td><td><i>was / were / is</i> (continuous) · a preposition (<i>by, without, of, for, instead of</i>) · <i>enjoy, keep, avoid, stop</i></td></tr>
+              <tr><td><span class="lbl lbl-n">noun</span></td><td><i>insight, outcome, hypothesis</i></td><td><i>a / an / the</i>, an adjective, <i>of</i> / <i>into</i> after it</td></tr>
+            </table></div>
+            <div class="rule-tip">⚠️ Two traps: <b>V2 and V3 often look the same</b> (<i>observed</i>): the gap decides. <b>Some verbs have V1 = V3</b>: <i>come up with</i> fits after <i>to</i> and after <i>have</i> (<i>nobody has <b>come up with</b> a better idea</i>); <i>set off, put, cut</i> are V1 = V2 = V3.</div>
+            <div class="rule-title" style="margin-top:12px">🔗 Then look at the word after the gap</div>
+            <div class="tbl-wrap"><table class="rule-table wrap">
+              <tr><td><i>come up <b>with</b> an idea · rely <b>on</b> sb/sth · point <b>out</b> that… · carry <b>out</b> research · figure <b>out</b> how / what…</i></td></tr>
+              <tr><td><i>an insight <b>into</b> · lead <b>to</b> · result <b>in</b> · consist <b>of</b> · depend <b>on</b> · contribute <b>to</b> · prevent sb <b>from</b> -ing · apply sth <b>to</b></i></td></tr>
+            </table></div>
+            <div class="ru-note">🇷🇺 «Полагаться <b>на</b>» = <i>rely <b>on</b></i>, а не <i>to</i>. «Проводить эксперимент» = <i><b>carry out</b> / <b>conduct</b> an experiment</i>, а не <i>make</i>. «Понимание <b>чего-то</b>» = <i>an insight <b>into</b> sth</i>.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="exercise">
+      <div class="exercise-label">Practice 1 · Science words (V10) · 4 min</div>
+      <h3>Choose the word that fits</h3>
+      <p class="instr">These are this week’s flashcard words. All three options have the same form, so here only the <b>meaning</b> decides.</p>
+      <div class="facts"><span class="fact">🔬 V10 science &amp; technology</span><span class="fact">10 sentences</span></div>
+      <div class="quiz">
+        <div class="answer-row"><span class="ar-num">1</span><span class="ar-txt">Before an experiment, a scientist starts with a ___: an idea that can be tested.</span><select class="exam-select ans" data-opts="hypothesis,phenomenon,outcome" data-answer="hypothesis"></select></div>
+        <div class="answer-row"><span class="ar-num">2</span><span class="ar-txt">The northern lights are a natural ___ that can be seen near the Arctic Circle.</span><select class="exam-select ans" data-opts="phenomenon,hypothesis,insight" data-answer="phenomenon"></select></div>
+        <div class="answer-row"><span class="ar-num">3</span><span class="ar-txt">The team ___ more than two hundred experiments before they found the answer.</span><select class="exam-select ans" data-opts="conducted,enhanced,verified" data-answer="conducted"></select></div>
+        <div class="answer-row"><span class="ar-num">4</span><span class="ar-txt">A clock that loses one second in a million years is extremely ___.</span><select class="exam-select ans" data-opts="accurate,artificial,virtual" data-answer="accurate"></select></div>
+        <div class="answer-row"><span class="ar-num">5</span><span class="ar-txt">Nobody could predict the ___ of the experiment, so everyone was waiting nervously.</span><select class="exam-select ans" data-opts="outcome,innovation,gravity" data-answer="outcome"></select></div>
+        <div class="answer-row"><span class="ar-num">6</span><span class="ar-txt">New results must be ___ by other scientists before they are accepted.</span><select class="exam-select ans" data-opts="verified,observed,enhanced" data-answer="verified"></select></div>
+        <div class="answer-row"><span class="ar-num">7</span><span class="ar-txt">The study gave researchers a new ___ into how dolphins communicate.</span><select class="exam-select ans" data-opts="insight,hypothesis,outcome" data-answer="insight"></select></div>
+        <div class="answer-row"><span class="ar-num">8</span><span class="ar-txt">Good lighting can ___ the colours in a photograph.</span><select class="exam-select ans" data-opts="enhance,verify,conduct" data-answer="enhance"></select></div>
+        <div class="answer-row"><span class="ar-num">9</span><span class="ar-txt">In 1610 Galileo was the first to ___ the moons of Jupiter through a telescope.</span><select class="exam-select ans" data-opts="observe,conduct,rely" data-answer="observe"></select></div>
+        <div class="answer-row"><span class="ar-num">10</span><span class="ar-txt">Without ___, everything on Earth would float away into space.</span><select class="exam-select ans" data-opts="gravity,innovation,precision" data-answer="gravity"></select></div>
+      </div>
+    </div>
+
+    <div class="exercise">
+      <div class="exercise-label">Practice 2 · Label the box · 3 min</div>
+      <h3>What form is each word?</h3>
+      <p class="instr">This is step 1 of every Задание 2. Don’t think about meaning yet: just the form.</p>
+      <div class="facts"><span class="fact">🏷 V1 · V2/V3 · -ing · noun</span><span class="fact">10 words</span></div>
+      <div class="quiz">
+        <div class="answer-row"><span class="ar-num">1</span><span class="ar-txt"><b>rely on</b></span><select class="exam-select ans" data-opts="V1 (base),V2 / V3,V1 = V3 (come),-ing,noun" data-answer="V1 (base)"></select></div>
+        <div class="answer-row"><span class="ar-num">2</span><span class="ar-txt"><b>figured out</b></span><select class="exam-select ans" data-opts="V1 (base),V2 / V3,V1 = V3 (come),-ing,noun" data-answer="V2 / V3"></select></div>
+        <div class="answer-row"><span class="ar-num">3</span><span class="ar-txt"><b>carrying out</b></span><select class="exam-select ans" data-opts="V1 (base),V2 / V3,V1 = V3 (come),-ing,noun" data-answer="-ing"></select></div>
+        <div class="answer-row"><span class="ar-num">4</span><span class="ar-txt"><b>come up with</b></span><select class="exam-select ans" data-opts="V1 (base),V2 / V3,V1 = V3 (come),-ing,noun" data-answer="V1 = V3 (come)"></select></div>
+        <div class="answer-row"><span class="ar-num">5</span><span class="ar-txt"><b>insight</b></span><select class="exam-select ans" data-opts="V1 (base),V2 / V3,V1 = V3 (come),-ing,noun" data-answer="noun"></select></div>
+        <div class="answer-row"><span class="ar-num">6</span><span class="ar-txt"><b>pointed out</b></span><select class="exam-select ans" data-opts="V1 (base),V2 / V3,V1 = V3 (come),-ing,noun" data-answer="V2 / V3"></select></div>
+        <div class="answer-row"><span class="ar-num">7</span><span class="ar-txt"><b>observing</b></span><select class="exam-select ans" data-opts="V1 (base),V2 / V3,V1 = V3 (come),-ing,noun" data-answer="-ing"></select></div>
+        <div class="answer-row"><span class="ar-num">8</span><span class="ar-txt"><b>enhance</b></span><select class="exam-select ans" data-opts="V1 (base),V2 / V3,V1 = V3 (come),-ing,noun" data-answer="V1 (base)"></select></div>
+        <div class="answer-row"><span class="ar-num">9</span><span class="ar-txt"><b>verified</b></span><select class="exam-select ans" data-opts="V1 (base),V2 / V3,V1 = V3 (come),-ing,noun" data-answer="V2 / V3"></select></div>
+        <div class="answer-row"><span class="ar-num">10</span><span class="ar-txt"><b>outcome</b></span><select class="exam-select ans" data-opts="V1 (base),V2 / V3,V1 = V3 (come),-ing,noun" data-answer="noun"></select></div>
+      </div>
+      <details class="logic"><summary><span>💡</span><span class="hint-txt">Hint · the tricky one</span></summary><div class="logic-body"><p><i>come up with</i>: <b>come</b> is both V1 and V3 (<i>come – came – <b>come</b></i>), so it fits after <i>to</i> and after <i>have / has</i>.</p></div></details>
+    </div>
+
+    <div class="exercise">
+      <div class="exercise-label">Practice 3 · Which form? · 4 min</div>
+      <h3>Same verb, three forms: the gap decides</h3>
+      <p class="instr">Find the word before the gap (<i>to, was, has, for, will</i>) and choose the form.</p>
+      <div class="facts"><span class="fact">👀 the word before the gap</span><span class="fact">8 sentences</span></div>
+      <div class="quiz">
+        <div class="answer-row"><span class="ar-num">1</span><span class="ar-txt">Scientists are still trying to ___ why we dream.</span><select class="exam-select ans" data-opts="figure out,figured out,figuring out" data-answer="figure out"></select></div>
+        <div class="answer-row"><span class="ar-num">2</span><span class="ar-txt">The experiment was ___ by a team of sixteen-year-old students.</span><select class="exam-select ans" data-opts="carry out,carried out,carrying out" data-answer="carried out"></select></div>
+        <div class="answer-row"><span class="ar-num">3</span><span class="ar-txt">She became famous for ___ a cheap way to clean drinking water.</span><select class="exam-select ans" data-opts="come up with,came up with,coming up with" data-answer="coming up with"></select></div>
+        <div class="answer-row"><span class="ar-num">4</span><span class="ar-txt">Before computers, astronomers had to ___ their own eyes and a notebook.</span><select class="exam-select ans" data-opts="rely on,relied on,relying on" data-answer="rely on"></select></div>
+        <div class="answer-row"><span class="ar-num">5</span><span class="ar-txt">In 1610 Galileo ___ that Venus has phases, just like the Moon.</span><select class="exam-select ans" data-opts="point out,pointed out,pointing out" data-answer="pointed out"></select></div>
+        <div class="answer-row"><span class="ar-num">6</span><span class="ar-txt">Nobody has ever ___ a better explanation.</span><select class="exam-select ans" data-opts="come up with,came up with,coming up with" data-answer="come up with"></select></div>
+        <div class="answer-row"><span class="ar-num">7</span><span class="ar-txt">The new telescope will ___ our view of distant galaxies.</span><select class="exam-select ans" data-opts="enhance,enhanced,enhancing" data-answer="enhance"></select></div>
+        <div class="answer-row"><span class="ar-num">8</span><span class="ar-txt">By 1919 the theory had already been ___ by an experiment during an eclipse.</span><select class="exam-select ans" data-opts="verify,verified,verifying" data-answer="verified"></select></div>
+      </div>
+    </div>
+
+    <div class="exercise">
+      <div class="review-head"><span class="task-num">Olympway · task 14</span><span class="pts">PDF p. 16 · 10 phrasal verbs</span></div>
+      <h3>Practice 4 · Match the phrasal verbs to their meanings · 3 min</h3>
+      <ul class="sent-list">
+        <li><span class="sl">A</span>leave a hotel</li>
+        <li><span class="sl">B</span>investigate</li>
+        <li><span class="sl">C</span>stop being friends</li>
+        <li><span class="sl">D</span>meet unexpectedly</li>
+        <li><span class="sl">E</span>disappoint</li>
+        <li><span class="sl">F</span>understand</li>
+        <li><span class="sl">G</span>eat at a restaurant</li>
+        <li><span class="sl">H</span>break into pieces</li>
+        <li><span class="sl">I</span>review</li>
+        <li><span class="sl">J</span>stay positive</li>
+      </ul>
+      <div class="quiz">
+        <div class="answer-row letters"><span class="ar-num">1</span><span class="ar-txt"><b>figure sth out</b></span><select class="exam-select ans" data-opts="A,B,C,D,E,F,G,H,I,J" data-answer="F"></select></div>
+        <div class="answer-row letters"><span class="ar-num">2</span><span class="ar-txt"><b>fall apart</b></span><select class="exam-select ans" data-opts="A,B,C,D,E,F,G,H,I,J" data-answer="H"></select></div>
+        <div class="answer-row letters"><span class="ar-num">3</span><span class="ar-txt"><b>check out</b></span><select class="exam-select ans" data-opts="A,B,C,D,E,F,G,H,I,J" data-answer="A"></select></div>
+        <div class="answer-row letters"><span class="ar-num">4</span><span class="ar-txt"><b>hang in</b></span><select class="exam-select ans" data-opts="A,B,C,D,E,F,G,H,I,J" data-answer="J"></select></div>
+        <div class="answer-row letters"><span class="ar-num">5</span><span class="ar-txt"><b>go over sth</b></span><select class="exam-select ans" data-opts="A,B,C,D,E,F,G,H,I,J" data-answer="I"></select></div>
+        <div class="answer-row letters"><span class="ar-num">6</span><span class="ar-txt"><b>grow apart</b></span><select class="exam-select ans" data-opts="A,B,C,D,E,F,G,H,I,J" data-answer="C"></select></div>
+        <div class="answer-row letters"><span class="ar-num">7</span><span class="ar-txt"><b>run into sb / sth</b></span><select class="exam-select ans" data-opts="A,B,C,D,E,F,G,H,I,J" data-answer="D"></select></div>
+        <div class="answer-row letters"><span class="ar-num">8</span><span class="ar-txt"><b>look into sth</b></span><select class="exam-select ans" data-opts="A,B,C,D,E,F,G,H,I,J" data-answer="B"></select></div>
+        <div class="answer-row letters"><span class="ar-num">9</span><span class="ar-txt"><b>let sb down</b></span><select class="exam-select ans" data-opts="A,B,C,D,E,F,G,H,I,J" data-answer="E"></select></div>
+        <div class="answer-row letters"><span class="ar-num">10</span><span class="ar-txt"><b>eat out</b></span><select class="exam-select ans" data-opts="A,B,C,D,E,F,G,H,I,J" data-answer="G"></select></div>
+      </div>
+    </div>
+
+    <div class="exercise">
+      <div class="review-head"><span class="task-num">Olympway · tasks 282 and 312</span><span class="pts">PDF p. 205 and 221</span></div>
+      <h3>Practice 5 · One word for all three sentences · 4 min</h3>
+      <p class="instr">Write <b>one</b> word (a particle like <i>up, out, on</i>) that completes all three sentences.</p>
+      <div class="facts"><span class="fact">✍️ one word</span><span class="fact">8 sets</span></div>
+      <div class="quiz">
+        <div class="answer-row"><span class="ar-num">1</span><span class="ar-txt"><span class="three"><span>John takes ___ his mother.</span><span>The policeman tried to go ___ the thief.</span><span>I have to look ___ my sick little sister.</span></span></span><input class="blank short ans" data-answer="after" autocomplete="off" spellcheck="false"></div>
+        <div class="answer-row"><span class="ar-num">2</span><span class="ar-txt"><span class="three"><span>The children are growing ___.</span><span>Never give ___!</span><span>My parents always back me ___.</span></span></span><input class="blank short ans" data-answer="up" autocomplete="off" spellcheck="false"></div>
+        <div class="answer-row"><span class="ar-num">3</span><span class="ar-txt"><span class="three"><span>John asked Jane ___ to a dinner party.</span><span>It was so hot in the room that my mum passed ___.</span><span>I picked ___ three books for you to start with.</span></span></span><input class="blank short ans" data-answer="out" autocomplete="off" spellcheck="false"></div>
+        <div class="answer-row"><span class="ar-num">4</span><span class="ar-txt"><span class="three"><span>We will call ___ you tomorrow.</span><span>You can always count ___ me.</span><span>He doesn’t get ___ with his father.</span></span></span><input class="blank short ans" data-answer="on" autocomplete="off" spellcheck="false"></div>
+        <div class="answer-row"><span class="ar-num">5</span><span class="ar-txt"><span class="three"><span>We’ve decided to get ___ for a few days.</span><span>The emotions on her face gave her ___.</span><span>Her old granny passed ___ last night.</span></span></span><input class="blank short ans" data-answer="away" autocomplete="off" spellcheck="false"></div>
+        <div class="answer-row"><span class="ar-num">6</span><span class="ar-txt"><span class="three"><span>These awful words brought me ___.</span><span>It’s better to calm ___ before you drive the car.</span><span>My sister came ___ with flu last week.</span></span></span><input class="blank short ans" data-answer="down" autocomplete="off" spellcheck="false"></div>
+        <div class="answer-row"><span class="ar-num">7</span><span class="ar-txt"><span class="three"><span>Take ___ your shoes, please.</span><span>To put ___ our holiday until next year is a bad idea.</span><span>The storm cut the village ___ from the rest of the world.</span></span></span><input class="blank short ans" data-answer="off" autocomplete="off" spellcheck="false"></div>
+        <div class="answer-row"><span class="ar-num">8</span><span class="ar-txt"><span class="three"><span>I have to hand ___ my report by Monday.</span><span>To get the hotel keys we need to check ___.</span><span>The thief broke ___ through the kitchen window.</span></span></span><input class="blank short ans" data-answer="in" autocomplete="off" spellcheck="false"></div>
+      </div>
+    </div>
+
+    <div class="exercise">
+      <div class="review-head"><span class="task-num">Olympway · tasks 6 and 296</span><span class="pts">PDF p. 9 and 212</span></div>
+      <h3>Practice 6 · The little word: prepositions · 3 min</h3>
+      <p class="instr">In Задание 2 the preposition after the gap often decides the answer. Choose the preposition.</p>
+      <div class="facts"><span class="fact">verb / noun / adjective + preposition</span><span class="fact">10 sentences</span></div>
+      <div class="quiz">
+        <div class="answer-row"><span class="ar-num">1</span><span class="ar-txt">A date ___ the school prom has not been set yet.</span><select class="exam-select ans" data-opts="in,at,on,for,to,of" data-answer="for"></select></div>
+        <div class="answer-row"><span class="ar-num">2</span><span class="ar-txt">This tragedy is her best work ___ date.</span><select class="exam-select ans" data-opts="in,at,on,for,to,of" data-answer="to"></select></div>
+        <div class="answer-row"><span class="ar-num">3</span><span class="ar-txt">The government has learned ___ the existence of new facts.</span><select class="exam-select ans" data-opts="in,at,on,for,to,of" data-answer="of"></select></div>
+        <div class="answer-row"><span class="ar-num">4</span><span class="ar-txt">John noticed my surprise ___ the news and smiled.</span><select class="exam-select ans" data-opts="in,at,on,for,to,of" data-answer="at"></select></div>
+        <div class="answer-row"><span class="ar-num">5</span><span class="ar-txt">They bought the house early ___ their married life.</span><select class="exam-select ans" data-opts="in,at,on,for,to,of" data-answer="in"></select></div>
+        <div class="answer-row"><span class="ar-num">6</span><span class="ar-txt">It’s making life very difficult ___ us.</span><select class="exam-select ans" data-opts="in,at,on,for,to,of" data-answer="for"></select></div>
+        <div class="answer-row"><span class="ar-num">7</span><span class="ar-txt">The man must be ___ least twenty years younger than she is!</span><select class="exam-select ans" data-opts="in,at,on,for,to,of" data-answer="at"></select></div>
+        <div class="answer-row"><span class="ar-num">8</span><span class="ar-txt">It was a warm, still day ___ early July.</span><select class="exam-select ans" data-opts="in,at,on,for,to,of" data-answer="in"></select></div>
+        <div class="answer-row"><span class="ar-num">9</span><span class="ar-txt">You’ve done enough gardening ___ today.</span><select class="exam-select ans" data-opts="in,at,on,for,to,of" data-answer="for"></select></div>
+        <div class="answer-row"><span class="ar-num">10</span><span class="ar-txt">He gave up medicine and lived ___ home, writing poems.</span><select class="exam-select ans" data-opts="in,at,on,for,to,of" data-answer="at"></select></div>
+      </div>
+    </div>
+
+    <div class="exercise">
+      <div class="review-head"><span class="task-num">Задание 2 · 10 баллов</span><span class="pts">13 words · 10 gaps · 3 extra</span></div>
+      <h3>The chocolate bar that invented a kitchen · 8 min</h3>
+      <p class="orig-instr">Прочитайте текст и заполните пропуски, выбрав подходящее слово из списка. Три слова лишние.</p>
+      <div class="facts"><span class="fact">⏱ 8 min</span><span class="fact">🏷 label the box first</span><span class="fact">3 extras</span></div>
+      <div class="timer" data-min="8"></div>
+      <div class="bank dnd"><span>afford</span><span>carried out</span><span>came up with</span><span>figure out</span><span>figured out</span><span>invent</span><span>melted</span><span>paid</span><span>pointed out</span><span>produced</span><span>relying on</span><span>rely on</span><span>working</span></div>
+      <p class="bank-hint">Drag a word into a gap, or tap a word and then the gap. Tap a filled gap to empty it.</p>
+      <div class="quiz">
+        <div class="gap-text">
+          <p>In 1945 Percy Spencer, an American engineer, was <span class="gap"><span class="gn">1</span><select class="exam-select ans" data-bank="1" data-answer="working"></select></span> on radar equipment for the army. One day he was standing in front of a machine called a magnetron when he noticed that the chocolate bar in his pocket had <span class="gap"><span class="gn">2</span><select class="exam-select ans" data-bank="1" data-answer="melted"></select></span>. Most people would have ignored it, but Spencer was curious and wanted to <span class="gap"><span class="gn">3</span><select class="exam-select ans" data-bank="1" data-answer="figure out"></select></span> what had happened.</p>
+          <p>The next morning he <span class="gap"><span class="gn">4</span><select class="exam-select ans" data-bank="1" data-answer="carried out"></select></span> a simple experiment: he put some corn kernels near the machine, and within seconds they began to pop all over the laboratory. Then he tried an egg, which exploded in the face of a colleague who had come too close. Spencer realised that the invisible waves <span class="gap"><span class="gn">5</span><select class="exam-select ans" data-bank="1" data-answer="produced"></select></span> by the magnetron could heat food very quickly.</p>
+          <p>His company soon <span class="gap"><span class="gn">6</span><select class="exam-select ans" data-bank="1" data-answer="came up with"></select></span> the first microwave oven. It was almost two metres tall, weighed 340 kilograms and cost thousands of dollars, so at first only restaurants, ships and trains could <span class="gap"><span class="gn">7</span><select class="exam-select ans" data-bank="1" data-answer="afford"></select></span> one. It took more than twenty years to make the machine small and cheap enough for ordinary homes.</p>
+          <p>Today millions of families <span class="gap"><span class="gn">8</span><select class="exam-select ans" data-bank="1" data-answer="rely on"></select></span> microwave ovens every day. Spencer, who had never finished school, received about 300 patents during his life. However, he was never <span class="gap"><span class="gn">9</span><select class="exam-select ans" data-bank="1" data-answer="paid"></select></span> any extra money for his famous invention: like every engineer in the company, he got just two dollars for each patent. As one writer later <span class="gap"><span class="gn">10</span><select class="exam-select ans" data-bank="1" data-answer="pointed out"></select></span>, the most useful kitchen machine of the century was invented by accident.</p>
+        </div>
+        <div class="after-check">
+          <details class="logic" open><summary><span>🏷</span><span class="hint-txt">The form, then the meaning</span></summary><div class="logic-body"><ul class="why-list">
+            <li><b>1 working</b>: after <i>was</i> → -ing (past continuous).</li>
+            <li><b>2 melted</b>: after <i>had</i> → V3.</li>
+            <li><b>3 figure out</b>: after <i>wanted to</i> → V1. <i>figured out</i> is the trap.</li>
+            <li><b>4 carried out</b>: subject + ___ + an experiment in a past story → V2. <i>carry out an experiment</i>.</li>
+            <li><b>5 produced</b>: <i>the waves (which were) ___ by</i> → V3, a passive meaning.</li>
+            <li><b>6 came up with</b>: V2 + an object (the first oven). <i>invent</i> is V1: wrong form.</li>
+            <li><b>7 afford</b>: after <i>could</i> → V1.</li>
+            <li><b>8 rely on</b>: <i>today</i>, plural subject → present simple. <i>relying on</i> needs <i>are</i>.</li>
+            <li><b>9 paid</b>: <i>was never ___ any money</i> → passive V3.</li>
+            <li><b>10 pointed out</b>: <i>As one writer ___,</i> + a fact → V2.</li>
+            <li>Extras: <b>figured out</b>, <b>invent</b>, <b>relying on</b>: right meaning, wrong form.</li>
+          </ul></div></details>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════
+       TAB 3 — Block B: the passive in all tenses → Задания 1 and 3
+  ══════════════════════════════════════════════════════════ -->
+  <div class="tab-content" id="tab-pass">
+
+    <div class="exercise">
+      <div class="exercise-label">Discover · step 1</div>
+      <h3>Read the story. Look at the two parts of every passive.</h3>
+      <div class="story">
+        <h4>A gold mirror in space</h4>
+        <p><span class="snum">1</span>The James Webb Space Telescope <span class="pv"><span class="pv-be">was</span> <span class="pv-v3">launched</span></span> on Christmas Day 2021.
+        <span class="snum">2</span>It <span class="pv"><span class="pv-be">had been</span> <span class="pv-v3">planned</span></span> for more than twenty-five years, and its cost <span class="pv-act">had grown</span> from 500 million to ten billion dollars.
+        <span class="snum">3</span>Its huge gold mirror <span class="pv"><span class="pv-be">is</span> <span class="pv-v3">made</span></span> of eighteen pieces, which <span class="pv"><span class="pv-be">were</span> <span class="pv-v3">folded</span></span> up like origami so that the telescope could fit inside the rocket.
+        <span class="snum">4</span>While the mirror <span class="pv"><span class="pv-be">was being</span> <span class="pv-v3">unfolded</span></span> in space, engineers on Earth hardly slept: one mistake, and the telescope <span class="pv"><span class="pv-be">could not be</span> <span class="pv-v3">repaired</span></span>.
+        <span class="snum">5</span><span class="mk">Since then</span>, thousands of new galaxies <span class="pv"><span class="pv-be">have been</span> <span class="pv-v3">discovered</span></span>, and the telescope <span class="pv"><span class="pv-be">is being</span> <span class="pv-v3">used</span></span> by scientists from more than forty countries.
+        <span class="snum">6</span>It <span class="pv"><span class="pv-be">will be</span> <span class="pv-v3">replaced</span></span> one day, but for now its pictures <span class="pv"><span class="pv-be">can be</span> <span class="pv-v3">seen</span></span> on every news website.</p>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;font-size:.85rem"><span class="pv-be" style="border-radius:6px">be-part</span><span class="pv-v3" style="border-radius:6px">V3</span><span class="pv-act">active, for contrast</span></div>
+      </div>
+    </div>
+
+    <div class="exercise">
+      <div class="exercise-label">Discover · step 2</div>
+      <h3>Answer the questions: they lead you to the rule</h3>
+      <p class="instr">Answer from the story, then press Check. The rule opens after you check.</p>
+      <div class="facts"><span class="fact">🔎 think, don’t guess</span><span class="fact">7 questions</span></div>
+      <div class="quiz">
+        <div class="answer-row"><span class="ar-num">1</span><span class="ar-txt">Every passive has two parts: a form of ___ + V3.</span><select class="exam-select ans" data-opts="be,have,do" data-answer="be"></select></div>
+        <div class="answer-row"><span class="ar-num">2</span><span class="ar-txt">Which part shows the tense?</span><select class="exam-select ans" data-opts="the be-part (was / has been / will be),the V3 (launched / made)" data-answer="the be-part (was / has been / will be)"></select></div>
+        <div class="answer-row"><span class="ar-num">3</span><span class="ar-txt"><i>was being unfolded</i> (4) is the passive of which tense?</span><select class="exam-select ans" data-opts="past continuous (was unfolding),past perfect (had unfolded)" data-answer="past continuous (was unfolding)"></select></div>
+        <div class="answer-row"><span class="ar-num">4</span><span class="ar-txt">Why <i>have been discovered</i> in 5?</span><select class="exam-select ans" data-opts="“since then”: from 2021 up to now,it happened at a finished time" data-answer="“since then”: from 2021 up to now"></select></div>
+        <div class="answer-row"><span class="ar-num">5</span><span class="ar-txt">After <i>can / could / will / must</i> the passive is…</span><select class="exam-select ans" data-opts="be + V3 (can be seen),been + V3 (can been seen)" data-answer="be + V3 (can be seen)"></select></div>
+        <div class="answer-row"><span class="ar-num">6</span><span class="ar-txt">In 3, why <i>were</i> folded, not <i>was</i>?</span><select class="exam-select ans" data-opts="which = eighteen pieces (plural),mirror is plural" data-answer="which = eighteen pieces (plural)"></select></div>
+        <div class="answer-row"><span class="ar-num">7</span><span class="ar-txt">Sentence 1 doesn’t say who launched the telescope. Why?</span><select class="exam-select ans" data-opts="the thing is more important than who did it,the passive never names the doer" data-answer="the thing is more important than who did it"></select></div>
+        <div class="after-check">
+          <div class="rule-box">
+            <div class="rule-title">📏 The rule: be (in the right tense) + V3</div>
+            <div class="tbl-wrap"><table class="rule-table">
+              <tr><th>Tense</th><th>Active</th><th>Passive</th></tr>
+              <tr><td>Present simple</td><td>they make</td><td>it <span class="pv-be">is</span> <span class="pv-v3">made</span></td></tr>
+              <tr><td>Present continuous</td><td>they are using</td><td>it <span class="pv-be">is being</span> <span class="pv-v3">used</span></td></tr>
+              <tr><td>Past simple</td><td>they launched</td><td>it <span class="pv-be">was</span> <span class="pv-v3">launched</span></td></tr>
+              <tr><td>Past continuous</td><td>they were unfolding</td><td>it <span class="pv-be">was being</span> <span class="pv-v3">unfolded</span></td></tr>
+              <tr><td>Present perfect</td><td>they have discovered</td><td>they <span class="pv-be">have been</span> <span class="pv-v3">discovered</span></td></tr>
+              <tr><td>Past perfect</td><td>they had planned</td><td>it <span class="pv-be">had been</span> <span class="pv-v3">planned</span></td></tr>
+              <tr><td>Future</td><td>they will replace</td><td>it <span class="pv-be">will be</span> <span class="pv-v3">replaced</span></td></tr>
+              <tr><td>Modal</td><td>you can see · they must test</td><td>it <span class="pv-be">can be</span> <span class="pv-v3">seen</span> · it <span class="pv-be">must be</span> <span class="pv-v3">tested</span></td></tr>
+              <tr><td>Perfect modal <small>(C1)</small></td><td>they should have checked</td><td>it <span class="pv-be">should have been</span> <span class="pv-v3">checked</span></td></tr>
+              <tr><td>to / -ing</td><td>I want them to see me · I hate them watching me</td><td>I want <span class="pv-be">to be</span> <span class="pv-v3">seen</span> · I hate <span class="pv-be">being</span> <span class="pv-v3">watched</span></td></tr>
+            </table></div>
+            <div class="rule-tip">⚠️ <b>been or being?</b> <i>has / had / have <b>been</b></i> + V3, but <i>is / was / are <b>being</b></i> + V3. And the be-part agrees with the real subject: <i>the <span class="subj">remains</span> of the mammoth <b>were</b> found</i>.</div>
+            <div class="rule-tip">💡 In the demo paper: Задание 1 needed <i>are made</i> and <i>has been achieved</i>; Задание 3, text 5, had a missing <b>was</b>: <i>more help <s>needed</s> → <b>was</b> needed</i>.</div>
+            <div class="ru-note">🇷🇺 «Зеркало сделано из золота»: в русском глагола «быть» в настоящем нет. В английском <b>be</b> есть всегда: <i>The mirror <b>is</b> made of gold</i> (не <i>*The mirror made of gold</i>). Именно эту пропущенную форму <i>be</i> ищут в Задании 3.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="exercise">
+      <div class="exercise-label">Practice 1 · Find the tense, then the passive · 6 min</div>
+      <h3>Choose the right passive form</h3>
+      <p class="instr">Look for the time marker first (<i>in 1928, since, at the moment, by the time, next month</i>), then the subject: one or many?</p>
+      <div class="facts"><span class="fact">⏳ marker → tense</span><span class="fact">10 sentences</span></div>
+      <div class="quiz">
+        <div class="answer-row"><span class="ar-num">1</span><span class="ar-txt">Penicillin ___ by Alexander Fleming in 1928.</span><select class="exam-select ans" data-opts="discovered,was discovered,has been discovered" data-answer="was discovered"></select></div>
+        <div class="answer-row"><span class="ar-num">2</span><span class="ar-txt">Every year millions of tonnes of plastic ___ into the oceans.</span><select class="exam-select ans" data-opts="are thrown,were thrown,have thrown" data-answer="are thrown"></select></div>
+        <div class="answer-row"><span class="ar-num">3</span><span class="ar-txt">Since 1992 more than five thousand planets outside our solar system ___.</span><select class="exam-select ans" data-opts="were found,have been found,had found" data-answer="have been found"></select></div>
+        <div class="answer-row"><span class="ar-num">4</span><span class="ar-txt">You can’t go in: the laboratory ___ at the moment.</span><select class="exam-select ans" data-opts="is cleaned,is being cleaned,has cleaned" data-answer="is being cleaned"></select></div>
+        <div class="answer-row"><span class="ar-num">5</span><span class="ar-txt">By the time the vaccine reached Europe, it ___ on thousands of volunteers.</span><select class="exam-select ans" data-opts="was tested,had been tested,has been tested" data-answer="had been tested"></select></div>
+        <div class="answer-row"><span class="ar-num">6</span><span class="ar-txt">The results ___ in a science journal next month.</span><select class="exam-select ans" data-opts="will publish,will be published,are published" data-answer="will be published"></select></div>
+        <div class="answer-row"><span class="ar-num">7</span><span class="ar-txt">This experiment is dangerous: it must ___ in a special room.</span><select class="exam-select ans" data-opts="be done,done,being done" data-answer="be done"></select></div>
+        <div class="answer-row"><span class="ar-num">8</span><span class="ar-txt">When the power went off, the samples ___ to another freezer.</span><select class="exam-select ans" data-opts="were being moved,were moving,have been moved" data-answer="were being moved"></select></div>
+        <div class="answer-row"><span class="ar-num">9</span><span class="ar-txt">The first photograph of a black hole ___ in 2019.</span><select class="exam-select ans" data-opts="was published,has been published,is published" data-answer="was published"></select></div>
+        <div class="answer-row"><span class="ar-num">10</span><span class="ar-txt">The mirror broke in space. It should ___ more carefully before the launch.</span><select class="exam-select ans" data-opts="have been tested,have tested,been tested" data-answer="have been tested"></select></div>
+      </div>
+      <details class="logic"><summary><span>💡</span><span class="hint-txt">Hint · the markers</span></summary><div class="logic-body"><ul>
+        <li><i>in 1928, in 2019</i> → <b>was / were</b> + V3. <i>since 1992</i> → <b>has / have been</b> + V3.</li>
+        <li><i>at the moment, right now</i> → <b>is / are being</b> + V3. <i>when the power went off</i> + an action in progress → <b>was / were being</b> + V3.</li>
+        <li><i>by the time</i> + past → <b>had been</b> + V3. <i>next month</i> → <b>will be</b> + V3.</li>
+      </ul></div></details>
+    </div>
+
+    <div class="exercise">
+      <div class="review-head"><span class="task-num">Задание 3 format</span><span class="pts">5 texts · a line with an error or OK</span></div>
+      <h3>Practice 2 · Find the line with the mistake · 6 min</h3>
+      <p class="orig-instr">В каждом из текстов найдите строку с ошибкой. Если ошибки нет, выберите OK.</p>
+      <div class="facts"><span class="fact">📖 read two lines at a time</span><span class="fact">missing be · was/were · been/being</span><span class="fact">“OK” is a real answer</span></div>
+      <div class="quiz">
+        <div class="z3">
+          <div class="z3-title">Text 1 · Sputnik</div>
+          <ul class="sent-list">
+          <li><span class="sl">A</span>The first artificial satellite, Sputnik 1,</li>
+          <li><span class="sl">B</span>launched by the Soviet Union in October 1957.</li>
+          <li><span class="sl">C</span>It was only the size of a beach ball, but</li>
+          <li><span class="sl">D</span>its radio signal could be heard all over</li>
+          <li><span class="sl">E</span>the world, and the space race had begun.</li>
+          </ul>
+        <div class="answer-row letters"><span class="ar-num"></span><span class="ar-txt">The line with the mistake:</span><select class="exam-select ans" data-opts="A,B,C,D,E,OK" data-answer="B"></select></div>
+        </div>
+        <div class="z3">
+          <div class="z3-title">Text 2 · A frozen giant</div>
+          <ul class="sent-list">
+          <li><span class="sl">A</span>The remains of a woolly mammoth</li>
+          <li><span class="sl">B</span>was found in Siberia in 2013 by a team</li>
+          <li><span class="sl">C</span>of scientists, who were amazed to see that</li>
+          <li><span class="sl">D</span>some of its blood had been preserved</li>
+          <li><span class="sl">E</span>in the ice for more than 40,000 years.</li>
+          </ul>
+        <div class="answer-row letters"><span class="ar-num"></span><span class="ar-txt">The line with the mistake:</span><select class="exam-select ans" data-opts="A,B,C,D,E,OK" data-answer="B"></select></div>
+        </div>
+        <div class="z3">
+          <div class="z3-title">Text 3 · Dolly the sheep</div>
+          <ul class="sent-list">
+          <li><span class="sl">A</span>Dolly the sheep, the first mammal to be</li>
+          <li><span class="sl">B</span>cloned from an adult cell, was born in</li>
+          <li><span class="sl">C</span>Scotland in 1996. Since her death in 2003,</li>
+          <li><span class="sl">D</span>her body has been displayed in the</li>
+          <li><span class="sl">E</span>National Museum of Scotland in Edinburgh.</li>
+          </ul>
+        <div class="answer-row letters"><span class="ar-num"></span><span class="ar-txt">The line with the mistake:</span><select class="exam-select ans" data-opts="A,B,C,D,E,OK" data-answer="OK"></select></div>
+        </div>
+        <div class="z3">
+          <div class="z3-title">Text 4 · Ten-minute charging</div>
+          <ul class="sent-list">
+          <li><span class="sl">A</span>Right now, a new kind of battery is been</li>
+          <li><span class="sl">B</span>tested in a laboratory in Cambridge. If the</li>
+          <li><span class="sl">C</span>tests are successful, electric cars could</li>
+          <li><span class="sl">D</span>soon be charged in less than ten minutes,</li>
+          <li><span class="sl">E</span>which would change the way we travel.</li>
+          </ul>
+        <div class="answer-row letters"><span class="ar-num"></span><span class="ar-txt">The line with the mistake:</span><select class="exam-select ans" data-opts="A,B,C,D,E,OK" data-answer="A"></select></div>
+        </div>
+        <div class="z3">
+          <div class="z3-title">Text 5 · A bad start</div>
+          <ul class="sent-list">
+          <li><span class="sl">A</span>When the Large Hadron Collider was first</li>
+          <li><span class="sl">B</span>switched on in 2008, a fault damaged</li>
+          <li><span class="sl">C</span>dozens of its magnets. More than a year of</li>
+          <li><span class="sl">D</span>repairs needed before the machine could</li>
+          <li><span class="sl">E</span>be used again for experiments.</li>
+          </ul>
+        <div class="answer-row letters"><span class="ar-num"></span><span class="ar-txt">The line with the mistake:</span><select class="exam-select ans" data-opts="A,B,C,D,E,OK" data-answer="D"></select></div>
+        </div>
+        <div class="after-check">
+          <details class="logic" open><summary><span>🔎</span><span class="hint-txt">The mistakes and how to fix them</span></summary><div class="logic-body"><ul class="why-list">
+            <li><b>1 B</b>: <i>Sputnik 1 <b>was</b> launched</i>: a satellite can’t launch itself → passive, and the <b>be</b> was missing.</li>
+            <li><b>2 B</b>: <i>The <span class="subj">remains</span> of a woolly mammoth <b>were</b> found</i>: <i>remains</i> is plural; <i>mammoth</i> is just closer to the verb.</li>
+            <li><b>3 OK</b>: <i>to be cloned</i> (passive infinitive), <i>was born</i>, <i>since … has been displayed</i>: all correct.</li>
+            <li><b>4 A</b>: <i>is <b>being</b> tested</i>: <i>right now</i> → present continuous passive. <i>Is been</i> doesn’t exist.</li>
+            <li><b>5 D</b>: <i>More than a year of repairs <b>were</b> needed</i> (or <i>was needed</i>): repairs don’t need anything, they <i>are needed</i>. The same mistake as the demo, text 5.</li>
+          </ul></div></details>
+        </div>
+      </div>
+      <details class="logic"><summary><span>💡</span><span class="hint-txt">Hint · the passive checklist for Задание 3</span></summary><div class="logic-body"><ol>
+        <li>Can the subject really <b>do</b> the action? If not, there must be <b>be + V3</b>.</li>
+        <li>Is there a <b>be</b>? (<i>launched</i> alone → <i>was launched</i>)</li>
+        <li><b>was or were?</b> Find the real subject, not the closest noun.</li>
+        <li><b>been or being?</b> <i>has been</i>, <i>is being</i>.</li>
+      </ol></div></details>
+    </div>
+
+    <div class="exercise">
+      <div class="review-head"><span class="task-num">Задание 1 format</span><span class="pts">10 points</span></div>
+      <h3>Practice 3 · The first picture of a black hole · 8 min</h3>
+      <p class="instr">Read the text. Put the words in capitals into the correct form so that they fit grammatically. Some answers need more than one word.</p>
+      <div class="facts"><span class="fact">⚙️ active or passive?</span><span class="fact">1–4 words</span><span class="fact">⏱ 8 min</span><span class="fact">✍️ spelling counts</span></div>
+      <div class="timer" data-min="8"></div>
+      <div class="quiz">
+        <div class="gap-text">
+          <h4>The first picture of a black hole</h4>
+          Black holes were predicted by Einstein’s theory in 1915, but for more than a century nobody <span class="gn">1</span><input class="blank ans" data-answer="had seen|had ever seen" autocomplete="off" spellcheck="false"> <span class="cue">SEE</span> one: since not even light can escape from them, they are invisible.
+          In April 2019, however, a picture of a black hole <span class="gn">2</span><input class="blank ans" data-answer="was published" autocomplete="off" spellcheck="false"> <span class="cue">PUBLISH</span> for the first time.
+          It <span class="gn">3</span><input class="blank ans" data-answer="was taken" autocomplete="off" spellcheck="false"> <span class="cue">TAKE</span> by the Event Horizon Telescope, which is not really one telescope but eight radio telescopes on four continents.
+          Two years earlier, all eight <span class="gn">4</span><input class="blank ans" data-answer="had been pointed|were pointed" autocomplete="off" spellcheck="false"> <span class="cue">POINT</span> at the centre of a galaxy 55 million light years away.
+          While the observations <span class="gn">5</span><input class="blank ans" data-answer="were being made" autocomplete="off" spellcheck="false"> <span class="cue">MAKE</span>, so much data <span class="gn">6</span><input class="blank ans" data-answer="was collected" autocomplete="off" spellcheck="false"> <span class="cue">COLLECT</span> that it could not be sent over the internet: the hard drives had to <span class="gn">7</span><input class="blank ans" data-answer="be flown" autocomplete="off" spellcheck="false"> <span class="cue">FLY</span> to computer centres in the USA and Germany.
+          Since then, the picture <span class="gn">8</span><input class="blank ans" data-answer="has been seen" autocomplete="off" spellcheck="false"> <span class="cue">SEE</span> by hundreds of millions of people, and in 2022 a second black hole, at the centre of our own galaxy, <span class="gn">9</span><input class="blank ans" data-answer="was photographed" autocomplete="off" spellcheck="false"> <span class="cue">PHOTOGRAPH</span>.
+          Scientists hope that in the future even sharper images <span class="gn">10</span><input class="blank ans" data-answer="will be produced|can be produced|could be produced" autocomplete="off" spellcheck="false"> <span class="cue">PRODUCE</span>.
+        </div>
+        <div class="after-check">
+          <details class="logic" open><summary><span>🔎</span><span class="hint-txt">Why each answer</span></summary><div class="logic-body"><ul class="why-list">
+            <li><b>1 had seen</b>: active (nobody saw); before 2019, the past moment in the next sentence → past perfect.</li>
+            <li><b>2 was published · 3 was taken</b>: <i>in April 2019</i>, and a picture can’t publish or take itself.</li>
+            <li><b>4 had been pointed</b> (<i>were pointed</i> is accepted): <i>two years earlier</i> = before 2019.</li>
+            <li><b>5 were being made</b>: <i>while</i> + an action in progress; <i>observations</i> is plural.</li>
+            <li><b>6 was collected</b>: <i>so <b>much</b> data</i> → uncountable → singular.</li>
+            <li><b>7 be flown</b>: after <i>had to</i> → <b>be</b> + V3 (<i>fly – flew – flown</i>).</li>
+            <li><b>8 has been seen</b>: <i>since then</i>. <b>9 was photographed</b>: <i>in 2022</i>.</li>
+            <li><b>10 will be produced</b>: <i>in the future</i> (<i>can / could be produced</i> accepted).</li>
+          </ul></div></details>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════
+       TAB 4 — HISTORY, era 3: the Tudors 1485–1603
+  ══════════════════════════════════════════════════════════ -->
+  <div class="tab-content" id="tab-hist">
+
+    <div class="step-title">In class · 6 min</div>
+
+    <div class="exercise">
+      <div class="exercise-label">Hook · 1 min</div>
+      <h3>Two rulers, one century</h3>
+      <div class="duo">
+        <figure><img src="images/people/person-henry-viii.jpg" alt="Henry VIII in a black hat with a white feather" loading="lazy"><figcaption><b>Henry VIII</b>, King of England 1509–1547. Portrait by Hans Holbein, about 1537.</figcaption></figure>
+        <figure><img src="images/people/person-ivan-iv.jpg" alt="Ivan IV standing on a staircase in a gold robe" loading="lazy"><figcaption><b>Ivan IV (the Terrible)</b>, Grand Prince 1533, Tsar 1547–1584. Painting by Viktor Vasnetsov, 1897.</figcaption></figure>
+      </div>
+      <p class="instr">They lived at the same time and are often compared. Is each fact about <b>Henry</b>, <b>Ivan</b>, or <b>both</b>?</p>
+      <div class="quiz">
+        <div class="answer-row"><span class="ar-num">1</span><span class="ar-txt">married six times or more</span><select class="exam-select ans" data-opts="Henry VIII,Ivan IV,both" data-answer="both"></select></div>
+        <div class="answer-row"><span class="ar-num">2</span><span class="ar-txt">broke with the Pope and made himself head of his country’s Church</span><select class="exam-select ans" data-opts="Henry VIII,Ivan IV,both" data-answer="Henry VIII"></select></div>
+        <div class="answer-row"><span class="ar-num">3</span><span class="ar-txt">was the first ruler of his country to be crowned “Tsar”</span><select class="exam-select ans" data-opts="Henry VIII,Ivan IV,both" data-answer="Ivan IV"></select></div>
+        <div class="answer-row"><span class="ar-num">4</span><span class="ar-txt">had two of his wives executed</span><select class="exam-select ans" data-opts="Henry VIII,Ivan IV,both" data-answer="Henry VIII"></select></div>
+        <div class="answer-row"><span class="ar-num">5</span><span class="ar-txt">killed his own son in a fit of anger</span><select class="exam-select ans" data-opts="Henry VIII,Ivan IV,both" data-answer="Ivan IV"></select></div>
+        <div class="answer-row"><span class="ar-num">6</span><span class="ar-txt">came to the throne as a teenager or a child</span><select class="exam-select ans" data-opts="Henry VIII,Ivan IV,both" data-answer="both"></select></div>
+        <div class="after-check">
+          <details class="logic" open><summary><span>🇷🇺🇬🇧</span><span class="hint-txt">The link between them</span></summary><div class="logic-body">
+            <p>Henry married six times and had two wives beheaded; Ivan married at least six times and sent several wives to convents. In 1553, six years after Henry’s death, an English ship looking for a sea route to China reached the White Sea instead. Its captain, Richard Chancellor, travelled to Moscow and was received by Ivan, and in 1555 the <b>Muscovy Company</b> was set up to trade with Russia. Ivan later wrote many letters to Elizabeth I, Henry’s daughter, and even asked for an English bride.</p>
+          </div></details>
+        </div>
+      </div>
+    </div>
+
+    <div class="exercise">
+      <div class="exercise-label">The spine · 2 min</div>
+      <h3>Five Tudors: who did what?</h3>
+      <div class="spine-row"><small>The house of Tudor, 1485–1603</small><div class="spine">
+        <span class="h"><b>Henry VII</b><span>1485</span></span> <span class="arr">→</span> <span class="h"><b>Henry VIII</b><span>1509</span></span> <span class="arr">→</span> <span class="h"><b>Edward VI</b><span>1547</span></span> <span class="arr">→</span> <span class="h"><b>Mary I</b><span>1553</span></span> <span class="arr">→</span> <span class="h"><b>Elizabeth I</b><span>1558–1603</span></span>
+      </div></div>
+      <div class="quiz">
+        <div class="answer-row"><span class="ar-num">1</span><span class="ar-txt">won at Bosworth and married Elizabeth of York</span><select class="exam-select ans" data-opts="Henry VII,Henry VIII,Edward VI,Mary I,Elizabeth I" data-answer="Henry VII"></select></div>
+        <div class="answer-row"><span class="ar-num">2</span><span class="ar-txt">broke with Rome because the Pope wouldn’t end his first marriage</span><select class="exam-select ans" data-opts="Henry VII,Henry VIII,Edward VI,Mary I,Elizabeth I" data-answer="Henry VIII"></select></div>
+        <div class="answer-row"><span class="ar-num">3</span><span class="ar-txt">became king at nine and died at fifteen</span><select class="exam-select ans" data-opts="Henry VII,Henry VIII,Edward VI,Mary I,Elizabeth I" data-answer="Edward VI"></select></div>
+        <div class="answer-row"><span class="ar-num">4</span><span class="ar-txt">brought back the Catholic Church; remembered as “Bloody”</span><select class="exam-select ans" data-opts="Henry VII,Henry VIII,Edward VI,Mary I,Elizabeth I" data-answer="Mary I"></select></div>
+        <div class="answer-row"><span class="ar-num">5</span><span class="ar-txt">never married; her navy defeated the Spanish Armada</span><select class="exam-select ans" data-opts="Henry VII,Henry VIII,Edward VI,Mary I,Elizabeth I" data-answer="Elizabeth I"></select></div>
+      </div>
+    </div>
+
+    <div class="exercise">
+      <div class="review-head"><span class="task-num">Задание 10 format</span><span class="pts">5 events · 7 centuries</span></div>
+      <h3>Events and centuries · 1 min</h3>
+      <p class="orig-instr">Соотнесите события, значимые для стран(ы) изучаемого языка, и века, в которых эти события происходили. Два века не соответствуют ни одному событию.</p>
+      <div class="facts"><span class="fact">🧠 eras 1–3</span><span class="fact">2 centuries are extra</span></div>
+      <div class="quiz">
+        <div class="answer-row"><span class="ar-num">1</span><span class="ar-txt">Columbus reaches America</span><select class="exam-select ans" data-opts="11th,12th,13th,14th,15th,16th,17th" data-answer="15th"></select></div>
+        <div class="answer-row"><span class="ar-num">2</span><span class="ar-txt">Henry VIII becomes Head of the Church of England</span><select class="exam-select ans" data-opts="11th,12th,13th,14th,15th,16th,17th" data-answer="16th"></select></div>
+        <div class="answer-row"><span class="ar-num">3</span><span class="ar-txt">Elizabeth I dies and James VI of Scotland becomes King of England</span><select class="exam-select ans" data-opts="11th,12th,13th,14th,15th,16th,17th" data-answer="17th"></select></div>
+        <div class="answer-row"><span class="ar-num">4</span><span class="ar-txt">Magna Carta is agreed at Runnymede</span><select class="exam-select ans" data-opts="11th,12th,13th,14th,15th,16th,17th" data-answer="13th"></select></div>
+        <div class="answer-row"><span class="ar-num">5</span><span class="ar-txt">The Domesday Book survey</span><select class="exam-select ans" data-opts="11th,12th,13th,14th,15th,16th,17th" data-answer="11th"></select></div>
+      </div>
+      <details class="logic"><summary><span>💡</span><span class="hint-txt">Hint · watch the borders</span></summary><div class="logic-body"><ul>
+        <li>1603 is the <b>17th</b> century, even though the Tudor age feels like the 1500s.</li>
+        <li>1492: first two digits + 1 = 14 + 1 = <b>15th</b>.</li>
+      </ul></div></details>
+    </div>
+
+    <div class="step-title">At home · 20 min</div>
+
+    <div class="exercise">
+      <div class="exercise-label">Step 1 · Listen once · 3 min</div>
+      <h3>The Tudors, 1485–1603</h3>
+      <p class="instr">Read the statements first and underline the absolute words (<i>only, all, never</i>). Then listen <b>once</b> without stopping, as in the Olympiad, and decide if each statement is True or False.</p>
+      <div class="facts"><span class="fact">🎧 once, no stopping</span><span class="fact">✅ True / ❌ False</span><span class="fact">⏱ 2 min audio</span></div>
+      <div class="player" data-src="audio/l14-tudors.mp3" data-label="The Tudors"></div>
+      <div class="quiz">
+        <div class="answer-row"><span class="ar-num">1</span><span class="ar-txt">Henry VII left the royal treasury empty.</span><select class="exam-select ans" data-opts="True,False" data-answer="False"></select></div>
+        <div class="answer-row"><span class="ar-num">2</span><span class="ar-txt">John Cabot sailed to North America for the English king.</span><select class="exam-select ans" data-opts="True,False" data-answer="True"></select></div>
+        <div class="answer-row"><span class="ar-num">3</span><span class="ar-txt">Henry VIII broke with Rome because the Pope refused to end his first marriage.</span><select class="exam-select ans" data-opts="True,False" data-answer="True"></select></div>
+        <div class="answer-row"><span class="ar-num">4</span><span class="ar-txt">Edward VI ruled for more than ten years.</span><select class="exam-select ans" data-opts="True,False" data-answer="False"></select></div>
+        <div class="answer-row"><span class="ar-num">5</span><span class="ar-txt">The Armada was defeated only by English ships.</span><select class="exam-select ans" data-opts="True,False" data-answer="False"></select></div>
+      </div>
+      <details class="logic"><summary><span>💡</span><span class="hint-txt">Hint · the traps</span></summary><div class="logic-body"><ul>
+        <li><b>“only”</b> in 5: the story gives two reasons, ships <i>and</i> storms.</li>
+        <li>4: <i>became king in 1547 … died six years later</i>: count it.</li>
+      </ul></div></details>
+    </div>
+
+    <div class="exercise">
+      <div class="exercise-label">Step 2 · Read and place · 5 min</div>
+      <h3>Put the story on your timeline</h3>
+      <p class="instr">Now read the story. The <b class="ps" style="color:#9A3F64">passives</b> are in colour: today’s grammar. Two dates are not written: count them from <i>five years later</i> and <i>six years later</i>. Then drag each event to its date (or tap the event, then the date).</p>
+      <div class="story">
+        <h4>The Tudors, 1485–1603</h4>
+        <p>When Henry Tudor took the crown at Bosworth in 1485, England was tired of war. Henry VII married Elizabeth of York, joining the two rival houses, and the red and white roses became one Tudor rose. He was very careful with money, and by the time he died in 1509, the royal treasury <b class="ps">had been filled</b>.</p>
+        <p>The world was changing fast. In 1492 Christopher Columbus, sailing for Spain, reached America. Five years later John Cabot, an Italian sailing for Henry VII, landed in North America, probably in Newfoundland.</p>
+        <p>Henry VIII was a very different king: young, clever and fond of music, hunting and war. He was desperate for a son, and when the Pope refused to end his first marriage, Henry broke with Rome. In 1534 he made himself Head of the Church of England. Over the next few years the monasteries <b class="ps">were closed</b>, and their land and treasures <b class="ps">were taken</b> by the Crown. Henry married six times, and two of his wives <b class="ps">were beheaded</b>.</p>
+        <p>His son Edward VI became king in 1547, at the age of nine, and died six years later. Edward’s half-sister Mary I brought back the Catholic Church, and almost three hundred Protestants <b class="ps">were burnt</b>, which is why she is remembered as Bloody Mary.</p>
+        <p>In 1558 Elizabeth I came to the throne. Her long reign is often called a golden age: Shakespeare wrote his first plays, and Francis Drake sailed around the world. In 1588 a huge Spanish fleet, the Armada, <b class="ps">was sent</b> to invade England, but it <b class="ps">was defeated</b> by English ships and terrible storms. Elizabeth never married, and when she died in 1603, the Tudor line came to an end. Her cousin James, King of Scotland, became King of England too.</p>
+      </div>
+      <figure class="pic" style="margin-bottom:14px"><img src="images/culture/09-armada.jpg" alt="Ships of the Spanish Armada in battle" loading="lazy"><figcaption>The Spanish Armada, 1588.</figcaption></figure>
+      <div class="bank dnd"><span>Henry becomes Head of the Church of England</span><span>the Spanish Armada is defeated</span><span>Columbus reaches America</span><span>Mary I becomes queen</span><span>Elizabeth dies; the Tudor line ends</span><span>Cabot lands in North America</span><span>Henry VII wins at Bosworth</span><span>Elizabeth I comes to the throne</span><span>Edward VI becomes king at nine</span><span>Henry VIII becomes king</span></div>
+      <p class="bank-hint">Drag an event to a date, or tap an event and then tap the date. Tap a filled date to empty it.</p>
+      <div class="quiz">
+        <ul class="place-list">
+          <li><span class="yr">1485</span><span class="gap"><span class="gn">1</span><select class="exam-select ans" data-bank="1" data-answer="Henry VII wins at Bosworth"></select></span></li>
+          <li><span class="yr">1492</span><span class="gap"><span class="gn">2</span><select class="exam-select ans" data-bank="1" data-answer="Columbus reaches America"></select></span></li>
+          <li><span class="yr">1497</span><span class="gap"><span class="gn">3</span><select class="exam-select ans" data-bank="1" data-answer="Cabot lands in North America"></select></span></li>
+          <li><span class="yr">1509</span><span class="gap"><span class="gn">4</span><select class="exam-select ans" data-bank="1" data-answer="Henry VIII becomes king"></select></span></li>
+          <li><span class="yr">1534</span><span class="gap"><span class="gn">5</span><select class="exam-select ans" data-bank="1" data-answer="Henry becomes Head of the Church of England"></select></span></li>
+          <li><span class="yr">1547</span><span class="gap"><span class="gn">6</span><select class="exam-select ans" data-bank="1" data-answer="Edward VI becomes king at nine"></select></span></li>
+          <li><span class="yr">1553</span><span class="gap"><span class="gn">7</span><select class="exam-select ans" data-bank="1" data-answer="Mary I becomes queen"></select></span></li>
+          <li><span class="yr">1558</span><span class="gap"><span class="gn">8</span><select class="exam-select ans" data-bank="1" data-answer="Elizabeth I comes to the throne"></select></span></li>
+          <li><span class="yr">1588</span><span class="gap"><span class="gn">9</span><select class="exam-select ans" data-bank="1" data-answer="the Spanish Armada is defeated"></select></span></li>
+          <li><span class="yr">1603</span><span class="gap"><span class="gn">10</span><select class="exam-select ans" data-bank="1" data-answer="Elizabeth dies; the Tudor line ends"></select></span></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="exercise">
+      <div class="exercise-label">Step 3 · Say it · 2 min</div>
+      <h3>Retell the story aloud, with your timeline in front of you</h3>
+      <p class="instr">Two minutes, out loud, monarch by monarch. Use at least <b>two passives</b> (<i>the monasteries were closed, the Armada was defeated</i>) and <b>by the time + had</b> once (<i>By the time Henry VII died, the treasury had been filled</i>). Next lesson you’ll retell it without the timeline.</p>
+      <div class="use-words" data-need="5"><span>reign</span><span>break with</span><span>was / were + V3</span><span>by the time … had</span><span>golden age</span><span>invade</span><span>come to an end</span></div>
+      <p class="bank-hint">0 / 5 used</p>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════
+       TAB 5 — HOMEWORK (60 min)
+  ══════════════════════════════════════════════════════════ -->
+  <div class="tab-content" id="tab-hw">
+    <div class="exercise">
+      <div class="exercise-label">Homework · 60 min</div>
+      <h3>Tick each part when it’s done</h3>
+      <ul class="hw-list" id="hwList">
+        <li><label><input type="checkbox"> <span class="t">🃏 <b>Science &amp; technology flashcards</b> (10 min): <a href="../flashcards.html?deck=v10">deck V10</a>, Learn mode, until at least 15 cards are 🏆 mastered.</span></label></li>
+        <li><label><input type="checkbox"> <span class="t">🔬 <b>One Задание 2 text</b> (below, 10 min): label the box first, then start the 8-minute timer.</span></label></li>
+        <li><label><input type="checkbox"> <span class="t">⚙️ <b>Passive rewrite × 10</b> (below, 10 min): keep the tense of the active sentence.</span></label></li>
+        <li><label><input type="checkbox"> <span class="t">🏛 <b>History · the Tudors</b> (20 min): the <a href="#" onclick="switchTab('hist');return false">History tab</a>, “At home”, steps 1–3. The listening counts as your one-listen audio.</span></label></li>
+        <li><label><input type="checkbox"> <span class="t">📘 <b>Olympway check · Medieval England</b> (10 min): task 98 (PDF p. 81–82) and task 91, only the five kings below (PDF p. 76–77). Do them in the book, then tap your letters.</span></label></li>
+      </ul>
+    </div>
+
+    <div class="exercise">
+      <div class="review-head"><span class="task-num">Задание 2 · 10 баллов</span><span class="pts">13 words · 10 gaps · 3 extra</span></div>
+      <h3>The doctor who drank his own experiment · 8 min</h3>
+      <p class="orig-instr">Прочитайте текст и заполните пропуски, выбрав подходящее слово из списка. Три слова лишние.</p>
+      <div class="facts"><span class="fact">⏱ 8 min</span><span class="fact">🏷 label the box first</span><span class="fact">3 extras</span></div>
+      <div class="timer" data-min="8"></div>
+      <div class="bank dnd"><span>awarded</span><span>believe</span><span>believed</span><span>came across</span><span>carry out</span><span>carrying out</span><span>caught up with</span><span>finding</span><span>found</span><span>having</span><span>laughed at</span><span>showed</span><span>take</span></div>
+      <p class="bank-hint">Drag a word into a gap, or tap a word and then the gap. Tap a filled gap to empty it.</p>
+      <div class="quiz">
+        <div class="gap-text">
+          <p>For most of the 20th century, doctors <span class="gap"><span class="gn">1</span><select class="exam-select ans" data-bank="1" data-answer="believed"></select></span> that stomach ulcers were caused by stress and spicy food. In the early 1980s, however, two Australian doctors, Robin Warren and Barry Marshall, <span class="gap"><span class="gn">2</span><select class="exam-select ans" data-bank="1" data-answer="came across"></select></span> something strange: in almost every patient with an ulcer they found the same spiral-shaped bacterium. They suggested that the bacterium, not stress, was to blame, but most doctors simply <span class="gap"><span class="gn">3</span><select class="exam-select ans" data-bank="1" data-answer="laughed at"></select></span> the idea.</p>
+          <p>To prove it, Marshall needed to <span class="gap"><span class="gn">4</span><select class="exam-select ans" data-bank="1" data-answer="carry out"></select></span> an experiment on a living person, and he could not ask anyone else to <span class="gap"><span class="gn">5</span><select class="exam-select ans" data-bank="1" data-answer="take"></select></span> the risk. So in 1984 he mixed the bacteria into a drink and swallowed it. Within a week he was feeling terrible. Tests <span class="gap"><span class="gn">6</span><select class="exam-select ans" data-bank="1" data-answer="showed"></select></span> that his stomach was badly inflamed, and the bacterium was <span class="gap"><span class="gn">7</span><select class="exam-select ans" data-bank="1" data-answer="found"></select></span> everywhere in it. He then cured himself with antibiotics.</p>
+          <p>It took years before the rest of the medical world <span class="gap"><span class="gn">8</span><select class="exam-select ans" data-bank="1" data-answer="caught up with"></select></span> them. In 2005 the two men were <span class="gap"><span class="gn">9</span><select class="exam-select ans" data-bank="1" data-answer="awarded"></select></span> the Nobel Prize, and since then millions of patients have been cured with a simple course of antibiotics instead of <span class="gap"><span class="gn">10</span><select class="exam-select ans" data-bank="1" data-answer="having"></select></span> operations.</p>
+        </div>
+        <div class="after-check">
+          <details class="logic" open><summary><span>🏷</span><span class="hint-txt">The form, then the meaning</span></summary><div class="logic-body"><ul class="why-list">
+            <li><b>1 believed</b>: subject + ___ + <i>that</i> in a past story → V2. <i>believe</i> is the trap.</li>
+            <li><b>2 came across</b>: V2 + an object = found by chance.</li>
+            <li><b>3 laughed at</b>: V2; <i>laugh <b>at</b></i> + the idea.</li>
+            <li><b>4 carry out</b>: after <i>needed to</i> → V1. <i>carrying out</i> is the trap.</li>
+            <li><b>5 take</b>: after <i>ask sb to</i> → V1; <i>take a risk</i>.</li>
+            <li><b>6 showed</b>: <i>Tests ___ that</i> → V2.</li>
+            <li><b>7 found</b>: <i>was ___</i> → passive V3. <i>finding</i> is the trap.</li>
+            <li><b>8 caught up with</b>: V2 after <i>before the rest of the world</i>.</li>
+            <li><b>9 awarded</b>: <i>were ___ the Nobel Prize</i> → passive V3.</li>
+            <li><b>10 having</b>: after the preposition <i>instead of</i> → -ing.</li>
+            <li>Extras: <b>believe</b>, <b>carrying out</b>, <b>finding</b>.</li>
+          </ul></div></details>
+        </div>
+      </div>
+    </div>
+
+    <div class="exercise">
+      <div class="exercise-label">Passive rewrite · 10 sentences</div>
+      <h3>Say the same thing in the passive</h3>
+      <p class="instr">Type only the missing verb, in the <b>same tense</b> as the active sentence: <i>They built it in 1950. → It <b>was built</b> in 1950.</i> Don’t add <i>by them / by people</i>.</p>
+      <div class="facts"><span class="fact">⏳ same tense</span><span class="fact">✍️ the verb only</span><span class="fact">10 sentences</span></div>
+      <div class="quiz">
+        <div class="answer-row"><span class="ar-num">1</span><span class="ar-txt">They built the first computer in the 1940s. → The first computer ___ in the 1940s.</span><input class="blank ans" data-answer="was built" autocomplete="off" spellcheck="false"></div>
+        <div class="answer-row"><span class="ar-num">2</span><span class="ar-txt">Scientists are testing a new vaccine. → A new vaccine ___.</span><input class="blank ans" data-answer="is being tested" autocomplete="off" spellcheck="false"></div>
+        <div class="answer-row"><span class="ar-num">3</span><span class="ar-txt">People use smartphones all over the world. → Smartphones ___ all over the world.</span><input class="blank ans" data-answer="are used" autocomplete="off" spellcheck="false"></div>
+        <div class="answer-row"><span class="ar-num">4</span><span class="ar-txt">Someone has stolen my laptop! → My laptop ___!</span><input class="blank ans" data-answer="has been stolen" autocomplete="off" spellcheck="false"></div>
+        <div class="answer-row"><span class="ar-num">5</span><span class="ar-txt">They will open the new laboratory next year. → The new laboratory ___ next year.</span><input class="blank ans" data-answer="will be opened" autocomplete="off" spellcheck="false"></div>
+        <div class="answer-row"><span class="ar-num">6</span><span class="ar-txt">You must wear safety glasses in the lab. → Safety glasses ___ in the lab.</span><input class="blank ans" data-answer="must be worn" autocomplete="off" spellcheck="false"></div>
+        <div class="answer-row"><span class="ar-num">7</span><span class="ar-txt">By 1900 inventors had built the first cars. → By 1900 the first cars ___.</span><input class="blank ans" data-answer="had been built" autocomplete="off" spellcheck="false"></div>
+        <div class="answer-row"><span class="ar-num">8</span><span class="ar-txt">Engineers were repairing the satellite when the storm began. → The satellite ___ when the storm began.</span><input class="blank ans" data-answer="was being repaired" autocomplete="off" spellcheck="false"></div>
+        <div class="answer-row"><span class="ar-num">9</span><span class="ar-txt">We can recycle this kind of plastic. → This kind of plastic ___.</span><input class="blank ans" data-answer="can be recycled" autocomplete="off" spellcheck="false"></div>
+        <div class="answer-row"><span class="ar-num">10</span><span class="ar-txt">Nobody has checked the results yet. → The results ___ yet.</span><input class="blank ans" data-answer="have not been checked|haven&#x27;t been checked|have not yet been checked" autocomplete="off" spellcheck="false"></div>
+      </div>
+    </div>
+
+    <div class="exercise">
+      <div class="exercise-label">Olympway check · era 2</div>
+      <h3>Task 98 (PDF p. 81–82): which century?</h3>
+      <p class="instr">A = 11th · B = 12th · C = 13th · D = 14th · E = 15th century.</p>
+      <div class="quiz">
+        <div class="answer-row letters"><span class="ar-num">1</span><span class="ar-txt">Battle of Agincourt</span><select class="exam-select ans" data-opts="A,B,C,D,E" data-answer="E"></select></div>
+        <div class="answer-row letters"><span class="ar-num">2</span><span class="ar-txt">Henry II crowned at Westminster Abbey</span><select class="exam-select ans" data-opts="A,B,C,D,E" data-answer="B"></select></div>
+        <div class="answer-row letters"><span class="ar-num">3</span><span class="ar-txt">First English Prince of Wales</span><select class="exam-select ans" data-opts="A,B,C,D,E" data-answer="D"></select></div>
+        <div class="answer-row letters"><span class="ar-num">4</span><span class="ar-txt">Caxton printed the first book in England</span><select class="exam-select ans" data-opts="A,B,C,D,E" data-answer="E"></select></div>
+        <div class="answer-row letters"><span class="ar-num">5</span><span class="ar-txt">Magna Carta signed</span><select class="exam-select ans" data-opts="A,B,C,D,E" data-answer="C"></select></div>
+        <div class="answer-row letters"><span class="ar-num">6</span><span class="ar-txt">Edward the Confessor died</span><select class="exam-select ans" data-opts="A,B,C,D,E" data-answer="A"></select></div>
+        <div class="answer-row letters"><span class="ar-num">7</span><span class="ar-txt">William the Conqueror crowned</span><select class="exam-select ans" data-opts="A,B,C,D,E" data-answer="A"></select></div>
+        <div class="answer-row letters"><span class="ar-num">8</span><span class="ar-txt">Richard the Lionheart left England for the Crusades</span><select class="exam-select ans" data-opts="A,B,C,D,E" data-answer="B"></select></div>
+        <div class="answer-row letters"><span class="ar-num">9</span><span class="ar-txt">Oxford University chartered</span><select class="exam-select ans" data-opts="A,B,C,D,E" data-answer="C"></select></div>
+        <div class="answer-row letters"><span class="ar-num">10</span><span class="ar-txt">Statute of Marlborough</span><select class="exam-select ans" data-opts="A,B,C,D,E" data-answer="C"></select></div>
+        <div class="answer-row letters"><span class="ar-num">11</span><span class="ar-txt">Joan of Arc burnt to death</span><select class="exam-select ans" data-opts="A,B,C,D,E" data-answer="E"></select></div>
+        <div class="answer-row letters"><span class="ar-num">12</span><span class="ar-txt">Macbeth killed at Lumphanan</span><select class="exam-select ans" data-opts="A,B,C,D,E" data-answer="A"></select></div>
+        <div class="answer-row letters"><span class="ar-num">13</span><span class="ar-txt">The Hundred Years’ War began</span><select class="exam-select ans" data-opts="A,B,C,D,E" data-answer="D"></select></div>
+        <div class="answer-row letters"><span class="ar-num">14</span><span class="ar-txt">Richard III became King of England</span><select class="exam-select ans" data-opts="A,B,C,D,E" data-answer="E"></select></div>
+        <div class="answer-row letters"><span class="ar-num">15</span><span class="ar-txt">Domesday Book commissioned</span><select class="exam-select ans" data-opts="A,B,C,D,E" data-answer="A"></select></div>
+      </div>
+    </div>
+
+    <div class="exercise">
+      <div class="exercise-label">Olympway check · era 2</div>
+      <h3>Task 91 (PDF p. 76–77): five kings, their deeds and their reigns</h3>
+      <p class="instr">Only these five; the rest of the task is about later centuries. For each king choose the deed (A–J) and the reign (a–j).</p>
+      <div class="quiz">
+        <div class="answer-row letters"><span class="ar-num">1</span><span class="ar-txt"><b>Edward I</b> · deed</span><select class="exam-select ans" data-opts="A,B,C,D,E,F,G,H,I,J" data-answer="J"></select></div>
+        <div class="answer-row letters"><span class="ar-num"></span><span class="ar-txt"><b>Edward I</b> · reign</span><select class="exam-select ans" data-opts="a,b,c,d,e,f,g,h,i,j" data-answer="g"></select></div>
+        <div class="answer-row letters"><span class="ar-num">2</span><span class="ar-txt"><b>Henry V</b> · deed</span><select class="exam-select ans" data-opts="A,B,C,D,E,F,G,H,I,J" data-answer="G"></select></div>
+        <div class="answer-row letters"><span class="ar-num"></span><span class="ar-txt"><b>Henry V</b> · reign</span><select class="exam-select ans" data-opts="a,b,c,d,e,f,g,h,i,j" data-answer="b"></select></div>
+        <div class="answer-row letters"><span class="ar-num">3</span><span class="ar-txt"><b>Henry VII</b> · deed</span><select class="exam-select ans" data-opts="A,B,C,D,E,F,G,H,I,J" data-answer="B"></select></div>
+        <div class="answer-row letters"><span class="ar-num"></span><span class="ar-txt"><b>Henry VII</b> · reign</span><select class="exam-select ans" data-opts="a,b,c,d,e,f,g,h,i,j" data-answer="c"></select></div>
+        <div class="answer-row letters"><span class="ar-num">4</span><span class="ar-txt"><b>Richard I</b> · deed</span><select class="exam-select ans" data-opts="A,B,C,D,E,F,G,H,I,J" data-answer="E"></select></div>
+        <div class="answer-row letters"><span class="ar-num"></span><span class="ar-txt"><b>Richard I</b> · reign</span><select class="exam-select ans" data-opts="a,b,c,d,e,f,g,h,i,j" data-answer="h"></select></div>
+        <div class="answer-row letters"><span class="ar-num">5</span><span class="ar-txt"><b>William I</b> · deed</span><select class="exam-select ans" data-opts="A,B,C,D,E,F,G,H,I,J" data-answer="F"></select></div>
+        <div class="answer-row letters"><span class="ar-num"></span><span class="ar-txt"><b>William I</b> · reign</span><select class="exam-select ans" data-opts="a,b,c,d,e,f,g,h,i,j" data-answer="i"></select></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="btn-row" style="margin:6px 0 30px">
+    <button class="btn btn-danger" onclick="resetAll()">Clear all my answers</button>
+  </div>
+</div>
+
+<div class="save-indicator" id="saveIndicator">✓ Saved</div>
+
+<script>
+const LESSON_KEY = 'lesson-14';
+let data = {};
+try { data = JSON.parse(localStorage.getItem(LESSON_KEY)) || {}; } catch(e) {}
+
+function save(patch) {
+  Object.assign(data, patch);
+  try { localStorage.setItem(LESSON_KEY, JSON.stringify(data)); } catch(e) {}
+  const el = document.getElementById('saveIndicator');
+  el.classList.add('show');
+  clearTimeout(save.t);
+  save.t = setTimeout(() => el.classList.remove('show'), 1400);
+}
+
+// ── TABS ───────────────────────────────────────────────────────
+function showTab(name) {
+  const btn = document.querySelector('.tab-btn[onclick*="\'' + name + '\'"]');
+  if (!btn) return;
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  btn.classList.add('active');
+}
+function switchTab(name) {
+  showTab(name);
+  save({ activeTab: name });
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ── BUILD THE CONTROLS ─────────────────────────────────────────
+const QUIZZES = [...document.querySelectorAll('.quiz')];
+QUIZZES.forEach((q, qi) => {
+  q.id = 'q' + qi;
+  q.querySelectorAll('.ans').forEach((el, i) => { el.dataset.key = 'q' + qi + '-' + i; });
+});
+const isChecked = q => !!data['chk-' + q.id];
+
+// word-bank gaps take their options from the box above the text
+document.querySelectorAll('select[data-bank]').forEach(sel => {
+  const words = [...sel.closest('.exercise').querySelectorAll('.bank span')].map(s => s.textContent);
+  sel.dataset.opts = words.join('|');   // sentences contain commas
+});
+document.querySelectorAll('select.ans').forEach(sel => {
+  const blank = document.createElement('option');
+  blank.value = ''; blank.textContent = '—';
+  sel.appendChild(blank);
+  sel.dataset.opts.split(sel.dataset.bank ? '|' : ',').forEach(v => {
+    const o = document.createElement('option');
+    o.value = v; o.textContent = v;
+    sel.appendChild(o);
+  });
+  if (data[sel.dataset.key] !== undefined) sel.value = data[sel.dataset.key];
+  sel.addEventListener('change', () => save({ [sel.dataset.key]: sel.value }));
+});
+// word box: cross out every word that is already in a gap, with the gap's number
+function paintBank(ex) {
+  const used = {};
+  ex.querySelectorAll('select[data-bank]').forEach(sel => {
+    sel.classList.toggle('filled', !!sel.value);
+    if (sel.value) used[sel.value] = sel.closest('.gap').querySelector('.gn').textContent;
+  });
+  ex.querySelectorAll('.bank span').forEach(w => {
+    const n = used[w.textContent];
+    w.classList.toggle('used', !!n);
+    if (n) w.dataset.gap = n; else delete w.dataset.gap;
+  });
+  ex.querySelectorAll('select[data-bank] option').forEach(o => {
+    if (!o.value) return;
+    o.textContent = (used[o.value] && o.parentElement.value !== o.value ? '✓ ' : '') + o.value;   // ✓ = already used in another gap
+  });
+}
+// Задание 2 word box: drag a word into a gap (or tap a word, then tap the gap); tap a filled gap to empty it
+document.querySelectorAll('.bank').forEach(bank => {
+  const ex = bank.closest('.exercise');
+  const sels = [...ex.querySelectorAll('select[data-bank]')];
+  let picked = null;
+  const pick = w => {
+    picked = w;
+    bank.querySelectorAll('span').forEach(s => s.classList.toggle('picked', s === w));
+    ex.classList.toggle('picking', !!w);
+  };
+  const setGap = (sel, word) => { sel.value = word; sel.dispatchEvent(new Event('change')); };
+  const put = (sel, word) => {
+    if (sel.disabled) return;
+    sels.forEach(o => { if (o !== sel && o.value === word) setGap(o, ''); });   // each word goes in one gap only
+    setGap(sel, word);
+  };
+  const paintZone = sel => {
+    const dz = sel._dz;
+    dz.textContent = sel.value || '\u00a0';
+    dz.classList.toggle('filled', !!sel.value);
+    ['correct', 'wrong'].forEach(c => dz.classList.toggle(c, sel.classList.contains(c)));
+    dz.classList.toggle('locked', sel.disabled);
+  };
+  sels.forEach(sel => {
+    const dz = document.createElement('span');
+    dz.className = 'dz';
+    sel.before(dz); sel.hidden = true; sel._dz = dz;
+    dz.addEventListener('click', () => {
+      if (sel.disabled) return;
+      if (picked) { put(sel, picked.textContent); pick(null); }
+      else if (sel.value) setGap(sel, '');
+    });
+    sel.addEventListener('change', () => { paintZone(sel); paintBank(ex); });
+    new MutationObserver(() => paintZone(sel)).observe(sel, { attributes: true, attributeFilter: ['class', 'disabled'] });   // Check / Try again
+    paintZone(sel);
+  });
+  bank.querySelectorAll('span').forEach(w => {
+    w.addEventListener('pointerdown', e => {
+      if (sels[0].disabled) return;
+      e.preventDefault();
+      const x0 = e.clientX, y0 = e.clientY;
+      let ghost = null;
+      const zoneAt = ev => { const el = document.elementFromPoint(ev.clientX, ev.clientY); const dz = el && el.closest('.dz'); return dz && ex.contains(dz) ? dz : null; };
+      const move = ev => {
+        if (!ghost && Math.hypot(ev.clientX - x0, ev.clientY - y0) < 6) return;
+        if (!ghost) { ghost = document.createElement('span'); ghost.className = 'drag-ghost'; ghost.textContent = w.textContent; document.body.appendChild(ghost); pick(null); }
+        ghost.style.left = ev.clientX + 'px'; ghost.style.top = ev.clientY + 'px';
+        const dz = zoneAt(ev);
+        ex.querySelectorAll('.dz').forEach(d => d.classList.toggle('over', d === dz));
+      };
+      const up = ev => {
+        removeEventListener('pointermove', move); removeEventListener('pointerup', up); removeEventListener('pointercancel', up);
+        if (!ghost) { pick(picked === w ? null : w); return; }   // a tap: pick the word
+        ghost.remove();
+        ex.querySelectorAll('.dz.over').forEach(d => d.classList.remove('over'));
+        const dz = ev.type === 'pointerup' && zoneAt(ev);
+        if (dz) put(sels.find(s => s._dz === dz), w.textContent);
+      };
+      addEventListener('pointermove', move); addEventListener('pointerup', up); addEventListener('pointercancel', up);
+    });
+  });
+  paintBank(ex);
+});
+document.querySelectorAll('input.blank.ans').forEach(inp => {
+  if (data[inp.dataset.key] !== undefined) inp.value = data[inp.dataset.key];
+  inp.addEventListener('input', () => save({ [inp.dataset.key]: inp.value }));
+});
+
+// ── MARKING ────────────────────────────────────────────────────
+// typed answers: capitals, curly apostrophes and extra spaces don't matter; spelling does
+const norm = s => s.toLowerCase().replace(/[’‘`]/g, "'").replace(/[.,!?;:"“”]/g, ' ').replace(/\s+/g, ' ').trim();
+function given(el) {
+  // first-letter gaps: she types the rest of the word ("reaty"), or the whole word ("treaty")
+  const v = el.value, pre = el.dataset.prefix;
+  return pre && !norm(v).startsWith(pre) ? pre + v : v;
+}
+function mark(el) {
+  const keys = el.dataset.answer.split('|');
+  const ok = el.tagName === 'SELECT' ? keys.includes(el.value) : keys.some(k => norm(k) === norm(given(el)));
+  el.classList.add(ok ? 'correct' : 'wrong');
+  const shown = el.closest('.slots') ? keys[0].split(' ')[0] : keys.join(' / ');   // sentence places show just the letter
+  el.insertAdjacentHTML('afterend', '<span class="key">' + shown + '</span>');   // the correct answer next to every gap
+  el.disabled = true;
+  return ok ? 1 : 0;
+}
+function unmark(el) {
+  el.classList.remove('correct', 'wrong'); el.disabled = false; el.value = '';
+  if (el.nextElementSibling && el.nextElementSibling.classList.contains('key')) el.nextElementSibling.remove();
+}
+
+// ── CHECK / TRY AGAIN ──────────────────────────────────────────
+QUIZZES.forEach(q => {
+  const foot = document.createElement('div');
+  foot.className = 'quiz-foot';
+  foot.innerHTML = '<button class="btn btn-primary">Check ✓</button>' +
+                   '<button class="btn btn-ghost" style="display:none">Try again ↺</button>' +
+                   '<span class="q-result"></span>';
+  const after = q.querySelector(':scope > .after-check');
+  after ? q.insertBefore(foot, after) : q.appendChild(foot);
+  const [bCheck, bRetry] = foot.querySelectorAll('button');
+  bCheck.addEventListener('click', () => checkQuiz(q, true));
+  bRetry.addEventListener('click', () => retryQuiz(q));
+  q._foot = foot;
+});
+function checkQuiz(q, doSave) {
+  const els = [...q.querySelectorAll('.ans')];
+  const got = els.reduce((a, el) => a + mark(el), 0), max = els.length;
+  const res = q._foot.querySelector('.q-result');
+  res.textContent = got + ' / ' + max + (got === max ? ' — perfect! 🎉' : '');
+  res.className = 'q-result ' + (got === max ? 'full' : got === 0 ? 'zero' : 'part');
+  q._foot.children[0].style.display = 'none';
+  q._foot.children[1].style.display = '';
+  q.classList.add('checked');
+  q._score = [got, max];
+  if (doSave) save({ ['chk-' + q.id]: true });
+  updateProgress();
+}
+function retryQuiz(q) {
+  const patch = { ['chk-' + q.id]: false };
+  q.querySelectorAll('.ans').forEach(el => { unmark(el); patch[el.dataset.key] = undefined; });
+  q._foot.querySelector('.q-result').textContent = '';
+  const ex = q.closest('.exercise'); if (ex.querySelector('.bank')) paintBank(ex);
+  q._foot.children[0].style.display = '';
+  q._foot.children[1].style.display = 'none';
+  q.classList.remove('checked');
+  q._score = null;
+  save(patch);
+  updateProgress();
+}
+function updateProgress() {
+  const done = QUIZZES.filter(q => q._score);
+  const got = done.reduce((a, q) => a + q._score[0], 0);
+  const max = done.reduce((a, q) => a + q._score[1], 0);
+  document.getElementById('pgCount').textContent = done.length + ' / ' + QUIZZES.length;
+  document.getElementById('pgScore').textContent = got + ' / ' + max;
+  document.getElementById('pgFill').style.width = (done.length / QUIZZES.length * 100) + '%';
+}
+
+// ── AUDIO PLAYER: play/pause, drag or click the bar, ⏪ 10 s / ⏩ 10 s ──
+const fmt = s => Math.floor(s / 60) + ':' + String(Math.floor(s % 60)).padStart(2, '0');
+document.querySelectorAll('.player[data-src]').forEach(pl => {
+  const audio = new Audio(pl.dataset.src);
+  audio.preload = 'metadata';
+  pl.innerHTML =
+    '<button type="button" class="pl-btn" aria-label="Play">' +
+      '<svg class="i-play" viewBox="0 0 24 24"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.2-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z"/></svg>' +
+      '<svg class="i-pause" viewBox="0 0 24 24"><rect x="6" y="5" width="4.2" height="14" rx="1.2"/><rect x="13.8" y="5" width="4.2" height="14" rx="1.2"/></svg>' +
+    '</button>' +
+    '<div class="pl-main"><div class="pl-top"><span class="pl-label">🎧 ' + pl.dataset.label + '</span><span class="pl-time">0:00</span></div>' +
+    '<div class="pl-track"><div class="pl-fill"></div><div class="pl-knob"></div></div></div>' +
+    '<button type="button" class="pl-skip" data-s="-10" title="Back 10 seconds">⏪ 10</button>' +
+    '<button type="button" class="pl-skip" data-s="10" title="Forward 10 seconds">10 ⏩</button>';
+  pl.appendChild(audio);
+  const fill = pl.querySelector('.pl-fill'), knob = pl.querySelector('.pl-knob');
+  const time = pl.querySelector('.pl-time'), track = pl.querySelector('.pl-track');
+  const paint = () => {
+    const pct = audio.duration ? audio.currentTime / audio.duration * 100 : 0;
+    fill.style.width = pct + '%'; knob.style.left = pct + '%';
+    time.textContent = fmt(audio.currentTime) + ' / ' + (audio.duration ? fmt(audio.duration) : '…');
+  };
+  pl.querySelector('.pl-btn').addEventListener('click', () => audio.paused ? audio.play() : audio.pause());
+  pl.querySelectorAll('.pl-skip').forEach(b => b.addEventListener('click', () => {
+    if (!audio.duration) return;
+    audio.currentTime = Math.min(audio.duration, Math.max(0, audio.currentTime + +b.dataset.s));
+    paint();
+  }));
+  const seek = e => {
+    if (!audio.duration) return;
+    const r = track.getBoundingClientRect();
+    audio.currentTime = Math.min(1, Math.max(0, (e.clientX - r.left) / r.width)) * audio.duration;
+    paint();
+  };
+  track.addEventListener('pointerdown', e => { track.setPointerCapture(e.pointerId); pl.classList.add('dragging'); seek(e); });
+  track.addEventListener('pointermove', e => { if (pl.classList.contains('dragging')) seek(e); });
+  track.addEventListener('pointerup', () => pl.classList.remove('dragging'));
+  track.addEventListener('pointercancel', () => pl.classList.remove('dragging'));
+  audio.addEventListener('play', () => pl.classList.add('playing'));
+  audio.addEventListener('pause', () => pl.classList.remove('playing'));
+  audio.addEventListener('ended', () => pl.classList.remove('playing'));
+  audio.addEventListener('timeupdate', paint);
+  audio.addEventListener('loadedmetadata', paint);
+});
+
+// ── PRACTICE 1 PAIRS: tap the first sentence, then a link word (values live in hidden inputs) ──
+document.querySelectorAll('.pp').forEach(pp => {
+  const first = pp.querySelector('.pp-first'), link = pp.querySelector('.pp-link');
+  const quiz = pp.closest('.quiz'), step = pp.querySelector('.pp-step');
+  const set = (inp, v) => { inp.value = v; inp.dispatchEvent(new Event('input')); };
+  const paint = () => {
+    const f = first.value;
+    pp.classList.toggle('ordered', !!f);
+    pp.querySelectorAll('.pp-s').forEach(s => {
+      const isF = s.dataset.l === f;
+      s.classList.toggle('first', isF);
+      s.classList.toggle('second', !!f && !isF);
+      s.querySelector('.pp-b').textContent = f ? (isF ? '1st' : '2nd') : s.dataset.l;
+      s.classList.toggle('ok', isF && f === first.dataset.answer);
+      s.classList.toggle('bad', isF && f !== first.dataset.answer);
+    });
+    const box = pp.querySelector('.pp-ss'), sA = box.querySelector('[data-l="A"]'), sB = box.querySelector('[data-l="B"]');
+    if (f === 'B') box.prepend(sB); else box.prepend(sA);   // the chosen sentence moves to the top
+    pp.querySelectorAll('.w').forEach(w => w.classList.toggle('pick', !!link.value && w.dataset.ph === link.value));
+    step.textContent = !f ? '① Tap the sentence that comes first' : !link.value ? '② Now tap the word that links back' : '✓ Done';
+  };
+  pp.querySelectorAll('.pp-s').forEach(s => s.addEventListener('click', () => {
+    if (quiz.classList.contains('checked') || first.value) return;
+    set(first, s.dataset.l); paint();
+  }));
+  pp.querySelectorAll('.w').forEach(w => w.addEventListener('click', e => {
+    if (quiz.classList.contains('checked') || !first.value) return;
+    e.stopPropagation();
+    set(link, link.value === w.dataset.ph ? '' : w.dataset.ph); paint();
+  }));
+  pp.querySelector('.pp-swap').addEventListener('click', () => { set(first, ''); set(link, ''); paint(); });
+  new MutationObserver(paint).observe(quiz, { attributes: true, attributeFilter: ['class'] });   // Check / Try again
+  paint();
+});
+
+
+// ── TIMERS: Start / Pause / Reset; the clock stops when the task is checked ──
+document.querySelectorAll('.timer[data-min]').forEach((tm, ti) => {
+  const limit = +tm.dataset.min * 60, key = 'tm-' + ti;
+  const quiz = tm.closest('.exercise').querySelector('.quiz');
+  let spent = +data[key] || 0, t0 = null, tick = null;
+  tm.innerHTML = '<span class="tm-clock">⏱ <b></b></span>' +
+                 '<button type="button" class="btn btn-primary">Start</button>' +
+                 '<button type="button" class="btn btn-ghost">Reset</button><span class="tm-msg"></span>';
+  const clock = tm.querySelector('b'), [go, reset] = tm.querySelectorAll('button'), msg = tm.querySelector('.tm-msg');
+  const now = () => spent + (t0 ? (Date.now() - t0) / 1000 : 0);
+  const paint = () => {
+    const left = limit - now();
+    clock.textContent = left >= 0 ? fmt(Math.ceil(left)) : '+' + fmt(-left);   // over the limit: counts up in red
+    tm.classList.toggle('over', left < 0);
+    tm.classList.toggle('running', !!t0);
+    go.textContent = t0 ? 'Pause' : spent ? 'Go on' : 'Start';
+  };
+  const stop = () => {
+    if (!t0) return;
+    spent = now(); t0 = null; clearInterval(tick);
+    save({ [key]: Math.round(spent) }); paint();
+  };
+  go.addEventListener('click', () => { if (t0) stop(); else { t0 = Date.now(); tick = setInterval(paint, 250); paint(); } });
+  reset.addEventListener('click', () => { stop(); spent = 0; msg.textContent = ''; save({ [key]: 0 }); paint(); });
+  new MutationObserver(() => {
+    if (!quiz.classList.contains('checked')) { msg.textContent = ''; return; }
+    stop();
+    if (spent) msg.textContent = 'Your time: ' + fmt(spent) + (spent <= limit ? ' ✓ in time' : ' (over the limit)');
+  }).observe(quiz, { attributes: true, attributeFilter: ['class'] });
+  paint();
+});
+
+// ── WARM-UP: story card (🎲 draws another; saved, so the teacher sees the same card) ──
+const CARDS = [{"title": "A time you overcame an obstacle", "q": ["What were you trying to do, and what went wrong?", "What had you done (or not done) before it happened?", "How did it end? <i>Eventually… / In the end…</i>"]}, {"title": "A historic place you have visited", "q": ["Where and when did you go, and who with?", "What was happening when you arrived? What was the weather like?", "What had you expected, and was it different? When was the place built?"]}, {"title": "A day when everything went wrong", "q": ["What were you doing when the first thing went wrong?", "What had you forgotten or not known?", "How did the day end? What did you learn?"]}, {"title": "Someone you look up to", "q": ["Who is it, and how did you first hear about them?", "What obstacles did they overcome? What had their life been like before?", "How did they become successful? Use a passive: <i>she was given…, he was chosen…</i>"]}, {"title": "Your first day somewhere new (a school, a club, a camp)", "q": ["How did you feel on the way there? What were you thinking about?", "What had people told you about it before?", "What happened that day, and how did things change later?"]}, {"title": "An invention you couldn’t live without", "q": ["When did you first use it, and what were you doing at the time?", "How did people live before it had been invented?", "When and where was it invented? Who was it invented by?"]}];
+function paintCard() {
+  const i = (+data.card || 0) % CARDS.length, c = CARDS[i];
+  document.getElementById('storyCard').innerHTML =
+    '<div class="scard-top"><span class="scard-n">Card ' + (i + 1) + ' / ' + CARDS.length + '</span><h4>' + c.title + '</h4>' +
+    '<button type="button" class="btn btn-ghost draw-btn" id="cardNew">🎲 Another card</button></div>' +
+    '<ul>' + c.q.map(q => '<li>' + q + '</li>').join('') + '</ul>';
+  document.getElementById('cardNew').addEventListener('click', () => {
+    let j; do { j = Math.floor(Math.random() * CARDS.length); } while (j === i);
+    save({ card: j }); paintCard();
+  });
+}
+paintCard();
+
+// ── WARM-UP: random words · 🎲 draws 8 new ones and clears that block ──
+document.getElementById('vcNew').addEventListener('click', () => {
+  const q = document.querySelector('.vc-quiz');
+  Object.keys(data).forEach(k => { if (k.startsWith(q.id + '-') || k === 'chk-' + q.id) delete data[k]; });
+  save({ 'vc-set': vcDraw() });
+  location.reload();
+});
+
+// ── WORDS TO USE (tap when used) · HOMEWORK ────────────────────
+document.querySelectorAll('.use-words').forEach((box, bi) => {
+  const need = +box.dataset.need || 5, out = box.nextElementSibling;
+  const paint = () => { out.textContent = box.querySelectorAll('.used').length + ' / ' + need + ' used'; };
+  box.querySelectorAll('span').forEach((w, i) => {
+    const k = 'uw-' + bi + '-' + i;
+    if (data[k]) w.classList.add('used');
+    w.addEventListener('click', () => { save({ [k]: w.classList.toggle('used') }); paint(); });
+  });
+  paint();
+});
+document.querySelectorAll('#hwList input').forEach((c, i) => {
+  c.checked = !!data['hw-' + i];
+  c.closest('li').classList.toggle('done', c.checked);
+  c.addEventListener('change', () => { save({ ['hw-' + i]: c.checked }); c.closest('li').classList.toggle('done', c.checked); });
+});
+
+function resetAll() {
+  if (!confirm('Clear every answer on this page (flashcard progress stays)?')) return;
+  try { localStorage.removeItem(LESSON_KEY); } catch(e) {}
+  location.reload();
+}
+
+// ── INIT ───────────────────────────────────────────────────────
+if (data.activeTab) showTab(data.activeTab);
+QUIZZES.forEach(q => { if (isChecked(q)) checkQuiz(q, false); });
+updateProgress();
+</script>
+
+<script src="../flashcards.js"></script>
+<script src="../choices.js"></script>
+<script src="../dictionary.js"></script>
+</body>
+</html>
