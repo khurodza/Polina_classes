@@ -264,6 +264,32 @@
     .passage p { margin-bottom: 10px; }
     .rule-table.wrap td:first-child { white-space: normal; }
     /* teacher-only: shown only inside teacher.html (sync.js adds html.watching in watch mode) */
+    details.bio { margin-top: 16px; background: rgba(95,142,196,.08); border: 2px solid rgba(95,142,196,.35); border-radius: var(--radius); overflow: hidden; }
+    details.bio summary { list-style: none; cursor: pointer; display: flex; align-items: center; gap: 12px; padding: 12px 16px; user-select: none; }
+    details.bio summary::-webkit-details-marker { display: none; }
+    details.bio summary:hover { background: rgba(95,142,196,.12); }
+    details.bio summary::after { content: '▾'; margin-left: auto; font-size: 1.1rem; color: #3E6A9E; transition: transform .2s; }
+    details.bio[open] summary::after { transform: rotate(180deg); }
+    details.bio[open] summary { border-bottom: 1px dashed rgba(95,142,196,.45); }
+    .bio-thumb { width: 44px; height: 44px; border-radius: 50%; object-fit: cover; object-position: 50% 18%; border: 2px solid #fff; box-shadow: 0 1px 4px rgba(0,0,0,.18); flex-shrink: 0; }
+    .bio-sum b { display: block; color: #3E6A9E; }
+    .bio-sum small { color: var(--muted); font-size: .82rem; }
+    .bio-body { padding: 14px 16px 16px; line-height: 1.7; }
+    .bio-top { display: flex; gap: 16px; align-items: flex-start; }
+    .bio-top figure { margin: 0; flex: 0 0 150px; }
+    .bio-top img { width: 100%; border-radius: 10px; box-shadow: var(--shadow); display: block; }
+    .bio-top figcaption { font-size: .72rem; color: var(--muted); margin-top: 4px; line-height: 1.35; }
+    .bio-facts { display: grid; grid-template-columns: auto 1fr; gap: 4px 12px; margin: 0; font-size: .92rem; }
+    .bio-facts dt { font-weight: 800; color: #3E6A9E; }
+    .bio-facts dd { margin: 0; }
+    .bio-body h4 { margin: 16px 0 6px; font-size: 1rem; color: #3E6A9E; }
+    .bio-body p { margin: 0 0 8px; }
+    .bio-tales { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 8px; margin: 8px 0 4px; }
+    .bio-tales div { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 8px 10px; font-size: .88rem; line-height: 1.45; }
+    .bio-tales b { display: block; }
+    .bio-quote { margin: 12px 0 0; padding: 10px 14px; border-left: 4px solid var(--blue); background: var(--card); border-radius: 0 10px 10px 0; font-style: italic; font-size: .92rem; }
+    .bio-quote span { display: block; font-style: normal; font-size: .8rem; color: var(--muted); margin-top: 4px; }
+    @media (max-width: 560px) { .bio-top { flex-direction: column; } .bio-top figure { flex-basis: auto; width: 140px; } }
     .teacher-only { display: none; }
     html.watching .teacher-only { display: block; margin-top: 14px; background: #FDEAF2; border: 2px dashed #D9628F; border-radius: var(--radius); padding: 12px 16px; line-height: 1.75; }
     .teacher-only .to-label { font-size: .75rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: #B0416C; margin-bottom: 6px; }
@@ -802,6 +828,37 @@
         <li>Collect clues for the hidden ones: dates, places, jobs, famous works.</li>
         <li>Follow the format exactly (<i>First Name Last Name</i>) and check the spelling.</li>
       </ol></div></details>
+      <details class="bio">
+        <summary><img class="bio-thumb" src="images/people/person-chaucer.jpg" alt=""><span class="bio-sum"><b>📜 Who was Geoffrey Chaucer?</b><small>Don’t know a hidden name? Open this, read it, then go back to the questions.</small></span></summary>
+        <div class="bio-body">
+          <div class="bio-top">
+            <figure><img src="images/people/person-chaucer.jpg" alt="Portrait of Geoffrey Chaucer in a grey hood, holding a rosary"><figcaption>Geoffrey Chaucer (c. 1343–1400). Portrait painted about 200 years after his death.</figcaption></figure>
+            <div>
+              <p><b>Geoffrey Chaucer</b> is often called <b>“the Father of English literature”</b>. He lived in the time of Edward III and Richard II, when England was fighting France in the <b>Hundred Years’ War</b> (1337–1453).</p>
+              <dl class="bio-facts">
+                <dt>Born</dt><dd>London, about 1343, son of a wine merchant</dd>
+                <dt>Jobs</dt><dd>page at court, soldier, diplomat, customs official</dd>
+                <dt>Died</dt><dd>1400, buried in Westminster Abbey</dd>
+              </dl>
+            </div>
+          </div>
+
+          <h4>🏆 His main accomplishment</h4>
+          <p>In his day, educated people in England wrote in <b>French or Latin</b>. Chaucer wrote in the <b>English of London</b> and showed that it could be a language for great poetry. Writers after him followed his example, so modern English literature starts with him.</p>
+          <p>He was the first poet buried in what is now called <b>Poets’ Corner</b> in Westminster Abbey. Later poets were buried or remembered near him there.</p>
+
+          <h4>🐎 What <i>The Canterbury Tales</i> are about</h4>
+          <p>A group of <b>pilgrims</b> meets at the <b>Tabard Inn</b> in Southwark, London. They are travelling to <b>Canterbury Cathedral</b> to visit the shrine of <b>Thomas Becket</b>, the archbishop murdered there in 1170. To pass the time, each pilgrim tells stories on the road, and the best storyteller will win a free dinner.</p>
+          <p>The pilgrims come from every part of medieval society, so the book is like a portrait of England in the 1300s. Some tales are serious, some romantic and some very rude and funny. Chaucer planned about 120 tales but finished only 24.</p>
+          <div class="bio-tales">
+            <div><b>⚔️ The Knight</b>a noble love story about two knights and one lady</div>
+            <div><b>🍺 The Miller</b>a drunk storyteller with a very rude joke</div>
+            <div><b>👗 The Wife of Bath</b>five husbands; asks “What do women most want?”</div>
+            <div><b>🪙 The Pardoner</b>sells fake holy relics; tells a tale about greed</div>
+          </div>
+          <p class="bio-quote">“Whan that Aprill with his shoures soote…”<span>The first line, in Chaucer’s Middle English. Today: “When April with its sweet showers…”</span></p>
+        </div>
+      </details>
     </div>
   </div>
 
