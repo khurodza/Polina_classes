@@ -592,7 +592,10 @@
     const a = app.initializeApp(FIREBASE);
     const au = auth.getAuth(a);
     await au.authStateReady();
-    if (au.currentUser && !au.currentUser.isAnonymous) return;   // the teacher is signed in here: don't sync her test answers
+    if (au.currentUser && !au.currentUser.isAnonymous) {   // the teacher is signed in here: show her notes, don't sync her test answers
+      document.documentElement.classList.add('teacher');
+      return;
+    }
     if (!au.currentUser) await auth.signInAnonymously(au);
     const d = db.getDatabase(a), uid = au.currentUser.uid;
     fb = { db, d, uid };
