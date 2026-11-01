@@ -1,0 +1,1391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lesson 15 – Nature &amp; the Environment · Listening: Speakers</title>
+  <link rel="stylesheet" href="../style.css">
+  <style>
+    .exam-select {
+      font: inherit; font-weight: 700; text-align: center; padding: 7px 10px; border-radius: 10px;
+      border: 2px solid var(--border); background: var(--card); color: var(--text); cursor: pointer; min-width: 64px;
+    }
+    .exam-select:focus { border-color: var(--primary); outline: none; }
+    .exam-select.correct, .blank.correct { border-color: var(--green); color: var(--green); background: rgba(91,140,69,.08); }
+    .exam-select.wrong,   .blank.wrong   { border-color: var(--red);   color: var(--red);   background: rgba(200,64,64,.06); }
+    .blank { min-width: 130px; font-weight: 600; border: 2px solid var(--border); border-radius: 10px; padding: 5px 10px; background: var(--card); }
+    .blank.short { min-width: 100px; width: 120px; }
+    .blank:focus { border-color: var(--primary); outline: none; }
+    .key { margin-left: 4px; font-size: .82rem; font-weight: 700; color: var(--green); background: rgba(91,140,69,.10); padding: 2px 8px; border-radius: 6px; }
+
+    .answer-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; padding: 9px 0; border-bottom: 1px dashed var(--border); }
+    .answer-row:last-child { border-bottom: none; }
+    .ar-num { font-family: 'Fraunces', Georgia, serif; font-weight: 700; color: var(--primary); min-width: 26px; }
+    .ar-txt { flex: 1; min-width: 200px; line-height: 1.75; }
+    .cue { font-weight: 700; letter-spacing: .04em; color: var(--accent-dk); background: rgba(201,160,48,.14); padding: 1px 8px; border-radius: 6px; font-size: .86rem; white-space: nowrap; }
+    .gap-text { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px 20px; line-height: 2.3; font-size: 1.02rem; }
+    .gap-text .gn { font-family: 'Fraunces', Georgia, serif; font-weight: 700; color: var(--primary); font-size: .85rem; margin-right: 2px; }
+    .gap-text h4 { font-family: 'Fraunces', Georgia, serif; text-align: center; font-size: 1.15rem; margin-bottom: 4px; line-height: 1.5; }
+    /* word box: a word crosses itself out when it's used in a gap (or when she taps it) */
+    .bank { display: flex; flex-wrap: wrap; gap: 8px; padding: 14px 16px; margin-bottom: 14px; border: 2px dashed rgba(201,160,48,.55); border-radius: 14px; background: rgba(201,160,48,.07); }
+    .bank span { position: relative; font-weight: 700; padding: 5px 14px; border-radius: 99px; background: #fff; border: 2px solid var(--border); cursor: pointer; user-select: none; transition: .2s; }
+    .bank span:hover { border-color: var(--accent); }
+    .bank span.used, .bank span.struck { color: var(--muted); background: transparent; border-style: dashed; text-decoration: line-through; text-decoration-thickness: 2px; text-decoration-color: var(--primary); opacity: .75; }
+    .bank span.used::after { content: attr(data-gap); position: absolute; top: -8px; right: -6px; min-width: 18px; height: 18px; padding: 0 4px; border-radius: 99px; background: var(--primary); color: #fff; font-size: .68rem; line-height: 18px; text-align: center; text-decoration: none; display: inline-block; }
+    /* Задание 2 as in the demo: drag a word into a gap (or tap the word, then the gap) */
+    .orig-instr { font-weight: 600; border-left: 3px solid var(--border); padding-left: 14px; margin: 0 0 18px; line-height: 1.7; font-size: .98rem; }
+    .bank.dnd span { cursor: grab; touch-action: none; }
+    .bank.dnd span.picked { border-color: var(--primary); background: rgba(212,87,42,.10); box-shadow: 0 0 0 3px rgba(212,87,42,.18); }
+    .drag-ghost { position: fixed; z-index: 100; pointer-events: none; transform: translate(-50%, -70%); font-weight: 700; padding: 5px 14px; border-radius: 99px; background: #fff; border: 2px solid var(--primary); box-shadow: 0 8px 18px rgba(44,32,16,.22); }
+    .dz { display: inline-block; min-width: 128px; padding: 2px 16px; border-radius: 99px; border: 2px dashed rgba(212,87,42,.45); background: #fff; font-weight: 700; color: var(--text); text-align: center; line-height: 1.6; vertical-align: middle; cursor: pointer; transition: .15s; }
+    .dz.filled { border-style: solid; border-color: var(--blue); background: #EAF2FB; }
+    .dz.over, .picking .dz:not(.filled):not(.locked) { border-color: var(--primary); background: rgba(212,87,42,.08); }
+    .dz.correct { border-style: solid; border-color: var(--green); color: var(--green); background: rgba(91,140,69,.10); }
+    .dz.wrong { border-style: solid; border-color: var(--red); color: var(--red); background: rgba(200,64,64,.07); }
+    .dz.locked { cursor: default; }
+    .bank-hint { font-size: .82rem; color: var(--muted); margin: -8px 0 12px; }
+
+    /* gaps in a word-box text: number badge + pill-shaped choice */
+    .gap { display: inline-flex; align-items: center; white-space: nowrap; margin: 0 2px; vertical-align: middle; }
+    .gap .gn { display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; border-radius: 50%; background: var(--primary); color: #fff !important; font-family: 'DM Sans', system-ui, sans-serif !important; font-size: .74rem !important; font-weight: 700; margin-right: -6px; position: relative; z-index: 1; box-shadow: 0 0 0 3px var(--card); }
+    .gap select.exam-select {
+      appearance: none; -webkit-appearance: none; min-width: 138px; padding: 4px 30px 4px 16px; border-radius: 99px;
+      font-weight: 700; text-align: left; color: var(--primary-dk); background-color: #fff;
+      border: 2px dashed rgba(212,87,42,.45);
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%23D4572A' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat; background-position: right 11px center; background-size: 11px 8px;
+    }
+    .gap select.exam-select:hover:not(:disabled) { border-color: var(--primary); }
+    .gap select.exam-select.filled { border-style: solid; border-color: var(--blue); color: var(--text); background-color: #EAF2FB; }
+    .gap select.exam-select.correct { border-style: solid; border-color: var(--green); color: var(--green); background-color: rgba(91,140,69,.10); background-image: none; padding-right: 16px; }
+    .gap select.exam-select.wrong { border-style: solid; border-color: var(--red); color: var(--red); background-color: rgba(200,64,64,.07); background-image: none; padding-right: 16px; }
+
+    .step-title { font-weight: 700; font-size: .8rem; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin: 22px 0 10px; display: flex; align-items: center; gap: 8px; }
+    .step-title::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+    .task-num { font-weight: 700; color: var(--accent-dk); background: rgba(201,160,48,.15); padding: 3px 12px; border-radius: 99px; font-size: .85rem; }
+    .pts { font-weight: 700; font-size: .82rem; padding: 3px 10px; border-radius: 99px; color: var(--blue); background: rgba(95,142,196,.12); }
+    .review-head { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 6px; }
+    .talk { background: rgba(95,142,196,.09); border-left: 4px solid var(--blue); border-radius: 0 10px 10px 0; padding: 10px 14px; margin: 10px 0; line-height: 1.6; font-size: .97rem; }
+    .book { display: inline-flex; align-items: center; gap: 6px; font-size: .88rem; font-weight: 700; color: var(--rose); background: rgba(196,122,150,.12); padding: 4px 12px; border-radius: 99px; margin-top: 10px; }
+
+    /* instruction + key-fact chips (as in lesson 10) */
+    .instr { margin: 10px 0 8px; color: var(--text); font-size: 1rem; line-height: 1.7; }
+    .facts { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 16px; }
+    .fact { display: inline-flex; align-items: center; gap: 4px; padding: 5px 13px; border-radius: 99px; font-size: .86rem; font-weight: 700; color: #fff; background: var(--primary); box-shadow: 0 2px 6px rgba(44,32,16,.12); }
+    .fact:nth-child(4n+2) { background: var(--blue); } .fact:nth-child(4n+3) { background: var(--rose); } .fact:nth-child(4n+4) { background: var(--green); }
+
+    /* hints: closed until she taps them (as in lesson 10) */
+    details.logic { background: rgba(201,160,48,.09); border: 2px solid rgba(201,160,48,.35); border-radius: var(--radius); margin-top: 12px; overflow: hidden; }
+    details.logic summary { list-style: none; cursor: pointer; display: flex; align-items: center; gap: 10px; padding: 11px 16px; font-weight: 700; color: var(--accent-dk); user-select: none; }
+    details.logic summary::-webkit-details-marker { display: none; }
+    details.logic summary:hover { background: rgba(201,160,48,.12); }
+    details.logic summary::after { content: '▾'; margin-left: auto; font-size: 1.1rem; transition: transform .2s; }
+    details.logic[open] summary::after { transform: rotate(180deg); }
+    details.logic[open] summary { border-bottom: 1px dashed rgba(201,160,48,.45); }
+    .hint-txt { font-family: 'Fraunces', Georgia, serif; font-size: 1.02rem; }
+    .logic-body { padding: 12px 18px; line-height: 1.7; }
+    .logic-body ul, .logic-body ol { padding-left: 22px; }
+
+    /* the rule table stays open: it is the lesson */
+    .rule-table { border-collapse: collapse; width: 100%; font-size: .95rem; }
+    .rule-table th, .rule-table td { border: 1px solid var(--border); padding: 8px 10px; text-align: left; vertical-align: top; background: #fff; }
+    .rule-table th { background: rgba(212,87,42,.08); }
+    .rule-table td:first-child { font-weight: 700; white-space: nowrap; }
+    .rule-table i { color: var(--primary-dk); font-style: normal; font-weight: 600; }
+    .tbl-wrap { overflow-x: auto; }
+
+    /* revealed after Check */
+    .after-check { display: none; margin-top: 14px; }
+    .quiz.checked .after-check { display: block; }
+    details.script { border: 2px solid rgba(95,142,196,.35); border-radius: 12px; background: rgba(95,142,196,.05); }
+    details.script summary { cursor: pointer; padding: 9px 14px; font-weight: 700; color: var(--blue); }
+    details.script .sc-body { padding: 2px 16px 12px; line-height: 1.7; }
+
+    .timeline { list-style: none; border-left: 3px solid var(--primary); margin-left: 8px; }
+    .timeline li { position: relative; padding: 6px 0 6px 18px; line-height: 1.5; }
+    .timeline li::before { content: ''; position: absolute; left: -8px; top: 12px; width: 13px; height: 13px; border-radius: 50%; background: #fff; border: 3px solid var(--primary); }
+    .timeline b { font-family: 'Fraunces', Georgia, serif; color: var(--primary); margin-right: 6px; }
+
+    .quiz-foot { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-top: 14px; }
+    .q-result { font-weight: 700; }
+    .q-result.full { color: var(--green); } .q-result.part { color: var(--accent-dk); } .q-result.zero { color: var(--red); }
+    .progress-wrap { position: sticky; top: 0; z-index: 30; background: var(--bg); padding: 10px 0 12px; margin-bottom: 8px; border-bottom: 1px solid var(--border); }
+    .progress-top { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 7px; font-weight: 600; font-size: .92rem; }
+    .progress-top span { color: var(--primary); }
+    .progress-bar { height: 9px; border-radius: 99px; background: var(--border); overflow: hidden; }
+    .progress-fill { height: 100%; width: 0%; border-radius: 99px; background: linear-gradient(90deg, var(--primary), var(--accent-dk)); transition: width .3s ease; }
+    /* audio player: play/pause, drag the bar, ⏪ 10 s / ⏩ 10 s (as in lesson 10) */
+    .player { display: flex; align-items: center; gap: 12px; background: linear-gradient(135deg, rgba(212,87,42,.09), rgba(201,160,48,.10)); border: 2px solid rgba(212,87,42,.25); border-radius: 18px; padding: 12px 16px; margin: 4px 0 16px; }
+    .pl-btn { flex: 0 0 52px; width: 52px; height: 52px; border-radius: 50%; border: none; background: var(--primary); color: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(212,87,42,.35); }
+    .pl-btn:hover { background: var(--primary-dk); }
+    .pl-btn svg { width: 22px; height: 22px; fill: currentColor; }
+    .pl-btn .i-pause { display: none; }
+    .player.playing .pl-btn .i-play { display: none; } .player.playing .pl-btn .i-pause { display: block; }
+    .pl-main { flex: 1; min-width: 0; }
+    .pl-top { display: flex; justify-content: space-between; gap: 10px; margin-bottom: 8px; font-size: .88rem; }
+    .pl-label { font-weight: 700; color: var(--primary-dk); }
+    .pl-time { color: var(--muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
+    .pl-track { position: relative; height: 10px; border-radius: 99px; background: rgba(44,32,16,.10); cursor: pointer; touch-action: none; }
+    .pl-fill { position: absolute; inset: 0 auto 0 0; width: 0; border-radius: 99px; background: linear-gradient(90deg, var(--primary), var(--accent-dk)); }
+    .pl-knob { position: absolute; top: 50%; left: 0; width: 18px; height: 18px; margin: -9px 0 0 -9px; border-radius: 50%; background: #fff; border: 3px solid var(--primary); box-shadow: 0 1px 4px rgba(0,0,0,.2); transition: transform .15s; }
+    .pl-track:hover .pl-knob, .player.dragging .pl-knob { transform: scale(1.25); }
+    .pl-skip { flex: 0 0 auto; height: 36px; padding: 0 10px; border-radius: 99px; border: 2px solid var(--border); background: var(--card); color: var(--muted); cursor: pointer; font: inherit; font-size: .8rem; font-weight: 700; white-space: nowrap; }
+    .pl-skip:hover { border-color: var(--primary); color: var(--primary); }
+    @media (max-width: 560px) { .player { flex-wrap: wrap; gap: 10px; padding: 10px 12px; } .pl-main { flex-basis: calc(100% - 64px); } .pl-skip { flex: 1; } }
+
+    /* ── History tab ── */
+    .story { background: #fff; border: 1px solid var(--border); border-radius: var(--radius); padding: 18px 22px; line-height: 1.9; font-size: 1.02rem; box-shadow: 0 2px 10px rgba(44,32,16,.05); margin-bottom: 16px; }
+    .story h4 { font-family: 'Fraunces', Georgia, serif; text-align: center; font-size: 1.2rem; margin-bottom: 6px; }
+    .story p { margin-bottom: 8px; }
+    .spine-row { margin: 6px 0 14px; }
+    .spine-row > small { display: block; font-size: .72rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
+    .spine { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+    .spine .h { display: inline-flex; flex-direction: column; align-items: center; padding: 6px 12px; border-radius: 12px; background: rgba(95,142,196,.12); border: 2px solid rgba(95,142,196,.45); line-height: 1.2; }
+    .spine .h b { font-family: 'Fraunces', Georgia, serif; font-size: 1rem; }
+    .spine .h b::first-letter { color: var(--primary); font-size: 1.15em; }
+    .spine .h span { font-size: .78rem; font-weight: 700; color: var(--muted); }
+    .spine .h.old { background: rgba(201,160,48,.12); border-color: rgba(201,160,48,.5); }
+    .spine .arr { color: var(--muted); font-weight: 700; }
+    .mnemo { font-family: 'Fraunces', Georgia, serif; font-size: 1.12rem; text-align: center; padding: 10px; margin: 4px 0 10px; }
+    .mnemo b { color: var(--primary); font-size: 1.2em; }
+    .pre { font-weight: 700; color: var(--primary); margin-right: 1px; }
+    .place-list { list-style: none; border-left: 3px solid var(--primary); margin-left: 8px; }
+    .place-list li { position: relative; padding: 7px 0 7px 18px; line-height: 1.6; }
+    .place-list li::before { content: ''; position: absolute; left: -8px; top: 15px; width: 13px; height: 13px; border-radius: 50%; background: #fff; border: 3px solid var(--primary); }
+    .place-list .yr { display: inline-block; min-width: 92px; font-family: 'Fraunces', Georgia, serif; font-weight: 700; color: var(--primary); }
+
+    /* ── Lesson 12 blocks A/B ── */
+    .tab-btn:nth-child(4).active { background: var(--blue); border-color: var(--blue); }
+    .tab-btn:nth-child(5).active { background: var(--green); border-color: var(--green); }
+    .rule-box { background: linear-gradient(160deg, #fff, rgba(95,142,196,.07)); border: 2px solid rgba(95,142,196,.45); border-radius: var(--radius); padding: 16px 18px; }
+    .rule-title { font-family: 'Fraunces', Georgia, serif; font-size: 1.15rem; font-weight: 700; color: var(--blue); margin-bottom: 12px; }
+    .ru-note { background: rgba(196,122,150,.09); border-left: 4px solid var(--rose); border-radius: 0 10px 10px 0; padding: 9px 14px; font-size: .93rem; line-height: 1.6; margin-top: 8px; }
+    .rule-tip { margin-top: 10px; font-size: .95rem; line-height: 1.7; }
+    .lk { font-weight: 700; padding: 1px 6px; border-radius: 6px; }
+    .lk-pr { color: #2F5F96; background: rgba(95,142,196,.18); }
+    .lk-th { color: #9A3F64; background: rgba(196,122,150,.20); }
+    .lk-the { color: #3F6E2B; background: rgba(91,140,69,.16); }
+    .lk-ln { color: #8A6A10; background: rgba(201,160,48,.22); }
+    .snum { font-family: 'Fraunces', Georgia, serif; font-weight: 700; color: var(--primary); margin-right: 4px; }
+    /* Practice 1: pair cards — tap the first sentence, then the link word */
+    .pp-quiz { display: grid; gap: 14px; }
+    .pp { background: #fff; border: 1px solid var(--border); border-radius: 16px; padding: 14px 16px; box-shadow: 0 2px 10px rgba(44,32,16,.05); }
+    .pp-head { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+    .pp-n { width: 28px; height: 28px; border-radius: 50%; background: var(--primary); color: #fff; font-weight: 700; display: inline-flex; align-items: center; justify-content: center; font-size: .9rem; flex-shrink: 0; }
+    .pp-step { font-size: .88rem; font-weight: 700; color: var(--muted); }
+    .pp-swap { margin-left: auto; display: none; font: inherit; font-size: .8rem; font-weight: 700; color: var(--muted); background: none; border: 2px solid var(--border); border-radius: 99px; padding: 3px 12px; cursor: pointer; }
+    .pp-swap:hover { color: var(--primary); border-color: var(--primary); }
+    .pp.ordered .pp-swap { display: inline-block; }
+    .quiz.checked .pp-swap { display: none; }
+    .pp-ss { display: flex; flex-direction: column; gap: 8px; }
+    .pp-s { display: flex; gap: 12px; align-items: flex-start; padding: 10px 14px; border-radius: 12px; border: 2px solid var(--border); background: var(--bg); line-height: 1.65; transition: .15s; }
+    .pp:not(.ordered) .pp-s { cursor: pointer; }
+    .pp:not(.ordered) .pp-s:hover { border-color: var(--primary); background: rgba(212,87,42,.05); }
+    .pp-b { flex-shrink: 0; min-width: 34px; height: 26px; padding: 0 8px; border-radius: 99px; background: var(--border); color: var(--text); font-size: .78rem; font-weight: 700; display: inline-flex; align-items: center; justify-content: center; margin-top: 1px; }
+    .pp-s.first { border-color: var(--blue); background: #EAF2FB; }
+    .pp-s.first .pp-b { background: var(--blue); color: #fff; }
+    .pp-s.second .pp-b { background: var(--primary); color: #fff; }
+    .pp.ordered .w { cursor: pointer; border-radius: 5px; padding: 0 1px; transition: background .12s; }
+    .pp.ordered .w:hover { background: rgba(201,160,48,.25); }
+    .w.pick { background: rgba(201,160,48,.45); box-shadow: 0 0 0 2px rgba(201,160,48,.6); }
+    .quiz.checked .w { cursor: default; }
+    .quiz.checked .w.is-link { background: rgba(91,140,69,.18); color: #3F6E2B; font-weight: 700; }
+    .quiz.checked .w.pick:not(.is-link) { background: rgba(200,64,64,.15); box-shadow: 0 0 0 2px rgba(200,64,64,.5); }
+    .quiz.checked .pp-s.first.ok { border-color: var(--green); background: rgba(91,140,69,.08); }
+    .quiz.checked .pp-s.first.bad { border-color: var(--red); background: rgba(200,64,64,.06); }
+    .pp-keys { display: none; margin-top: 10px; font-size: .88rem; font-weight: 700; color: var(--muted); }
+    .quiz.checked .pp-keys { display: block; }
+    .pp-keys input { display: none; }
+    .pp-why { font-size: .93rem; line-height: 1.6; background: rgba(95,142,196,.08); border-radius: 10px; padding: 8px 12px; margin-top: 8px; }
+    .bank.sent { flex-direction: column; }
+    .bank.sent span { border-radius: 12px; font-weight: 500; line-height: 1.5; padding: 7px 14px; }
+    .slots .slot { margin: 8px 0; }
+    .slots .gap { display: flex; align-items: flex-start; white-space: normal; }
+    .slots .gap .gn { margin-top: 8px; margin-right: 8px; flex-shrink: 0; }
+    .slots .dz { display: block; flex: 1; text-align: left; border-radius: 12px; padding: 7px 14px; min-height: 40px; font-weight: 500; line-height: 1.5; }
+    .slots .key { display: inline-block; margin-top: 10px; }
+    .why-list { padding-left: 22px; line-height: 1.7; }
+    .use-words { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; padding: 10px 14px; border-radius: 12px; background: rgba(201,160,48,.08); border: 2px dashed rgba(201,160,48,.45); margin: 6px 0; }
+    .use-words span { font-weight: 700; font-size: .9rem; padding: 3px 12px; border-radius: 99px; background: #fff; border: 1px solid var(--border); cursor: pointer; user-select: none; }
+    .use-words span.used { background: var(--green); border-color: var(--green); color: #fff; }
+    .hw-list { list-style: none; }
+    .hw-list li { padding: 10px 0; border-bottom: 1px dashed var(--border); }
+    .hw-list li:last-child { border-bottom: none; }
+    .hw-list label { display: flex; gap: 12px; align-items: flex-start; cursor: pointer; line-height: 1.55; }
+    .hw-list input { width: 22px; height: 22px; accent-color: var(--green); flex-shrink: 0; margin-top: 1px; }
+    .hw-list li.done span.t { color: var(--green); text-decoration: line-through; }
+    .free-write { min-height: 150px; }
+  
+    /* ── Lesson 14 ── */
+    .vt { font-weight: 700; padding: 1px 6px; border-radius: 6px; }
+    .mk { font-weight: 700; color: #8A6A10; border-bottom: 3px solid rgba(201,160,48,.7); }
+    .subj { text-decoration: underline wavy rgba(212,87,42,.7); text-underline-offset: 4px; font-weight: 600; }
+    /* passive: the be-part shows the tense, V3 never changes */
+    .pv { font-weight: 700; white-space: nowrap; }
+    .pv-be { color: #2F5F96; background: rgba(95,142,196,.16); padding: 1px 4px; border-radius: 6px 0 0 6px; }
+    .pv-v3 { color: #9A3F64; background: rgba(196,122,150,.18); padding: 1px 4px; border-radius: 0 6px 6px 0; }
+    .pv-act { color: var(--muted); font-weight: 700; border-bottom: 2px dotted var(--muted); }
+    /* Задание 2: the filled word and the clue around it */
+    .fw { font-weight: 700; color: #3F6E2B; background: rgba(91,140,69,.16); padding: 1px 6px; border-radius: 6px; }
+    .clue { font-weight: 700; color: #8A6A10; border-bottom: 3px solid rgba(201,160,48,.7); }
+    .lbl { display: inline-block; font-size: .72rem; font-weight: 800; letter-spacing: .03em; padding: 1px 7px; border-radius: 99px; margin-left: 4px; vertical-align: 2px; }
+    .lbl-v1 { background: rgba(95,142,196,.18); color: #2F5F96; }
+    .lbl-v2 { background: rgba(196,122,150,.20); color: #9A3F64; }
+    .lbl-ing { background: rgba(91,140,69,.18); color: #3F6E2B; }
+    .lbl-n { background: rgba(201,160,48,.22); color: #8A6A10; }
+    /* timer */
+    .timer { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin: 4px 0 14px; padding: 10px 14px; border-radius: 14px; background: rgba(95,142,196,.08); border: 2px solid rgba(95,142,196,.35); }
+    .timer .btn { padding: 6px 16px; }
+    .tm-clock { font-size: 1.25rem; font-variant-numeric: tabular-nums; min-width: 96px; }
+    .tm-clock b { font-family: 'Fraunces', Georgia, serif; }
+    .timer.running { border-color: var(--blue); }
+    .timer.over { border-color: var(--red); background: rgba(200,64,64,.06); }
+    .timer.over .tm-clock { color: var(--red); }
+    .tm-msg { font-weight: 700; color: var(--green); }
+    /* lists of lettered lines / meanings */
+    .sent-list { list-style: none; margin-bottom: 10px; background: #fff; border: 1px solid var(--border); border-radius: 14px; padding: 6px 14px; }
+    .sent-list li { display: flex; gap: 10px; padding: 5px 0; line-height: 1.55; border-bottom: 1px dashed var(--border); }
+    .sent-list li:last-child { border-bottom: none; }
+    .sl { flex-shrink: 0; width: 26px; height: 26px; border-radius: 50%; background: var(--border); font-weight: 700; font-size: .82rem; display: inline-flex; align-items: center; justify-content: center; }
+    .z3 { background: #fff; border: 1px solid var(--border); border-radius: 16px; padding: 12px 16px; margin-bottom: 12px; }
+    .z3-title { font-weight: 800; margin-bottom: 4px; }
+    .z3 .sent-list { border: none; padding: 0; margin-bottom: 4px; }
+    .answer-row.letters .ch-l { display: none; }
+    .answer-row.letters .ch-group { grid-template-columns: repeat(auto-fill, minmax(52px, 1fr)); }
+    .answer-row.letters .ch-t { text-align: center; width: 100%; font-weight: 700; }
+    .three { line-height: 1.75; }
+    .three span { display: block; }
+    .rule-table.wrap td:first-child { white-space: normal; }
+    .fmt-note { font-size: .85rem; color: var(--muted); font-weight: 600; }
+    /* warm-up: story card + random word check */
+    .scard { background: #fff; border: 2px solid rgba(196,122,150,.45); border-radius: 18px; padding: 14px 18px; margin-bottom: 10px; box-shadow: 0 2px 12px rgba(44,32,16,.06); }
+    .scard-top { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 6px; }
+    .scard-n { font-size: .75rem; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: var(--rose); }
+    .scard h4 { font-family: 'Fraunces', Georgia, serif; font-size: 1.2rem; margin: 0; flex: 1 1 220px; }
+    .scard ul { margin: 4px 0 0 18px; line-height: 1.7; }
+    .draw-btn { margin-left: auto; }
+    .vc-quiz input.blank { width: 250px; max-width: 100%; letter-spacing: .02em; text-align: left; }
+    .vc-quiz input.blank::placeholder { color: #B9AC97; letter-spacing: .06em; font-weight: 600; }
+    .vc-bar { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 10px; }
+    .vc-bar small { color: var(--muted); }
+    .vc-bar .draw-btn { margin-left: 0; }
+    html.watching .draw-btn { display: none; }
+    /* history pictures */
+    .duo { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 6px 0 14px; }
+    .duo figure, .pic { margin: 0; }
+    .duo img { width: 100%; height: 280px; object-fit: cover; object-position: 50% 12%; border-radius: 12px; box-shadow: var(--shadow); display: block; }
+    .duo figcaption, .pic figcaption { font-size: .8rem; color: var(--muted); margin-top: 5px; line-height: 1.35; }
+    .duo figcaption b { color: var(--text); }
+    .pic img { width: 100%; max-height: 300px; object-fit: cover; border-radius: 12px; box-shadow: var(--shadow); display: block; }
+    @media (max-width: 560px) { .duo img { height: 200px; } }
+    .story b.ps { color: #9A3F64; }
+    /* teacher-only: shown only inside teacher.html (sync.js adds html.watching in watch mode) */
+    .teacher-only { display: none; }
+    html.watching .teacher-only { display: block; margin-top: 14px; background: #FDEAF2; border: 2px dashed #D9628F; border-radius: var(--radius); padding: 12px 16px; line-height: 1.75; }
+    .teacher-only .to-label { font-size: .75rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: #B0416C; margin-bottom: 6px; }
+    .teacher-only b { color: #9A3F64; }
+    .teacher-only ul { margin: 4px 0 0 18px; }
+    /* ── Lesson 15 ── */
+    .op { background: #fff; border: 1px solid var(--border); border-radius: 14px; padding: 10px 14px 6px; margin-bottom: 10px; }
+    .op:last-child { margin-bottom: 0; }
+    .gap-text.ops { padding: 0; border: none; background: none; }
+    .op-head { display: flex; align-items: center; gap: 8px; line-height: 1.4; font-size: .95rem; }
+    .op-n { width: 26px; height: 26px; border-radius: 50%; background: var(--primary); color: #fff; font-weight: 700; display: inline-flex; align-items: center; justify-content: center; font-size: .85rem; flex-shrink: 0; }
+    .op-role { color: var(--muted); font-size: .88rem; }
+    .op p { margin: 2px 0 0; }
+    /* Задание 7: statements she can tap-underline */
+    .st-list { list-style: none; background: #fff; border: 1px solid var(--border); border-radius: 14px; padding: 6px 14px; margin-bottom: 6px; }
+    .st-list li { display: flex; gap: 10px; padding: 6px 0; line-height: 1.6; border-bottom: 1px dashed var(--border); }
+    .st-list li:last-child { border-bottom: none; }
+    .st-list .u { cursor: pointer; border-radius: 3px; transition: background .12s; }
+    .st-list .u:hover { background: rgba(201,160,48,.15); }
+    .st-list .u.hl { background: linear-gradient(transparent 55%, rgba(201,160,48,.6) 55%); }
+    .ul-hint { font-size: .82rem; color: var(--muted); margin: 0 0 14px; }
+    .note { font: inherit; font-size: .92rem; border: none; border-bottom: 2px dashed var(--border); background: transparent; padding: 2px 4px; margin-left: 10px; width: 240px; max-width: 62%; color: var(--text); }
+    .note:focus { outline: none; border-bottom-color: var(--primary); }
+    .note:disabled { color: var(--muted); }
+    /* once-only player: no skipping, no dragging; unlocks after Check */
+    .player.once .pl-skip, .player.once .pl-knob { display: none; }
+    .player.once .pl-track { cursor: default; }
+    .player.locked { opacity: .65; }
+    .player.locked .pl-btn { background: var(--muted); box-shadow: none; cursor: default; }
+    .pl-note { font-size: .82rem; font-weight: 700; color: var(--muted); margin: -8px 0 14px; }
+    /* audio scripts: the paraphrase and the traps */
+    mark.para { background: rgba(91,140,69,.20); color: #2F5A1F; padding: 0 3px; border-radius: 4px; }
+    .trap { text-decoration: underline wavy rgba(200,64,64,.75); text-underline-offset: 4px; }
+    .sc-body p { margin-bottom: 10px; }
+    .legend { display: flex; gap: 14px; flex-wrap: wrap; font-size: .84rem; margin: 4px 0 10px; color: var(--muted); }
+    /* history: 1603 / 1613 cards and the time links */
+    .duo-card { background: #fff; border: 2px solid rgba(95,142,196,.4); border-radius: 14px; padding: 12px 16px; }
+    .dc-yr { font-family: 'Fraunces', Georgia, serif; font-size: 1.7rem; font-weight: 700; color: var(--primary); line-height: 1.1; }
+    .dc-name { font-weight: 700; margin: 2px 0 4px; }
+    .duo-card p { font-size: .9rem; color: var(--muted); line-height: 1.5; margin: 0; }
+    .story .tx { font-weight: 700; color: #8A6A10; border-bottom: 3px solid rgba(201,160,48,.7); }
+  </style>
+<script src="../sync.js"></script>
+<script src="../decks.js"></script>
+</head>
+<body>
+
+<header class="site-header">
+  <h1>Lesson 15 — Nature &amp; the Environment · Listening: Speakers</h1>
+  <a class="back-link" href="../index.html">← All Lessons</a>
+</header>
+
+<div class="container">
+
+  <div class="lesson-meta">
+    <h2>«Высшая проба» Round 2 · Nature &amp; the environment · Задание 7: five speakers, heard once</h2>
+    <p>📅 2 November 2026 &nbsp;·&nbsp; Lesson 15 &nbsp;·&nbsp; trains Задание 7 (speakers), Задание 2 (word box), Задание 10 · history era 4: the Stuarts and the first colonies</p>
+  </div>
+
+  <div class="progress-wrap">
+    <div class="progress-top">
+      <div>Blocks checked: <span id="pgCount">0 / 0</span></div>
+      <div>Points today: <span id="pgScore">0 / 0</span></div>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="pgFill"></div></div>
+  </div>
+
+  <div class="tab-bar">
+    <button class="tab-btn active" onclick="switchTab('warm', this)">🔁 Warm-up</button>
+    <button class="tab-btn"        onclick="switchTab('words', this)">🌿 Nature words</button>
+    <button class="tab-btn"        onclick="switchTab('listen', this)">🎧 Five speakers</button>
+    <button class="tab-btn"        onclick="switchTab('hist', this)">🏛 History</button>
+    <button class="tab-btn"        onclick="switchTab('hw', this)">🏠 Homework</button>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════
+       TAB 1 — WARM-UP (8 min): the Tudors from memory + random words from Lessons 11–14
+  ══════════════════════════════════════════════════════════ -->
+  <div class="tab-content active" id="tab-warm">
+
+    <div class="exercise">
+      <div class="exercise-label">Warm-up 1 · from Lesson 14 · 3 min</div>
+      <h3>The Tudors, from memory</h3>
+      <p class="instr">No timeline this time. Retell the story aloud in one or two minutes, monarch by monarch: <b>Henry VII → Henry VIII → Edward VI → Mary I → Elizabeth I</b>. Tap each word when you use it, and say at least <b>two passives</b> (<i>the monasteries were closed</i>).</p>
+      <div class="use-words" data-need="5"><span>reign</span><span>break with Rome</span><span>was / were + V3</span><span>by the time … had</span><span>golden age</span><span>invade</span><span>come to an end</span><span>a year / five years later</span></div>
+      <p class="bank-hint">0 / 5 used</p>
+      <div class="teacher-only">
+        <div class="to-label">👩‍🏫 Teacher only · sample answer (about 1½ min)</div>
+        <p>In 1485 Henry Tudor won at Bosworth and became Henry VII. He married Elizabeth of York, so the two roses became one. He was careful with money, and <b>by the time</b> he died in 1509, the treasury <b>had been filled</b>. In 1492 Columbus reached America, and <b>five years later</b> John Cabot landed in North America for Henry VII. Henry VIII wanted a son, and when the Pope refused to end his first marriage, he <b>broke with Rome</b>: in 1534 he became Head of the Church of England. The monasteries <b>were closed</b>, and two of his six wives <b>were beheaded</b>. Edward VI became king at nine and died six years later. Mary I brought back the Catholic Church, and almost three hundred Protestants <b>were burnt</b>. In 1558 Elizabeth I came to the throne. Her <b>reign</b> was a <b>golden age</b>: Shakespeare, Drake. In 1588 the Armada was sent to <b>invade</b> England, but it <b>was defeated</b> by English ships and storms. She never married, so in 1603 the Tudor line <b>came to an end</b>.</p>
+        <p style="font-size:.9rem;color:var(--muted)">Listen for: the five monarchs in order · <i>was / were</i> + V3 · <i>by the time … had been</i> · <i>the</i> Pope, <i>the</i> Church of England · 1603 = the 17th century.</p>
+      </div>
+    </div>
+
+    <div class="exercise">
+      <div class="exercise-label">Warm-up 2 · random words from Lessons 11–14 · 5 min</div>
+      <h3>Eight random words: science, people, history</h3>
+      <p class="instr">Read the Russian and type the English word or phrase. The first letter and the number of letters are shown. Press <b>Check</b>. Then say <b>a passive sentence of your own</b> with every word you missed (<i>The experiment <b>was carried out</b> in 1928.</i>).</p>
+      <div class="vc-bar">
+        <button type="button" class="btn btn-ghost draw-btn" id="vcNew">🎲 New 8 words</button>
+        <small>4 from <i>Science &amp; technology</i> (L14) · 2 from <i>People &amp; achievement</i> (L12) · 2 from <i>History &amp; heritage</i> (L11)</small>
+      </div>
+      <div class="quiz vc-quiz">
+        <div class="vc-rows"></div>
+        <div class="after-check">
+          <details class="logic" open><summary><span>🗣</span><span class="hint-txt">The words in context · now make your own passive sentence</span></summary><div class="logic-body"><ul class="why-list vc-why"></ul></div></details>
+        </div>
+      </div>
+<script>
+// Draws 8 random words (4 from V10, 2 from V9, 2 from V8) before the lesson engine builds the quizzes.
+// The draw is saved with the answers, so the teacher's live view shows the same words; 🎲 draws again.
+(function () {
+  const deck = id => ((window.DECKS || []).find(d => d.id === id) || { cards: [] }).cards;
+  const POOLS = { v10: deck('v10'), v9: deck('v9'), v8: deck('v8') };
+  const PLAN = [['v10', 4], ['v9', 2], ['v8', 2]];
+  const ALT = { civilisation: 'civilisation|civilization' };
+  const shuffle = a => { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+  const card = k => { const [p, i] = String(k).split(':'); return (POOLS[p] || [])[+i]; };
+  window.vcDraw = () => shuffle(PLAN.flatMap(([p, n]) => shuffle([...POOLS[p].keys()]).slice(0, n).map(i => p + ':' + i)));
+
+  let saved = {};
+  try { saved = JSON.parse(localStorage.getItem('lesson-15')) || {}; } catch (e) {}
+  let set = saved['vc-set'];
+  if (!Array.isArray(set) || set.length !== 8 || !set.every(card)) {
+    set = vcDraw();
+    saved['vc-set'] = set;
+    try { localStorage.setItem('lesson-15', JSON.stringify(saved)); } catch (e) {}
+  }
+  const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;');
+  const mask = w => w.split(' ').map(x => x[0] + ' _'.repeat(x.length - 1)).join('    ');
+  const box = document.currentScript.previousElementSibling;
+  box.querySelector('.vc-rows').innerHTML = set.map((k, n) => {
+    const c = card(k);
+    return `<div class="answer-row"><span class="ar-num">${n + 1}</span><span class="ar-txt">${esc(c.t)} <span class="fmt-note">${esc(c.p)}</span></span>` +
+           `<input class="blank ans" data-answer="${esc(c.a || ALT[c.w] || c.w)}" placeholder="${esc(mask(c.w))}" autocomplete="off" spellcheck="false"></div>`;
+  }).join('');
+  box.querySelector('.vc-why').innerHTML = set.map(k => { const c = card(k); return `<li><b>${esc(c.w)}</b> · <i>${esc(c.e)}</i></li>`; }).join('');
+})();
+</script>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════
+       TAB 2 — Block A: nature & environment words (V11) → Задание 2 box + Задание 7 by reading
+  ══════════════════════════════════════════════════════════ -->
+  <div class="tab-content" id="tab-words">
+
+    <div class="exercise">
+      <div class="exercise-label">Step 1 · Meet the words · 7 min</div>
+      <h3>Nature &amp; the environment: the words</h3>
+      <p class="instr">Go through the cards: say the word, guess the translation, then flip. Mark each card ✓ or ✗.</p>
+      <div class="fc-app" data-deck="v11"></div>
+    </div>
+
+    <div class="exercise">
+      <div class="exercise-label">Step 2 · Your word list</div>
+      <h3>All the new words in one place</h3>
+      <p class="instr">Read through the list and listen to any word you’re unsure of. Then press <b>🙈 Hide Russian</b> and test yourself: tap a blurred translation to check.</p>
+      <div class="fc-list" data-deck="v11"></div>
+    </div>
+
+    <div class="exercise">
+      <div class="exercise-label">Practice 1 · Nature words (V11) · 5 min</div>
+      <h3>Choose the word that fits</h3>
+      <p class="instr">All three options have the same form, so here only the <b>meaning</b> decides.</p>
+      <div class="facts"><span class="fact">🌿 V11 nature &amp; environment</span><span class="fact">10 sentences</span></div>
+      <div class="quiz">
+        <div class="answer-row"><span class="ar-num">1</span><span class="ar-txt">The giant panda’s natural ___ is the bamboo forest of central China.</span><select class="exam-select ans" data-opts="habitat,prey,emission" data-answer="habitat"></select></div>
+        <div class="answer-row"><span class="ar-num">2</span><span class="ar-txt">Scientists describe thousands of new ___ of insects every year.</span><select class="exam-select ans" data-opts="species,landscapes,predators" data-answer="species"></select></div>
+        <div class="answer-row"><span class="ar-num">3</span><span class="ar-txt">A long ___ left the fields dry and the farmers without a harvest.</span><select class="exam-select ans" data-opts="drought,ecosystem,terrain" data-answer="drought"></select></div>
+        <div class="answer-row"><span class="ar-num">4</span><span class="ar-txt">Wolves are ___: they hunt deer, rabbits and other animals.</span><select class="exam-select ans" data-opts="predators,prey,species" data-answer="predators"></select></div>
+        <div class="answer-row"><span class="ar-num">5</span><span class="ar-txt">Electric buses produce no ___ from their exhausts.</span><select class="exam-select ans" data-opts="emissions,droughts,habitats" data-answer="emissions"></select></div>
+        <div class="answer-row"><span class="ar-num">6</span><span class="ar-txt">Coral reefs are very ___: even a small rise in water temperature can kill them.</span><select class="exam-select ans" data-opts="fragile,coastal,sustainable" data-answer="fragile"></select></div>
+        <div class="answer-row"><span class="ar-num">7</span><span class="ar-txt">Rising sea levels are a danger to ___ towns.</span><select class="exam-select ans" data-opts="coastal,fragile,genetic" data-answer="coastal"></select></div>
+        <div class="answer-row"><span class="ar-num">8</span><span class="ar-txt">Polar bears have ___ to life on the ice: thick fur and fat keep them warm.</span><select class="exam-select ans" data-opts="adapted,threatened,bred" data-answer="adapted"></select></div>
+        <div class="answer-row"><span class="ar-num">9</span><span class="ar-txt">These bikes are built for rough ___ with rocks and mud.</span><select class="exam-select ans" data-opts="terrain,ecosystem,wildlife" data-answer="terrain"></select></div>
+        <div class="answer-row"><span class="ar-num">10</span><span class="ar-txt">Baby turtles are very ___ as they run across the beach to the sea: birds and crabs catch many of them.</span><select class="exam-select ans" data-opts="vulnerable,fragile,sustainable" data-answer="vulnerable"></select></div>
+      </div>
+      <details class="logic"><summary><span>💡</span><span class="hint-txt">Hint · two pairs that look alike</span></summary><div class="logic-body"><ul>
+        <li><b>predator</b> hunts; <b>prey</b> is hunted. <i>The eagle (predator) caught its prey (a rabbit).</i></li>
+        <li><b>fragile</b> = easy to break or damage (a thing, a system). <b>vulnerable</b> = easy to attack or hurt (a living thing): <i>vulnerable <b>to</b> predators</i>.</li>
+      </ul></div></details>
+    </div>
+
+    <div class="exercise">
+      <div class="exercise-label">Practice 2 · The little word · 4 min</div>
+      <h3>One word: a preposition or a particle</h3>
+      <p class="instr">In Задание 2 the little word after the gap often decides the answer. Type <b>one</b> word.</p>
+      <div class="facts"><span class="fact">✍️ one word</span><span class="fact">10 sentences</span></div>
+      <div class="quiz">
+        <div class="answer-row"><span class="ar-num">1</span><span class="ar-txt">Polar bears have adapted ___ life on the ice.</span><input class="blank short ans" data-answer="to" autocomplete="off" spellcheck="false"></div>
+        <div class="answer-row"><span class="ar-num">2</span><span class="ar-txt">Young birds are vulnerable ___ cats.</span><input class="blank short ans" data-answer="to" autocomplete="off" spellcheck="false"></div>
+        <div class="answer-row"><span class="ar-num">3</span><span class="ar-txt">The dodo died ___ in the 17th century.</span><input class="blank short ans" data-answer="out" autocomplete="off" spellcheck="false"></div>
+        <div class="answer-row"><span class="ar-num">4</span><span class="ar-txt">Thousands of trees are cut ___ every day.</span><input class="blank short ans" data-answer="down" autocomplete="off" spellcheck="false"></div>
+        <div class="answer-row"><span class="ar-num">5</span><span class="ar-txt">Some cities are running out ___ fresh water.</span><input class="blank short ans" data-answer="of" autocomplete="off" spellcheck="false"></div>
+        <div class="answer-row"><span class="ar-num">6</span><span class="ar-txt">We are using ___ the Earth’s resources faster than they can grow back.</span><input class="blank short ans" data-answer="up" autocomplete="off" spellcheck="false"></div>
+        <div class="answer-row"><span class="ar-num">7</span><span class="ar-txt">Hundreds of species are threatened ___ extinction.</span><input class="blank short ans" data-answer="with" autocomplete="off" spellcheck="false"></div>
+        <div class="answer-row"><span class="ar-num">8</span><span class="ar-txt">The destruction ___ the rainforest is speeding up.</span><input class="blank short ans" data-answer="of" autocomplete="off" spellcheck="false"></div>
+        <div class="answer-row"><span class="ar-num">9</span><span class="ar-txt">The national park protects wildlife ___ hunters.</span><input class="blank short ans" data-answer="from" autocomplete="off" spellcheck="false"></div>
+        <div class="answer-row"><span class="ar-num">10</span><span class="ar-txt">Plastic bags are dangerous ___ sea animals.</span><input class="blank short ans" data-answer="for|to" autocomplete="off" spellcheck="false"></div>
+      </div>
+      <details class="logic"><summary><span>💡</span><span class="hint-txt">Hint · Russian says it differently</span></summary><div class="logic-body"><ul>
+        <li>«приспосабливаться <b>к</b>» = <i>adapt <b>to</b></i>; «уязвимый <b>для</b>» = <i>vulnerable <b>to</b></i>.</li>
+        <li>«нам не хватает воды» = <i>we are running out <b>of</b> water</i>.</li>
+        <li>«под угрозой исчезновения» = <i>threatened <b>with</b> extinction</i>.</li>
+      </ul></div></details>
+    </div>
+
+    <div class="exercise">
+      <div class="review-head"><span class="task-num">Задание 2 format</span><span class="pts">12 words · 10 gaps · 2 extra</span></div>
+      <h3>Practice 3 · Should the lynx come back to Britain? · 8 min</h3>
+      <p class="instr">The Eurasian lynx, a wild cat about the size of a big dog, died out in Britain more than a thousand years ago. Some people want to bring it back. Five people give their opinion. <b>Label the box first</b> (noun, verb, adjective, -ed?), then fill the gaps.</p>
+      <div class="facts"><span class="fact">⏱ 8 min</span><span class="fact">🏷 label the box first</span><span class="fact">2 extras</span></div>
+      <div class="timer" data-min="8"></div>
+      <div class="bank dnd"><span>adapt</span><span>conservation</span><span>died out</span><span>drought</span><span>ecosystem</span><span>habitat</span><span>predator</span><span>prey</span><span>species</span><span>sustainable</span><span>threaten</span><span>threatened</span></div>
+      <p class="bank-hint">Drag a word into a gap, or tap a word and then the gap. Tap a filled gap to empty it.</p>
+      <div class="quiz">
+        <div class="gap-text ops">
+          <div class="op"><div class="op-head"><span class="op-n">1</span><b>Ruth</b><span class="op-role">sheep farmer</span></div><p>People in cities love the idea, but they don’t have to live with it. A lynx is a <span class="gap"><span class="gn">1</span><select class="exam-select ans" data-bank="1" data-answer="predator"></select></span>, and on my farm the easiest prey would be my lambs, not the deer in the forest. My family has kept sheep on these hills for four generations, and our income is already vulnerable: one hard winter or a long <span class="gap"><span class="gn">2</span><select class="exam-select ans" data-bank="1" data-answer="drought"></select></span>, and we struggle. They say farmers will get money for every lamb that is killed, but nobody can tell me how I’d prove it was a lynx. I’m not against wildlife. I just think the people who make the decision should come and spend a lambing season here first.</p></div>
+          <div class="op"><div class="op-head"><span class="op-n">2</span><b>Amir</b><span class="op-role">ecologist</span></div><p>Britain has lost more of its wildlife than almost any other country in Europe. Deer numbers are completely out of control, because we got rid of every animal that used to hunt them. The deer eat the young trees, so whole forests can’t grow back. A lynx doesn’t chase sheep across open fields: it hunts deer in thick forest, which is its natural <span class="gap"><span class="gn">3</span><select class="exam-select ans" data-bank="1" data-answer="habitat"></select></span>. In other European countries lynx were brought back decades ago, and the whole <span class="gap"><span class="gn">4</span><select class="exam-select ans" data-bank="1" data-answer="ecosystem"></select></span> there has become healthier. Of course a few sheep will be lost, but the numbers are tiny.</p></div>
+          <div class="op"><div class="op-head"><span class="op-n">3</span><b>Josh</b><span class="op-role">student, 17</span></div><p>Honestly, I’d just love to see one. I’ve grown up hearing that wolves, bears and lynx used to live here, and that we killed them all. It makes me sad that animals like that <span class="gap"><span class="gn">5</span><select class="exam-select ans" data-bank="1" data-answer="died out"></select></span> because of us. At school we’re always told to recycle and cut our emissions, which is fine, but bringing a <span class="gap"><span class="gn">6</span><select class="exam-select ans" data-bank="1" data-answer="species"></select></span> back feels like actually doing something, not just using less. Even if I never saw a lynx myself, I’d like to know it was out there.</p></div>
+          <div class="op"><div class="op-head"><span class="op-n">4</span><b>Helen</b><span class="op-role">runs a guest house</span></div><p>Our village is in a beautiful area, but most tourists just drive straight through it. In places like Spain and Switzerland, people pay to go on lynx tours, even though they hardly ever see one. That could change everything for us: more visitors, more jobs, and more young people staying instead of moving to the city. But it has to be done in a <span class="gap"><span class="gn">7</span><select class="exam-select ans" data-bank="1" data-answer="sustainable"></select></span> way. If coaches full of tourists start driving into the forest, they’ll <span class="gap"><span class="gn">8</span><select class="exam-select ans" data-bank="1" data-answer="threaten"></select></span> the very animals they’ve come to see.</p></div>
+          <div class="op"><div class="op-head"><span class="op-n">5</span><b>Graham</b><span class="op-role">forester</span></div><p>I’ve worked in these forests for thirty years, and I’m not sure the lynx would cope. This isn’t the landscape it left: most of the old forests have been cut down, and what’s left are small patches of trees with roads and farms in between. A lynx needs a huge territory. If we release a few animals and they can’t <span class="gap"><span class="gn">9</span><select class="exam-select ans" data-bank="1" data-answer="adapt"></select></span>, they’ll end up hit by cars or shot. I’d rather we spent the money on the <span class="gap"><span class="gn">10</span><select class="exam-select ans" data-bank="1" data-answer="conservation"></select></span> of the animals we’ve still got, like the red squirrel and the wildcat, before they disappear too.</p></div>
+        </div>
+        <div class="after-check">
+          <details class="logic" open><summary><span>🏷</span><span class="hint-txt">The form, then the meaning</span></summary><div class="logic-body"><ul class="why-list">
+            <li><b>1 predator</b>: a lynx hunts; the lambs would be its <i>prey</i>. <i>prey</i> is the trap.</li>
+            <li><b>2 drought</b>: <i>one hard winter or a long ___</i>: bad weather for a farm.</li>
+            <li><b>3 habitat · 4 ecosystem</b>: <i>its natural habitat</i> = where it lives; the whole system of plants and animals = <i>ecosystem</i>.</li>
+            <li><b>5 died out</b>: <i>animals like that ___</i> in the past → V2.</li>
+            <li><b>6 species</b>: <i>a ___</i> → singular noun; <i>species</i> is the same in the singular and the plural.</li>
+            <li><b>7 sustainable</b>: <i>a ___ way</i> → an adjective.</li>
+            <li><b>8 threaten</b>: after <i>they’ll</i> (will) → V1. <i>threatened</i> is the trap.</li>
+            <li><b>9 adapt</b>: after <i>can’t</i> → V1. <b>10 conservation</b>: <i>the ___ of</i> → a noun.</li>
+            <li>Extras: <b>prey</b> and <b>threatened</b>.</li>
+          </ul></div></details>
+          <p class="instr" style="margin-top:14px">🎧 Now listen to all five and read along. Notice how the speakers sound: Ruth is annoyed, Josh is excited, Graham is worried.</p>
+          <div class="player" data-src="audio/l15-lynx.mp3" data-label="Should the lynx come back?"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="exercise">
+      <div class="review-head"><span class="task-num">Задание 7 format, by reading</span><span class="pts">5 speakers · 7 statements · 2 extra</span></div>
+      <h3>Practice 4 · Who thinks what? · 5 min</h3>
+      <p class="instr">Read the five opinions again and match each speaker to a statement. The statements say the same thing <b>in other words</b>: that is exactly what happens in Задание 7. Two statements are extra.</p>
+      <ul class="sent-list">
+        <li><span class="sl">A</span>This speaker thinks the animal might not survive in Britain as it is today.</li>
+        <li><span class="sl">B</span>This speaker has already seen a lynx in the wild.</li>
+        <li><span class="sl">C</span>This speaker feels that the people making the decision don’t understand their life.</li>
+        <li><span class="sl">D</span>This speaker sees a chance for the local economy.</li>
+        <li><span class="sl">E</span>This speaker is against tourism in the area.</li>
+        <li><span class="sl">F</span>This speaker says the animal would help to solve a problem caused by another animal.</li>
+        <li><span class="sl">G</span>This speaker would be happy just to know the animal is there.</li>
+      </ul>
+      <div class="quiz">
+        <div class="answer-row letters"><span class="ar-num">1</span><span class="ar-txt">Ruth, sheep farmer</span><select class="exam-select ans" data-opts="A,B,C,D,E,F,G" data-answer="C"></select></div>
+        <div class="answer-row letters"><span class="ar-num">2</span><span class="ar-txt">Amir, ecologist</span><select class="exam-select ans" data-opts="A,B,C,D,E,F,G" data-answer="F"></select></div>
+        <div class="answer-row letters"><span class="ar-num">3</span><span class="ar-txt">Josh, student</span><select class="exam-select ans" data-opts="A,B,C,D,E,F,G" data-answer="G"></select></div>
+        <div class="answer-row letters"><span class="ar-num">4</span><span class="ar-txt">Helen, runs a guest house</span><select class="exam-select ans" data-opts="A,B,C,D,E,F,G" data-answer="D"></select></div>
+        <div class="answer-row letters"><span class="ar-num">5</span><span class="ar-txt">Graham, forester</span><select class="exam-select ans" data-opts="A,B,C,D,E,F,G" data-answer="A"></select></div>
+        <div class="after-check">
+          <details class="logic" open><summary><span>🔎</span><span class="hint-txt">Same idea, other words</span></summary><div class="logic-body"><ul class="why-list">
+            <li><b>Ruth → C</b>: <i>the people who make the decision should come and spend a lambing season here first</i> = they <b>don’t understand her life</b>.</li>
+            <li><b>Amir → F</b>: <i>deer numbers are out of control … a lynx hunts deer</i> = <b>solves a problem caused by another animal</b>.</li>
+            <li><b>Josh → G</b>: <i>even if I never saw a lynx, I’d like to know it was out there</i>. Trap B: <i>I’d just love to see one</i> means he <b>hasn’t</b>.</li>
+            <li><b>Helen → D</b>: <i>more visitors, more jobs</i> = <b>the local economy</b>. Trap E: she wants tourists, just not coaches in the forest.</li>
+            <li><b>Graham → A</b>: <i>I’m not sure the lynx would cope … this isn’t the landscape it left</i> = <b>might not survive in Britain today</b>.</li>
+          </ul></div></details>
+        </div>
+      </div>
+    </div>
+
+    <div class="exercise">
+      <div class="exercise-label">Speak · 3 min</div>
+      <h3>Should the lynx come back? What do you think?</h3>
+      <p class="instr">Say which speaker you agree with most and why. Then answer <b>one</b> of the others: <i>Ruth says …, but I think …</i> Tap each word or phrase when you use it.</p>
+      <div class="use-words" data-need="5"><span>predator</span><span>prey</span><span>habitat</span><span>ecosystem</span><span>adapt to</span><span>threaten</span><span>die out</span><span>sustainable</span><span>I’m not saying …, but …</span><span>I’d rather …</span></div>
+      <p class="bank-hint">0 / 5 used</p>
+      <div class="teacher-only">
+        <div class="to-label">👩‍🏫 Teacher only · what to listen for</div>
+        <ul>
+          <li><b>adapt <i>to</i></b>, not <i>*adapt for</i>; <b>die out</b> has no passive: <i>*was died out</i> → <i>died out</i>.</li>
+          <li><b>species</b> is singular and plural: <i>a species / many species</i>, never <i>*specie</i>.</li>
+          <li><b>I’d rather + V1</b>: <i>I’d rather <b>protect</b> the animals we have</i> (not <i>*to protect</i>).</li>
+          <li>Push for a contrast linker from Lesson 13: <i>however, although, despite</i>.</li>
+          <li>Follow-up: <i>“Would you feel the same if you were Ruth?”</i> (second conditional).</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════
+       TAB 3 — Block B: Задание 7 routine + three one-listen sets
+  ══════════════════════════════════════════════════════════ -->
+  <div class="tab-content" id="tab-listen">
+
+    <div class="exercise">
+      <div class="exercise-label">Discover · step 1</div>
+      <h3>One speaker, three statements</h3>
+      <div class="story">
+        <h4>Speaker</h4>
+        <p>“I’d always thought of foxes as countryside animals, so I nearly dropped my coffee when one strolled past me on Oxford Street at eight in the morning. Nobody else even looked up.”</p>
+      </div>
+      <ul class="sent-list">
+        <li><span class="sl">A</span>The speaker was surprised to see a wild animal in a city.</li>
+        <li><span class="sl">B</span>The speaker dropped something because of an animal.</li>
+        <li><span class="sl">C</span>The speaker saw an animal in the countryside.</li>
+      </ul>
+    </div>
+
+    <div class="exercise">
+      <div class="exercise-label">Discover · step 2</div>
+      <h3>Answer the questions: they lead you to the routine</h3>
+      <p class="instr">Answer, then press Check. The routine opens after you check.</p>
+      <div class="facts"><span class="fact">🔎 think, don’t guess</span><span class="fact">8 questions</span></div>
+      <div class="quiz">
+        <div class="answer-row"><span class="ar-num">1</span><span class="ar-txt">Which statement matches the speaker?</span><select class="exam-select ans" data-opts="A,B,C" data-answer="A"></select></div>
+        <div class="answer-row"><span class="ar-num">2</span><span class="ar-txt">The speaker <i>nearly</i> dropped the coffee. So…</span><select class="exam-select ans" data-opts="the coffee was dropped,the coffee was not dropped" data-answer="the coffee was not dropped"></select></div>
+        <div class="answer-row"><span class="ar-num">3</span><span class="ar-txt">C uses a word the speaker said (<i>countryside</i>). Is C right?</span><select class="exam-select ans" data-opts="yes: the same word is there,no: the speaker only thought foxes lived there" data-answer="no: the speaker only thought foxes lived there"></select></div>
+        <div class="answer-row"><span class="ar-num">4</span><span class="ar-txt">The speaker never says <i>surprised</i> or <i>city</i>. How do we know?</span><select class="exam-select ans" data-opts="“nearly dropped my coffee” + “Oxford Street”,“nobody else even looked up”" data-answer="“nearly dropped my coffee” + “Oxford Street”"></select></div>
+        <div class="answer-row"><span class="ar-num">5</span><span class="ar-txt">So the right statement usually…</span><select class="exam-select ans" data-opts="says the same idea in other words,uses the speaker’s own words" data-answer="says the same idea in other words"></select></div>
+        <div class="answer-row"><span class="ar-num">6</span><span class="ar-txt">When should you read the seven statements?</span><select class="exam-select ans" data-opts="before the recording starts,while Speaker 1 is talking" data-answer="before the recording starts"></select></div>
+        <div class="answer-row"><span class="ar-num">7</span><span class="ar-txt">You missed the end of Speaker 3. What do you do?</span><select class="exam-select ans" data-opts="stop and try to remember it,move on to Speaker 4 and decide about 3 at the end" data-answer="move on to Speaker 4 and decide about 3 at the end"></select></div>
+        <div class="answer-row"><span class="ar-num">8</span><span class="ar-txt">Seven statements, five speakers. How many statements are not used?</span><select class="exam-select ans" data-opts="0,1,2" data-answer="2"></select></div>
+        <div class="after-check">
+          <div class="rule-box">
+            <div class="rule-title">📏 The Задание 7 routine</div>
+            <div class="tbl-wrap"><table class="rule-table wrap">
+              <tr><th>When</th><th>What you do</th></tr>
+              <tr><td>Before · 1 min</td><td>Read all seven statements. <b>Tap-underline what happened + why</b> in each one. Notice what they all share (in the demo: <i>a misunderstanding</i>): the shared part never decides.</td></tr>
+              <tr><td>While</td><td>Write <b>2–3 words per speaker</b>, no more. Expect <b>paraphrase</b>, not the same words. A word from the recording inside a statement is often a <b>trap</b>. Missed something? <b>Never stop</b>: the next speaker is already talking.</td></tr>
+              <tr><td>After</td><td>Fill in the certain ones first. The two left over are the extras. Never leave an answer empty.</td></tr>
+            </table></div>
+            <div class="rule-title" style="margin-top:12px">🔁 What they say → what the statement says</div>
+            <div class="tbl-wrap"><table class="rule-table wrap">
+              <tr><td><i>I couldn’t believe my eyes · it was the last thing I expected</i></td><td>was <b>surprised</b></td></tr>
+              <tr><td><i>I had no choice · I had to</i></td><td>was <b>forced</b> to / had <b>no choice</b></td></tr>
+              <tr><td><i>It turned out (that)… · In the end…</i></td><td><b>discovered</b> / <b>finally</b></td></tr>
+              <tr><td><i>I wish I’d… · If only I’d…</i></td><td><b>regrets</b> something</td></tr>
+              <tr><td><i>I’m not saying…, but… · …, I admit, but…</i></td><td><b>mixed feelings</b> / <b>partly</b> agrees</td></tr>
+              <tr><td><i>I nearly / almost did X</i></td><td>did <b>not</b> do X</td></tr>
+              <tr><td><i>Everybody else got X</i></td><td>the speaker did <b>not</b> get X</td></tr>
+            </table></div>
+            <div class="ru-note">🇷🇺 Не ищите в утверждении те же слова, что в записи: в Задании 7 правильный ответ почти всегда сказан <b>другими словами</b>. Если слово из записи стоит в утверждении, проверьте его дважды: это частая ловушка.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="exercise">
+      <div class="exercise-label">Practice 1 · Same meaning, other words · 4 min</div>
+      <h3>What does the speaker really mean?</h3>
+      <p class="instr">These are the phrases that carry the answer in Задание 7. Choose the meaning.</p>
+      <div class="facts"><span class="fact">🔁 paraphrase</span><span class="fact">8 phrases</span></div>
+      <div class="quiz">
+        <div class="answer-row"><span class="ar-num">1</span><span class="ar-txt">“I couldn’t believe my eyes.”</span><select class="exam-select ans" data-opts="I was amazed,I couldn’t see well,I didn’t trust my eyesight" data-answer="I was amazed"></select></div>
+        <div class="answer-row"><span class="ar-num">2</span><span class="ar-txt">“It put me off camping for years.”</span><select class="exam-select ans" data-opts="I didn’t want to go camping after that,I went camping more often,I was late for a camping trip" data-answer="I didn’t want to go camping after that"></select></div>
+        <div class="answer-row"><span class="ar-num">3</span><span class="ar-txt">“I wish I’d listened to the guide.”</span><select class="exam-select ans" data-opts="I regret not following advice,I’m glad I followed advice,I want to become a guide" data-answer="I regret not following advice"></select></div>
+        <div class="answer-row"><span class="ar-num">4</span><span class="ar-txt">“It turned out to be a harmless grass snake.”</span><select class="exam-select ans" data-opts="In the end it wasn’t dangerous,It was dangerous after all,The snake turned round and left" data-answer="In the end it wasn’t dangerous"></select></div>
+        <div class="answer-row"><span class="ar-num">5</span><span class="ar-txt">“We’d run out of water by lunchtime.”</span><select class="exam-select ans" data-opts="We had no water left,We had too much water,We ran to find water" data-answer="We had no water left"></select></div>
+        <div class="answer-row"><span class="ar-num">6</span><span class="ar-txt">“I’m not saying it’s easy, but it’s worth it.”</span><select class="exam-select ans" data-opts="It’s hard but good,It’s easy and good,It isn’t worth doing" data-answer="It’s hard but good"></select></div>
+        <div class="answer-row"><span class="ar-num">7</span><span class="ar-txt">“It was the last thing I expected.”</span><select class="exam-select ans" data-opts="It was a big surprise,It happened at the very end,I knew it would happen" data-answer="It was a big surprise"></select></div>
+        <div class="answer-row"><span class="ar-num">8</span><span class="ar-txt">“I’ve never looked at plastic bags the same way since.”</span><select class="exam-select ans" data-opts="It changed my opinion,I stopped looking at bags,I still think the same" data-answer="It changed my opinion"></select></div>
+      </div>
+    </div>
+
+    <div class="step-title">Three sets, heard once · about 7 min each</div>
+
+    <div class="exercise" id="ex-set1">
+      <div class="review-head"><span class="task-num">Задание 7 · 10 баллов</span><span class="pts">5 speakers · 7 statements · 2 extra</span></div>
+      <h3>Set 1 · An unforgettable moment with wildlife · 7 min</h3>
+      <p class="orig-instr">Ниже представлено семь утверждений. Прослушайте пять аудиотекстов и соотнесите утверждения с информацией, представленной в них. Два утверждения являются лишними. Прослушайте текст 1 раз.</p>
+      <div class="facts"><span class="fact">① 1 min: read + underline</span><span class="fact">🎧 once, no stopping</span><span class="fact">✍️ 2–3 words per speaker</span></div>
+      <div class="timer" data-min="1" data-kind="read"></div>
+      <ul class="st-list" data-k="hl-set1">
+        <li><span class="sl">A</span><span class="st-t"><span class="u">The</span> <span class="u">speaker</span> <span class="u">was</span> <span class="u">hurt</span> <span class="u">by</span> <span class="u">a</span> <span class="u">wild</span> <span class="u">animal.</span></span></li>
+        <li><span class="sl">B</span><span class="st-t"><span class="u">The</span> <span class="u">speaker</span> <span class="u">missed</span> <span class="u">the</span> <span class="u">chance</span> <span class="u">to</span> <span class="u">see</span> <span class="u">an</span> <span class="u">animal.</span></span></li>
+        <li><span class="sl">C</span><span class="st-t"><span class="u">The</span> <span class="u">speaker</span> <span class="u">took</span> <span class="u">a</span> <span class="u">great</span> <span class="u">photo</span> <span class="u">of</span> <span class="u">a</span> <span class="u">rare</span> <span class="u">bird.</span></span></li>
+        <li><span class="sl">D</span><span class="st-t"><span class="u">The</span> <span class="u">speaker</span> <span class="u">helped</span> <span class="u">an</span> <span class="u">injured</span> <span class="u">animal.</span></span></li>
+        <li><span class="sl">E</span><span class="st-t"><span class="u">The</span> <span class="u">speaker</span> <span class="u">learned</span> <span class="u">that</span> <span class="u">an</span> <span class="u">animal</span> <span class="u">was</span> <span class="u">less</span> <span class="u">dangerous</span> <span class="u">than</span> <span class="u">they</span> <span class="u">had</span> <span class="u">thought.</span></span></li>
+        <li><span class="sl">F</span><span class="st-t"><span class="u">An</span> <span class="u">animal</span> <span class="u">came</span> <span class="u">much</span> <span class="u">closer</span> <span class="u">than</span> <span class="u">the</span> <span class="u">speaker</span> <span class="u">had</span> <span class="u">expected.</span></span></li>
+        <li><span class="sl">G</span><span class="st-t"><span class="u">The</span> <span class="u">speaker</span> <span class="u">discovered</span> <span class="u">who</span> <span class="u">was</span> <span class="u">responsible</span> <span class="u">for</span> <span class="u">a</span> <span class="u">mystery.</span></span></li>
+      </ul>
+      <p class="ul-hint">Tap a word to underline it: what happened + why.</p>
+      <div class="player" data-src="audio/l15-set1.mp3" data-label="Set 1: five speakers" data-once="1"></div>
+      <div class="quiz">
+        <div class="answer-row letters"><span class="ar-num">1</span><span class="ar-txt">Speaker 1 <input class="note" data-k="nt-set1-0" placeholder="your 2–3 words" autocomplete="off" spellcheck="false"></span><select class="exam-select ans" data-opts="A,B,C,D,E,F,G" data-answer="B"></select></div>
+        <div class="answer-row letters"><span class="ar-num">2</span><span class="ar-txt">Speaker 2 <input class="note" data-k="nt-set1-1" placeholder="your 2–3 words" autocomplete="off" spellcheck="false"></span><select class="exam-select ans" data-opts="A,B,C,D,E,F,G" data-answer="E"></select></div>
+        <div class="answer-row letters"><span class="ar-num">3</span><span class="ar-txt">Speaker 3 <input class="note" data-k="nt-set1-2" placeholder="your 2–3 words" autocomplete="off" spellcheck="false"></span><select class="exam-select ans" data-opts="A,B,C,D,E,F,G" data-answer="F"></select></div>
+        <div class="answer-row letters"><span class="ar-num">4</span><span class="ar-txt">Speaker 4 <input class="note" data-k="nt-set1-3" placeholder="your 2–3 words" autocomplete="off" spellcheck="false"></span><select class="exam-select ans" data-opts="A,B,C,D,E,F,G" data-answer="D"></select></div>
+        <div class="answer-row letters"><span class="ar-num">5</span><span class="ar-txt">Speaker 5 <input class="note" data-k="nt-set1-4" placeholder="your 2–3 words" autocomplete="off" spellcheck="false"></span><select class="exam-select ans" data-opts="A,B,C,D,E,F,G" data-answer="G"></select></div>
+        <div class="after-check">
+          <details class="logic" open><summary><span>🔎</span><span class="hint-txt">Where the paraphrase was</span></summary><div class="logic-body"><ul class="why-list"><li><b>Speaker 1 → B</b>: <i>By the time I’d run back up, the eagle had … flown off</i> = she <b>missed the chance</b>. Trap C: <i>everybody <b>else</b></i> got photos; she got a seagull.</li><li><b>Speaker 2 → E</b>: <i>Most species can’t even bite through human skin</i> = <b>less dangerous than he had thought</b>. Trap A: he talks about biting, but nobody was hurt.</li><li><b>Speaker 3 → F</b>: <i>I thought we’d only see them from a distance … right next to me</i> = <b>closer than she had expected</b>. Trap B: her dad missed the <i>photo</i>, not the animal.</li><li><b>Speaker 4 → D</b>: <i>hit by a car … wrapped it in my jacket … carried it to a vet</i> = <b>helped an injured animal</b>. Trap A: the <i>owl</i> was hit, not the speaker.</li><li><b>Speaker 5 → G</b>: Things disappeared, the dog was blamed, the camera showed a fox = <b>discovered who was responsible for a mystery</b>. The word <i>mystery</i> is never said: that is paraphrase.</li><li>Not used: <b>A</b> (the owl was hurt; the spider can’t bite) and <b>C</b> (the people who got great photos were everybody else).</li></ul></div></details>
+          <details class="script" style="margin-top:12px"><summary>📜 Audio script</summary><div class="sc-body">
+            <div class="legend"><span><mark class="para">green</mark> = the words that match the statement</span><span><span class="trap">wavy red</span> = a trap</span></div>
+            <p><b>Speaker 1 → B.</b> Everyone told me that if I went to the island of Mull, off the west coast of Scotland, I’d see sea eagles. We booked a boat trip, and the guide said they’d been seen every single day that week. Well, not that day. We sat on that boat for three hours in the rain, staring at the sky. On the way back my phone died, so I went downstairs to charge it. Ten minutes later everyone started shouting. <mark class="para">By the time I’d run back up, the eagle had caught a fish and flown off.</mark> <span class="trap">Everybody else got amazing photos.</span> I got a very nice photo of a seagull.</p><p><b>Speaker 2 → E.</b> When I was about ten, a huge spider appeared in our bathroom, and I refused to go in there for two days. Years later, at university, I did a project on spiders, and it completely changed the way I see them. <mark class="para">Most species in Britain can’t even bite through human skin</mark>, and the big ones in your bath are actually more scared of you than you are of them. They’re useful, too: they eat flies and mosquitoes. So now, when I find one in the house, I don’t scream. I just put a glass over it and carry it out into the garden.</p><p><b>Speaker 3 → F.</b> Last summer I went kayaking off the coast of Cornwall with my dad. We’d been told there were seals in the area, but <mark class="para">I thought we’d only see them from a distance</mark>, lying on the rocks. Then suddenly something bumped the back of my kayak. I turned round, and there was a young seal <mark class="para">right next to me</mark>, looking up at me with these huge dark eyes. It was close enough to touch, although of course you’re not supposed to. It followed us for about five minutes and then just disappeared under the water. <span class="trap">My dad didn’t even manage to take a photo.</span></p><p><b>Speaker 4 → D.</b> It was a really foggy morning, and I was cycling to school along a country road when I saw something lying in the middle of it. At first I thought it was a bag, but it was an owl. <mark class="para">It must have been <span class="trap">hit</span> by a car</mark>, because one of its wings was hanging down and it couldn’t fly. <mark class="para">I wrapped it in my jacket</mark>, which it didn’t like at all, and <mark class="para">carried it to a vet</mark> in the next village. I was an hour late for school, but my teacher didn’t mind when she heard why. A few weeks later the vet phoned to say the owl had been released back into the wild.</p><p><b>Speaker 5 → G.</b> For months, things kept disappearing from our garden: a glove, a shoe, one of my dad’s socks from the washing line. <mark class="para">We blamed the neighbours’ dog.</mark> Then my mum put a wildlife camera on the fence, just to see. On the very first night, <mark class="para">a fox came out from under our shed, picked up one of my trainers and carried it back underneath.</mark> It turned out a whole family of foxes had been living there since the spring, right under our noses. We never got the trainer back, but I’ve never been so happy to lose a shoe.</p>
+          </div></details>
+        </div>
+      </div>
+    </div>
+
+    <div class="exercise" id="ex-set2">
+      <div class="review-head"><span class="task-num">Задание 7 · 10 баллов</span><span class="pts">5 speakers · 7 statements · 2 extra</span></div>
+      <h3>Set 2 · Changing a habit for the planet · 7 min</h3>
+      <p class="orig-instr">Ниже представлено семь утверждений. Прослушайте пять аудиотекстов и соотнесите утверждения с информацией, представленной в них. Два утверждения являются лишними. Прослушайте текст 1 раз.</p>
+      <div class="facts"><span class="fact">① 1 min: read + underline</span><span class="fact">🎧 once, no stopping</span><span class="fact">✍️ 2–3 words per speaker</span></div>
+      <div class="timer" data-min="1" data-kind="read"></div>
+      <ul class="st-list" data-k="hl-set2">
+        <li><span class="sl">A</span><span class="st-t"><span class="u">The</span> <span class="u">speaker</span> <span class="u">made</span> <span class="u">a</span> <span class="u">change</span> <span class="u">in</span> <span class="u">order</span> <span class="u">to</span> <span class="u">get</span> <span class="u">fitter.</span></span></li>
+        <li><span class="sl">B</span><span class="st-t"><span class="u">The</span> <span class="u">speaker</span> <span class="u">doubts</span> <span class="u">that</span> <span class="u">small</span> <span class="u">personal</span> <span class="u">actions</span> <span class="u">are</span> <span class="u">enough.</span></span></li>
+        <li><span class="sl">C</span><span class="st-t"><span class="u">The</span> <span class="u">speaker’s</span> <span class="u">first</span> <span class="u">reason</span> <span class="u">for</span> <span class="u">a</span> <span class="u">change</span> <span class="u">had</span> <span class="u">nothing</span> <span class="u">to</span> <span class="u">do</span> <span class="u">with</span> <span class="u">the</span> <span class="u">environment.</span></span></li>
+        <li><span class="sl">D</span><span class="st-t"><span class="u">The</span> <span class="u">speaker</span> <span class="u">gave</span> <span class="u">up</span> <span class="u">after</span> <span class="u">the</span> <span class="u">people</span> <span class="u">in</span> <span class="u">charge</span> <span class="u">said</span> <span class="u">no.</span></span></li>
+        <li><span class="sl">E</span><span class="st-t"><span class="u">A</span> <span class="u">change</span> <span class="u">that</span> <span class="u">the</span> <span class="u">speaker</span> <span class="u">had</span> <span class="u">no</span> <span class="u">choice</span> <span class="u">about</span> <span class="u">turned</span> <span class="u">out</span> <span class="u">well.</span></span></li>
+        <li><span class="sl">F</span><span class="st-t"><span class="u">The</span> <span class="u">speaker</span> <span class="u">persuaded</span> <span class="u">the</span> <span class="u">people</span> <span class="u">in</span> <span class="u">charge</span> <span class="u">to</span> <span class="u">change</span> <span class="u">something.</span></span></li>
+        <li><span class="sl">G</span><span class="st-t"><span class="u">Only</span> <span class="u">part</span> <span class="u">of</span> <span class="u">a</span> <span class="u">change</span> <span class="u">lasted.</span></span></li>
+      </ul>
+      <p class="ul-hint">Tap a word to underline it: what happened + why.</p>
+      <div class="player" data-src="audio/l15-set2.mp3" data-label="Set 2: five speakers" data-once="1"></div>
+      <div class="quiz">
+        <div class="answer-row letters"><span class="ar-num">1</span><span class="ar-txt">Speaker 1 <input class="note" data-k="nt-set2-0" placeholder="your 2–3 words" autocomplete="off" spellcheck="false"></span><select class="exam-select ans" data-opts="A,B,C,D,E,F,G" data-answer="C"></select></div>
+        <div class="answer-row letters"><span class="ar-num">2</span><span class="ar-txt">Speaker 2 <input class="note" data-k="nt-set2-1" placeholder="your 2–3 words" autocomplete="off" spellcheck="false"></span><select class="exam-select ans" data-opts="A,B,C,D,E,F,G" data-answer="G"></select></div>
+        <div class="answer-row letters"><span class="ar-num">3</span><span class="ar-txt">Speaker 3 <input class="note" data-k="nt-set2-2" placeholder="your 2–3 words" autocomplete="off" spellcheck="false"></span><select class="exam-select ans" data-opts="A,B,C,D,E,F,G" data-answer="F"></select></div>
+        <div class="answer-row letters"><span class="ar-num">4</span><span class="ar-txt">Speaker 4 <input class="note" data-k="nt-set2-3" placeholder="your 2–3 words" autocomplete="off" spellcheck="false"></span><select class="exam-select ans" data-opts="A,B,C,D,E,F,G" data-answer="E"></select></div>
+        <div class="answer-row letters"><span class="ar-num">5</span><span class="ar-txt">Speaker 5 <input class="note" data-k="nt-set2-4" placeholder="your 2–3 words" autocomplete="off" spellcheck="false"></span><select class="exam-select ans" data-opts="A,B,C,D,E,F,G" data-answer="B"></select></div>
+        <div class="after-check">
+          <details class="logic" open><summary><span>🔎</span><span class="hint-txt">Where the paraphrase was</span></summary><div class="logic-body"><ul class="why-list"><li><b>Speaker 1 → C</b>: <i>It started because I was broke … only later did I read</i> about water = her <b>first reason</b> was money, <b>not the environment</b>.</li><li><b>Speaker 2 → G</b>: <i>We all went back to eating meat, although we still have two meat-free days</i> = <b>only part of the change lasted</b>.</li><li><b>Speaker 3 → F</b>: <i>I started a petition … in the end, the school agreed</i> = she <b>persuaded the people in charge</b>. Trap D: the head teacher said no <i>at first</i>, but the speaker didn’t give up.</li><li><b>Speaker 4 → E</b>: <i>She couldn’t take me any more, so I had no choice … now I’d feel strange going by car</i> = <b>no choice, turned out well</b>. Trap A: he got fitter as a <i>result</i>, not as a reason.</li><li><b>Speaker 5 → B</b>: <i>Is my straw the problem? … the big changes have to come from governments</i> = he <b>doubts small personal actions are enough</b>.</li><li>Not used: <b>A</b> (getting fitter was a result, not the reason) and <b>D</b> (the speaker in 3 heard “no” but didn’t give up).</li></ul></div></details>
+          <details class="script" style="margin-top:12px"><summary>📜 Audio script</summary><div class="sc-body">
+            <div class="legend"><span><mark class="para">green</mark> = the words that match the statement</span><span><span class="trap">wavy red</span> = a trap</span></div>
+            <p><b>Speaker 1 → C.</b> I’d love to say I stopped buying new clothes to save the planet, but honestly, <mark class="para">it started because I was broke</mark>. I’d spent all my birthday money in one weekend, so for the rest of the year I had to buy everything second-hand. What surprised me was how much I enjoyed it. Charity shops are like a treasure hunt, and nobody at school has the same jacket as me. <mark class="para">Only later</mark> did I read how much water it takes to make one pair of jeans, and that made me feel even better about it. So now I tell people I do it for the environment, which is half true.</p><p><b>Speaker 2 → G.</b> Last January my whole family decided to go vegetarian for a month. My sister found loads of recipes, and the first two weeks were great: lentil curry, mushroom burgers, all sorts. But my dad really struggled. By week three he was just popping out to the shop every evening and coming back smelling of chips. <mark class="para">When the month was over, we all went back to eating meat</mark>, <mark class="para">although we do still have two meat-free days a week</mark>. So it didn’t last, but it wasn’t a complete failure either.</p><p><b>Speaker 3 → F.</b> At our school, the canteen used to give out plastic forks and spoons with every lunch: hundreds a day, used once and thrown away. I counted them for a week for a science project, and the number was shocking. I took my results to the head teacher, and <span class="trap">at first she said no</span>: metal ones would be too expensive, and they’d get stolen. So <mark class="para">I started a petition, and more than four hundred students signed it. In the end, the school agreed.</mark> Now we have proper metal cutlery, and I don’t think a single fork has been stolen.</p><p><b>Speaker 4 → E.</b> I live in a small town, and I always thought cycling to my college, which is about eight kilometres away, would be impossible: too far, too many hills, and it rains all the time. So my mum drove me every day. Then this year she started a new job and couldn’t take me any more, so <mark class="para">I had no choice</mark>. The first week was hard, I won’t lie. But after a month I was getting there faster than by car, because I don’t get stuck in traffic, and <span class="trap">I’ve got much fitter</span>. <mark class="para">Now I’d actually feel strange going by car.</mark></p><p><b>Speaker 5 → B.</b> I do all the usual things: I recycle, I turn the lights off, I take a reusable bottle to school. But sometimes I wonder what the point is. I read that just a hundred companies produce most of the world’s emissions. So when someone tells me off for using a plastic straw, I think, really? <mark class="para">Is my straw the problem?</mark> Don’t get me wrong, I’ll keep doing my bit, because if everyone gave up, things would be even worse. But <mark class="para">the big changes have to come from governments and companies</mark>, not from teenagers with metal straws.</p>
+          </div></details>
+        </div>
+      </div>
+    </div>
+
+    <div class="exercise" id="ex-set3">
+      <div class="review-head"><span class="task-num">Задание 7 · 10 баллов</span><span class="pts">5 speakers · 7 statements · 2 extra</span></div>
+      <h3>Set 3 · Weather I’ll never forget · 7 min</h3>
+      <p class="orig-instr">Ниже представлено семь утверждений. Прослушайте пять аудиотекстов и соотнесите утверждения с информацией, представленной в них. Два утверждения являются лишними. Прослушайте текст 1 раз.</p>
+      <div class="facts"><span class="fact">① 1 min: read + underline</span><span class="fact">🎧 once, no stopping</span><span class="fact">✍️ 2–3 words per speaker</span></div>
+      <div class="timer" data-min="1" data-kind="read"></div>
+      <ul class="st-list" data-k="hl-set3">
+        <li><span class="sl">A</span><span class="st-t"><span class="u">The</span> <span class="u">speaker</span> <span class="u">did</span> <span class="u">not</span> <span class="u">take</span> <span class="u">a</span> <span class="u">warning</span> <span class="u">seriously.</span></span></li>
+        <li><span class="sl">B</span><span class="st-t"><span class="u">The</span> <span class="u">speaker</span> <span class="u">would</span> <span class="u">happily</span> <span class="u">go</span> <span class="u">through</span> <span class="u">the</span> <span class="u">experience</span> <span class="u">again.</span></span></li>
+        <li><span class="sl">C</span><span class="st-t"><span class="u">The</span> <span class="u">speaker’s</span> <span class="u">family</span> <span class="u">had</span> <span class="u">to</span> <span class="u">leave</span> <span class="u">home</span> <span class="u">in</span> <span class="u">the</span> <span class="u">middle</span> <span class="u">of</span> <span class="u">the</span> <span class="u">night.</span></span></li>
+        <li><span class="sl">D</span><span class="st-t"><span class="u">The</span> <span class="u">experience</span> <span class="u">made</span> <span class="u">the</span> <span class="u">speaker</span> <span class="u">think</span> <span class="u">about</span> <span class="u">their</span> <span class="u">everyday</span> <span class="u">habits.</span></span></li>
+        <li><span class="sl">E</span><span class="st-t"><span class="u">Someone</span> <span class="u">was</span> <span class="u">injured</span> <span class="u">because</span> <span class="u">of</span> <span class="u">the</span> <span class="u">weather.</span></span></li>
+        <li><span class="sl">F</span><span class="st-t"><span class="u">The</span> <span class="u">speaker</span> <span class="u">had</span> <span class="u">a</span> <span class="u">great</span> <span class="u">time</span> <span class="u">while</span> <span class="u">others</span> <span class="u">were</span> <span class="u">having</span> <span class="u">problems.</span></span></li>
+        <li><span class="sl">G</span><span class="st-t"><span class="u">The</span> <span class="u">speaker</span> <span class="u">felt</span> <span class="u">bad</span> <span class="u">although</span> <span class="u">nobody</span> <span class="u">blamed</span> <span class="u">them.</span></span></li>
+      </ul>
+      <p class="ul-hint">Tap a word to underline it: what happened + why.</p>
+      <div class="player" data-src="audio/l15-set3.mp3" data-label="Set 3: five speakers" data-once="1"></div>
+      <div class="quiz">
+        <div class="answer-row letters"><span class="ar-num">1</span><span class="ar-txt">Speaker 1 <input class="note" data-k="nt-set3-0" placeholder="your 2–3 words" autocomplete="off" spellcheck="false"></span><select class="exam-select ans" data-opts="A,B,C,D,E,F,G" data-answer="C"></select></div>
+        <div class="answer-row letters"><span class="ar-num">2</span><span class="ar-txt">Speaker 2 <input class="note" data-k="nt-set3-1" placeholder="your 2–3 words" autocomplete="off" spellcheck="false"></span><select class="exam-select ans" data-opts="A,B,C,D,E,F,G" data-answer="G"></select></div>
+        <div class="answer-row letters"><span class="ar-num">3</span><span class="ar-txt">Speaker 3 <input class="note" data-k="nt-set3-2" placeholder="your 2–3 words" autocomplete="off" spellcheck="false"></span><select class="exam-select ans" data-opts="A,B,C,D,E,F,G" data-answer="F"></select></div>
+        <div class="answer-row letters"><span class="ar-num">4</span><span class="ar-txt">Speaker 4 <input class="note" data-k="nt-set3-3" placeholder="your 2–3 words" autocomplete="off" spellcheck="false"></span><select class="exam-select ans" data-opts="A,B,C,D,E,F,G" data-answer="D"></select></div>
+        <div class="answer-row letters"><span class="ar-num">5</span><span class="ar-txt">Speaker 5 <input class="note" data-k="nt-set3-4" placeholder="your 2–3 words" autocomplete="off" spellcheck="false"></span><select class="exam-select ans" data-opts="A,B,C,D,E,F,G" data-answer="A"></select></div>
+        <div class="after-check">
+          <details class="logic" open><summary><span>🔎</span><span class="hint-txt">Where the paraphrase was</span></summary><div class="logic-body"><ul class="why-list"><li><b>Speaker 1 → C</b>: <i>At about two in the morning, a policeman … told us we had to go</i> = <b>leave home in the middle of the night</b>.</li><li><b>Speaker 2 → G</b>: <i>Grandad said it wasn’t my fault, but I still felt terrible</i> = <b>felt bad although nobody blamed him</b>.</li><li><b>Speaker 3 → F</b>: <i>The whole country basically stopped … for me, it was the best week of my life</i> = <b>a great time while others had problems</b>.</li><li><b>Speaker 4 → D</b>: <i>It made me see how much time I normally spend staring at a screen</i> = <b>think about everyday habits</b>. Trap B: <i>I’m not saying I’d want to do it again</i> means he would <b>not</b>.</li><li><b>Speaker 5 → A</b>: <i>The forecast had said … but I said we’d be down long before</i> = she <b>did not take a warning seriously</b>. Trap E: <i>nobody was hurt</i>.</li><li>Not used: <b>B</b> (<i>I’m not saying I’d want to do it again</i>) and <b>E</b> (<i>Nobody was hurt, luckily</i>).</li></ul></div></details>
+          <details class="script" style="margin-top:12px"><summary>📜 Audio script</summary><div class="sc-body">
+            <div class="legend"><span><mark class="para">green</mark> = the words that match the statement</span><span><span class="trap">wavy red</span> = a trap</span></div>
+            <p><b>Speaker 1 → C.</b> It had been raining for four days without stopping, and the river at the end of our street was getting higher and higher. On the fifth night, <mark class="para">at about two in the morning, a policeman knocked on our door and told us we had to go</mark>, right then. We grabbed the cat and a few bags and spent the night in the school sports hall with about fifty other families. When we came back three days later, the water had come halfway up the kitchen walls. It took months to get the house dry again. Now, whenever it rains for more than a day, my mum checks the river every hour.</p><p><b>Speaker 2 → G.</b> In the summer of 2022 we had the hottest weather I’ve ever known in England: it was nearly forty degrees. My grandad has an allotment where he grows vegetables, and I’d promised to look after it while he was in hospital. There was a ban on using hosepipes, so I had to carry water from the tap in cans, twice a day. It wasn’t enough. One by one, the beans and the lettuces dried up and died. The only things that survived were the tomatoes, which loved the heat. <mark class="para">Grandad said it wasn’t my fault, but I still felt terrible.</mark></p><p><b>Speaker 3 → F.</b> When the Beast from the East hit in 2018, <mark class="para">the whole country basically stopped</mark>. Trains were cancelled, the shops ran out of bread, and my parents couldn’t get to work. <mark class="para">For me, though, it was the best week of my life.</mark> School was closed for four days, and there was so much snow that we built an igloo in the park big enough for six people to sit in. I know some people were stuck in their cars for hours, which must have been awful, but I was eleven, and all I cared about was sledging.</p><p><b>Speaker 4 → D.</b> During Storm Arwen, the wind brought down power lines all over the north-east, and our village had no electricity for six days. No heating, no lights, no internet, and my phone died on the second day. At first I was bored out of my mind. But by the third evening we were all sitting round the fire playing cards and telling stories, which my family had never done before. <span class="trap">I’m not saying I’d want to do it again</span>, especially in November, but <mark class="para">it made me see how much time I normally spend staring at a screen</mark>.</p><p><b>Speaker 5 → A.</b> We were walking in the Lake District, and <mark class="para">the forecast had said there might be thunderstorms in the afternoon</mark>. My friend wanted to turn back, but <mark class="para">I said we’d be at the top by midday and down long before anything happened</mark>. I was wrong. Half an hour from the top, the sky went black, and suddenly there was lightning hitting the hills all around us. We ran down, soaking wet, and hid under a rock until it passed. <span class="trap">Nobody was hurt</span>, luckily, but I’ve never been so scared. These days I check the forecast twice, and if it says storms, I stay in the valley.</p>
+          </div></details>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════
+       TAB 4 — HISTORY, era 4: the Stuarts and the first colonies 1603–1714
+  ══════════════════════════════════════════════════════════ -->
+  <div class="tab-content" id="tab-hist">
+
+    <div class="step-title">In class · 6 min</div>
+
+    <div class="exercise">
+      <div class="exercise-label">Hook · 1 min</div>
+      <h3>1603 and 1613: two new families on two thrones</h3>
+      <div class="duo">
+        <div class="duo-card"><div class="dc-yr">1603</div><div class="dc-name">James I · the first Stuart</div><p>King of Scotland as James VI; King of England 1603–1625.</p></div>
+        <div class="duo-card"><div class="dc-yr">1613</div><div class="dc-name">Michael · the first Romanov</div><p>Tsar of Russia 1613–1645, after the Time of Troubles.</p></div>
+      </div>
+      <p class="instr">Ten years apart, both countries got a new royal family. Is each fact about <b>James</b>, <b>Michael</b>, or <b>both</b>?</p>
+      <div class="quiz">
+        <div class="answer-row"><span class="ar-num">1</span><span class="ar-txt">came to the throne after the old royal family had died out</span><select class="exam-select ans" data-opts="James I,Michael Romanov,both" data-answer="both"></select></div>
+        <div class="answer-row"><span class="ar-num">2</span><span class="ar-txt">was already the king of another country</span><select class="exam-select ans" data-opts="James I,Michael Romanov,both" data-answer="James I"></select></div>
+        <div class="answer-row"><span class="ar-num">3</span><span class="ar-txt">was chosen by a great assembly of the whole land</span><select class="exam-select ans" data-opts="James I,Michael Romanov,both" data-answer="Michael Romanov"></select></div>
+        <div class="answer-row"><span class="ar-num">4</span><span class="ar-txt">was only sixteen when he started to rule</span><select class="exam-select ans" data-opts="James I,Michael Romanov,both" data-answer="Michael Romanov"></select></div>
+        <div class="answer-row"><span class="ar-num">5</span><span class="ar-txt">survived a plot to blow him up</span><select class="exam-select ans" data-opts="James I,Michael Romanov,both" data-answer="James I"></select></div>
+        <div class="answer-row"><span class="ar-num">6</span><span class="ar-txt">started a family that ruled for about three hundred years</span><select class="exam-select ans" data-opts="James I,Michael Romanov,both" data-answer="Michael Romanov"></select></div>
+        <div class="after-check">
+          <details class="logic" open><summary><span>🇷🇺🇬🇧</span><span class="hint-txt">The link between them</span></summary><div class="logic-body">
+            <p>In both countries the old line had died out: Elizabeth I had no children, and in Russia Feodor I, the last tsar of Rurik’s line, died childless in 1598, which led to the Time of Troubles. In 1613 the Zemsky Sobor chose sixteen-year-old Michael Romanov. The Stuarts ruled for 111 years (until 1714); the Romanovs for 304 (until 1917). And there is a link: in 1617 <b>John Merrick</b>, James I’s ambassador in Moscow, helped Russia and Sweden make peace at <b>Stolbovo</b>, and Novgorod was returned to Russia.</p>
+          </div></details>
+        </div>
+      </div>
+    </div>
+
+    <div class="exercise">
+      <div class="exercise-label">The spine · 2 min</div>
+      <h3>Six Stuart reigns: who did what?</h3>
+      <div class="mnemo"><b>N</b>o <b>P</b>lan <b>L</b>ike <b>Y</b>ours <b>T</b>o <b style="background:rgba(201,160,48,.25);border-radius:6px;padding:0 4px">S</b>tudy <b>H</b>istory <b>W</b>isely</div>
+      <div class="spine-row"><small>The house of Stuart, 1603–1714</small><div class="spine">
+        <span class="h"><b>James I</b><span>1603</span></span> <span class="arr">→</span> <span class="h"><b>Charles I</b><span>1625</span></span> <span class="arr">→</span> <span class="h old"><b>No king</b><span>1649</span></span> <span class="arr">→</span> <span class="h"><b>Charles II</b><span>1660</span></span> <span class="arr">→</span> <span class="h"><b>James II</b><span>1685</span></span> <span class="arr">→</span> <span class="h"><b>William &amp; Mary</b><span>1689</span></span> <span class="arr">→</span> <span class="h"><b>Anne</b><span>1702–1714</span></span>
+      </div></div>
+      <div class="quiz">
+        <div class="answer-row"><span class="ar-num">1</span><span class="ar-txt">lost a civil war and was beheaded</span><select class="exam-select ans" data-opts="James I,Charles I,Charles II,James II,William & Mary,Anne" data-answer="Charles I"></select></div>
+        <div class="answer-row"><span class="ar-num">2</span><span class="ar-txt">came back from exile when the monarchy was restored</span><select class="exam-select ans" data-opts="James I,Charles I,Charles II,James II,William & Mary,Anne" data-answer="Charles II"></select></div>
+        <div class="answer-row"><span class="ar-num">3</span><span class="ar-txt">was driven out in the Glorious Revolution</span><select class="exam-select ans" data-opts="James I,Charles I,Charles II,James II,William & Mary,Anne" data-answer="James II"></select></div>
+        <div class="answer-row"><span class="ar-num">4</span><span class="ar-txt">ruled together as husband and wife</span><select class="exam-select ans" data-opts="James I,Charles I,Charles II,James II,William & Mary,Anne" data-answer="William & Mary"></select></div>
+        <div class="answer-row"><span class="ar-num">5</span><span class="ar-txt">the last Stuart: in her reign England and Scotland became one kingdom</span><select class="exam-select ans" data-opts="James I,Charles I,Charles II,James II,William & Mary,Anne" data-answer="Anne"></select></div>
+        <div class="answer-row"><span class="ar-num">6</span><span class="ar-txt">survived the Gunpowder Plot</span><select class="exam-select ans" data-opts="James I,Charles I,Charles II,James II,William & Mary,Anne" data-answer="James I"></select></div>
+      </div>
+    </div>
+
+    <div class="exercise">
+      <div class="review-head"><span class="task-num">Задание 10 format</span><span class="pts">5 events · 7 centuries</span></div>
+      <h3>Events and centuries · 1 min</h3>
+      <p class="orig-instr">Соотнесите события, значимые для стран(ы) изучаемого языка, и века, в которых эти события происходили. Два века не соответствуют ни одному событию.</p>
+      <div class="facts"><span class="fact">🧠 eras 1–4</span><span class="fact">2 centuries are extra</span></div>
+      <div class="quiz">
+        <div class="answer-row"><span class="ar-num">1</span><span class="ar-txt">Jamestown, the first permanent English colony in America, is founded</span><select class="exam-select ans" data-opts="11th,12th,13th,14th,15th,16th,17th" data-answer="17th"></select></div>
+        <div class="answer-row"><span class="ar-num">2</span><span class="ar-txt">Henry Tudor wins the Battle of Bosworth</span><select class="exam-select ans" data-opts="11th,12th,13th,14th,15th,16th,17th" data-answer="15th"></select></div>
+        <div class="answer-row"><span class="ar-num">3</span><span class="ar-txt">The Spanish Armada is defeated</span><select class="exam-select ans" data-opts="11th,12th,13th,14th,15th,16th,17th" data-answer="16th"></select></div>
+        <div class="answer-row"><span class="ar-num">4</span><span class="ar-txt">The Norman Conquest of England</span><select class="exam-select ans" data-opts="11th,12th,13th,14th,15th,16th,17th" data-answer="11th"></select></div>
+        <div class="answer-row"><span class="ar-num">5</span><span class="ar-txt">King John agrees to Magna Carta</span><select class="exam-select ans" data-opts="11th,12th,13th,14th,15th,16th,17th" data-answer="13th"></select></div>
+      </div>
+      <details class="logic"><summary><span>💡</span><span class="hint-txt">Hint · first two digits + 1</span></summary><div class="logic-body"><ul>
+        <li>1607 → 16 + 1 = <b>17th</b>. 1485 → <b>15th</b>. 1588 → <b>16th</b>.</li>
+        <li>1066 → <b>11th</b>. 1215 → <b>13th</b>. Not used: 12th and 14th.</li>
+      </ul></div></details>
+    </div>
+
+    <div class="step-title">At home · 20 min</div>
+
+    <div class="exercise">
+      <div class="exercise-label">Step 1 · Listen once · 3 min</div>
+      <h3>The Stuarts and the first colonies, 1603–1714</h3>
+      <p class="instr">Read the statements first and underline the absolute words (<i>first, same, more than</i>). Then listen <b>once</b> without stopping, as in the Olympiad, and decide if each statement is True or False.</p>
+      <div class="facts"><span class="fact">🎧 once, no stopping</span><span class="fact">✅ True / ❌ False</span><span class="fact">⏱ 3 min audio</span></div>
+      <div class="player" data-src="audio/l15-stuarts.mp3" data-label="The Stuarts" data-once="1"></div>
+      <div class="quiz">
+        <div class="answer-row"><span class="ar-num">1</span><span class="ar-txt">James I was already a king when he became King of England.</span><select class="exam-select ans" data-opts="True,False" data-answer="True"></select></div>
+        <div class="answer-row"><span class="ar-num">2</span><span class="ar-txt">The British celebrate the Gunpowder Plot because it was a success.</span><select class="exam-select ans" data-opts="True,False" data-answer="False"></select></div>
+        <div class="answer-row"><span class="ar-num">3</span><span class="ar-txt">The Mayflower took the first English colonists to America.</span><select class="exam-select ans" data-opts="True,False" data-answer="False"></select></div>
+        <div class="answer-row"><span class="ar-num">4</span><span class="ar-txt">For more than ten years, England had no king.</span><select class="exam-select ans" data-opts="True,False" data-answer="True"></select></div>
+        <div class="answer-row"><span class="ar-num">5</span><span class="ar-txt">The Great Plague and the Great Fire happened in the same year.</span><select class="exam-select ans" data-opts="True,False" data-answer="False"></select></div>
+      </div>
+      <details class="logic"><summary><span>💡</span><span class="hint-txt">Hint · the traps</span></summary><div class="logic-body"><ul>
+        <li>2: they celebrate the <b>failure</b> of the plot.</li>
+        <li>3 <b>“first”</b>: Jamestown was founded thirteen years <i>before</i> the Mayflower.</li>
+        <li>5 <b>“same”</b>: the Plague was in 1665, the Fire <i>a year later</i>.</li>
+      </ul></div></details>
+    </div>
+
+    <div class="exercise">
+      <div class="exercise-label">Step 2 · Read and place · 5 min</div>
+      <h3>Put the story on your timeline</h3>
+      <p class="instr">Now read the story. The <span class="tx" style="font-weight:700;color:#8A6A10;border-bottom:3px solid rgba(201,160,48,.7)">time expressions</span> are the links you need for Задание 5. Four dates are not written: count them from <i>two years later</i>, <i>thirteen years later</i>, <i>the next eleven years</i> and <i>a year later</i>. Then drag each event to its date (or tap the event, then the date).</p>
+      <div class="story">
+        <h4>The Stuarts and the first colonies, 1603–1714</h4>
+        <p>When Elizabeth I died <span class="tx">in 1603</span>, her cousin James, who was already King of Scotland, became James I of England. <span class="tx">For the first time</span>, one king ruled both countries. <span class="tx">Two years later</span>, a group of Catholics tried to blow him up together with the whole Parliament. Guy Fawkes was caught in a cellar under the House of Lords, guarding thirty-six barrels of gunpowder. <span class="tx">Every year on the fifth of November</span>, the British still celebrate the failure of the Gunpowder Plot with bonfires and fireworks.</p>
+        <p><span class="tx">Meanwhile</span>, the English were crossing the Atlantic. <span class="tx">In 1607</span> Jamestown, in Virginia, became the first permanent English colony in America. <span class="tx">Thirteen years later</span>, the Pilgrims crossed the ocean on the Mayflower and founded Plymouth Colony, where they could practise their religion freely, and <span class="tx">in 1636</span> the colonists founded Harvard, the first college in America.</p>
+        <p>James’s son, Charles I, believed that kings got their power from God, and he quarrelled with Parliament <span class="tx">for years</span>. <span class="tx">In 1642</span> a civil war broke out. Parliament won, largely thanks to its best general, Oliver Cromwell, and <span class="tx">in 1649</span> the king was put on trial and beheaded. <span class="tx">For the next eleven years</span>, England had no king.</p>
+        <p><span class="tx">Then</span> the monarchy was restored, and Charles II came back from exile. His reign was hit by two disasters: the Great Plague <span class="tx">of 1665</span> and, <span class="tx">a year later</span>, the Great Fire of London, which destroyed more than thirteen thousand houses. Across the ocean, William Penn founded Pennsylvania <span class="tx">in 1681</span>, and <span class="tx">in 1692</span> twenty people were executed as witches in Salem.</p>
+        <p><span class="tx">In 1688</span> the Catholic James II was driven out, almost without a fight, in the Glorious Revolution, and his daughter Mary and her Dutch husband William took the throne. <span class="tx">In 1707</span> the Act of Union joined England and Scotland into one kingdom, Great Britain. When Queen Anne died <span class="tx">in 1714</span>, the Stuart line came to an end.</p>
+      </div>
+      <div class="duo">
+        <figure><img src="images/culture/10-gunpowder-plot.jpg" alt="Engraving of eight of the Gunpowder Plot conspirators" loading="lazy"><figcaption><b>The Gunpowder Plot</b>, 1605: eight of the plotters. Guy Fawkes (“Guido Fawkes”) is third from the right.</figcaption></figure>
+        <figure><img src="images/culture/11-charles-i.jpg" alt="Charles I walking between soldiers in a winter park" loading="lazy"><figcaption><b>Charles I</b> on his way to his execution, January 1649. Painting by Ernest Crofts.</figcaption></figure>
+      </div>
+      <div class="bank dnd"><span>the Civil War breaks out</span><span>Queen Anne dies; the Stuart line ends</span><span>the Gunpowder Plot fails</span><span>the Mayflower sails to America</span><span>the Act of Union creates Great Britain</span><span>James VI of Scotland becomes James I of England</span><span>the Great Fire of London</span><span>Charles I is executed</span><span>Jamestown is founded in Virginia</span><span>the monarchy is restored</span></div>
+      <p class="bank-hint">Drag an event to a date, or tap an event and then tap the date. Tap a filled date to empty it.</p>
+      <div class="quiz">
+        <ul class="place-list">
+          <li><span class="yr">1603</span><span class="gap"><span class="gn">1</span><select class="exam-select ans" data-bank="1" data-answer="James VI of Scotland becomes James I of England"></select></span></li>
+          <li><span class="yr">1605</span><span class="gap"><span class="gn">2</span><select class="exam-select ans" data-bank="1" data-answer="the Gunpowder Plot fails"></select></span></li>
+          <li><span class="yr">1607</span><span class="gap"><span class="gn">3</span><select class="exam-select ans" data-bank="1" data-answer="Jamestown is founded in Virginia"></select></span></li>
+          <li><span class="yr">1620</span><span class="gap"><span class="gn">4</span><select class="exam-select ans" data-bank="1" data-answer="the Mayflower sails to America"></select></span></li>
+          <li><span class="yr">1642</span><span class="gap"><span class="gn">5</span><select class="exam-select ans" data-bank="1" data-answer="the Civil War breaks out"></select></span></li>
+          <li><span class="yr">1649</span><span class="gap"><span class="gn">6</span><select class="exam-select ans" data-bank="1" data-answer="Charles I is executed"></select></span></li>
+          <li><span class="yr">1660</span><span class="gap"><span class="gn">7</span><select class="exam-select ans" data-bank="1" data-answer="the monarchy is restored"></select></span></li>
+          <li><span class="yr">1666</span><span class="gap"><span class="gn">8</span><select class="exam-select ans" data-bank="1" data-answer="the Great Fire of London"></select></span></li>
+          <li><span class="yr">1707</span><span class="gap"><span class="gn">9</span><select class="exam-select ans" data-bank="1" data-answer="the Act of Union creates Great Britain"></select></span></li>
+          <li><span class="yr">1714</span><span class="gap"><span class="gn">10</span><select class="exam-select ans" data-bank="1" data-answer="Queen Anne dies; the Stuart line ends"></select></span></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="exercise">
+      <div class="exercise-label">Step 3 · Say it · 2 min</div>
+      <h3>Retell the story aloud, with your timeline in front of you</h3>
+      <p class="instr">Two minutes, out loud, from James I to Anne, with the colonies in the middle. Use at least <b>two time links</b> (<i>meanwhile, two years later, for the next eleven years</i>) and <b>two passives</b> (<i>the king was beheaded, the monarchy was restored</i>). Next lesson you’ll retell it without the timeline.</p>
+      <div class="use-words" data-need="5"><span>reign</span><span>colony</span><span>break out</span><span>was / were + V3</span><span>meanwhile</span><span>… years later</span><span>restore</span><span>come to an end</span></div>
+      <p class="bank-hint">0 / 5 used</p>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════
+       TAB 5 — HOMEWORK (60 min)
+  ══════════════════════════════════════════════════════════ -->
+  <div class="tab-content" id="tab-hw">
+    <div class="exercise">
+      <div class="exercise-label">Homework · 60 min</div>
+      <h3>Tick each part when it’s done</h3>
+      <ul class="hw-list" id="hwList">
+        <li><label><input type="checkbox"> <span class="t">🃏 <b>Nature &amp; environment flashcards</b> (10 min): <a href="../flashcards.html?deck=v11">deck V11</a>, Learn mode, until at least 15 cards are 🏆 mastered.</span></label></li>
+        <li><label><input type="checkbox"> <span class="t">🎧 <b>Two Задание 7 sets, heard once</b> (below, 20 min): one minute to read and underline, listen once, check, then open the script and find each paraphrase.</span></label></li>
+        <li><label><input type="checkbox"> <span class="t">🏛 <b>History · the Stuarts</b> (20 min): the <a href="#" onclick="switchTab('hist');return false">History tab</a>, “At home”, steps 1–3. The listening counts as your one-listen audio.</span></label></li>
+        <li><label><input type="checkbox"> <span class="t">📘 <b>Olympway check · the Tudors</b> (10 min): task 221, task 97 (the Tudor items only), then task 377 (Henry VIII) as a Задание 9 text. Do them in the book and type your answers below.</span></label></li>
+      </ul>
+    </div>
+
+    <div class="exercise" id="ex-set4">
+      <div class="review-head"><span class="task-num">Задание 7 · 10 баллов</span><span class="pts">5 speakers · 7 statements · 2 extra</span></div>
+      <h3>Homework set 1 · Volunteering for nature · 10 min</h3>
+      <p class="orig-instr">Ниже представлено семь утверждений. Прослушайте пять аудиотекстов и соотнесите утверждения с информацией, представленной в них. Два утверждения являются лишними. Прослушайте текст 1 раз.</p>
+      <div class="facts"><span class="fact">① 1 min: read + underline</span><span class="fact">🎧 once, no stopping</span><span class="fact">✍️ 2–3 words per speaker</span></div>
+      <div class="timer" data-min="1" data-kind="read"></div>
+      <ul class="st-list" data-k="hl-set4">
+        <li><span class="sl">A</span><span class="st-t"><span class="u">The</span> <span class="u">work</span> <span class="u">was</span> <span class="u">more</span> <span class="u">upsetting</span> <span class="u">than</span> <span class="u">the</span> <span class="u">speaker</span> <span class="u">had</span> <span class="u">imagined.</span></span></li>
+        <li><span class="sl">B</span><span class="st-t"><span class="u">The</span> <span class="u">speaker</span> <span class="u">joined</span> <span class="u">because</span> <span class="u">they</span> <span class="u">wanted</span> <span class="u">to</span> <span class="u">make</span> <span class="u">new</span> <span class="u">friends.</span></span></li>
+        <li><span class="sl">C</span><span class="st-t"><span class="u">The</span> <span class="u">speaker</span> <span class="u">carried</span> <span class="u">on</span> <span class="u">with</span> <span class="u">something</span> <span class="u">that</span> <span class="u">another</span> <span class="u">person</span> <span class="u">gave</span> <span class="u">up.</span></span></li>
+        <li><span class="sl">D</span><span class="st-t"><span class="u">The</span> <span class="u">speaker</span> <span class="u">is</span> <span class="u">glad</span> <span class="u">to</span> <span class="u">have</span> <span class="u">done</span> <span class="u">something</span> <span class="u">that</span> <span class="u">others</span> <span class="u">will</span> <span class="u">enjoy</span> <span class="u">in</span> <span class="u">the</span> <span class="u">future.</span></span></li>
+        <li><span class="sl">E</span><span class="st-t"><span class="u">The</span> <span class="u">speaker’s</span> <span class="u">group</span> <span class="u">had</span> <span class="u">to</span> <span class="u">pay</span> <span class="u">a</span> <span class="u">fine.</span></span></li>
+        <li><span class="sl">F</span><span class="st-t"><span class="u">The</span> <span class="u">speaker</span> <span class="u">was</span> <span class="u">thanked</span> <span class="u">for</span> <span class="u">something</span> <span class="u">they</span> <span class="u">had</span> <span class="u">reported.</span></span></li>
+        <li><span class="sl">G</span><span class="st-t"><span class="u">Something</span> <span class="u">the</span> <span class="u">speaker</span> <span class="u">found</span> <span class="u">changed</span> <span class="u">how</span> <span class="u">they</span> <span class="u">saw</span> <span class="u">a</span> <span class="u">problem.</span></span></li>
+      </ul>
+      <p class="ul-hint">Tap a word to underline it: what happened + why.</p>
+      <div class="player" data-src="audio/l15-hw-set4.mp3" data-label="Homework set 1: five speakers" data-once="1"></div>
+      <div class="quiz">
+        <div class="answer-row letters"><span class="ar-num">1</span><span class="ar-txt">Speaker 1 <input class="note" data-k="nt-set4-0" placeholder="your 2–3 words" autocomplete="off" spellcheck="false"></span><select class="exam-select ans" data-opts="A,B,C,D,E,F,G" data-answer="G"></select></div>
+        <div class="answer-row letters"><span class="ar-num">2</span><span class="ar-txt">Speaker 2 <input class="note" data-k="nt-set4-1" placeholder="your 2–3 words" autocomplete="off" spellcheck="false"></span><select class="exam-select ans" data-opts="A,B,C,D,E,F,G" data-answer="D"></select></div>
+        <div class="answer-row letters"><span class="ar-num">3</span><span class="ar-txt">Speaker 3 <input class="note" data-k="nt-set4-2" placeholder="your 2–3 words" autocomplete="off" spellcheck="false"></span><select class="exam-select ans" data-opts="A,B,C,D,E,F,G" data-answer="F"></select></div>
+        <div class="answer-row letters"><span class="ar-num">4</span><span class="ar-txt">Speaker 4 <input class="note" data-k="nt-set4-3" placeholder="your 2–3 words" autocomplete="off" spellcheck="false"></span><select class="exam-select ans" data-opts="A,B,C,D,E,F,G" data-answer="A"></select></div>
+        <div class="answer-row letters"><span class="ar-num">5</span><span class="ar-txt">Speaker 5 <input class="note" data-k="nt-set4-4" placeholder="your 2–3 words" autocomplete="off" spellcheck="false"></span><select class="exam-select ans" data-opts="A,B,C,D,E,F,G" data-answer="C"></select></div>
+        <div class="after-check">
+          <details class="logic" open><summary><span>🔎</span><span class="hint-txt">Where the paraphrase was</span></summary><div class="logic-body"><ul class="why-list"><li><b>Speaker 1 → G</b>: <i>I’d always thought of litter as ugly. I’d never thought of it as dangerous</i> = the net <b>changed how she saw the problem</b>.</li><li><b>Speaker 2 → D</b>: <i>I’ll be an old man by the time it looks like a forest … a present for people who haven’t been born yet</i> = <b>others will enjoy it in the future</b>.</li><li><b>Speaker 3 → F</b>: <i>I sent in a photo … someone from the charity emailed to thank me</i> = <b>thanked for something she had reported</b>.</li><li><b>Speaker 4 → A</b>: <i>I imagined cute babies … the first time one died, I cried</i> = <b>more upsetting than he had imagined</b>.</li><li><b>Speaker 5 → C</b>: <i>My friend stopped coming … I’m still there</i> = she <b>carried on; another person gave up</b>. Traps: she joined because her friend <i>begged</i> her (not to make friends, B), and the <i>builders</i> were fined (not the group, E).</li><li>Not used: <b>B</b> (she joined because her friend begged her) and <b>E</b> (the builders were fined).</li></ul></div></details>
+          <details class="script" style="margin-top:12px"><summary>📜 Audio script</summary><div class="sc-body">
+            <div class="legend"><span><mark class="para">green</mark> = the words that match the statement</span><span><span class="trap">wavy red</span> = a trap</span></div>
+            <p><b>Speaker 1 → G.</b> Every spring our school does a beach clean on the coast near Whitby. I’d done it twice before, so I thought I knew what to expect: crisp packets, bottles, the odd flip-flop. This year, though, we found a whole fishing net, about ten metres long, tangled in the rocks, with a dead seabird caught in it. It took six of us an hour to pull it out. Our teacher said nets like that are one of the biggest threats to sea life, because they keep catching animals for years. <mark class="para">I’d always thought of litter as ugly. I’d never thought of it as dangerous.</mark></p><p><b>Speaker 2 → D.</b> Last November I spent three Saturdays planting trees with a local wildlife group. It was freezing and muddy, and by lunchtime I couldn’t feel my fingers. We planted about two thousand trees: oak, birch and hazel. Right now they’re just sticks with plastic tubes round them. The leader told us an oak doesn’t really become a proper tree for about fifty years, so <mark class="para">I’ll be an old man by the time it looks like a forest</mark>. Strangely, I quite like that. <mark class="para">It feels like a present for people who haven’t been born yet.</mark></p><p><b>Speaker 3 → F.</b> Every January I take part in the Big Garden Birdwatch. You just sit by the window for an hour, count the birds you see and send the numbers online. It sounds boring, but hundreds of thousands of people do it, so scientists get a picture of the whole country. That’s how they found out how much house sparrows have declined since the seventies. Last year <mark class="para">I spotted a bird I didn’t recognise, so I sent in a photo</mark>, and it turned out to be quite a rare winter visitor from Scandinavia. <mark class="para">Someone from the charity even emailed to thank me.</mark></p><p><b>Speaker 4 → A.</b> My aunt runs a hedgehog hospital in her garage, and in the summer holidays I helped her out. <mark class="para">I imagined cute babies and cuddles.</mark> In reality, a lot of the hedgehogs that come in have been hurt by garden machines or poisoned, and not all of them make it. <mark class="para">The first time one died, I cried for the whole evening.</mark> My aunt said it never gets easy, but you have to think about the ones you save. By the end of the summer we’d released fourteen back into the wild, and that kept me going.</p><p><b>Speaker 5 → C.</b> I only joined the river group because <span class="trap">my best friend begged me to</span>. I thought it would be a bunch of old people talking about fish. Actually, once a month we test the water in our local river: we check the temperature and look for tiny insects that only live in clean water. Last spring the numbers suddenly dropped, and our data showed that the problem started near a new building site. The group reported it, and <span class="trap">the builders were fined</span>. <mark class="para">My friend stopped coming after two months, by the way. I’m still there.</mark></p>
+          </div></details>
+        </div>
+      </div>
+    </div>
+
+    <div class="exercise" id="ex-set5">
+      <div class="review-head"><span class="task-num">Задание 7 · 10 баллов</span><span class="pts">5 speakers · 7 statements · 2 extra</span></div>
+      <h3>Homework set 2 · Wild animals in towns · 10 min</h3>
+      <p class="orig-instr">Ниже представлено семь утверждений. Прослушайте пять аудиотекстов и соотнесите утверждения с информацией, представленной в них. Два утверждения являются лишними. Прослушайте текст 1 раз.</p>
+      <div class="facts"><span class="fact">① 1 min: read + underline</span><span class="fact">🎧 once, no stopping</span><span class="fact">✍️ 2–3 words per speaker</span></div>
+      <div class="timer" data-min="1" data-kind="read"></div>
+      <ul class="st-list" data-k="hl-set5">
+        <li><span class="sl">A</span><span class="st-t"><span class="u">The</span> <span class="u">speaker’s</span> <span class="u">exam</span> <span class="u">results</span> <span class="u">suffered</span> <span class="u">because</span> <span class="u">of</span> <span class="u">a</span> <span class="u">new</span> <span class="u">hobby.</span></span></li>
+        <li><span class="sl">B</span><span class="st-t"><span class="u">The</span> <span class="u">speaker</span> <span class="u">mistook</span> <span class="u">an</span> <span class="u">animal’s</span> <span class="u">noise</span> <span class="u">for</span> <span class="u">something</span> <span class="u">else.</span></span></li>
+        <li><span class="sl">C</span><span class="st-t"><span class="u">The</span> <span class="u">speaker</span> <span class="u">got</span> <span class="u">other</span> <span class="u">people</span> <span class="u">to</span> <span class="u">help</span> <span class="u">an</span> <span class="u">animal.</span></span></li>
+        <li><span class="sl">D</span><span class="st-t"><span class="u">The</span> <span class="u">speaker</span> <span class="u">thinks</span> <span class="u">an</span> <span class="u">animal</span> <span class="u">should</span> <span class="u">be</span> <span class="u">removed</span> <span class="u">from</span> <span class="u">the</span> <span class="u">area.</span></span></li>
+        <li><span class="sl">E</span><span class="st-t"><span class="u">Something</span> <span class="u">the</span> <span class="u">speaker</span> <span class="u">began</span> <span class="u">in</span> <span class="u">order</span> <span class="u">to</span> <span class="u">avoid</span> <span class="u">work</span> <span class="u">became</span> <span class="u">a</span> <span class="u">real</span> <span class="u">interest.</span></span></li>
+        <li><span class="sl">F</span><span class="st-t"><span class="u">The</span> <span class="u">speaker</span> <span class="u">has</span> <span class="u">mixed</span> <span class="u">feelings</span> <span class="u">about</span> <span class="u">an</span> <span class="u">animal</span> <span class="u">that</span> <span class="u">doesn’t</span> <span class="u">belong</span> <span class="u">in</span> <span class="u">the</span> <span class="u">area.</span></span></li>
+        <li><span class="sl">G</span><span class="st-t"><span class="u">The</span> <span class="u">speaker</span> <span class="u">now</span> <span class="u">avoids</span> <span class="u">eating</span> <span class="u">outdoors</span> <span class="u">because</span> <span class="u">of</span> <span class="u">an</span> <span class="u">animal.</span></span></li>
+      </ul>
+      <p class="ul-hint">Tap a word to underline it: what happened + why.</p>
+      <div class="player" data-src="audio/l15-hw-set5.mp3" data-label="Homework set 2: five speakers" data-once="1"></div>
+      <div class="quiz">
+        <div class="answer-row letters"><span class="ar-num">1</span><span class="ar-txt">Speaker 1 <input class="note" data-k="nt-set5-0" placeholder="your 2–3 words" autocomplete="off" spellcheck="false"></span><select class="exam-select ans" data-opts="A,B,C,D,E,F,G" data-answer="G"></select></div>
+        <div class="answer-row letters"><span class="ar-num">2</span><span class="ar-txt">Speaker 2 <input class="note" data-k="nt-set5-1" placeholder="your 2–3 words" autocomplete="off" spellcheck="false"></span><select class="exam-select ans" data-opts="A,B,C,D,E,F,G" data-answer="F"></select></div>
+        <div class="answer-row letters"><span class="ar-num">3</span><span class="ar-txt">Speaker 3 <input class="note" data-k="nt-set5-2" placeholder="your 2–3 words" autocomplete="off" spellcheck="false"></span><select class="exam-select ans" data-opts="A,B,C,D,E,F,G" data-answer="C"></select></div>
+        <div class="answer-row letters"><span class="ar-num">4</span><span class="ar-txt">Speaker 4 <input class="note" data-k="nt-set5-3" placeholder="your 2–3 words" autocomplete="off" spellcheck="false"></span><select class="exam-select ans" data-opts="A,B,C,D,E,F,G" data-answer="B"></select></div>
+        <div class="answer-row letters"><span class="ar-num">5</span><span class="ar-txt">Speaker 5 <input class="note" data-k="nt-set5-4" placeholder="your 2–3 words" autocomplete="off" spellcheck="false"></span><select class="exam-select ans" data-opts="A,B,C,D,E,F,G" data-answer="E"></select></div>
+        <div class="after-check">
+          <details class="logic" open><summary><span>🔎</span><span class="hint-txt">Where the paraphrase was</span></summary><div class="logic-body"><ul class="why-list"><li><b>Speaker 1 → G</b>: <i>Now I eat inside, or I don’t eat at all</i> = he <b>avoids eating outdoors</b> because of the gulls.</li><li><b>Speaker 2 → F</b>: <i>They’re beautiful, I admit … but they’re not supposed to be here</i> = <b>mixed feelings</b> about an animal that <b>doesn’t belong</b>. Trap D: <i>I’m not saying we should get rid of them</i>.</li><li><b>Speaker 3 → C</b>: <i>I asked everyone if we could cut a small hole … most people said yes</i> = he <b>got other people to help</b>.</li><li><b>Speaker 4 → B</b>: <i>It sounds exactly like a person being attacked … I phoned the police</i> = she <b>mistook the noise</b> for something else.</li><li><b>Speaker 5 → E</b>: <i>As a way to avoid revising … I got completely hooked</i> = began <b>to avoid work</b>, became <b>a real interest</b>. Trap A: <i>my exam results were fine</i>.</li><li>Not used: <b>A</b> (<i>my exam results were fine</i>) and <b>D</b> (<i>I’m not saying we should get rid of them</i>).</li></ul></div></details>
+          <details class="script" style="margin-top:12px"><summary>📜 Audio script</summary><div class="sc-body">
+            <div class="legend"><span><mark class="para">green</mark> = the words that match the statement</span><span><span class="trap">wavy red</span> = a trap</span></div>
+            <p><b>Speaker 1 → G.</b> If you’ve ever been to St Ives in Cornwall, you’ll know about the seagulls. I was sitting on the harbour wall with a pasty I’d been looking forward to all morning. I’d just taken my first bite when a gull swooped down from behind me and took the whole thing out of my hand. It even scratched my finger. Everybody laughed, including my brother. There are signs everywhere telling you not to feed them, but the gulls don’t need feeding: they help themselves. <mark class="para">Now I eat inside, or I don’t eat at all.</mark></p><p><b>Speaker 2 → F.</b> When people visit London, they’re always amazed by the bright green parrots in the parks. They’re called ring-necked parakeets, and there are tens of thousands of them now. Nobody knows exactly how they got here, but most experts think they’re escaped pets. <mark class="para">They’re beautiful, I admit</mark>, and tourists love them. <mark class="para">But they’re not supposed to be here.</mark> They take the nesting holes that our own birds need, and they empty the bird feeders before the smaller birds get a chance. <span class="trap">I’m not saying we should get rid of them</span>, but I don’t think we should celebrate them either.</p><p><b>Speaker 3 → C.</b> Hedgehogs need to travel about a mile every night to find enough food, but in a town like ours every garden has a fence or a wall all the way round it. So last year <mark class="para">I went round our street with a leaflet and asked everyone if we could cut a small hole</mark>, about the size of a CD case, at the bottom of their fences. <mark class="para">Most people said yes straight away.</mark> Mr Patel at number twelve even made a little sign that says Hedgehog Highway. This summer our camera filmed three different hedgehogs, which is three more than we’d ever seen before.</p><p><b>Speaker 4 → B.</b> I live in a flat above a row of shops in Bristol, and there are foxes everywhere. I don’t mind them going through the bins, even though it means rubbish all over the street in the morning. What I can’t stand is the noise. In winter, when they’re looking for a partner, they scream. <mark class="para">It sounds exactly like a person being attacked.</mark> The first time I heard it, <mark class="para">I actually phoned the police</mark>. The officer was very nice about it and explained what it was, but I’ve never been so embarrassed in my life.</p><p><b>Speaker 5 → E.</b> A pair of peregrine falcons nests on the cathedral in our city every year, and there’s a camera pointing at the nest that you can watch online. <mark class="para">I started watching it during exam season, to be honest, as a way to avoid revising.</mark> <mark class="para">I got completely hooked.</mark> I watched the eggs hatch, and I saw the parents bring back pigeons for the chicks. Now I volunteer at the viewing point outside the cathedral at weekends, lending people binoculars and telling them about the birds. <span class="trap">My exam results were fine</span>, in case you’re wondering.</p>
+          </div></details>
+        </div>
+      </div>
+    </div>
+    <div class="exercise">
+      <div class="exercise-label">Olympway check · era 3</div>
+      <h3>Your answers to tasks 221, 97 and 377</h3>
+      <p class="instr">Type your answers here (e.g. <i>221: 1 C, 2 A …</i>) so your teacher can check them.</p>
+      <textarea class="free-write" id="hwOlymp" placeholder="221: 1 … 2 …&#10;97: …&#10;377: 1 … 2 …" spellcheck="false"></textarea>
+      <div class="btn-row"><button class="btn btn-primary" onclick="copyWriting()">📋 Copy for my teacher</button><span id="copyMsg" style="align-self:center;font-weight:600;color:var(--green)"></span></div>
+    </div>
+  </div>
+
+  <div class="btn-row" style="margin:6px 0 30px">
+    <button class="btn btn-danger" onclick="resetAll()">Clear all my answers</button>
+  </div>
+</div>
+
+<div class="save-indicator" id="saveIndicator">✓ Saved</div>
+
+<script>
+const LESSON_KEY = 'lesson-15';
+let data = {};
+try { data = JSON.parse(localStorage.getItem(LESSON_KEY)) || {}; } catch(e) {}
+
+function save(patch) {
+  Object.assign(data, patch);
+  try { localStorage.setItem(LESSON_KEY, JSON.stringify(data)); } catch(e) {}
+  const el = document.getElementById('saveIndicator');
+  el.classList.add('show');
+  clearTimeout(save.t);
+  save.t = setTimeout(() => el.classList.remove('show'), 1400);
+}
+
+// ── TABS ───────────────────────────────────────────────────────
+function showTab(name) {
+  const btn = document.querySelector('.tab-btn[onclick*="\'' + name + '\'"]');
+  if (!btn) return;
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  btn.classList.add('active');
+}
+function switchTab(name) {
+  showTab(name);
+  save({ activeTab: name });
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ── BUILD THE CONTROLS ─────────────────────────────────────────
+const QUIZZES = [...document.querySelectorAll('.quiz')];
+QUIZZES.forEach((q, qi) => {
+  q.id = 'q' + qi;
+  q.querySelectorAll('.ans').forEach((el, i) => { el.dataset.key = 'q' + qi + '-' + i; });
+});
+const isChecked = q => !!data['chk-' + q.id];
+
+// word-bank gaps take their options from the box above the text
+document.querySelectorAll('select[data-bank]').forEach(sel => {
+  const words = [...sel.closest('.exercise').querySelectorAll('.bank span')].map(s => s.textContent);
+  sel.dataset.opts = words.join('|');   // sentences contain commas
+});
+document.querySelectorAll('select.ans').forEach(sel => {
+  const blank = document.createElement('option');
+  blank.value = ''; blank.textContent = '—';
+  sel.appendChild(blank);
+  sel.dataset.opts.split(sel.dataset.bank ? '|' : ',').forEach(v => {
+    const o = document.createElement('option');
+    o.value = v; o.textContent = v;
+    sel.appendChild(o);
+  });
+  if (data[sel.dataset.key] !== undefined) sel.value = data[sel.dataset.key];
+  sel.addEventListener('change', () => save({ [sel.dataset.key]: sel.value }));
+});
+// word box: cross out every word that is already in a gap, with the gap's number
+function paintBank(ex) {
+  const used = {};
+  ex.querySelectorAll('select[data-bank]').forEach(sel => {
+    sel.classList.toggle('filled', !!sel.value);
+    if (sel.value) used[sel.value] = sel.closest('.gap').querySelector('.gn').textContent;
+  });
+  ex.querySelectorAll('.bank span').forEach(w => {
+    const n = used[w.textContent];
+    w.classList.toggle('used', !!n);
+    if (n) w.dataset.gap = n; else delete w.dataset.gap;
+  });
+  ex.querySelectorAll('select[data-bank] option').forEach(o => {
+    if (!o.value) return;
+    o.textContent = (used[o.value] && o.parentElement.value !== o.value ? '✓ ' : '') + o.value;   // ✓ = already used in another gap
+  });
+}
+// Задание 2 word box: drag a word into a gap (or tap a word, then tap the gap); tap a filled gap to empty it
+document.querySelectorAll('.bank').forEach(bank => {
+  const ex = bank.closest('.exercise');
+  const sels = [...ex.querySelectorAll('select[data-bank]')];
+  let picked = null;
+  const pick = w => {
+    picked = w;
+    bank.querySelectorAll('span').forEach(s => s.classList.toggle('picked', s === w));
+    ex.classList.toggle('picking', !!w);
+  };
+  const setGap = (sel, word) => { sel.value = word; sel.dispatchEvent(new Event('change')); };
+  const put = (sel, word) => {
+    if (sel.disabled) return;
+    sels.forEach(o => { if (o !== sel && o.value === word) setGap(o, ''); });   // each word goes in one gap only
+    setGap(sel, word);
+  };
+  const paintZone = sel => {
+    const dz = sel._dz;
+    dz.textContent = sel.value || '\u00a0';
+    dz.classList.toggle('filled', !!sel.value);
+    ['correct', 'wrong'].forEach(c => dz.classList.toggle(c, sel.classList.contains(c)));
+    dz.classList.toggle('locked', sel.disabled);
+  };
+  sels.forEach(sel => {
+    const dz = document.createElement('span');
+    dz.className = 'dz';
+    sel.before(dz); sel.hidden = true; sel._dz = dz;
+    dz.addEventListener('click', () => {
+      if (sel.disabled) return;
+      if (picked) { put(sel, picked.textContent); pick(null); }
+      else if (sel.value) setGap(sel, '');
+    });
+    sel.addEventListener('change', () => { paintZone(sel); paintBank(ex); });
+    new MutationObserver(() => paintZone(sel)).observe(sel, { attributes: true, attributeFilter: ['class', 'disabled'] });   // Check / Try again
+    paintZone(sel);
+  });
+  bank.querySelectorAll('span').forEach(w => {
+    w.addEventListener('pointerdown', e => {
+      if (sels[0].disabled) return;
+      e.preventDefault();
+      const x0 = e.clientX, y0 = e.clientY;
+      let ghost = null;
+      const zoneAt = ev => { const el = document.elementFromPoint(ev.clientX, ev.clientY); const dz = el && el.closest('.dz'); return dz && ex.contains(dz) ? dz : null; };
+      const move = ev => {
+        if (!ghost && Math.hypot(ev.clientX - x0, ev.clientY - y0) < 6) return;
+        if (!ghost) { ghost = document.createElement('span'); ghost.className = 'drag-ghost'; ghost.textContent = w.textContent; document.body.appendChild(ghost); pick(null); }
+        ghost.style.left = ev.clientX + 'px'; ghost.style.top = ev.clientY + 'px';
+        const dz = zoneAt(ev);
+        ex.querySelectorAll('.dz').forEach(d => d.classList.toggle('over', d === dz));
+      };
+      const up = ev => {
+        removeEventListener('pointermove', move); removeEventListener('pointerup', up); removeEventListener('pointercancel', up);
+        if (!ghost) { pick(picked === w ? null : w); return; }   // a tap: pick the word
+        ghost.remove();
+        ex.querySelectorAll('.dz.over').forEach(d => d.classList.remove('over'));
+        const dz = ev.type === 'pointerup' && zoneAt(ev);
+        if (dz) put(sels.find(s => s._dz === dz), w.textContent);
+      };
+      addEventListener('pointermove', move); addEventListener('pointerup', up); addEventListener('pointercancel', up);
+    });
+  });
+  paintBank(ex);
+});
+document.querySelectorAll('input.blank.ans').forEach(inp => {
+  if (data[inp.dataset.key] !== undefined) inp.value = data[inp.dataset.key];
+  inp.addEventListener('input', () => save({ [inp.dataset.key]: inp.value }));
+});
+
+// ── MARKING ────────────────────────────────────────────────────
+// typed answers: capitals, curly apostrophes and extra spaces don't matter; spelling does
+const norm = s => s.toLowerCase().replace(/[’‘`]/g, "'").replace(/[.,!?;:"“”]/g, ' ').replace(/\s+/g, ' ').trim();
+function given(el) {
+  // first-letter gaps: she types the rest of the word ("reaty"), or the whole word ("treaty")
+  const v = el.value, pre = el.dataset.prefix;
+  return pre && !norm(v).startsWith(pre) ? pre + v : v;
+}
+function mark(el) {
+  const keys = el.dataset.answer.split('|');
+  const ok = el.tagName === 'SELECT' ? keys.includes(el.value) : keys.some(k => norm(k) === norm(given(el)));
+  el.classList.add(ok ? 'correct' : 'wrong');
+  const shown = el.closest('.slots') ? keys[0].split(' ')[0] : keys.join(' / ');   // sentence places show just the letter
+  el.insertAdjacentHTML('afterend', '<span class="key">' + shown + '</span>');   // the correct answer next to every gap
+  el.disabled = true;
+  return ok ? 1 : 0;
+}
+function unmark(el) {
+  el.classList.remove('correct', 'wrong'); el.disabled = false; el.value = '';
+  if (el.nextElementSibling && el.nextElementSibling.classList.contains('key')) el.nextElementSibling.remove();
+}
+
+// ── CHECK / TRY AGAIN ──────────────────────────────────────────
+QUIZZES.forEach(q => {
+  const foot = document.createElement('div');
+  foot.className = 'quiz-foot';
+  foot.innerHTML = '<button class="btn btn-primary">Check ✓</button>' +
+                   '<button class="btn btn-ghost" style="display:none">Try again ↺</button>' +
+                   '<span class="q-result"></span>';
+  const after = q.querySelector(':scope > .after-check');
+  after ? q.insertBefore(foot, after) : q.appendChild(foot);
+  const [bCheck, bRetry] = foot.querySelectorAll('button');
+  bCheck.addEventListener('click', () => checkQuiz(q, true));
+  bRetry.addEventListener('click', () => retryQuiz(q));
+  q._foot = foot;
+});
+function checkQuiz(q, doSave) {
+  const els = [...q.querySelectorAll('.ans')];
+  const got = els.reduce((a, el) => a + mark(el), 0), max = els.length;
+  const res = q._foot.querySelector('.q-result');
+  res.textContent = got + ' / ' + max + (got === max ? ' — perfect! 🎉' : '');
+  res.className = 'q-result ' + (got === max ? 'full' : got === 0 ? 'zero' : 'part');
+  q._foot.children[0].style.display = 'none';
+  q._foot.children[1].style.display = '';
+  q.classList.add('checked');
+  q._score = [got, max];
+  if (doSave) save({ ['chk-' + q.id]: true });
+  updateProgress();
+}
+function retryQuiz(q) {
+  const patch = { ['chk-' + q.id]: false };
+  q.querySelectorAll('.ans').forEach(el => { unmark(el); patch[el.dataset.key] = undefined; });
+  q._foot.querySelector('.q-result').textContent = '';
+  const ex = q.closest('.exercise'); if (ex.querySelector('.bank')) paintBank(ex);
+  q._foot.children[0].style.display = '';
+  q._foot.children[1].style.display = 'none';
+  q.classList.remove('checked');
+  q._score = null;
+  save(patch);
+  updateProgress();
+}
+function updateProgress() {
+  const done = QUIZZES.filter(q => q._score);
+  const got = done.reduce((a, q) => a + q._score[0], 0);
+  const max = done.reduce((a, q) => a + q._score[1], 0);
+  document.getElementById('pgCount').textContent = done.length + ' / ' + QUIZZES.length;
+  document.getElementById('pgScore').textContent = got + ' / ' + max;
+  document.getElementById('pgFill').style.width = (done.length / QUIZZES.length * 100) + '%';
+}
+
+// ── AUDIO PLAYER: play/pause, drag or click the bar, ⏪ 10 s / ⏩ 10 s ──
+const fmt = s => Math.floor(s / 60) + ':' + String(Math.floor(s % 60)).padStart(2, '0');
+document.querySelectorAll('.player[data-src]').forEach(pl => {
+  const audio = new Audio(pl.dataset.src);
+  audio.preload = 'metadata';
+  pl.innerHTML =
+    '<button type="button" class="pl-btn" aria-label="Play">' +
+      '<svg class="i-play" viewBox="0 0 24 24"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.2-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z"/></svg>' +
+      '<svg class="i-pause" viewBox="0 0 24 24"><rect x="6" y="5" width="4.2" height="14" rx="1.2"/><rect x="13.8" y="5" width="4.2" height="14" rx="1.2"/></svg>' +
+    '</button>' +
+    '<div class="pl-main"><div class="pl-top"><span class="pl-label">🎧 ' + pl.dataset.label + '</span><span class="pl-time">0:00</span></div>' +
+    '<div class="pl-track"><div class="pl-fill"></div><div class="pl-knob"></div></div></div>' +
+    '<button type="button" class="pl-skip" data-s="-10" title="Back 10 seconds">⏪ 10</button>' +
+    '<button type="button" class="pl-skip" data-s="10" title="Forward 10 seconds">10 ⏩</button>';
+  pl.appendChild(audio);
+  const fill = pl.querySelector('.pl-fill'), knob = pl.querySelector('.pl-knob');
+  const time = pl.querySelector('.pl-time'), track = pl.querySelector('.pl-track');
+  const paint = () => {
+    const pct = audio.duration ? audio.currentTime / audio.duration * 100 : 0;
+    fill.style.width = pct + '%'; knob.style.left = pct + '%';
+    time.textContent = fmt(audio.currentTime) + ' / ' + (audio.duration ? fmt(audio.duration) : '…');
+  };
+  pl.querySelector('.pl-btn').addEventListener('click', () => { if (pl.classList.contains('locked')) return; audio.paused ? audio.play() : audio.pause(); });
+  pl.querySelectorAll('.pl-skip').forEach(b => b.addEventListener('click', () => {
+    if (!audio.duration || pl.classList.contains('once')) return;
+    audio.currentTime = Math.min(audio.duration, Math.max(0, audio.currentTime + +b.dataset.s));
+    paint();
+  }));
+  const seek = e => {
+    if (!audio.duration || pl.classList.contains('once')) return;
+    const r = track.getBoundingClientRect();
+    audio.currentTime = Math.min(1, Math.max(0, (e.clientX - r.left) / r.width)) * audio.duration;
+    paint();
+  };
+  track.addEventListener('pointerdown', e => { track.setPointerCapture(e.pointerId); pl.classList.add('dragging'); seek(e); });
+  track.addEventListener('pointermove', e => { if (pl.classList.contains('dragging')) seek(e); });
+  track.addEventListener('pointerup', () => pl.classList.remove('dragging'));
+  track.addEventListener('pointercancel', () => pl.classList.remove('dragging'));
+  audio.addEventListener('play', () => pl.classList.add('playing'));
+  audio.addEventListener('pause', () => pl.classList.remove('playing'));
+  audio.addEventListener('ended', () => pl.classList.remove('playing'));
+  audio.addEventListener('timeupdate', paint);
+  audio.addEventListener('loadedmetadata', paint);
+  if (pl.dataset.once) oncePlayer(pl, audio);
+});
+
+// ── PRACTICE 1 PAIRS: tap the first sentence, then a link word (values live in hidden inputs) ──
+document.querySelectorAll('.pp').forEach(pp => {
+  const first = pp.querySelector('.pp-first'), link = pp.querySelector('.pp-link');
+  const quiz = pp.closest('.quiz'), step = pp.querySelector('.pp-step');
+  const set = (inp, v) => { inp.value = v; inp.dispatchEvent(new Event('input')); };
+  const paint = () => {
+    const f = first.value;
+    pp.classList.toggle('ordered', !!f);
+    pp.querySelectorAll('.pp-s').forEach(s => {
+      const isF = s.dataset.l === f;
+      s.classList.toggle('first', isF);
+      s.classList.toggle('second', !!f && !isF);
+      s.querySelector('.pp-b').textContent = f ? (isF ? '1st' : '2nd') : s.dataset.l;
+      s.classList.toggle('ok', isF && f === first.dataset.answer);
+      s.classList.toggle('bad', isF && f !== first.dataset.answer);
+    });
+    const box = pp.querySelector('.pp-ss'), sA = box.querySelector('[data-l="A"]'), sB = box.querySelector('[data-l="B"]');
+    if (f === 'B') box.prepend(sB); else box.prepend(sA);   // the chosen sentence moves to the top
+    pp.querySelectorAll('.w').forEach(w => w.classList.toggle('pick', !!link.value && w.dataset.ph === link.value));
+    step.textContent = !f ? '① Tap the sentence that comes first' : !link.value ? '② Now tap the word that links back' : '✓ Done';
+  };
+  pp.querySelectorAll('.pp-s').forEach(s => s.addEventListener('click', () => {
+    if (quiz.classList.contains('checked') || first.value) return;
+    set(first, s.dataset.l); paint();
+  }));
+  pp.querySelectorAll('.w').forEach(w => w.addEventListener('click', e => {
+    if (quiz.classList.contains('checked') || !first.value) return;
+    e.stopPropagation();
+    set(link, link.value === w.dataset.ph ? '' : w.dataset.ph); paint();
+  }));
+  pp.querySelector('.pp-swap').addEventListener('click', () => { set(first, ''); set(link, ''); paint(); });
+  new MutationObserver(paint).observe(quiz, { attributes: true, attributeFilter: ['class'] });   // Check / Try again
+  paint();
+});
+
+
+// ── TIMERS: Start / Pause / Reset; the clock stops when the task is checked ──
+document.querySelectorAll('.timer[data-min]').forEach((tm, ti) => {
+  const limit = +tm.dataset.min * 60, key = 'tm-' + ti;
+  const quiz = tm.closest('.exercise').querySelector('.quiz');
+  let spent = +data[key] || 0, t0 = null, tick = null;
+  tm.innerHTML = '<span class="tm-clock">⏱ <b></b></span>' +
+                 '<button type="button" class="btn btn-primary">Start</button>' +
+                 '<button type="button" class="btn btn-ghost">Reset</button><span class="tm-msg"></span>';
+  const clock = tm.querySelector('b'), [go, reset] = tm.querySelectorAll('button'), msg = tm.querySelector('.tm-msg');
+  const now = () => spent + (t0 ? (Date.now() - t0) / 1000 : 0);
+  const paint = () => {
+    const left = limit - now();
+    clock.textContent = left >= 0 ? fmt(Math.ceil(left)) : '+' + fmt(-left);   // over the limit: counts up in red
+    tm.classList.toggle('over', left < 0);
+    tm.classList.toggle('running', !!t0);
+    go.textContent = t0 ? 'Pause' : spent ? 'Go on' : 'Start';
+  };
+  const stop = () => {
+    if (!t0) return;
+    spent = now(); t0 = null; clearInterval(tick);
+    save({ [key]: Math.round(spent) }); paint();
+  };
+  go.addEventListener('click', () => { if (t0) stop(); else { t0 = Date.now(); tick = setInterval(paint, 250); paint(); } });
+  reset.addEventListener('click', () => { stop(); spent = 0; msg.textContent = ''; save({ [key]: 0 }); paint(); });
+  new MutationObserver(() => {
+    if (!quiz.classList.contains('checked')) { msg.textContent = ''; return; }
+    stop();
+    if (spent && tm.dataset.kind !== 'read') msg.textContent = 'Your time: ' + fmt(spent) + (spent <= limit ? ' ✓ in time' : ' (over the limit)');
+  }).observe(quiz, { attributes: true, attributeFilter: ['class'] });
+  paint();
+});
+
+
+// ── WARM-UP: random words · 🎲 draws 8 new ones and clears that block ──
+document.getElementById('vcNew').addEventListener('click', () => {
+  const q = document.querySelector('.vc-quiz');
+  Object.keys(data).forEach(k => { if (k.startsWith(q.id + '-') || k === 'chk-' + q.id) delete data[k]; });
+  save({ 'vc-set': vcDraw() });
+  location.reload();
+});
+
+// ── WORDS TO USE (tap when used) · HOMEWORK ────────────────────
+document.querySelectorAll('.use-words').forEach((box, bi) => {
+  const need = +box.dataset.need || 5, out = box.nextElementSibling;
+  const paint = () => { out.textContent = box.querySelectorAll('.used').length + ' / ' + need + ' used'; };
+  box.querySelectorAll('span').forEach((w, i) => {
+    const k = 'uw-' + bi + '-' + i;
+    if (data[k]) w.classList.add('used');
+    w.addEventListener('click', () => { save({ [k]: w.classList.toggle('used') }); paint(); });
+  });
+  paint();
+});
+document.querySelectorAll('#hwList input').forEach((c, i) => {
+  c.checked = !!data['hw-' + i];
+  c.closest('li').classList.toggle('done', c.checked);
+  c.addEventListener('change', () => { save({ ['hw-' + i]: c.checked }); c.closest('li').classList.toggle('done', c.checked); });
+});
+
+// ── ONCE-ONLY PLAYER (Задание 7/8 practice): plays once, no skipping; the full player comes back after Check ──
+function oncePlayer(pl, audio) {
+  const quiz = pl.closest('.exercise').querySelector('.quiz');
+  const heard = 'heard-' + pl.dataset.src, opened = 'open-' + pl.dataset.src;
+  const note = document.createElement('p');
+  note.className = 'pl-note';
+  pl.after(note);
+  const paintOnce = () => {
+    const free = document.documentElement.classList.contains('watching') || data[opened];
+    pl.classList.toggle('once', !free);
+    pl.classList.toggle('locked', !free && !!data[heard] && audio.paused);
+    note.textContent = free ? '' : data[heard] ? (audio.paused ? '🔒 You have heard it once. Check your answers to listen again.' : '')
+                                               : '🎧 It plays once, like in the Olympiad: no going back.';
+  };
+  audio.addEventListener('ended', () => { save({ [heard]: true }); paintOnce(); });
+  audio.addEventListener('play', paintOnce);
+  if (quiz) new MutationObserver(() => {
+    if (quiz.classList.contains('checked') && !data[opened]) { save({ [opened]: true }); paintOnce(); }
+  }).observe(quiz, { attributes: true, attributeFilter: ['class'] });
+  paintOnce();
+}
+
+// ── STATEMENTS: tap a word to underline it (saved, so the teacher sees it too) ──
+document.querySelectorAll('.st-list[data-k]').forEach(list => {
+  const k = list.dataset.k, us = [...list.querySelectorAll('.u')];
+  (data[k] || []).forEach(i => us[i] && us[i].classList.add('hl'));
+  us.forEach((u, i) => u.addEventListener('click', () => {
+    u.classList.toggle('hl');
+    save({ [k]: us.map((x, j) => x.classList.contains('hl') ? j : -1).filter(j => j >= 0) });
+  }));
+});
+// ── NOTES while listening (not marked) ──
+document.querySelectorAll('input.note[data-k]').forEach(inp => {
+  inp.value = data[inp.dataset.k] || '';
+  inp.addEventListener('input', () => save({ [inp.dataset.k]: inp.value }));
+});
+// ── HOMEWORK: Olympway answers ──
+['hwOlymp'].forEach(id => {
+  const el = document.getElementById(id);
+  el.value = data[id] || '';
+  el.addEventListener('input', () => save({ [id]: el.value }));
+});
+function copyWriting() {
+  let name = '';
+  try { name = localStorage.getItem('studentName') || ''; } catch(e) {}
+  const text = 'Lesson 15 — homework' + (name ? ' — ' + name : '') + '\n\nOLYMPWAY 221, 97, 377:\n' + document.getElementById('hwOlymp').value;
+  if (navigator.clipboard) navigator.clipboard.writeText(text).then(() => { document.getElementById('copyMsg').textContent = '✓ Copied: paste it into our chat'; }, () => {});
+}
+
+function resetAll() {
+  if (!confirm('Clear every answer on this page (flashcard progress stays)?')) return;
+  try { localStorage.removeItem(LESSON_KEY); } catch(e) {}
+  location.reload();
+}
+
+// ── INIT ───────────────────────────────────────────────────────
+if (data.activeTab) showTab(data.activeTab);
+QUIZZES.forEach(q => { if (isChecked(q)) checkQuiz(q, false); });
+updateProgress();
+</script>
+
+<script src="../flashcards.js"></script>
+<script src="../choices.js"></script>
+<script src="../dictionary.js"></script>
+</body>
+</html>
