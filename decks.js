@@ -179,7 +179,7 @@ window.DECKS = [
        t = Russian name + birthplace + two works, e = one unusual fact, n = the lateral clue. */
     id: 'v14', name: 'Culture figures', lesson: 'Lessons 15–18',
     cards: [
-      // Lesson 15 · era 4 · 1603–1714
+      // era 4 · 1603–1714 (only Shakespeare was taught in Lesson 15; the other four are new in Lesson 16)
       { w: 'William Shakespeare', p: 'playwright, poet', l: '16th–17th c.', t: 'Уильям Шекспир · Stratford-upon-Avon · «Гамлет», «Ромео и Джульетта»', e: 'His company built the Globe Theatre in 1599; after 1603 it was called the King’s Men.', n: 'the Bard · Avon = Celtic “river”' },
       { w: 'John Milton', p: 'poet', l: '17th c.', t: 'Джон Мильтон · London · «Потерянный рай»', e: 'He was blind when he wrote Paradise Lost, so he dictated it to helpers.', n: 'Paradise Lost, 1667' },
       { w: 'Anthony van Dyck', p: 'painter', l: '17th c.', t: 'Антонис ван Дейк · Antwerp (Flanders) · портреты Карла I', e: 'He was court painter to Charles I, who made him a knight.', n: 'a “Van Dyke beard” is named after his portraits' },
