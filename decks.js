@@ -172,5 +172,27 @@ window.DECKS = [
       { w: 'stand up for', p: 'phr v', l: 'PV', t: 'заступаться за, отстаивать', e: 'Stand up for what you believe in.' },
       { w: 'give in', p: 'phr v', l: 'PV', t: 'уступить, сдаться', e: 'His parents finally gave in and bought him a dog.' }
     ]
+  },
+  {
+    /* Culture figures for Задание 9: one card per person, added lesson by lesson.
+       w = name (what she types in Learn mode), p = who they were, l = century,
+       t = Russian name + birthplace + two works, e = one unusual fact, n = the lateral clue. */
+    id: 'v14', name: 'Culture figures', lesson: 'Lessons 15–18',
+    cards: [
+      // Lesson 15 · era 4 · 1603–1714
+      { w: 'William Shakespeare', p: 'playwright, poet', l: '16th–17th c.', t: 'Уильям Шекспир · Stratford-upon-Avon · «Гамлет», «Ромео и Джульетта»', e: 'His company built the Globe Theatre in 1599; after 1603 it was called the King’s Men.', n: 'the Bard · Avon = Celtic “river”' },
+      { w: 'John Milton', p: 'poet', l: '17th c.', t: 'Джон Мильтон · London · «Потерянный рай»', e: 'He was blind when he wrote Paradise Lost, so he dictated it to helpers.', n: 'Paradise Lost, 1667' },
+      { w: 'Anthony van Dyck', p: 'painter', l: '17th c.', t: 'Антонис ван Дейк · Antwerp (Flanders) · портреты Карла I', e: 'He was court painter to Charles I, who made him a knight.', n: 'a “Van Dyke beard” is named after his portraits' },
+      { w: 'Christopher Wren', p: 'architect', l: '17th–18th c.', t: 'Кристофер Рен · Wiltshire · собор Святого Павла', e: 'He rebuilt St Paul’s Cathedral and more than fifty churches after the Great Fire of 1666.', n: 'his grave: “If you seek his monument, look around you”' },
+      { w: 'Henry Purcell', p: 'composer', l: '17th c.', t: 'Генри Пёрселл · London · опера «Дидона и Эней»', e: 'He was the organist of Westminster Abbey and is buried there.', n: 'Dido and Aeneas' },
+      // Lesson 16 · era 5 · the 18th century
+      { w: 'Daniel Defoe', p: 'writer', l: '17th–18th c.', t: 'Даниэль Дефо · London · «Робинзон Крузо», «Молль Флендерс»', e: 'He was born Daniel Foe and added the “De” himself.', n: 'Robinson Crusoe was inspired by Alexander Selkirk' },
+      { w: 'Jonathan Swift', p: 'writer', l: '18th c.', t: 'Джонатан Свифт · Dublin · «Путешествия Гулливера»', e: 'He was the dean of St Patrick’s Cathedral in Dublin.', n: 'Lilliput: the land of tiny people' },
+      { w: 'Robert Burns', p: 'poet', l: '18th c.', t: 'Роберт Бёрнс · Alloway, Scotland · «Auld Lang Syne», «Красная, красная роза»', e: 'Scots celebrate his birthday, 25 January, as Burns Night, with haggis.', n: 'in Russia known through Marshak’s translations' },
+      { w: 'William Hogarth', p: 'painter, engraver', l: '18th c.', t: 'Уильям Хогарт · London · «Карьера мота», «Модный брак»', e: 'He told moral stories in series of pictures, a little like comic strips.', n: 'his pug was called Trump' },
+      { w: 'Thomas Gainsborough', p: 'painter', l: '18th c.', t: 'Томас Гейнсборо · Sudbury, Suffolk · «Голубой мальчик», «Мистер и миссис Эндрюс»', e: 'He preferred painting landscapes, but portraits paid the bills.', n: 'Reynolds’s great rival' },
+      { w: 'Joshua Reynolds', p: 'painter', l: '18th c.', t: 'Джошуа Рейнольдс · Devon · «Эпоха невинности», портрет Сэмюэла Джонсона', e: 'In 1768 he became the first president of the Royal Academy of Arts.', n: 'Sir Joshua: knighted in 1769' },
+      { w: 'George Frideric Handel', p: 'composer', l: '18th c.', t: 'Георг Фридрих Гендель · Halle, Germany · «Мессия», «Музыка на воде»', e: 'Water Music was first played for George I on a boat on the Thames in 1717.', n: 'born German, became British' }
+    ]
   }
 ];

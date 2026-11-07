@@ -264,7 +264,62 @@
       b.textContent = on ? '↩ Back to the lesson' : '📚 Move to homework';
       b.classList.toggle('on', on);
     });
+    applyOrder();
     if (typeof updateScoreBar === 'function') try { updateScoreBar(); } catch (e) {}
+  }
+  // homework order set by the teacher: { task: place } → the homework tasks stand in that order
+  // (students/<id>/order/<page>; tasks without a place keep their own order, after the others)
+  let orderMap = {}, orderTools = false, saveOrder = null;
+  const hwTasks = box => [...box.children].filter(el => el.dataset && el.dataset.task);
+  function applyOrder(map) {
+    if (map) orderMap = map;
+    const hw = homeworkBox(false); if (!hw) return;
+    const tasks = hwTasks(hw.box);
+    const place = (el, i) => orderMap[el.dataset.task] != null ? orderMap[el.dataset.task] : 1e6 + i;
+    const sorted = tasks.map((el, i) => ({ el, p: place(el, i) })).sort((a, b) => a.p - b.p).map(x => x.el);
+    tasks.map(el => { const m = document.createComment('order'); el.before(m); return m; }).forEach((m, i) => m.replaceWith(sorted[i]));
+    if (orderTools) addOrderButtons(hw.box);
+  }
+  function flash(msg) {
+    let f = document.getElementById('ord-flash');
+    if (!f) { f = document.createElement('div'); f.id = 'ord-flash'; f.className = 'watch-tools'; document.body.appendChild(f); }
+    f.textContent = msg; f.style.opacity = 1;
+    clearTimeout(flash.t); flash.t = setTimeout(() => { f.style.opacity = 0; }, 2400);
+  }
+  function addOrderButtons(box) {                      // ↑ ↓ on every homework task (teacher only)
+    hwTasks(box).forEach(el => {
+      if (el.querySelector(':scope > .ord-btns')) return;
+      el.classList.add('w-ord');
+      const btns = document.createElement('div');
+      btns.className = 'ord-btns watch-tools';
+      btns.innerHTML = '<button type="button" title="Move up">↑</button><button type="button" title="Move down">↓</button>';
+      const step = dir => {
+        const list = hwTasks(box), j = list.indexOf(el) + dir;
+        if (j < 0 || j >= list.length) return;
+        dir < 0 ? list[j].before(el) : list[j].after(el);
+        el.scrollIntoView({ block: 'center', behavior: 'smooth' });
+        const map = {}; hwTasks(box).forEach((x, n) => { map[x.dataset.task] = n; });
+        orderMap = map;
+        if (saveOrder) saveOrder(map); else flash('Not saved: sign in on the teacher page first');
+      };
+      btns.children[0].addEventListener('click', () => step(-1));
+      btns.children[1].addEventListener('click', () => step(1));
+      el.prepend(btns);
+    });
+  }
+  function enableOrder() {                             // for the teacher: buttons + the live order, saved with her own sign-in
+    orderTools = true;
+    whenReady(() => { const hw = homeworkBox(false); if (hw) addOrderButtons(hw.box); });
+    if (location.hostname !== 'khurodza.github.io') return;
+    Promise.all([import(SDK + 'firebase-app.js'), import(SDK + 'firebase-auth.js'), import(SDK + 'firebase-database.js')]).then(async ([app, auth, db]) => {
+      const a = app.getApps().length ? app.getApp() : app.initializeApp(FIREBASE);
+      const au = auth.getAuth(a);
+      await au.authStateReady();
+      if (!au.currentUser || au.currentUser.isAnonymous) return;
+      const ref = db.ref(db.getDatabase(a), `students/${STUDENT}/order/${PAGE}`);
+      db.onValue(ref, snap => { const m = snap.val() || {}; whenReady(() => applyOrder(m)); });
+      saveOrder = map => db.set(ref, map).then(() => flash('✓ Homework order saved'), e => flash('Could not save the order: ' + (e && e.message)));
+    }).catch(e => console.warn('order off:', e && e.message));
   }
   // styles for extras and moved tasks (here, so every site has them whatever its stylesheet)
   addCss(
@@ -279,7 +334,12 @@
     '.w-movable{position:relative}' +
     '.move-btn{position:absolute;top:-14px;right:16px;z-index:21;border:2px solid #7B5CE6;border-radius:99px;padding:5px 12px;background:#fff;color:#5B44B8;font:800 12px/1 system-ui,sans-serif;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.12)}' +
     '.move-btn:hover{background:#7B5CE6;color:#fff}.move-btn.on{border-color:#12A374;color:#0D6B4C}.move-btn.on:hover{background:#12A374;color:#fff}' +
-    '.hw-block{margin:40px 0 20px;padding-top:12px;border-top:3px dashed #7B5CE6}.hw-block-title{color:#7B5CE6;margin:0 0 12px}');
+    '.hw-block{margin:40px 0 20px;padding-top:12px;border-top:3px dashed #7B5CE6}.hw-block-title{color:#7B5CE6;margin:0 0 12px}' +
+    '.w-ord{position:relative}' +
+    '.ord-btns{position:absolute;top:-14px;left:16px;z-index:21;display:flex;gap:6px}' +
+    '.ord-btns button{border:2px solid #D9628F;border-radius:99px;width:32px;height:28px;background:#fff;color:#B0416C;font:800 15px/1 system-ui,sans-serif;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.12)}' +
+    '.ord-btns button:hover{background:#D9628F;color:#fff}' +
+    '#ord-flash{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);z-index:10000;background:#1E2C4D;color:#fff;padding:8px 16px;border-radius:99px;font:700 14px/1.3 system-ui,sans-serif;opacity:0;transition:opacity .3s;pointer-events:none}');
   const whenReady = fn => document.readyState === 'loading' ? document.addEventListener('DOMContentLoaded', fn) : fn();
 
   /* ================= WATCH MODE (teacher) ================= */
@@ -397,6 +457,7 @@
       stats
     };
 
+    enableOrder();
     document.addEventListener('DOMContentLoaded', () => {
       document.documentElement.classList.add('watching');
       window.toast = () => {};
@@ -558,6 +619,14 @@
   const MOVED_KEY = 'moved-' + PAGE;
   let moved = {}; try { moved = JSON.parse(get(MOVED_KEY) || '{}') || {}; } catch (e) {}
   whenReady(() => applyMoves(moved));
+  const ORDER_KEY = 'order-' + PAGE;
+  try { orderMap = JSON.parse(get(ORDER_KEY) || '{}') || {}; } catch (e) {}
+  whenReady(() => applyOrder());
+  function orderChanged(map) {
+    map = map || {};
+    set(ORDER_KEY, JSON.stringify(map));
+    whenReady(() => applyOrder(map));
+  }
   function movedChanged(map) {
     map = map || {};
     const fresh = Object.keys(map).filter(k => !moved[k]);
@@ -594,6 +663,7 @@
     await au.authStateReady();
     if (au.currentUser && !au.currentUser.isAnonymous) {   // the teacher is signed in here: show her notes, don't sync her test answers
       document.documentElement.classList.add('teacher');
+      enableOrder();
       return;
     }
     if (!au.currentUser) await auth.signInAnonymously(au);
@@ -634,6 +704,7 @@
 
     db.onValue(db.ref(d, `students/${STUDENT}/extras/${PAGE}`), snap => extrasChanged(snap.val()));
     db.onValue(db.ref(d, `students/${STUDENT}/moved/${PAGE}`), snap => movedChanged(snap.val()));
+    db.onValue(db.ref(d, `students/${STUDENT}/order/${PAGE}`), snap => orderChanged(snap.val()));
 
     // the teacher's marks and comments for this page
     db.onValue(db.ref(d, `students/${STUDENT}/notes/${PAGE}`), snap => {
