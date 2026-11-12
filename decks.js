@@ -180,7 +180,7 @@ window.DECKS = [
               bio = who the person was and what they are famous for,
               keys = names to know, each [name, a very short explanation],
               e = one unusual fact, n = the lateral clue a Задание 9 question likes. */
-    id: 'v14', name: 'Culture figures', lesson: 'Lessons 15–17',
+    id: 'v14', name: 'Culture figures', lesson: 'Lessons 15–18',
     imgBase: 'lessons/images/culture/figures/',
     cards: [
       // era 4 · 1603–1714 (Shakespeare: Lesson 15; the other four: Lesson 16)
@@ -531,7 +531,206 @@ window.DECKS = [
           ['Lavinia', 'her sister, who found the poems'],
           ['the Belle of Amherst', 'her nickname']
         ],
-        e: 'Fewer than a dozen of her poems were printed while she was alive.', n: 'the Belle of Amherst' }
+        e: 'Fewer than a dozen of her poems were printed while she was alive.', n: 'the Belle of Amherst' },
+      // era 7 · the 20th century (Lesson 18: 8 in class, 8 at home)
+      { w: 'George Orwell', a: ['Orwell', 'Eric Arthur Blair', 'Eric Blair'], p: 'writer', l: '20th c.', img: 'orwell.jpg',
+        t: 'Джордж Оруэлл',
+        bio: 'Pen name of Eric Arthur Blair, born in British India. After five years as a police officer in Burma he lived among the poor in Paris and London, fought in the Spanish Civil War and worked for the BBC. His two great warnings about dictatorship are Animal Farm and Nineteen Eighty-Four.',
+        keys: [
+          ['Animal Farm (1945)', 'the animals drive out the farmer; the pigs become the new masters'],
+          ['Nineteen Eighty-Four (1949)', 'Big Brother watches everyone; Winston Smith, Room 101'],
+          ['Eric Arthur Blair', 'his real name'],
+          ['Burma (today Myanmar)', 'where he served in the Imperial Police'],
+          ['the river Orwell', 'a river in Suffolk: half of his pen name (St George the other half)'],
+          ['Jura', 'the Scottish island where he wrote 1984'],
+          ['Down and Out in Paris and London', 'his first book (1933), about poverty']
+        ],
+        e: 'He was shot in the throat by a sniper in the Spanish Civil War.', n: 'real name Eric Arthur Blair; Burma = Myanmar' },
+      { w: 'J. R. R. Tolkien', a: ['J.R.R. Tolkien', 'JRR Tolkien', 'Tolkien'], p: 'writer, Oxford professor', l: '20th c.', img: 'tolkien.jpg',
+        t: 'Джон Р. Р. Толкин',
+        bio: 'Born in South Africa and raised in Birmingham, he fought at the Somme and became a professor of Old English at Oxford. For his elves he invented whole languages, and around them the world of Middle-earth: The Hobbit and The Lord of the Rings.',
+        keys: [
+          ['The Hobbit (1937)', 'Bilbo Baggins and the dragon Smaug'],
+          ['The Lord of the Rings (1954–55)', 'Frodo must destroy the One Ring'],
+          ['Middle-earth', 'the world of his books'],
+          ['Bloemfontein', 'his birthplace, in South Africa'],
+          ['Oxford', 'where he taught Old English (Anglo-Saxon)'],
+          ['C. S. Lewis', 'his friend, author of Narnia; both were in the Inklings'],
+          ['the Somme (1916)', 'the First World War battle he fought in']
+        ],
+        e: 'He wrote the first line of The Hobbit on a blank page of an exam paper he was marking.', n: 'born in South Africa (Bloemfontein)' },
+      { w: 'Agatha Christie', a: ['Christie'], p: 'crime novelist', l: '20th c.', img: 'christie.png',
+        t: 'Агата Кристи',
+        bio: 'The best-selling novelist of all time, from Torquay in Devon. She learned about poisons in a hospital pharmacy in the First World War and created two great detectives, Hercule Poirot and Miss Marple. Her play The Mousetrap has run in London since 1952.',
+        keys: [
+          ['Hercule Poirot', 'her Belgian detective with “little grey cells”'],
+          ['Miss Marple', 'an elderly lady detective from St Mary Mead'],
+          ['Murder on the Orient Express (1934)', 'a murder on a train stopped by snow'],
+          ['The Mousetrap', 'the longest-running play in history (since 1952)'],
+          ['Torquay', 'her home town in Devon'],
+          ['Mary Westmacott', 'her other pen name, for romantic novels'],
+          ['Max Mallowan', 'her second husband, an archaeologist']
+        ],
+        e: 'In 1926 she disappeared for eleven days and was found in a hotel in Harrogate.', n: 'The Mousetrap; Mary Westmacott' },
+      { w: 'J. K. Rowling', a: ['J.K. Rowling', 'JK Rowling', 'Rowling', 'Joanne Rowling'], p: 'writer', l: '20th–21st c.', img: 'rowling.jpg',
+        t: 'Джоан Роулинг',
+        bio: 'Joanne Rowling, born near Bristol, had the idea for Harry Potter on a delayed train in 1990 and wrote the first book as a single mother in Edinburgh cafés. Twelve publishers rejected it; the seven books (1997–2007) became the best-selling series in history.',
+        keys: [
+          ['Harry Potter and the Philosopher’s Stone (1997)', 'the first of seven books'],
+          ['Hogwarts', 'the school of witchcraft and wizardry'],
+          ['platform 9¾', 'at King’s Cross, where the Hogwarts Express leaves'],
+          ['Edinburgh', 'the city where she wrote in cafés'],
+          ['Kathleen', 'her grandmother: the K in her name'],
+          ['Robert Galbraith', 'her pen name for crime novels']
+        ],
+        e: 'Her publisher asked for initials so that boys would not be put off by a woman’s name.', n: 'the K = Kathleen; Robert Galbraith' },
+      { w: 'Charlie Chaplin', a: ['Charles Chaplin', 'Chaplin'], p: 'actor, film-maker', l: '20th c.', img: 'chaplin.jpg',
+        t: 'Чарли Чаплин',
+        bio: 'A London boy who spent time in the workhouse and became the most famous face of silent cinema. His Tramp, with a bowler hat, a cane and big shoes, made the world laugh and cry. Refused re-entry to the USA in 1952, he spent his last years in Switzerland.',
+        keys: [
+          ['the Tramp', 'his character: bowler hat, cane, baggy trousers'],
+          ['The Kid (1921)', 'the Tramp looks after an orphan'],
+          ['The Gold Rush (1925)', 'he cooks and eats his own boot'],
+          ['Modern Times (1936)', 'a worker caught in the gears of a factory'],
+          ['The Great Dictator (1940)', 'his mockery of Hitler'],
+          ['Switzerland', 'where he lived from 1952']
+        ],
+        e: 'He died on Christmas Day 1977.', n: 'the Tramp' },
+      { w: 'Alfred Hitchcock', a: ['Hitchcock'], p: 'film director', l: '20th c.', img: 'hitchcock.jpg',
+        t: 'Альфред Хичкок',
+        bio: 'A London greengrocer’s son who became “the Master of Suspense”, first in British films and from 1939 in Hollywood. He appeared for a moment in almost every one of his films, but never won the Oscar for Best Director.',
+        keys: [
+          ['Psycho (1960)', 'the Bates Motel and the shower scene'],
+          ['The Birds (1963)', 'birds attack a seaside town'],
+          ['Rear Window (1954)', 'a man in a wheelchair watches his neighbours'],
+          ['Vertigo (1958)', 'a detective afraid of heights'],
+          ['The 39 Steps (1935)', 'his famous British thriller'],
+          ['cameo', 'his short appearance in his own films'],
+          ['Leytonstone', 'the part of London where he was born']
+        ],
+        e: 'Five times nominated, he never won the Oscar for Best Director.', n: 'the Master of Suspense; cameos' },
+      { w: 'the Beatles', a: ['Beatles'], p: 'band', l: '20th c.', img: 'beatles.jpg',
+        t: '«Битлз»',
+        bio: 'John Lennon, Paul McCartney, George Harrison and Ringo Starr, from Liverpool: the most famous band in history. After nights in Hamburg and the Cavern Club they caused “Beatlemania” in Britain and in 1964 conquered America. They broke up in 1970.',
+        keys: [
+          ['Liverpool', 'their home city'],
+          ['the Cavern Club', 'the Liverpool cellar where they played almost 300 times'],
+          ['Hamburg', 'the German port where they played in clubs'],
+          ['Abbey Road (1969)', 'their last recorded album: the zebra crossing'],
+          ['Sgt. Pepper’s Lonely Hearts Club Band (1967)', 'their most famous album'],
+          ['Brian Epstein', 'their manager, who ran a record shop'],
+          ['Liverpool John Lennon Airport', 'named after Lennon, shot in New York in 1980']
+        ],
+        e: 'When they received MBEs in 1965, some older holders sent theirs back in protest.', n: 'Abbey Road; the airport named after John Lennon' },
+      { w: 'Banksy', a: [], p: 'street artist', l: '20th–21st c.', img: 'banksy.jpg',
+        t: 'Бэнкси',
+        bio: 'An anonymous street artist from Bristol whose stencils of rats, children and police officers appear on walls around the world. Nobody knows for certain who he is. His Girl with Balloon shredded itself at Sotheby’s seconds after it was sold in 2018.',
+        keys: [
+          ['Bristol', 'the city where his work began'],
+          ['Girl with Balloon (2002)', 'a girl letting go of a red heart-shaped balloon'],
+          ['Love Is in the Bin', 'the new title of the shredded picture (2018)'],
+          ['Dismaland (2015)', 'his gloomy “bemusement park”'],
+          ['Exit Through the Gift Shop', 'his film about street art'],
+          ['the Walled Off Hotel', 'his hotel in Bethlehem, “the worst view in the world”']
+        ],
+        e: 'His real name and face are still unknown.', n: 'Love Is in the Bin' },
+      { w: 'Virginia Woolf', a: ['Woolf'], p: 'novelist', l: '20th c.', img: 'woolf.jpg',
+        t: 'Вирджиния Вулф',
+        bio: 'A London novelist at the centre of the Bloomsbury Group, who followed her characters’ thoughts from moment to moment. With her husband Leonard she ran the Hogarth Press from their home. Her essay A Room of One’s Own is a founding text of feminism.',
+        keys: [
+          ['Mrs Dalloway (1925)', 'one June day in London; a lady prepares a party'],
+          ['To the Lighthouse (1927)', 'a family’s summer house and a trip to a lighthouse'],
+          ['Orlando (1928)', 'a hero who lives for 300 years'],
+          ['A Room of One’s Own (1929)', 'a woman needs money and a room of her own to write'],
+          ['the Bloomsbury Group', 'her circle of writers and artists'],
+          ['the Hogarth Press', 'the publishing house she ran with Leonard Woolf']
+        ],
+        e: 'She drowned herself in the river Ouse, in Sussex, in 1941.', n: 'the Hogarth Press' },
+      { w: 'Ernest Hemingway', a: ['Hemingway'], p: 'writer (USA)', l: '20th c.', img: 'hemingway.jpg',
+        t: 'Эрнест Хемингуэй',
+        bio: 'An American writer of short, plain sentences who drove an ambulance in Italy in 1918, lived in Paris with the “Lost Generation”, followed bullfights in Spain and lived in Cuba. The Old Man and the Sea won him the Pulitzer Prize, and he won the Nobel Prize in 1954.',
+        keys: [
+          ['The Old Man and the Sea (1952)', 'an old Cuban fisherman, Santiago, and a giant marlin'],
+          ['A Farewell to Arms (1929)', 'love in the First World War in Italy'],
+          ['For Whom the Bell Tolls (1940)', 'the Spanish Civil War'],
+          ['the Lost Generation', 'the young Americans in 1920s Paris'],
+          ['Cuba', 'where he lived for twenty years'],
+          ['Nobel Prize, 1954', 'for literature']
+        ],
+        e: 'He was badly wounded as an ambulance driver in Italy at eighteen.', n: 'Santiago; Cuba' },
+      { w: 'F. Scott Fitzgerald', a: ['Scott Fitzgerald', 'Fitzgerald'], p: 'novelist (USA)', l: '20th c.', img: 'fitzgerald.jpg',
+        t: 'Фрэнсис Скотт Фицджеральд',
+        bio: 'The novelist who named the 1920s “the Jazz Age”. With his wife Zelda he lived the glamorous life he wrote about. The Great Gatsby sold poorly while he was alive; he died in Hollywood at 44, and only later did it become a great American classic.',
+        keys: [
+          ['The Great Gatsby (1925)', 'a mysterious millionaire’s parties on Long Island'],
+          ['Jay Gatsby and Daisy', 'the hero and the woman he lost'],
+          ['Nick Carraway', 'the narrator of Gatsby'],
+          ['the green light', 'at the end of Daisy’s dock: Gatsby’s dream'],
+          ['the Jazz Age', 'his name for the 1920s'],
+          ['Zelda', 'his wife'],
+          ['Francis Scott Key', 'the distant relative he was named after: author of the US national anthem']
+        ],
+        e: 'He died thinking he was a failure.', n: 'named after Francis Scott Key' },
+      { w: 'Walt Disney', a: ['Disney'], p: 'animator, producer (USA)', l: '20th c.', img: 'disney.jpg',
+        t: 'Уолт Дисней',
+        bio: 'An American cartoonist from Chicago who created Mickey Mouse in 1928, made the first full-length cartoon film from Hollywood, Snow White and the Seven Dwarfs, and opened Disneyland in California in 1955. He won more Oscars than anyone in history.',
+        keys: [
+          ['Mickey Mouse', 'created in 1928; Disney was his first voice'],
+          ['Steamboat Willie (1928)', 'the first Mickey film with sound'],
+          ['Snow White and the Seven Dwarfs (1937)', 'his first full-length cartoon'],
+          ['Disneyland (1955)', 'his theme park in California'],
+          ['Oswald the Lucky Rabbit', 'the character he lost before Mickey'],
+          ['22 Oscars', 'more than anyone else']
+        ],
+        e: 'He was the voice of Mickey Mouse himself.', n: 'Steamboat Willie' },
+      { w: 'Edward Elgar', a: ['Elgar'], p: 'composer', l: '19th–20th c.', img: 'elgar.jpg',
+        t: 'Эдуард Элгар',
+        bio: 'England’s great composer of the early 20th century, the self-taught son of a music-shop owner near Worcester. His Enigma Variations made him famous, and his first Pomp and Circumstance march is sung as “Land of Hope and Glory” every year at the Last Night of the Proms.',
+        keys: [
+          ['Enigma Variations (1899)', 'musical portraits of his friends; the most famous is “Nimrod”'],
+          ['Pomp and Circumstance March No. 1', 'sung as “Land of Hope and Glory”'],
+          ['the Last Night of the Proms', 'the London concert where it is sung every year'],
+          ['the Cello Concerto (1919)', 'his sad late masterpiece'],
+          ['Worcester', 'the city near which he was born'],
+          ['the £20 note', 'his face was on it from 1999 to 2010']
+        ],
+        e: 'He taught himself almost everything about music.', n: 'Land of Hope and Glory' },
+      { w: 'Elvis Presley', a: ['Elvis', 'Presley'], p: 'singer, actor (USA)', l: '20th c.', img: 'elvis.jpg',
+        t: 'Элвис Пресли',
+        bio: '“The King of Rock and Roll”, born in Tupelo, Mississippi, and raised in Memphis, where he drove a truck before recording at Sun Records in 1954. His voice and his dancing changed popular music. He died at his Memphis home, Graceland, in 1977.',
+        keys: [
+          ['Heartbreak Hotel (1956)', 'his first number-one hit'],
+          ['Jailhouse Rock (1957)', 'song and film'],
+          ['Love Me Tender', 'his ballad and first film'],
+          ['Graceland', 'his mansion in Memphis, now a museum'],
+          ['Tupelo, Mississippi', 'his birthplace'],
+          ['Germany (1958–60)', 'where he did his army service']
+        ],
+        e: 'His twin brother, Jesse, died at birth.', n: 'Graceland; the King' },
+      { w: 'David Hockney', a: ['Hockney'], p: 'painter', l: '20th–21st c.', img: 'hockney.jpg',
+        t: 'Дэвид Хокни',
+        bio: 'A painter from Bradford in Yorkshire who moved to Los Angeles in 1964 and painted its sunlit swimming pools. Bright, playful and always experimenting with photo-collages or iPad drawings, he became one of the most popular living artists.',
+        keys: [
+          ['A Bigger Splash (1967)', 'a splash in a Californian pool'],
+          ['Mr and Mrs Clark and Percy', 'a couple and their white cat, Percy'],
+          ['Portrait of an Artist (Pool with Two Figures)', 'sold for $90 million in 2018'],
+          ['Bradford', 'his home town in Yorkshire'],
+          ['Los Angeles', 'where he painted the pools'],
+          ['iPad drawings', 'his later way of drawing']
+        ],
+        e: 'In 2018 he was the most expensive living artist.', n: 'Percy (the cat)' },
+      { w: 'Andy Warhol', a: ['Warhol', 'Andrew Warhola'], p: 'pop artist (USA)', l: '20th c.', img: 'warhol.jpg',
+        t: 'Энди Уорхол',
+        bio: 'Born Andrew Warhola in Pittsburgh to Slovak immigrants, he became the leader of American pop art, printing soup cans and film stars again and again in bright colours. His New York studio was called the Factory.',
+        keys: [
+          ['Campbell’s Soup Cans (1962)', '32 canvases, one for each flavour'],
+          ['Marilyn Diptych (1962)', 'Marilyn Monroe’s face repeated'],
+          ['the Factory', 'his New York studio'],
+          ['pop art', 'art made from everyday, popular images'],
+          ['Pittsburgh', 'his home town, with his museum'],
+          ['15 minutes of fame', 'his famous prediction about everyone']
+        ],
+        e: 'He wore a silver wig, and in 1968 he was shot and nearly killed.', n: 'the Factory; real name Warhola' }
     ]
   }
 ];
