@@ -733,4 +733,81 @@ window.DECKS = [
         e: 'He wore a silver wig, and in 1968 he was shot and nearly killed.', n: 'the Factory; real name Warhola' }
     ]
   }
+  ,{
+    /* Places and events for Задания 9 and 10 (Lesson 19): built like V14.
+       Front: w = name, p = what it is, l = date / century. Back: img (in imgBase), t = Russian name only,
+       bio, keys = [name, short explanation], e = one unusual fact, n = the lateral clue. */
+    id: 'v15', name: 'Places & events', lesson: 'Lesson 19',
+    imgBase: 'lessons/images/culture/places/',
+    cards: [
+      { w: 'the Thames', a: ['Thames', 'the River Thames', 'River Thames'], p: 'river', l: 'about 346 km', img: 'thames-westminster.jpg',
+        t: 'Темза',
+        bio: 'The longest river entirely in England. It rises at Thames Head in the Cotswold Hills, flows east through Oxford, Windsor and London, and reaches the North Sea through the Thames Estuary. The Romans called it Tamesis and built London beside it.',
+        keys: [
+          ['Thames Head', 'its source: a stone under a tree in the Cotswolds'],
+          ['the Isis', 'its name where it flows through Oxford'],
+          ['the North Sea', 'where it ends, through the estuary'],
+          ['Runnymede', 'the meadow where Magna Carta was sealed (1215)'],
+          ['Windsor Castle and Eton', 'a royal castle and a famous school on opposite banks'],
+          ['Tower Bridge (1894)', 'its two halves rise to let ships through'],
+          ['the Globe', 'Shakespeare’s round theatre on the south bank'],
+          ['Water Music (1717)', 'Handel’s music for George I on a barge'],
+          ['the Boat Race', 'Oxford v Cambridge, every spring since 1829'],
+          ['the Thames Barrier', 'steel gates that protect London from floods'],
+          ['Three Men in a Boat', 'Jerome K. Jerome’s comic novel about a trip up the river']
+        ],
+        e: 'When it froze, Londoners held frost fairs on the ice; at the last one, in 1814, an elephant was led across.', n: 'the Isis (at Oxford)' },
+      { w: 'the Wars of the Roses', a: ['Wars of the Roses'], p: 'civil war in England', l: '1455–1485 · 15th c.', img: 'tudorrose.png',
+        t: 'Война Алой и Белой розы',
+        bio: 'Thirty years of war between two branches of the royal family, Lancaster (a red rose) and York (a white rose). It ended in 1485 at Bosworth, where Henry Tudor defeated and killed Richard III. Henry VII married Elizabeth of York and joined the two roses into the Tudor rose.',
+        keys: [
+          ['Lancaster', 'the red rose; Henry VI'],
+          ['York', 'the white rose; Edward IV, Richard III'],
+          ['the princes in the Tower', 'Edward IV’s two sons, who disappeared in 1483'],
+          ['Richard III', 'the last English king to die in battle'],
+          ['Bosworth (1485)', 'the last battle, near Leicester'],
+          ['Henry VII', 'Henry Tudor, the Welsh-born winner'],
+          ['the Tudor rose', 'red and white joined into one badge']
+        ],
+        e: 'In 2012 Richard III’s body was found under a car park in Leicester.', n: 'Lancaster = red, York = white' },
+      { w: 'the Boston Tea Party', a: ['Boston Tea Party'], p: 'protest in the American colonies', l: '16 Dec 1773 · 18th c.', img: 'teaparty.jpg',
+        t: 'Бостонское чаепитие',
+        bio: 'A protest against British taxes: “No taxation without representation”. On a December night colonists, some dressed as Mohawk Indians, threw 342 chests of the East India Company’s tea into Boston harbour. Britain closed the port, and within three years the colonies declared independence.',
+        keys: [
+          ['No taxation without representation', 'the colonists had no members in Parliament'],
+          ['the Tea Act (1773)', 'the law that let the East India Company sell tea directly'],
+          ['342 chests', 'how much tea went into the water'],
+          ['Mohawk Indians', 'the disguise some of the men wore'],
+          ['the Intolerable Acts (1774)', 'the punishment: the port of Boston closed'],
+          ['4 July 1776', 'the Declaration of Independence']
+        ],
+        e: 'At the time it was called “the destruction of the tea”; the name “Tea Party” appeared about fifty years later.', n: '1773: the same year as Pugachev' },
+      { w: 'the Battle of Waterloo', a: ['Waterloo', 'Battle of Waterloo'], p: 'battle', l: '18 June 1815 · 19th c.', img: 'waterloo.jpg',
+        t: 'Битва при Ватерлоо',
+        bio: 'Napoleon’s last battle, near Brussels in today’s Belgium. Back from exile on Elba for “the Hundred Days”, he was beaten by the Duke of Wellington’s army and the Prussians under Blücher, who arrived in the evening. He was sent to St Helena, where he died in 1821.',
+        keys: [
+          ['the Duke of Wellington', 'the British commander; wellington boots are named after him'],
+          ['Blücher', 'the Prussian general who arrived in the evening'],
+          ['Elba', 'the island Napoleon escaped from'],
+          ['the Hundred Days', 'his short return to power in 1815'],
+          ['St Helena', 'the South Atlantic island of his last exile'],
+          ['to meet your Waterloo', 'to suffer a final defeat'],
+          ['Waterloo station', 'a London station named after the battle']
+        ],
+        e: 'ABBA won the 1974 Eurovision Song Contest with a song called “Waterloo”.', n: 'exile on St Helena' },
+      { w: 'the Good Friday Agreement', a: ['Good Friday Agreement', 'the Belfast Agreement', 'Belfast Agreement'], p: 'peace agreement, Northern Ireland', l: '10 April 1998 · 20th c.', img: 'stormont.jpg',
+        t: 'Соглашение Страстной пятницы',
+        bio: 'The peace agreement that ended most of the violence of the Troubles in Northern Ireland (from the late 1960s; over 3,500 people killed) between unionists, who want to stay in the UK, and nationalists, who want a united Ireland. It was signed in Belfast on Good Friday, the Friday before Easter, and approved by voters in both parts of Ireland.',
+        keys: [
+          ['the Troubles', 'the thirty years of violence before it'],
+          ['Belfast', 'where it was signed; also called the Belfast Agreement'],
+          ['Tony Blair', 'the British Prime Minister'],
+          ['Bertie Ahern', 'the Irish leader'],
+          ['George Mitchell', 'the American senator who chaired the talks'],
+          ['Stormont', 'the Northern Ireland Assembly, where both sides share power'],
+          ['Good Friday', 'the Friday before Easter (Страстная пятница)']
+        ],
+        e: 'The Nobel Peace Prize of 1998 went to two Northern Irish politicians from opposite sides, John Hume and David Trimble.', n: '1998: the 20th century' }
+    ]
+  }
 ];

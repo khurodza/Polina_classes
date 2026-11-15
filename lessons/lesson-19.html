@@ -1,0 +1,1624 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lesson 19 – Final Review · Vikings, Churchill, Four Events, the Thames</title>
+  <link rel="stylesheet" href="../style.css">
+  <style>
+    .exam-select {
+      font: inherit; font-weight: 700; text-align: center; padding: 7px 10px; border-radius: 10px;
+      border: 2px solid var(--border); background: var(--card); color: var(--text); cursor: pointer; min-width: 64px;
+    }
+    .exam-select:focus { border-color: var(--primary); outline: none; }
+    .exam-select.correct, .blank.correct { border-color: var(--green); color: var(--green); background: rgba(91,140,69,.08); }
+    .exam-select.wrong,   .blank.wrong   { border-color: var(--red);   color: var(--red);   background: rgba(200,64,64,.06); }
+    .blank { min-width: 130px; font-weight: 600; border: 2px solid var(--border); border-radius: 10px; padding: 5px 10px; background: var(--card); }
+    .blank.short { min-width: 100px; width: 120px; }
+    .blank:focus { border-color: var(--primary); outline: none; }
+    .key { margin-left: 4px; font-size: .82rem; font-weight: 700; color: var(--green); background: rgba(91,140,69,.10); padding: 2px 8px; border-radius: 6px; }
+
+    .answer-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; padding: 9px 0; border-bottom: 1px dashed var(--border); }
+    .answer-row:last-child { border-bottom: none; }
+    .ar-num { font-family: 'Fraunces', Georgia, serif; font-weight: 700; color: var(--primary); min-width: 26px; }
+    .ar-txt { flex: 1; min-width: 200px; line-height: 1.75; }
+    .cue { font-weight: 700; letter-spacing: .04em; color: var(--accent-dk); background: rgba(201,160,48,.14); padding: 1px 8px; border-radius: 6px; font-size: .86rem; white-space: nowrap; }
+    .gap-text { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px 20px; line-height: 2.3; font-size: 1.02rem; }
+    .gap-text .gn { font-family: 'Fraunces', Georgia, serif; font-weight: 700; color: var(--primary); font-size: .85rem; margin-right: 2px; }
+    .gap-text h4 { font-family: 'Fraunces', Georgia, serif; text-align: center; font-size: 1.15rem; margin-bottom: 4px; line-height: 1.5; }
+    /* word box: a word crosses itself out when it's used in a gap (or when she taps it) */
+    .bank { display: flex; flex-wrap: wrap; gap: 8px; padding: 14px 16px; margin-bottom: 14px; border: 2px dashed rgba(201,160,48,.55); border-radius: 14px; background: rgba(201,160,48,.07); }
+    .bank span { position: relative; font-weight: 700; padding: 5px 14px; border-radius: 99px; background: #fff; border: 2px solid var(--border); cursor: pointer; user-select: none; transition: .2s; }
+    .bank span:hover { border-color: var(--accent); }
+    .bank span.used, .bank span.struck { color: var(--muted); background: transparent; border-style: dashed; text-decoration: line-through; text-decoration-thickness: 2px; text-decoration-color: var(--primary); opacity: .75; }
+    .bank span.used::after { content: attr(data-gap); position: absolute; top: -8px; right: -6px; min-width: 18px; height: 18px; padding: 0 4px; border-radius: 99px; background: var(--primary); color: #fff; font-size: .68rem; line-height: 18px; text-align: center; text-decoration: none; display: inline-block; }
+    /* Задание 2 as in the demo: drag a word into a gap (or tap the word, then the gap) */
+    .orig-instr { font-weight: 600; border-left: 3px solid var(--border); padding-left: 14px; margin: 0 0 18px; line-height: 1.7; font-size: .98rem; }
+    .bank.dnd span { cursor: grab; touch-action: none; }
+    .bank.dnd span.picked { border-color: var(--primary); background: rgba(212,87,42,.10); box-shadow: 0 0 0 3px rgba(212,87,42,.18); }
+    .drag-ghost { position: fixed; z-index: 100; pointer-events: none; transform: translate(-50%, -70%); font-weight: 700; padding: 5px 14px; border-radius: 99px; background: #fff; border: 2px solid var(--primary); box-shadow: 0 8px 18px rgba(44,32,16,.22); }
+    .dz { display: inline-block; min-width: 128px; padding: 2px 16px; border-radius: 99px; border: 2px dashed rgba(212,87,42,.45); background: #fff; font-weight: 700; color: var(--text); text-align: center; line-height: 1.6; vertical-align: middle; cursor: pointer; transition: .15s; }
+    .dz.filled { border-style: solid; border-color: var(--blue); background: #EAF2FB; }
+    .dz.over, .picking .dz:not(.filled):not(.locked) { border-color: var(--primary); background: rgba(212,87,42,.08); }
+    .dz.correct { border-style: solid; border-color: var(--green); color: var(--green); background: rgba(91,140,69,.10); }
+    .dz.wrong { border-style: solid; border-color: var(--red); color: var(--red); background: rgba(200,64,64,.07); }
+    .dz.locked { cursor: default; }
+    .bank-hint { font-size: .82rem; color: var(--muted); margin: -8px 0 12px; }
+
+    /* gaps in a word-box text: number badge + pill-shaped choice */
+    .gap { display: inline-flex; align-items: center; white-space: nowrap; margin: 0 2px; vertical-align: middle; }
+    .gap .gn { display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; border-radius: 50%; background: var(--primary); color: #fff !important; font-family: 'DM Sans', system-ui, sans-serif !important; font-size: .74rem !important; font-weight: 700; margin-right: -6px; position: relative; z-index: 1; box-shadow: 0 0 0 3px var(--card); }
+    .gap select.exam-select {
+      appearance: none; -webkit-appearance: none; min-width: 138px; padding: 4px 30px 4px 16px; border-radius: 99px;
+      font-weight: 700; text-align: left; color: var(--primary-dk); background-color: #fff;
+      border: 2px dashed rgba(212,87,42,.45);
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%23D4572A' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat; background-position: right 11px center; background-size: 11px 8px;
+    }
+    .gap select.exam-select:hover:not(:disabled) { border-color: var(--primary); }
+    .gap select.exam-select.filled { border-style: solid; border-color: var(--blue); color: var(--text); background-color: #EAF2FB; }
+    .gap select.exam-select.correct { border-style: solid; border-color: var(--green); color: var(--green); background-color: rgba(91,140,69,.10); background-image: none; padding-right: 16px; }
+    .gap select.exam-select.wrong { border-style: solid; border-color: var(--red); color: var(--red); background-color: rgba(200,64,64,.07); background-image: none; padding-right: 16px; }
+
+    .step-title { font-weight: 700; font-size: .8rem; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin: 22px 0 10px; display: flex; align-items: center; gap: 8px; }
+    .step-title::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+    .task-num { font-weight: 700; color: var(--accent-dk); background: rgba(201,160,48,.15); padding: 3px 12px; border-radius: 99px; font-size: .85rem; }
+    .pts { font-weight: 700; font-size: .82rem; padding: 3px 10px; border-radius: 99px; color: var(--blue); background: rgba(95,142,196,.12); }
+    .review-head { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 6px; }
+    .talk { background: rgba(95,142,196,.09); border-left: 4px solid var(--blue); border-radius: 0 10px 10px 0; padding: 10px 14px; margin: 10px 0; line-height: 1.6; font-size: .97rem; }
+    .book { display: inline-flex; align-items: center; gap: 6px; font-size: .88rem; font-weight: 700; color: var(--rose); background: rgba(196,122,150,.12); padding: 4px 12px; border-radius: 99px; margin-top: 10px; }
+
+    /* instruction + key-fact chips (as in lesson 10) */
+    .instr { margin: 10px 0 8px; color: var(--text); font-size: 1rem; line-height: 1.7; }
+    .facts { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 16px; }
+    .fact { display: inline-flex; align-items: center; gap: 4px; padding: 5px 13px; border-radius: 99px; font-size: .86rem; font-weight: 700; color: #fff; background: var(--primary); box-shadow: 0 2px 6px rgba(44,32,16,.12); }
+    .fact:nth-child(4n+2) { background: var(--blue); } .fact:nth-child(4n+3) { background: var(--rose); } .fact:nth-child(4n+4) { background: var(--green); }
+
+    /* hints: closed until she taps them (as in lesson 10) */
+    details.logic { background: rgba(201,160,48,.09); border: 2px solid rgba(201,160,48,.35); border-radius: var(--radius); margin-top: 12px; overflow: hidden; }
+    details.logic summary { list-style: none; cursor: pointer; display: flex; align-items: center; gap: 10px; padding: 11px 16px; font-weight: 700; color: var(--accent-dk); user-select: none; }
+    details.logic summary::-webkit-details-marker { display: none; }
+    details.logic summary:hover { background: rgba(201,160,48,.12); }
+    details.logic summary::after { content: '▾'; margin-left: auto; font-size: 1.1rem; transition: transform .2s; }
+    details.logic[open] summary::after { transform: rotate(180deg); }
+    details.logic[open] summary { border-bottom: 1px dashed rgba(201,160,48,.45); }
+    .hint-txt { font-family: 'Fraunces', Georgia, serif; font-size: 1.02rem; }
+    .logic-body { padding: 12px 18px; line-height: 1.7; }
+    .logic-body ul, .logic-body ol { padding-left: 22px; }
+
+    /* the rule table stays open: it is the lesson */
+    .rule-table { border-collapse: collapse; width: 100%; font-size: .95rem; }
+    .rule-table th, .rule-table td { border: 1px solid var(--border); padding: 8px 10px; text-align: left; vertical-align: top; background: #fff; }
+    .rule-table th { background: rgba(212,87,42,.08); }
+    .rule-table td:first-child { font-weight: 700; white-space: nowrap; }
+    .rule-table i { color: var(--primary-dk); font-style: normal; font-weight: 600; }
+    .tbl-wrap { overflow-x: auto; }
+
+    /* revealed after Check */
+    .after-check { display: none; margin-top: 14px; }
+    .quiz.checked .after-check { display: block; }
+    details.script { border: 2px solid rgba(95,142,196,.35); border-radius: 12px; background: rgba(95,142,196,.05); }
+    details.script summary { cursor: pointer; padding: 9px 14px; font-weight: 700; color: var(--blue); }
+    details.script .sc-body { padding: 2px 16px 12px; line-height: 1.7; }
+
+    .timeline { list-style: none; border-left: 3px solid var(--primary); margin-left: 8px; }
+    .timeline li { position: relative; padding: 6px 0 6px 18px; line-height: 1.5; }
+    .timeline li::before { content: ''; position: absolute; left: -8px; top: 12px; width: 13px; height: 13px; border-radius: 50%; background: #fff; border: 3px solid var(--primary); }
+    .timeline b { font-family: 'Fraunces', Georgia, serif; color: var(--primary); margin-right: 6px; }
+
+    .quiz-foot { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-top: 14px; }
+    .q-result { font-weight: 700; }
+    .q-result.full { color: var(--green); } .q-result.part { color: var(--accent-dk); } .q-result.zero { color: var(--red); }
+    .progress-wrap { position: sticky; top: 0; z-index: 30; background: var(--bg); padding: 10px 0 12px; margin-bottom: 8px; border-bottom: 1px solid var(--border); }
+    .progress-top { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 7px; font-weight: 600; font-size: .92rem; }
+    .progress-top span { color: var(--primary); }
+    .progress-bar { height: 9px; border-radius: 99px; background: var(--border); overflow: hidden; }
+    .progress-fill { height: 100%; width: 0%; border-radius: 99px; background: linear-gradient(90deg, var(--primary), var(--accent-dk)); transition: width .3s ease; }
+    /* audio player: play/pause, drag the bar, ⏪ 10 s / ⏩ 10 s (as in lesson 10) */
+    .player { display: flex; align-items: center; gap: 12px; background: linear-gradient(135deg, rgba(212,87,42,.09), rgba(201,160,48,.10)); border: 2px solid rgba(212,87,42,.25); border-radius: 18px; padding: 12px 16px; margin: 4px 0 16px; }
+    .pl-btn { flex: 0 0 52px; width: 52px; height: 52px; border-radius: 50%; border: none; background: var(--primary); color: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(212,87,42,.35); }
+    .pl-btn:hover { background: var(--primary-dk); }
+    .pl-btn svg { width: 22px; height: 22px; fill: currentColor; }
+    .pl-btn .i-pause { display: none; }
+    .player.playing .pl-btn .i-play { display: none; } .player.playing .pl-btn .i-pause { display: block; }
+    .pl-main { flex: 1; min-width: 0; }
+    .pl-top { display: flex; justify-content: space-between; gap: 10px; margin-bottom: 8px; font-size: .88rem; }
+    .pl-label { font-weight: 700; color: var(--primary-dk); }
+    .pl-time { color: var(--muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
+    .pl-track { position: relative; height: 10px; border-radius: 99px; background: rgba(44,32,16,.10); cursor: pointer; touch-action: none; }
+    .pl-fill { position: absolute; inset: 0 auto 0 0; width: 0; border-radius: 99px; background: linear-gradient(90deg, var(--primary), var(--accent-dk)); }
+    .pl-knob { position: absolute; top: 50%; left: 0; width: 18px; height: 18px; margin: -9px 0 0 -9px; border-radius: 50%; background: #fff; border: 3px solid var(--primary); box-shadow: 0 1px 4px rgba(0,0,0,.2); transition: transform .15s; }
+    .pl-track:hover .pl-knob, .player.dragging .pl-knob { transform: scale(1.25); }
+    .pl-skip { flex: 0 0 auto; height: 36px; padding: 0 10px; border-radius: 99px; border: 2px solid var(--border); background: var(--card); color: var(--muted); cursor: pointer; font: inherit; font-size: .8rem; font-weight: 700; white-space: nowrap; }
+    .pl-skip:hover { border-color: var(--primary); color: var(--primary); }
+    @media (max-width: 560px) { .player { flex-wrap: wrap; gap: 10px; padding: 10px 12px; } .pl-main { flex-basis: calc(100% - 64px); } .pl-skip { flex: 1; } }
+
+    /* ── History tab ── */
+    .story { background: #fff; border: 1px solid var(--border); border-radius: var(--radius); padding: 18px 22px; line-height: 1.9; font-size: 1.02rem; box-shadow: 0 2px 10px rgba(44,32,16,.05); margin-bottom: 16px; }
+    .story h4 { font-family: 'Fraunces', Georgia, serif; text-align: center; font-size: 1.2rem; margin-bottom: 6px; }
+    .story p { margin-bottom: 8px; }
+    .spine-row { margin: 6px 0 14px; }
+    .spine-row > small { display: block; font-size: .72rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
+    .spine { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+    .spine .h { display: inline-flex; flex-direction: column; align-items: center; padding: 6px 12px; border-radius: 12px; background: rgba(95,142,196,.12); border: 2px solid rgba(95,142,196,.45); line-height: 1.2; }
+    .spine .h b { font-family: 'Fraunces', Georgia, serif; font-size: 1rem; }
+    .spine .h b::first-letter { color: var(--primary); font-size: 1.15em; }
+    .spine .h span { font-size: .78rem; font-weight: 700; color: var(--muted); }
+    .spine .h.old { background: rgba(201,160,48,.12); border-color: rgba(201,160,48,.5); }
+    .spine .arr { color: var(--muted); font-weight: 700; }
+    .mnemo { font-family: 'Fraunces', Georgia, serif; font-size: 1.12rem; text-align: center; padding: 10px; margin: 4px 0 10px; }
+    .mnemo b { color: var(--primary); font-size: 1.2em; }
+    .pre { font-weight: 700; color: var(--primary); margin-right: 1px; }
+    .place-list { list-style: none; border-left: 3px solid var(--primary); margin-left: 8px; }
+    .place-list li { position: relative; padding: 7px 0 7px 18px; line-height: 1.6; }
+    .place-list li::before { content: ''; position: absolute; left: -8px; top: 15px; width: 13px; height: 13px; border-radius: 50%; background: #fff; border: 3px solid var(--primary); }
+    .place-list .yr { display: inline-block; min-width: 92px; font-family: 'Fraunces', Georgia, serif; font-weight: 700; color: var(--primary); }
+
+    /* ── Lesson 12 blocks A/B ── */
+    .tab-btn:nth-child(4).active { background: var(--blue); border-color: var(--blue); }
+    .tab-btn:nth-child(5).active { background: var(--green); border-color: var(--green); }
+    .rule-box { background: linear-gradient(160deg, #fff, rgba(95,142,196,.07)); border: 2px solid rgba(95,142,196,.45); border-radius: var(--radius); padding: 16px 18px; }
+    .rule-title { font-family: 'Fraunces', Georgia, serif; font-size: 1.15rem; font-weight: 700; color: var(--blue); margin-bottom: 12px; }
+    .ru-note { background: rgba(196,122,150,.09); border-left: 4px solid var(--rose); border-radius: 0 10px 10px 0; padding: 9px 14px; font-size: .93rem; line-height: 1.6; margin-top: 8px; }
+    .rule-tip { margin-top: 10px; font-size: .95rem; line-height: 1.7; }
+    .lk { font-weight: 700; padding: 1px 6px; border-radius: 6px; }
+    .lk-pr { color: #2F5F96; background: rgba(95,142,196,.18); }
+    .lk-th { color: #9A3F64; background: rgba(196,122,150,.20); }
+    .lk-the { color: #3F6E2B; background: rgba(91,140,69,.16); }
+    .lk-ln { color: #8A6A10; background: rgba(201,160,48,.22); }
+    .snum { font-family: 'Fraunces', Georgia, serif; font-weight: 700; color: var(--primary); margin-right: 4px; }
+    /* Practice 1: pair cards — tap the first sentence, then the link word */
+    .pp-quiz { display: grid; gap: 14px; }
+    .pp { background: #fff; border: 1px solid var(--border); border-radius: 16px; padding: 14px 16px; box-shadow: 0 2px 10px rgba(44,32,16,.05); }
+    .pp-head { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+    .pp-n { width: 28px; height: 28px; border-radius: 50%; background: var(--primary); color: #fff; font-weight: 700; display: inline-flex; align-items: center; justify-content: center; font-size: .9rem; flex-shrink: 0; }
+    .pp-step { font-size: .88rem; font-weight: 700; color: var(--muted); }
+    .pp-swap { margin-left: auto; display: none; font: inherit; font-size: .8rem; font-weight: 700; color: var(--muted); background: none; border: 2px solid var(--border); border-radius: 99px; padding: 3px 12px; cursor: pointer; }
+    .pp-swap:hover { color: var(--primary); border-color: var(--primary); }
+    .pp.ordered .pp-swap { display: inline-block; }
+    .quiz.checked .pp-swap { display: none; }
+    .pp-ss { display: flex; flex-direction: column; gap: 8px; }
+    .pp-s { display: flex; gap: 12px; align-items: flex-start; padding: 10px 14px; border-radius: 12px; border: 2px solid var(--border); background: var(--bg); line-height: 1.65; transition: .15s; }
+    .pp:not(.ordered) .pp-s { cursor: pointer; }
+    .pp:not(.ordered) .pp-s:hover { border-color: var(--primary); background: rgba(212,87,42,.05); }
+    .pp-b { flex-shrink: 0; min-width: 34px; height: 26px; padding: 0 8px; border-radius: 99px; background: var(--border); color: var(--text); font-size: .78rem; font-weight: 700; display: inline-flex; align-items: center; justify-content: center; margin-top: 1px; }
+    .pp-s.first { border-color: var(--blue); background: #EAF2FB; }
+    .pp-s.first .pp-b { background: var(--blue); color: #fff; }
+    .pp-s.second .pp-b { background: var(--primary); color: #fff; }
+    .pp.ordered .w { cursor: pointer; border-radius: 5px; padding: 0 1px; transition: background .12s; }
+    .pp.ordered .w:hover { background: rgba(201,160,48,.25); }
+    .w.pick { background: rgba(201,160,48,.45); box-shadow: 0 0 0 2px rgba(201,160,48,.6); }
+    .quiz.checked .w { cursor: default; }
+    .quiz.checked .w.is-link { background: rgba(91,140,69,.18); color: #3F6E2B; font-weight: 700; }
+    .quiz.checked .w.pick:not(.is-link) { background: rgba(200,64,64,.15); box-shadow: 0 0 0 2px rgba(200,64,64,.5); }
+    .quiz.checked .pp-s.first.ok { border-color: var(--green); background: rgba(91,140,69,.08); }
+    .quiz.checked .pp-s.first.bad { border-color: var(--red); background: rgba(200,64,64,.06); }
+    .pp-keys { display: none; margin-top: 10px; font-size: .88rem; font-weight: 700; color: var(--muted); }
+    .quiz.checked .pp-keys { display: block; }
+    .pp-keys input { display: none; }
+    .pp-why { font-size: .93rem; line-height: 1.6; background: rgba(95,142,196,.08); border-radius: 10px; padding: 8px 12px; margin-top: 8px; }
+    .bank.sent { flex-direction: column; }
+    .bank.sent span { border-radius: 12px; font-weight: 500; line-height: 1.5; padding: 7px 14px; }
+    .slots .slot { margin: 8px 0; }
+    .slots .gap { display: flex; align-items: flex-start; white-space: normal; }
+    .slots .gap .gn { margin-top: 8px; margin-right: 8px; flex-shrink: 0; }
+    .slots .dz { display: block; flex: 1; text-align: left; border-radius: 12px; padding: 7px 14px; min-height: 40px; font-weight: 500; line-height: 1.5; }
+    .slots .key { display: inline-block; margin-top: 10px; }
+    .why-list { padding-left: 22px; line-height: 1.7; }
+    .use-words { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; padding: 10px 14px; border-radius: 12px; background: rgba(201,160,48,.08); border: 2px dashed rgba(201,160,48,.45); margin: 6px 0; }
+    .use-words span { font-weight: 700; font-size: .9rem; padding: 3px 12px; border-radius: 99px; background: #fff; border: 1px solid var(--border); cursor: pointer; user-select: none; }
+    .use-words span.used { background: var(--green); border-color: var(--green); color: #fff; }
+    .hw-list { list-style: none; }
+    .hw-list li { padding: 10px 0; border-bottom: 1px dashed var(--border); }
+    .hw-list li:last-child { border-bottom: none; }
+    .hw-list label { display: flex; gap: 12px; align-items: flex-start; cursor: pointer; line-height: 1.55; }
+    .hw-list input { width: 22px; height: 22px; accent-color: var(--green); flex-shrink: 0; margin-top: 1px; }
+    .hw-list li.done span.t { color: var(--green); text-decoration: line-through; }
+    .free-write { min-height: 150px; }
+  
+    /* ── Lesson 14 ── */
+    .vt { font-weight: 700; padding: 1px 6px; border-radius: 6px; }
+    .mk { font-weight: 700; color: #8A6A10; border-bottom: 3px solid rgba(201,160,48,.7); }
+    .subj { text-decoration: underline wavy rgba(212,87,42,.7); text-underline-offset: 4px; font-weight: 600; }
+    /* passive: the be-part shows the tense, V3 never changes */
+    .pv { font-weight: 700; white-space: nowrap; }
+    .pv-be { color: #2F5F96; background: rgba(95,142,196,.16); padding: 1px 4px; border-radius: 6px 0 0 6px; }
+    .pv-v3 { color: #9A3F64; background: rgba(196,122,150,.18); padding: 1px 4px; border-radius: 0 6px 6px 0; }
+    .pv-act { color: var(--muted); font-weight: 700; border-bottom: 2px dotted var(--muted); }
+    /* Задание 2: the filled word and the clue around it */
+    .fw { font-weight: 700; color: #3F6E2B; background: rgba(91,140,69,.16); padding: 1px 6px; border-radius: 6px; }
+    .clue { font-weight: 700; color: #8A6A10; border-bottom: 3px solid rgba(201,160,48,.7); }
+    .lbl { display: inline-block; font-size: .72rem; font-weight: 800; letter-spacing: .03em; padding: 1px 7px; border-radius: 99px; margin-left: 4px; vertical-align: 2px; }
+    .lbl-v1 { background: rgba(95,142,196,.18); color: #2F5F96; }
+    .lbl-v2 { background: rgba(196,122,150,.20); color: #9A3F64; }
+    .lbl-ing { background: rgba(91,140,69,.18); color: #3F6E2B; }
+    .lbl-n { background: rgba(201,160,48,.22); color: #8A6A10; }
+    /* timer */
+    .timer { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin: 4px 0 14px; padding: 10px 14px; border-radius: 14px; background: rgba(95,142,196,.08); border: 2px solid rgba(95,142,196,.35); }
+    .timer .btn { padding: 6px 16px; }
+    .tm-clock { font-size: 1.25rem; font-variant-numeric: tabular-nums; min-width: 96px; }
+    .tm-clock b { font-family: 'Fraunces', Georgia, serif; }
+    .timer.running { border-color: var(--blue); }
+    .timer.over { border-color: var(--red); background: rgba(200,64,64,.06); }
+    .timer.over .tm-clock { color: var(--red); }
+    .tm-msg { font-weight: 700; color: var(--green); }
+    /* lists of lettered lines / meanings */
+    .sent-list { list-style: none; margin-bottom: 10px; background: #fff; border: 1px solid var(--border); border-radius: 14px; padding: 6px 14px; }
+    .sent-list li { display: flex; gap: 10px; padding: 5px 0; line-height: 1.55; border-bottom: 1px dashed var(--border); }
+    .sent-list li:last-child { border-bottom: none; }
+    .sl { flex-shrink: 0; width: 26px; height: 26px; border-radius: 50%; background: var(--border); font-weight: 700; font-size: .82rem; display: inline-flex; align-items: center; justify-content: center; }
+    .z3 { background: #fff; border: 1px solid var(--border); border-radius: 16px; padding: 12px 16px; margin-bottom: 12px; }
+    .z3-title { font-weight: 800; margin-bottom: 4px; }
+    .z3 .sent-list { border: none; padding: 0; margin-bottom: 4px; }
+    .answer-row.letters .ch-l { display: none; }
+    .answer-row.letters .ch-group { grid-template-columns: repeat(auto-fill, minmax(52px, 1fr)); }
+    .answer-row.letters .ch-t { text-align: center; width: 100%; font-weight: 700; }
+    .three { line-height: 1.75; }
+    .three span { display: block; }
+    .rule-table.wrap td:first-child { white-space: normal; }
+    .fmt-note { font-size: .85rem; color: var(--muted); font-weight: 600; }
+    /* warm-up: story card + random word check */
+    .scard { background: #fff; border: 2px solid rgba(196,122,150,.45); border-radius: 18px; padding: 14px 18px; margin-bottom: 10px; box-shadow: 0 2px 12px rgba(44,32,16,.06); }
+    .scard-top { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 6px; }
+    .scard-n { font-size: .75rem; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: var(--rose); }
+    .scard h4 { font-family: 'Fraunces', Georgia, serif; font-size: 1.2rem; margin: 0; flex: 1 1 220px; }
+    .scard ul { margin: 4px 0 0 18px; line-height: 1.7; }
+    .draw-btn { margin-left: auto; }
+    .vc-quiz input.blank { width: 250px; max-width: 100%; letter-spacing: .02em; text-align: left; }
+    .vc-quiz input.blank::placeholder { color: #B9AC97; letter-spacing: .06em; font-weight: 600; }
+    .vc-bar { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 10px; }
+    .vc-bar small { color: var(--muted); }
+    .vc-bar .draw-btn { margin-left: 0; }
+    html.watching .draw-btn { display: none; }
+    /* history pictures */
+    .duo { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 6px 0 14px; }
+    .duo figure, .pic { margin: 0; }
+    .duo img { width: 100%; height: 280px; object-fit: cover; object-position: 50% 12%; border-radius: 12px; box-shadow: var(--shadow); display: block; }
+    .duo figcaption, .pic figcaption { font-size: .8rem; color: var(--muted); margin-top: 5px; line-height: 1.35; }
+    .duo figcaption b { color: var(--text); }
+    .pic img { width: 100%; max-height: 300px; object-fit: cover; border-radius: 12px; box-shadow: var(--shadow); display: block; }
+    @media (max-width: 560px) { .duo img { height: 200px; } }
+    .story b.ps { color: #9A3F64; }
+    /* teacher-only: shown only inside teacher.html (sync.js adds html.watching in watch mode) */
+    .teacher-only { display: none; }
+    html.watching .teacher-only, html.teacher .teacher-only { display: block; margin-top: 14px; background: #FDEAF2; border: 2px dashed #D9628F; border-radius: var(--radius); padding: 12px 16px; line-height: 1.75; }
+    .teacher-only .to-label { font-size: .75rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: #B0416C; margin-bottom: 6px; }
+    .teacher-only b { color: #9A3F64; }
+    .teacher-only ul { margin: 4px 0 0 18px; }
+    /* ── Lesson 15 ── */
+    .op { background: #fff; border: 1px solid var(--border); border-radius: 14px; padding: 10px 14px 6px; margin-bottom: 10px; }
+    .op:last-child { margin-bottom: 0; }
+    .gap-text.ops { padding: 0; border: none; background: none; }
+    .op-head { display: flex; align-items: center; gap: 8px; line-height: 1.4; font-size: .95rem; }
+    .op-n { width: 26px; height: 26px; border-radius: 50%; background: var(--primary); color: #fff; font-weight: 700; display: inline-flex; align-items: center; justify-content: center; font-size: .85rem; flex-shrink: 0; }
+    .op-role { color: var(--muted); font-size: .88rem; }
+    .op p { margin: 2px 0 0; }
+    /* Задание 7: statements she can tap-underline */
+    .st-list { list-style: none; background: #fff; border: 1px solid var(--border); border-radius: 14px; padding: 6px 14px; margin-bottom: 6px; }
+    .st-list li { display: flex; gap: 10px; padding: 6px 0; line-height: 1.6; border-bottom: 1px dashed var(--border); }
+    .st-list li:last-child { border-bottom: none; }
+    .st-list .u { cursor: pointer; border-radius: 3px; transition: background .12s; }
+    .st-list .u:hover { background: rgba(201,160,48,.15); }
+    .st-list .u.hl { background: linear-gradient(transparent 55%, rgba(201,160,48,.6) 55%); }
+    .ul-hint { font-size: .82rem; color: var(--muted); margin: 0 0 14px; }
+    .note { font: inherit; font-size: .92rem; border: none; border-bottom: 2px dashed var(--border); background: transparent; padding: 2px 4px; margin-left: 10px; width: 240px; max-width: 62%; color: var(--text); }
+    .note:focus { outline: none; border-bottom-color: var(--primary); }
+    .note:disabled { color: var(--muted); }
+    /* once-only player: no skipping, no dragging; unlocks after Check */
+    .player.once .pl-skip, .player.once .pl-knob { display: none; }
+    .player.once .pl-track { cursor: default; }
+    .player.locked { opacity: .65; }
+    .player.locked .pl-btn { background: var(--muted); box-shadow: none; cursor: default; }
+    .pl-note { font-size: .82rem; font-weight: 700; color: var(--muted); margin: -8px 0 14px; }
+    /* audio scripts: the paraphrase and the traps */
+    mark.para { background: rgba(91,140,69,.20); color: #2F5A1F; padding: 0 3px; border-radius: 4px; }
+    .trap { text-decoration: underline wavy rgba(200,64,64,.75); text-underline-offset: 4px; }
+    .sc-body p { margin-bottom: 10px; }
+    .legend { display: flex; gap: 14px; flex-wrap: wrap; font-size: .84rem; margin: 4px 0 10px; color: var(--muted); }
+    /* history: 1603 / 1613 cards and the time links */
+    .duo-card { background: #fff; border: 2px solid rgba(95,142,196,.4); border-radius: 14px; padding: 12px 16px; }
+    .dc-yr { font-family: 'Fraunces', Georgia, serif; font-size: 1.7rem; font-weight: 700; color: var(--primary); line-height: 1.1; }
+    .dc-name { font-weight: 700; margin: 2px 0 4px; }
+    .duo-card p { font-size: .9rem; color: var(--muted); line-height: 1.5; margin: 0; }
+    .story .tx { font-weight: 700; color: #8A6A10; border-bottom: 3px solid rgba(201,160,48,.7); }
+    .tab-btn:nth-child(6).active { background: var(--rose); border-color: var(--rose); }
+    .figs { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 14px; margin: 6px 0 14px; }
+    .fig { background: #fff; border: 2px solid rgba(196,122,150,.4); border-radius: 16px; padding: 12px 16px; line-height: 1.6; font-size: .95rem; box-shadow: 0 2px 10px rgba(44,32,16,.05); }
+    .fig p { margin: 0 0 6px; }
+    .fig-top { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; }
+    .fig-name { font-family: 'Fraunces', Georgia, serif; font-size: 1.2rem; font-weight: 700; color: var(--primary-dk); }
+    .fig-tag { font-size: .78rem; font-weight: 700; color: #fff; background: var(--rose); padding: 1px 9px; border-radius: 99px; }
+    .fig-meta { font-size: .86rem; color: var(--muted); margin: 2px 0 8px; }
+    .fig-clues { background: rgba(201,160,48,.10); border-left: 4px solid var(--accent); border-radius: 0 10px 10px 0; padding: 7px 11px; margin: 8px 0 6px; font-size: .92rem; }
+    .fig-lat { font-size: .9rem; color: #2F5F96; }
+    .fig-pic { float: right; width: 150px; margin: 2px 0 10px 14px; }
+    .fig-pic img { width: 150px; height: 190px; object-fit: cover; object-position: 50% 18%; border-radius: 10px; box-shadow: var(--shadow); display: block; }
+    .fig-pic figcaption { font-size: .72rem; color: var(--muted); line-height: 1.25; margin-top: 3px; }
+    @media (max-width: 560px) { .figs { grid-template-columns: 1fr; } .fig-pic { width: 120px; } .fig-pic img { width: 120px; height: 152px; } }
+    .fig::after { content: ''; display: block; clear: both; }
+    .figs-credit { font-size: .75rem; color: var(--muted); margin: -6px 0 4px; }
+    .bank.faces span { display: inline-flex; align-items: center; gap: 10px; padding: 4px 16px 4px 4px; }
+    .bank.faces img { width: 52px; height: 52px; border-radius: 50%; object-fit: cover; object-position: 50% 20%; pointer-events: none; flex-shrink: 0; }
+    .bank.faces span.used img { opacity: .45; filter: grayscale(1); }
+    .clue-list { list-style: none; display: grid; gap: 10px; }
+    .clue-list li { display: flex; align-items: center; justify-content: space-between; gap: 10px 16px; flex-wrap: wrap; background: #fff; border: 1px solid var(--border); border-radius: 14px; padding: 10px 14px; line-height: 1.55; }
+    .clue-t { flex: 1 1 300px; }
+    .clue-list .dz { min-width: 210px; }
+    /* ── Lesson 16 ── */
+    .tf-s .u { cursor: pointer; border-radius: 3px; transition: background .12s; }
+    .tf-s .u:hover { background: rgba(201,160,48,.15); }
+    .tf-s .u.hl { background: linear-gradient(transparent 55%, rgba(201,160,48,.6) 55%); }
+    .ar-txt .talk { display: block; margin: 0 0 8px; }
+    .teacher-only.notes h4 { font-family: 'Fraunces', Georgia, serif; color: #9A3F64; margin: 14px 0 4px; font-size: 1.05rem; }
+    .teacher-only.notes p { margin: 0 0 8px; }
+    /* ── Lesson 17 ── */
+    .root { display: inline-block; font-size: .78rem; font-weight: 800; letter-spacing: .05em; color: #2F5F96; background: rgba(95,142,196,.14); border: 1px solid rgba(95,142,196,.4); padding: 0 7px; border-radius: 6px; margin-right: 2px; vertical-align: 1px; line-height: 1.6; }
+    .gap-text input.blank { min-width: 150px; width: 170px; }
+    .gap-text .gn { margin-left: 2px; }
+    .fam-table td:first-child { white-space: nowrap; }
+    .fam-table td:nth-child(2) { color: var(--muted); font-size: .9rem; }
+    .people6 { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 10px; margin: 8px 0 6px; }
+    .p6 { display: flex; gap: 10px; align-items: center; background: #fff; border: 1px solid var(--border); border-radius: 14px; padding: 8px 12px; font-size: .9rem; line-height: 1.45; }
+    .p6 img { width: 54px; height: 54px; border-radius: 50%; object-fit: cover; object-position: 50% 20%; flex-shrink: 0; }
+    .clue-list .clue-t { line-height: 1.6; }
+    /* prefix task: guide + word cards */
+    .px-guide { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 4px 0 16px; padding: 12px; border-radius: 14px; background: rgba(196,122,150,.07); border: 2px dashed rgba(196,122,150,.4); }
+    .px-g { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; background: #fff; border-radius: 10px; padding: 7px 10px; }
+    .px-chip { font-weight: 800; font-size: .92rem; color: #9A3F64; background: rgba(196,122,150,.15); border: 2px solid rgba(196,122,150,.55); border-radius: 99px; padding: 0 10px; }
+    .px-when { font-size: .88rem; }
+    .px-g small { flex-basis: 100%; color: var(--muted); font-style: italic; font-size: .82rem; }
+    .px-quiz { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+    .px-quiz > .quiz-foot, .px-quiz > .after-check { grid-column: 1 / -1; }
+    @media (max-width: 640px) { .px-quiz, .px-guide { grid-template-columns: 1fr; } }
+    .answer-row.px-card { position: relative; display: block; margin: 0; padding: 14px 14px 12px; background: #fff; border: 2px solid var(--border); border-radius: 16px; box-shadow: 0 2px 10px rgba(44,32,16,.05); }
+    .answer-row.px-card:last-of-type { border-bottom: 2px solid var(--border); }
+    .answer-row.px-card .ar-num { position: absolute; top: 12px; left: 12px; width: 26px; height: 26px; min-width: 0; border-radius: 50%; background: var(--rose); color: #fff; font-family: 'DM Sans', system-ui, sans-serif; font-size: .82rem; display: inline-flex; align-items: center; justify-content: center; margin: 0; }
+    .answer-row.px-card .ar-txt { display: block; text-align: center; margin: 0 0 10px; }
+    .px-word { display: block; font-family: 'Fraunces', Georgia, serif; font-size: 1.6rem; font-weight: 700; letter-spacing: .01em; margin: 2px 0 4px; }
+    .px-word .ch-slot { display: inline-block; min-width: 34px; margin: 0 1px 0 0 !important; padding: 0 1px !important; border-bottom: 3px dashed rgba(196,122,150,.8); color: #9A3F64; text-align: center; }
+    .px-word .ch-slot.filled, .px-word .ch-slot.right, .px-word .ch-slot.wrong { min-width: 0; }
+    .px-word .ch-slot:empty::before { content: '?'; color: rgba(196,122,150,.7); }
+    .px-ctx { display: block; font-size: .9rem; color: var(--muted); line-height: 1.5; }
+    .px-ctx i { color: var(--text); font-weight: 600; }
+    .px-card .ch-group { grid-template-columns: repeat(7, 1fr) !important; gap: 5px; }
+    .px-card .ch-btn { padding: 6px 0; min-height: 0; }
+    .px-card .ch-t { font-size: .9rem; }
+    .sfx { display: inline-block; font-weight: 800; font-size: .9rem; color: #2F5F96; background: rgba(95,142,196,.15); border: 2px solid rgba(95,142,196,.55); border-radius: 99px; padding: 1px 9px; margin: 2px 1px; line-height: 1.5; white-space: nowrap; }
+    .sfx-table td { vertical-align: middle; }
+    .sfx-table b.sfx-x { color: #2F5F96; background: rgba(95,142,196,.18); border-radius: 0 5px 5px 0; padding: 0; box-shadow: inset 0 -2px 0 rgba(95,142,196,.6); }
+    .st4-intro { margin: -4px 0 12px; font-size: .95rem; color: var(--muted); }
+    .steps4 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+    @media (max-width: 640px) { .steps4 { grid-template-columns: 1fr; } }
+    .st4 { --c: var(--blue); background: #fff; border: 2px solid var(--border); border-top: 5px solid var(--c); border-radius: 14px; padding: 12px 14px; }
+    .st4-a { --c: #5F8EC4; } .st4-b { --c: #C9A030; } .st4-c { --c: #C47A96; } .st4-d { --c: #5B8C45; }
+    .st4-head { display: flex; align-items: center; gap: 10px; margin-bottom: 4px; }
+    .st4-n { width: 30px; height: 30px; border-radius: 50%; background: var(--c); color: #fff; font-weight: 800; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .st4-q { font-family: 'Fraunces', Georgia, serif; font-size: 1.12rem; font-weight: 700; }
+    .st4-tip { font-size: .88rem; color: var(--muted); margin: 0 0 8px 40px; }
+    .st4-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 7px; }
+    .st4-list li { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 2px 10px; padding: 7px 10px; border-radius: 10px; background: var(--bg); line-height: 1.4; }
+    .st4-list .pat { font-weight: 700; font-size: .92rem; }
+    .st4-list .pat u { text-decoration: none; display: inline-block; min-width: 26px; text-align: center; border-bottom: 2px dashed var(--primary); color: var(--primary); }
+    .st4-list .arrow { display: none; }
+    .st4-list small { grid-column: 1 / -1; font-size: .85rem; color: var(--muted); font-style: italic; }
+    .st4-list small b { color: var(--text); font-style: normal; }
+    .pos { justify-self: end; white-space: nowrap; font-size: .78rem; font-weight: 800; color: #fff; padding: 2px 10px; border-radius: 99px; }
+    .pos-adj { background: #C47A96; } .pos-n { background: #C9A030; } .pos-adv { background: #5B8C45; } .pos-neg { background: #C84040; } .pos-ed { background: #5F8EC4; } .pos-ing { background: #D4572A; }
+    /* ── Lesson 18 ── */
+    .bank.hdg span { font-weight: 700; }
+    .hp { background: #fff; border: 1px solid var(--border); border-radius: 14px; padding: 12px 16px; margin-bottom: 12px; line-height: 1.75; font-size: 1rem; }
+    .hp-top { margin-bottom: 8px; }
+    .hp-top .gap { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; white-space: normal; }
+    .hp-top .gap .gn { margin-right: 4px; }
+    .hp-top .dz { display: block; flex: 1 1 260px; text-align: left; border-radius: 12px; padding: 5px 14px; min-height: 36px; }
+    .hp-top .dz:empty::before, .hp-top .dz:not(.filled)::after { content: ''; }
+    .quiz.checked .mi { background: rgba(91,140,69,.16); box-shadow: inset 0 -2px 0 rgba(91,140,69,.55); border-radius: 4px; }
+    .logic-body .mi { background: rgba(91,140,69,.16); border-radius: 4px; padding: 0 3px; }
+    .v13-table td:first-child { white-space: nowrap; }
+    .rule-table s { color: var(--red); }
+    .kind-quiz .ch-group { grid-template-columns: repeat(3, 1fr) !important; }
+    .kind-quiz .ch-l, .cent-quiz .ch-l { display: none; }
+    .kind-quiz input.blank { margin-bottom: 8px; }
+    .cent-quiz .ch-group { grid-template-columns: repeat(auto-fill, minmax(64px, 1fr)) !important; gap: 6px; }
+    .cent-quiz .ch-t { text-align: center; width: 100%; }
+    @media (max-width: 560px) { .kind-quiz .ch-group { grid-template-columns: repeat(2, 1fr) !important; } }
+    /* ── Lesson 19 ── */
+    .faces6 { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); }
+    .faces6 li { flex-direction: column; align-items: center; justify-content: flex-start; text-align: center; }
+    .faces6 img { width: 120px; height: 150px; object-fit: cover; object-position: 50% 18%; border-radius: 10px; box-shadow: var(--shadow); }
+    .faces6 .dz { min-width: 140px; }
+    .fig-pic.ev { width: 180px; }
+    .fig-pic.ev img { width: 180px; height: 130px; object-position: 50% 50%; }
+    .fig.wide { margin-top: 4px; }
+    .duo img.top { object-position: 50% 60%; }
+    @media (max-width: 560px) { .fig-pic.ev, .fig-pic.ev img { width: 130px; } .fig-pic.ev img { height: 100px; } }
+  </style>
+<script src="../sync.js"></script>
+<script src="../decks.js"></script>
+</head>
+<body>
+
+<header class="site-header">
+  <h1>Lesson 19 — Final review · the Vikings, Churchill, four famous events and the Thames</h1>
+  <a class="back-link" href="../index.html">← All Lessons</a>
+</header>
+
+<div class="container">
+
+  <div class="lesson-meta">
+    <h2>«Высшая проба» Round 2 · the final review: Задания 4, 5, 9 and 10, plus 1, 3 and 8 at home</h2>
+    <p>📅 November 2026 &nbsp;·&nbsp; Lesson 19 &nbsp;·&nbsp; word formation (the Vikings) · sentence ordering (Churchill) · history: all seven eras + the Wars of the Roses, the Boston Tea Party, Waterloo and the Good Friday Agreement · culture: decoding a place, not only a person (the Thames)</p>
+  </div>
+
+  <div class="progress-wrap">
+    <div class="progress-top">
+      <div>Blocks checked: <span id="pgCount">0 / 0</span></div>
+      <div>Points today: <span id="pgScore">0 / 0</span></div>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="pgFill"></div></div>
+  </div>
+
+  <details class="teacher-only to-plan">
+    <summary class="to-label" style="cursor:pointer">👩‍🏫 Teacher only · Lesson 19 plan · 60 min (tap to open / close)</summary>
+    <p><b>The thread:</b> the spine and six faces from memory → Задание 4 on the Vikings → Задание 5 on Churchill → four events taught on cards, the Russian hooks, two full Задание 10 sets, the traps and Olympway 162 → how to decode a place, the Thames card, decode the clue, a full “What is it?” text on the Thames.</p>
+    <ul>
+      <li><b>0–5 · Warm-up:</b> the eight royal houses + the nine US anchors from memory (3) · six portraits → names (2).</li>
+      <li><b>5–18 · Block A, Задание 4:</b> the four questions, a reminder (2) · the Vikings, 5 gaps, timed 5 min (6) · one root, several forms, 6 items (4) · buffer (1).</li>
+      <li><b>18–31 · Block B, Задание 5:</b> the link recap (2) · Churchill, 10 of 12 sentences, timed 8 min (8) · every reason aloud (3).</li>
+      <li><b>31–34 · Break.</b></li>
+      <li><b>34–48 · History:</b> four event cards (4) · decode the event (2) · the Russian hooks (1) · two Задание 10 sets, 2 min each (4) · the traps (1) · Olympway 162, 7 lines (2).</li>
+      <li><b>48–59 · Culture:</b> how to decode a place (1) · the Thames card (4) · decode the clue (2) · What is it? the Thames (4).</li>
+      <li><b>59–60 · Homework:</b> open the Homework tab together.</li>
+    </ul>
+  </details>
+
+  <details class="teacher-only notes">
+    <summary class="to-label" style="cursor:pointer">👩‍🏫 Teacher only · Lesson notes: what this lesson teaches and why (tap to open / close)</summary>
+
+    <h4>1 · Where this lesson sits</h4>
+    <p>This is the last lesson before the round, and it does two jobs at once. It is the <b>final review</b> from the plan (Lesson 11 of the plan): the spine, the culture figures, word formation, sentence ordering and all seven history eras, each in its real exam format. And it is built around the topics Polina heard came up on the paper: <b>Lewis Carroll, the Thames, the Boston Tea Party, the Wars of the Roses, Waterloo</b> (culture and history), <b>a sentence-ordering text on Churchill</b>, <b>“Good Friday”</b> (the Good Friday Agreement) and <b>a word-formation text on the Vikings</b>. Five of those were taught before (Carroll in Lesson 17; the Wars of the Roses in era 2, Lesson 13; the Tea Party in era 5, Lesson 16; Waterloo in era 6, Lessons 17–18; Churchill on the Lesson 18 history card). Two were never taught: the <b>Good Friday Agreement</b> and <b>the Thames as a culture topic</b>. Both are taught on cards here before anything tests them. Nothing on this page tests a fact that is not on this page or on an earlier lesson page.</p>
+    <p>The new idea of the lesson is in the Culture tab: <b>Задание 9 can describe a place (or an event) instead of a person</b>. Our seven kinds of clue were made for people; for a place they change into: where it starts and ends · size and records · what stands on it · what happened there · people linked to it · works set there · its other names. The Thames text tests exactly that.</p>
+
+    <h4>2 · Warm-up: the spine and six faces</h4>
+    <p>The eight houses with their first letters given (“No Plan Like Yours To Study History Wisely”): Norman 1066 · Plantagenet 1154 · Lancaster 1399 · York 1461 · Tudor 1485 · Stuart 1603 · Hanover 1714 · Windsor 1901 (the name Windsor since 1917). Plurals are accepted. Then the US anchors: 1492 Columbus · 1607 Jamestown · 1620 the Mayflower · 1776 the Declaration · 1789 Washington · 1803 Louisiana · 1861–65 the Civil War · 1867 Alaska · 1969 the Moon. Then six portraits → names (Carroll, Churchill, Orwell, Christie, Shakespeare, Dickens), with Austen and Wilde as extras in the box. The portraits are on the V14 cards (Churchill on the Lesson 18 history card).</p>
+
+    <h4>3 · Block A: Задание 4 on the Vikings</h4>
+    <p>The content is what she learned in Lessons 12–13 (Lindisfarne 793, the Danish army of the 860s, Alfred and Wessex, the Varangians), so she reads for form, not for facts. The procedure is the four questions from Lesson 17: <b>part of speech · plural or negative · feeling or cause · spelling</b>. Key: <b>1 invaders</b> (the subject that <i>jumped</i> is people, and <i>their ships</i> makes it plural; <i>invasion</i> can’t jump) · <b>2 terrified</b> (the monks feel the fear: -ed) · <b>3 unpredictable</b> (adjective after <i>completely</i>; <i>nobody knew</i> makes it negative) · <b>4 skilful</b> (adjective before <i>sailors</i>; British spelling has one <i>l</i> in the middle, <i>skillful</i> is accepted) · <b>5 settlements</b> (<i>many of their</i> → plural noun; the next sentence says <i>place names</i>, so places, not people). “One root, several forms” then puts the same roots into new sentences: <b>invasion · settlers · fearless · fearful · achievement · cultural</b>. The pair <i>fearless / fearful</i> is the point: the suffix carries the meaning, and the sentence decides.</p>
+
+    <h4>4 · Block B: Задание 5 on Churchill</h4>
+    <p>Twelve sentences, ten places, two extras, as in the real paper. Every place is decided by a link, not by knowing his life. The key is <b>F J B L D H A K C G</b>: F opens (full name, no pronoun) → J <i>however</i> (a palace, but bad at school) → B <i>once he had become a soldier</i> (← the army college) → L <i>his daring escape</i> (← taken prisoner) → D <i>however</i>, the First World War (after <i>the next year … Parliament</i>) → H <i>two years later he was back in government</i> (← resigned), <i>another war</i> → A <i>that war … they turned to him</i> (← the war and the people who would not listen) → K <i>that summer</i> (← May 1940) → C <i>yet</i>, 1945 → G <i>six years later … came back</i> (← voted out). The extras: <b>E</b> <i>She never forgave him</i> (no woman in the text: “she” links to nothing) and <b>I</b> <i>he never stood for Parliament again</i> (the text says he came back as Prime Minister). After Check, a box gives three facts worth keeping for Задание 9 (Blenheim, the Nobel Prize <i>in Literature</i>, “so much owed by so many to so few”). The Culture tab’s decode task uses two of them, so they are taught before they are used.</p>
+
+    <h4>5 · History: four events, the hooks, two Задание 10 sets, Olympway 162</h4>
+    <p><b>The four event cards</b> are written the way the culture-figure cards are: what it was, the date, the people, the words a text would use instead of the name (🔎), and a Russian hook. <b>The Wars of the Roses</b> (1455–1485): Lancaster (red) vs York (white), Henry VI, Edward IV, Richard III and the princes in the Tower, Henry Tudor at Bosworth (22 August 1485), Elizabeth of York, the Tudor rose; the name became popular much later (Shakespeare’s garden scene in <i>Henry VI</i>, then Walter Scott); Richard III’s body was found under a Leicester car park in 2012. Hook: 1480 the Ugra / 1485 Bosworth. <b>The Boston Tea Party</b> (16 December 1773): the Tea Act, “No taxation without representation”, some men disguised as Mohawks, 342 chests, the port of Boston closed in 1774 (the Intolerable Acts), 1775 the first shots, 1776 the Declaration. Hook: Pugachev, the same year. <b>Waterloo</b> (18 June 1815): near Brussels in today’s Belgium, Wellington and the Prussian Blücher against Napoleon, the Hundred Days after Elba, St Helena; Waterloo station and bridge, wellington boots, “to meet your Waterloo”, ABBA. Hook: 1812 Napoleon in Moscow. <b>The Good Friday Agreement</b> (10 April 1998), the only new history: Northern Ireland, the Troubles (from the late 1960s, over 3,500 dead), unionists (mostly Protestant, stay in the UK) and nationalists (mostly Catholic, a united Ireland), signed in Belfast, Tony Blair and Bertie Ahern, talks chaired by the American senator George Mitchell, approved by referendums in both parts of Ireland in May 1998, a power-sharing assembly at Stormont, the Nobel Peace Prize for John Hume and David Trimble. Good Friday = Страстная пятница, the Friday before Easter. It is 20th century: the trap is to say 21st because it feels recent.</p>
+    <p><b>Decode the event</b> adds two events she knows from earlier eras as distractors (the Gunpowder Plot, Lesson 15; Trafalgar, Lessons 17–18). <b>The Russian hooks</b> are the plan’s pairs plus 1812/1815. <b>Two Задание 10 sets</b> (5 events, 7 centuries, 2 extras each): set 1 Tea Party 18th · Magna Carta 13th · Good Friday Agreement 20th · Gunpowder Plot 17th · Bosworth 15th (not used: 11th, 16th); set 2 Agincourt 15th · the Moon landing 20th · Waterloo 19th · 9/11 21st · the Church of England 16th (not used: 11th, 14th). <b>The traps</b>: 1500 → 15th, 1066 → 11th, 1901 → 20th, 2000 → 20th, 1485 → 15th. <b>Olympway 162</b> is people → century; only the seven people she was taught are kept: Oliver Cromwell (17th), Anne Boleyn (16th, Elizabeth I’s mother, Lesson 12), George Washington (18th), James Cook (18th), Abraham Lincoln (19th), Queen Victoria (19th), Edgar Allan Poe (19th). <b>Note:</b> the Olympway key gives Cromwell as 16th (he was born in 1599); everything he is known for is 17th century, and the site accepts 17th. Left out because they were never taught: Newton, Mary Queen of Scots, Steve Jobs, Adam Smith, Johnny Depp, Robert Boyle, John Calvin, Schwarzenegger.</p>
+
+    <h4>6 · Culture: the Thames</h4>
+    <p>The card gives everything the text asks: the source at <b>Thames Head</b> in the Cotswolds (a stone under a tree, often dry: the same stone as the Lesson 10 reading), about <b>346 km</b>, the longest river entirely in England, into the <b>North Sea</b> through the estuary; at Oxford it is called the <b>Isis</b> (the name of an Egyptian goddess), and that is where Carroll told the <i>Alice</i> story on 4 July 1862; Windsor Castle and Eton; <b>Runnymede</b> and Magna Carta (1215); Hampton Court; in London Westminster, the Tower, Tower Bridge (1894), <b>the Globe</b> on the south bank; Handel’s <i>Water Music</i> (1717); the frost fairs (the last in 1814); the Boat Race (Oxford v Cambridge, since 1829); the <b>Thames Barrier</b> (1980s); <i>Three Men in a Boat</i> (Jerome K. Jerome, 1889). The “What is it?” key: <b>1 the Thames · 2 the Isis · 3 Magna Carta · 4 the Globe · 5 the North Sea</b>. Only 2 and 5 are hinted at in the text without the name; 3 and 4 need earlier lessons; all five are on the card. The decode-the-clue task mixes the Thames with people who belong to it (Carroll, Shakespeare, Handel, Dickens) and with Churchill from Block B.</p>
+
+    <h4>7 · Homework and the new deck</h4>
+    <p>New deck <b>V15 “Places &amp; events”</b> (5 cards: the Thames, the Wars of the Roses, the Boston Tea Party, Waterloo, the Good Friday Agreement), built like V14: picture, bio and names to know on the back; the quizzes test the content, not the Russian name. Then a <b>Задание 1</b> text on Waterloo (key: was forced · was sent · escaped · is known · was fought · Wanting · held · had been defeated · was exiled · has been given), a <b>Задание 3</b> set on today’s events (key: D · OK · B · F · C), a one-listen <b>Задание 8</b> talk on the Tea Party (key: F · T · F · F · T; the traps: <i>mainly</i>, <i>exactly</i>, the man who was stopped), a <b>“What is it?” Задание 9</b> on the Wars of the Roses (key: the Wars of the Roses · Lancaster · Richard III · Bosworth · the Tudors) and the <b>exam-day card</b>: her own time plan for the 60 minutes.</p>
+    <p><b>Not in this lesson, for time:</b> the plan’s Who-is-it blitz on all V14 cards, the Задание 2 vocabulary text and Olympway 425 / 302. For the last days: V14 and V15 daily, one sentence-ordering text and one one-listen set every other day, the timeline once more the day before the round.</p>
+  </details>
+
+  <div class="tab-bar">
+    <button class="tab-btn active" onclick="switchTab('warm', this)">🔁 Warm-up</button>
+    <button class="tab-btn"        onclick="switchTab('wf', this)">🔤 Word formation · Задание 4</button>
+    <button class="tab-btn"        onclick="switchTab('ord', this)">🔗 Order · Задание 5</button>
+    <button class="tab-btn"        onclick="switchTab('hist', this)">🏛 History</button>
+    <button class="tab-btn"        onclick="switchTab('cult', this)">🎭 Culture</button>
+    <button class="tab-btn"        onclick="switchTab('hw', this)">🏠 Homework</button>
+  </div>
+
+
+  <!-- ══════════════════════════════════════════════════════════
+       TAB 1 — WARM-UP (5 min): the spine · US anchors · six faces
+  ══════════════════════════════════════════════════════════ -->
+  <div class="tab-content active" id="tab-warm">
+
+    <div class="teacher-only" style="margin:0 0 16px">
+      <div class="to-label">👩‍🏫 Teacher only · what to say · warm-up</div>
+      <ul>
+        <li><b>Hello:</b> “Last lesson before the round. Today nothing is new except two things: one event and one river. Everything else you already know, and we’ll do it in the real formats.”</li>
+        <li><b>The spine:</b> “Eight houses, first letters given. Then nine American dates. Three minutes for both.” If she stops on a house, she says the mnemonic aloud.</li>
+        <li><b>Six faces:</b> “Six portraits, two names in the box are extra.” For each one she says one work or one 🔎 clue.</li>
+        <li><b>Homework check (Orwell, Задание 9):</b> George Orwell · Eric Arthur Blair · Myanmar · <i>Animal Farm</i> · <i>Nineteen Eighty-Four</i>.</li>
+        <li><b>Into Block A:</b> “Задание 4. The text is about people you met in Lesson 12: the Vikings.”</li>
+      </ul>
+    </div>
+
+    <div class="exercise">
+      <div class="exercise-label">Warm-up 1 · the spine from memory · 2 min</div>
+      <h3>Eight royal houses</h3>
+      <div class="mnemo"><b>N</b>o <b>P</b>lan <b>L</b>ike <b>Y</b>ours <b>T</b>o <b>S</b>tudy <b>H</b>istory <b>W</b>isely</div>
+      <p class="instr">Type the rest of each house’s name.</p>
+      <div class="quiz">
+        <div class="answer-row"><span class="ar-num">1</span><span class="ar-txt"><span class="pre">N</span><input class="blank ans" data-prefix="n" data-answer="norman|normans" autocomplete="off" spellcheck="false"> from <b>1066</b></span></div>
+        <div class="answer-row"><span class="ar-num">2</span><span class="ar-txt"><span class="pre">P</span><input class="blank ans" data-prefix="p" data-answer="plantagenet|plantagenets" autocomplete="off" spellcheck="false"> from <b>1154</b></span></div>
+        <div class="answer-row"><span class="ar-num">3</span><span class="ar-txt"><span class="pre">L</span><input class="blank ans" data-prefix="l" data-answer="lancaster|lancastrians" autocomplete="off" spellcheck="false"> from <b>1399</b></span></div>
+        <div class="answer-row"><span class="ar-num">4</span><span class="ar-txt"><span class="pre">Y</span><input class="blank ans" data-prefix="y" data-answer="york|yorkists" autocomplete="off" spellcheck="false"> from <b>1461</b></span></div>
+        <div class="answer-row"><span class="ar-num">5</span><span class="ar-txt"><span class="pre">T</span><input class="blank ans" data-prefix="t" data-answer="tudor|tudors" autocomplete="off" spellcheck="false"> from <b>1485</b></span></div>
+        <div class="answer-row"><span class="ar-num">6</span><span class="ar-txt"><span class="pre">S</span><input class="blank ans" data-prefix="s" data-answer="stuart|stuarts" autocomplete="off" spellcheck="false"> from <b>1603</b></span></div>
+        <div class="answer-row"><span class="ar-num">7</span><span class="ar-txt"><span class="pre">H</span><input class="blank ans" data-prefix="h" data-answer="hanover|hanoverians|hanoverian" autocomplete="off" spellcheck="false"> from <b>1714</b></span></div>
+        <div class="answer-row"><span class="ar-num">8</span><span class="ar-txt"><span class="pre">W</span><input class="blank ans" data-prefix="w" data-answer="windsor|windsors" autocomplete="off" spellcheck="false"> from <b>1901</b> (the name since 1917)</span></div>
+      </div>
+    </div>
+
+    <div class="exercise">
+      <div class="exercise-label">Warm-up 2 · the American anchors · 1 min</div>
+      <h3>Nine American dates</h3>
+      <div class="bank dnd"><span>the Louisiana Purchase</span><span>the Moon landing</span><span>Columbus reaches America</span><span>the Pilgrims arrive on the Mayflower</span><span>Alaska is bought from Russia</span><span>Washington becomes the first President</span><span>the Declaration of Independence</span><span>the Civil War</span><span>Jamestown, the first English colony</span></div>
+      <p class="bank-hint">Drag an event to a date, or tap an event and then tap the date. Tap a filled date to empty it.</p>
+      <div class="quiz">
+        <ul class="place-list">
+          <li><span class="yr">1492</span><span class="gap"><span class="gn">1</span><select class="exam-select ans" data-bank="1" data-answer="Columbus reaches America"></select></span></li>
+          <li><span class="yr">1607</span><span class="gap"><span class="gn">2</span><select class="exam-select ans" data-bank="1" data-answer="Jamestown, the first English colony"></select></span></li>
+          <li><span class="yr">1620</span><span class="gap"><span class="gn">3</span><select class="exam-select ans" data-bank="1" data-answer="the Pilgrims arrive on the Mayflower"></select></span></li>
+          <li><span class="yr">1776</span><span class="gap"><span class="gn">4</span><select class="exam-select ans" data-bank="1" data-answer="the Declaration of Independence"></select></span></li>
+          <li><span class="yr">1789</span><span class="gap"><span class="gn">5</span><select class="exam-select ans" data-bank="1" data-answer="Washington becomes the first President"></select></span></li>
+          <li><span class="yr">1803</span><span class="gap"><span class="gn">6</span><select class="exam-select ans" data-bank="1" data-answer="the Louisiana Purchase"></select></span></li>
+          <li><span class="yr">1861–65</span><span class="gap"><span class="gn">7</span><select class="exam-select ans" data-bank="1" data-answer="the Civil War"></select></span></li>
+          <li><span class="yr">1867</span><span class="gap"><span class="gn">8</span><select class="exam-select ans" data-bank="1" data-answer="Alaska is bought from Russia"></select></span></li>
+          <li><span class="yr">1969</span><span class="gap"><span class="gn">9</span><select class="exam-select ans" data-bank="1" data-answer="the Moon landing"></select></span></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="exercise">
+      <div class="exercise-label">Warm-up 3 · six faces · 2 min</div>
+      <h3>Who is it?</h3>
+      <p class="instr">Six portraits from your cards. Two names in the box are extra. For each one, say one work or one 🔎 clue aloud.</p>
+      <div class="bank dnd"><span>George Orwell</span><span>Jane Austen</span><span>Winston Churchill</span><span>Charles Dickens</span><span>Lewis Carroll</span><span>Oscar Wilde</span><span>William Shakespeare</span><span>Agatha Christie</span></div>
+      <p class="bank-hint">Drag a name to a portrait, or tap the name and then the portrait. Tap a filled place to empty it.</p>
+      <div class="quiz">
+        <ul class="clue-list faces6">
+          <li><img src="images/culture/figures/carroll.jpg" alt="Portrait 1"><span class="gap"><span class="gn">1</span><select class="exam-select ans" data-bank="1" data-answer="Lewis Carroll"></select></span></li>
+          <li><img src="images/culture/figures/churchill.jpg" alt="Portrait 2"><span class="gap"><span class="gn">2</span><select class="exam-select ans" data-bank="1" data-answer="Winston Churchill"></select></span></li>
+          <li><img src="images/culture/figures/orwell.jpg" alt="Portrait 3"><span class="gap"><span class="gn">3</span><select class="exam-select ans" data-bank="1" data-answer="George Orwell"></select></span></li>
+          <li><img src="images/culture/figures/christie.png" alt="Portrait 4"><span class="gap"><span class="gn">4</span><select class="exam-select ans" data-bank="1" data-answer="Agatha Christie"></select></span></li>
+          <li><img src="images/culture/figures/shakespeare.jpg" alt="Portrait 5"><span class="gap"><span class="gn">5</span><select class="exam-select ans" data-bank="1" data-answer="William Shakespeare"></select></span></li>
+          <li><img src="images/culture/figures/dickens.jpg" alt="Portrait 6"><span class="gap"><span class="gn">6</span><select class="exam-select ans" data-bank="1" data-answer="Charles Dickens"></select></span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════════════════════════════════
+       TAB 2 — Block A: Задание 4, the Vikings
+  ══════════════════════════════════════════════════════════ -->
+  <div class="tab-content" id="tab-wf">
+
+    <div class="teacher-only" style="margin:0 0 16px">
+      <div class="to-label">👩‍🏫 Teacher only · what to say · Задание 4</div>
+      <ul>
+        <li><b>The four questions:</b> “Before you write anything: what part of speech, plural or negative, feeling or cause, spelling. Say them.” She should not need the box; it is there for the first gap.</li>
+        <li><b>The text, 5 min:</b> start the timer. After Check, for each gap she names the word on the left or right that decided it (<i>their ships</i>, <i>monks</i>, <i>completely … nobody knew</i>, <i>sailors</i>, <i>many of their … place names</i>).</li>
+        <li><b>One root, several forms:</b> “Same roots, new sentences. Watch 3 and 4: the same root, opposite meanings.”</li>
+        <li><b>Into Block B:</b> “Задание 5, the 20-point task. Twelve sentences about a man you met on a history card: Churchill.”</li>
+      </ul>
+    </div>
+
+    <div class="exercise">
+      <div class="exercise-label">A reminder · 2 min</div>
+      <h3>Four questions for every gap</h3>
+      <div class="steps4">
+        <div class="st4 st4-a"><div class="st4-head"><span class="st4-n">1</span><span class="st4-q">What part of speech?</span></div><p class="st4-tip">Look left and right of the gap.</p>
+          <ul class="st4-list"><li><span class="pat">the / a / their + <u>__</u> + verb</span><span class="pos pos-n">noun</span></li><li><span class="pat">very / completely + <u>__</u></span><span class="pos pos-adj">adjective</span></li><li><span class="pat"><u>__</u> + noun (sailors)</span><span class="pos pos-adj">adjective</span></li></ul></div>
+        <div class="st4 st4-b"><div class="st4-head"><span class="st4-n">2</span><span class="st4-q">Plural? Negative?</span></div><p class="st4-tip">many / several / of their → <b>-s</b>; the meaning is “not” → <b>un- in- im- ir- dis-</b></p>
+          <ul class="st4-list"><li><span class="pat">many of their <u>__</u></span><span class="pos pos-n">-s</span></li><li><span class="pat">nobody knew what would happen → <u>__</u>predictable</span><span class="pos pos-neg">un-</span></li></ul></div>
+        <div class="st4 st4-c"><div class="st4-head"><span class="st4-n">3</span><span class="st4-q">Feeling or cause?</span></div><p class="st4-tip">The person feels it → <b>-ed</b>; the thing causes it → <b>-ing</b></p>
+          <ul class="st4-list"><li><span class="pat">the <u>__</u> monks (they feel fear)</span><span class="pos pos-ed">-ed</span></li><li><span class="pat">a <u>__</u> attack (it causes fear)</span><span class="pos pos-ing">-ing</span></li></ul></div>
+        <div class="st4 st4-d"><div class="st4-head"><span class="st4-n">4</span><span class="st4-q">Spelling</span></div><p class="st4-tip">Read the word you wrote letter by letter.</p>
+          <ul class="st4-list"><li><span class="pat">skill → skil<b>ful</b> (one l before -ful)</span><span class="pos pos-adj">-ful</span></li><li><span class="pat">settle → settle<b>ment</b> (keep the e)</span><span class="pos pos-n">-ment</span></li></ul></div>
+      </div>
+    </div>
+
+    <div class="exercise">
+      <div class="review-head"><span class="task-num">Задание 4 · 5 баллов</span><span class="pts">5 gaps · 5 min</span></div>
+      <h3>The Vikings in Britain</h3>
+      <p class="orig-instr">Прочитайте текст. Образуйте от слов, напечатанных заглавными буквами, однокоренные слова так, чтобы они грамматически и лексически соответствовали содержанию текста.</p>
+      <div class="facts"><span class="fact">⏱ 5 min</span><span class="fact">🔤 one word per gap</span><span class="fact">✍️ spelling counts</span></div>
+      <div class="timer" data-min="5"></div>
+      <div class="quiz">
+        <div class="gap-text">
+          <h4>The Vikings in Britain</h4>
+          On a summer day in 793, the first Viking <span class="root">INVADE</span> <span class="gn">1</span><input class="blank ans" data-answer="invaders" autocomplete="off" spellcheck="false"> jumped from their ships onto the beach of Lindisfarne, a small island off the north-east coast of England. The <span class="root">TERRIFY</span> <span class="gn">2</span><input class="blank ans" data-answer="terrified" autocomplete="off" spellcheck="false"> monks of the island’s monastery had no time to escape: the raiders killed many of them, took the gold and silver from the church and sailed away. For the next seventy years, attacks like this came almost every summer. They were sudden and completely <span class="root">PREDICT</span> <span class="gn">3</span><input class="blank ans" data-answer="unpredictable" autocomplete="off" spellcheck="false">: nobody knew which part of the coast the long ships would reach next.<br><br>
+          The Vikings came from Scandinavia, from the lands that are now Denmark, Norway and Sweden. They were <span class="root">SKILL</span> <span class="gn">4</span><input class="blank ans" data-answer="skilful|skillful" autocomplete="off" spellcheck="false"> sailors, and their light, narrow ships could cross the open sea and also travel far up shallow rivers. In the 860s a great Danish army arrived, and this time it stayed. By the 870s the Danes had taken over much of the north and east of England, and only Wessex survived, under King Alfred the Great. Alfred stopped them and made peace, and many Danes became farmers. Many of their <span class="root">SETTLE</span> <span class="gn">5</span><input class="blank ans" data-answer="settlements" autocomplete="off" spellcheck="false"> can still be recognised today: place names ending in <i>-by</i>, such as Derby and Whitby, come from a Danish word for a farm or a village. Meanwhile, Swedish Vikings travelled east along the rivers to Rus’, where they were known as the Varangians.
+        </div>
+        <div class="after-check">
+          <details class="logic" open><summary><span>🔎</span><span class="hint-txt">What decided each gap</span></summary><div class="logic-body"><ul class="why-list">
+            <li><b>1 invaders</b>: the subject of <i>jumped</i> is people, and <i>their ships</i> makes it plural (an <i>invasion</i> can’t jump).</li>
+            <li><b>2 terrified</b>: the monks <b>feel</b> the fear → -ed.</li>
+            <li><b>3 unpredictable</b>: an adjective after <i>completely</i>; <i>nobody knew</i> → negative, un-.</li>
+            <li><b>4 skilful</b>: an adjective before <i>sailors</i>; British spelling: skil<b>ful</b> (<i>skillful</i> in American English).</li>
+            <li><b>5 settlements</b>: <i>many of their</i> → a plural noun; <i>place names</i> → places, not people (<i>settlers</i>).</li>
+          </ul></div></details>
+        </div>
+      </div>
+    </div>
+
+    <div class="exercise">
+      <div class="exercise-label">Practice · 4 min</div>
+      <h3>One root, several forms</h3>
+      <p class="instr">The same roots in new sentences. Ask the four questions each time.</p>
+      <div class="quiz">
+        <div class="answer-row"><span class="ar-num">1</span><span class="ar-txt">The great Danish <span class="root">INVADE</span> ___ of England began in 865.</span><input class="blank ans" data-answer="invasion" autocomplete="off" spellcheck="false"></div>
+        <div class="answer-row"><span class="ar-num">2</span><span class="ar-txt">The Danes who stayed became farmers and <span class="root">SETTLE</span> ___ .</span><input class="blank ans" data-answer="settlers" autocomplete="off" spellcheck="false"></div>
+        <div class="answer-row"><span class="ar-num">3</span><span class="ar-txt">Viking warriors were known as <span class="root">FEAR</span> ___ fighters who never ran from a battle.</span><input class="blank ans" data-answer="fearless" autocomplete="off" spellcheck="false"></div>
+        <div class="answer-row"><span class="ar-num">4</span><span class="ar-txt">For years the monks of the coast lived in houses by the sea, always <span class="root">FEAR</span> ___ of another attack.</span><input class="blank ans" data-answer="fearful" autocomplete="off" spellcheck="false"></div>
+        <div class="answer-row"><span class="ar-num">5</span><span class="ar-txt">Alfred’s greatest <span class="root">ACHIEVE</span> ___ was to save Wessex.</span><input class="blank ans" data-answer="achievement" autocomplete="off" spellcheck="false"></div>
+        <div class="answer-row"><span class="ar-num">6</span><span class="ar-txt">The Vikings left a strong <span class="root">CULTURE</span> ___ influence on both England and Rus’.</span><input class="blank ans" data-answer="cultural" autocomplete="off" spellcheck="false"></div>
+        <div class="after-check">
+          <details class="logic" open><summary><span>🔎</span><span class="hint-txt">Why</span></summary><div class="logic-body"><ul class="why-list">
+            <li>1: <i>the great Danish ___ of England</i>: a noun for the event → invas<b>ion</b> (d → s).</li>
+            <li>2: <i>farmers and ___</i>: two plural nouns for people → settle<b>rs</b>.</li>
+            <li>3 and 4: the same root, opposite meanings: <i>never ran</i> → fear<b>less</b> (without fear); <i>always … of another attack</i> → fear<b>ful</b> (full of fear).</li>
+            <li>5: <i>Alfred’s greatest ___</i>: a noun → achieve<b>ment</b>. 6: <i>a strong ___ influence</i>: an adjective → cultur<b>al</b> (drop the e).</li>
+          </ul></div></details>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════════════════════════════════
+       TAB 3 — Block B: Задание 5, Churchill
+  ══════════════════════════════════════════════════════════ -->
+  <div class="tab-content" id="tab-ord">
+
+    <div class="teacher-only" style="margin:0 0 16px">
+      <div class="to-label">👩‍🏫 Teacher only · what to say · Задание 5</div>
+      <ul>
+        <li><b>The links:</b> “Four kinds of link: he / his / they; this / that / such + noun; however, yet, once; dates and ‘six years later’. And the extras: on topic, but they link to nothing, or they say something the text contradicts.”</li>
+        <li><b>The text, 8 min:</b> start the timer. Remind her: find the opener first (a full name, no pronoun), then build chains.</li>
+        <li><b>Reasons aloud:</b> after Check she gives every link: “J comes after F because of <i>however</i>: a palace, but bad at school.” The two extras: why can’t E go anywhere? (“she”: there is no woman). Why not I? (he came back as Prime Minister).</li>
+        <li><b>Keep:</b> the three facts in the box after Check. Two of them come back in the Culture tab.</li>
+      </ul>
+    </div>
+
+    <div class="exercise">
+      <div class="exercise-label">A reminder · 2 min</div>
+      <h3>What holds the sentences together</h3>
+      <div class="rule-box">
+        <div class="tbl-wrap"><table class="rule-table wrap">
+          <tr><th>Link</th><th>What to look for</th></tr>
+          <tr><td>Pronouns</td><td><span class="lk lk-pr">he, his, they, them</span>: who is it? The person must already be in the text.</td></tr>
+          <tr><td>this / that + noun</td><td><span class="lk lk-th">that war, this success, his escape</span>: the thing was mentioned in the sentence before.</td></tr>
+          <tr><td>Linkers</td><td><span class="lk lk-ln">however, yet, once, when</span>: a contrast or a step in time.</td></tr>
+          <tr><td>Time</td><td><span class="lk lk-the">the next year, that summer, six years later</span>: count the dates.</td></tr>
+          <tr><td>The two extras</td><td>On the topic, but a pronoun points to nobody, or the sentence says what the text contradicts.</td></tr>
+        </table></div>
+      </div>
+    </div>
+
+    <div class="exercise">
+      <div class="review-head"><span class="task-num">Задание 5 · 20 баллов</span><span class="pts">10 places · 2 extra sentences</span></div>
+      <h3>The man from Blenheim Palace · 8 min</h3>
+      <p class="orig-instr">Поставьте предложения в логическую цепочку, чтобы получился связный текст. Два предложения являются лишними.</p>
+      <div class="facts"><span class="fact">⏱ 8 min</span><span class="fact">2 extras</span><span class="fact">🔗 the opener has no pronoun</span></div>
+      <div class="timer" data-min="8"></div>
+      <div class="bank dnd sent"><span>A · When that war came in 1939, they turned to him at last, and in May 1940 he became Prime Minister.</span><span>B · Once he had become a soldier, he also worked as a newspaper reporter, and in 1899, during the Boer War in South Africa, he was taken prisoner.</span><span>C · Yet only two months after the victory over Germany in 1945, the British voted him out of office.</span><span>D · During the First World War, however, his career almost ended: he planned an attack at Gallipoli, in Turkey, which went badly wrong, and he had to resign.</span><span>E · She never forgave him for losing the election and did not speak to him for a year.</span><span>F · Winston Churchill was born in 1874 at Blenheim Palace, the enormous country house of his grandfather, the Duke of Marlborough.</span><span>G · Six years later he came back as Prime Minister, and in 1953 he received a Nobel Prize: not for peace, but for literature, for his histories and his speeches.</span><span>H · Two years later he was back in government, but in the 1930s few people listened when he warned that Hitler’s Germany was preparing for another war.</span><span>I · Despite this success, he soon left politics and never stood for Parliament again.</span><span>J · As a boy, however, he did badly at school, and it took him three attempts to pass the entrance exam for the army college at Sandhurst.</span><span>K · That summer, as the pilots of the RAF fought the Battle of Britain, he said of them: “Never was so much owed by so many to so few.”</span><span>L · His daring escape from the prison camp made him famous at home, and the next year he was elected to Parliament at the age of twenty-five.</span></div>
+      <p class="bank-hint">Drag a sentence to its place, or tap it and then the place. Tap a filled place to empty it.</p>
+      <div class="quiz">
+        <div class="slots">
+          <div class="slot"><span class="gap"><span class="gn">1</span><select class="exam-select ans" data-bank="1" data-answer="F · Winston Churchill was born in 1874 at Blenheim Palace, the enormous country house of his grandfather, the Duke of Marlborough."></select></span></div>
+          <div class="slot"><span class="gap"><span class="gn">2</span><select class="exam-select ans" data-bank="1" data-answer="J · As a boy, however, he did badly at school, and it took him three attempts to pass the entrance exam for the army college at Sandhurst."></select></span></div>
+          <div class="slot"><span class="gap"><span class="gn">3</span><select class="exam-select ans" data-bank="1" data-answer="B · Once he had become a soldier, he also worked as a newspaper reporter, and in 1899, during the Boer War in South Africa, he was taken prisoner."></select></span></div>
+          <div class="slot"><span class="gap"><span class="gn">4</span><select class="exam-select ans" data-bank="1" data-answer="L · His daring escape from the prison camp made him famous at home, and the next year he was elected to Parliament at the age of twenty-five."></select></span></div>
+          <div class="slot"><span class="gap"><span class="gn">5</span><select class="exam-select ans" data-bank="1" data-answer="D · During the First World War, however, his career almost ended: he planned an attack at Gallipoli, in Turkey, which went badly wrong, and he had to resign."></select></span></div>
+          <div class="slot"><span class="gap"><span class="gn">6</span><select class="exam-select ans" data-bank="1" data-answer="H · Two years later he was back in government, but in the 1930s few people listened when he warned that Hitler’s Germany was preparing for another war."></select></span></div>
+          <div class="slot"><span class="gap"><span class="gn">7</span><select class="exam-select ans" data-bank="1" data-answer="A · When that war came in 1939, they turned to him at last, and in May 1940 he became Prime Minister."></select></span></div>
+          <div class="slot"><span class="gap"><span class="gn">8</span><select class="exam-select ans" data-bank="1" data-answer="K · That summer, as the pilots of the RAF fought the Battle of Britain, he said of them: “Never was so much owed by so many to so few.”"></select></span></div>
+          <div class="slot"><span class="gap"><span class="gn">9</span><select class="exam-select ans" data-bank="1" data-answer="C · Yet only two months after the victory over Germany in 1945, the British voted him out of office."></select></span></div>
+          <div class="slot"><span class="gap"><span class="gn">10</span><select class="exam-select ans" data-bank="1" data-answer="G · Six years later he came back as Prime Minister, and in 1953 he received a Nobel Prize: not for peace, but for literature, for his histories and his speeches."></select></span></div>
+        </div>
+        <div class="after-check">
+          <details class="logic" open><summary><span>🔗</span><span class="hint-txt">Why this order: say each reason aloud</span></summary><div class="logic-body">
+            <ul class="why-list">
+            <li><b>1 = F</b>: the opener: his full name, no pronoun.</li>
+            <li><b>2 = J</b>: <i>however</i>: born in a palace, <b>but</b> bad at school.</li>
+            <li><b>3 = B</b>: <i>once he had become a soldier</i> ← the army college at Sandhurst.</li>
+            <li><b>4 = L</b>: <i>his daring escape</i> ← <i>taken prisoner</i>; <i>the next year</i> = 1900.</li>
+            <li><b>5 = D</b>: <i>however</i>: elected, then his career almost ended; the First World War comes after 1900.</li>
+            <li><b>6 = H</b>: <i>two years later … back in government</i> ← he had to resign; <i>another war</i> ← the First World War.</li>
+            <li><b>7 = A</b>: <i>that war</i> ← <i>another war</i>; <i>they turned to him at last</i> ← <i>few people listened</i>.</li>
+            <li><b>8 = K</b>: <i>that summer</i> ← May 1940.</li>
+            <li><b>9 = C</b>: <i>yet</i>: a hero, but voted out; 1945.</li>
+            <li><b>10 = G</b>: <i>six years later … came back</i> ← voted out in 1945 → 1951.</li>
+            </ul>
+            <p>The extras: <b>E</b> <i>She never forgave him</i>: there is no woman in the text, so “she” links to nobody. <b>I</b> <i>never stood for Parliament again</i>: the text says he came back as Prime Minister.</p>
+          </div></details>
+          <details class="logic" open><summary><span>📌</span><span class="hint-txt">Three facts to keep for Задание 9</span></summary><div class="logic-body"><ul>
+            <li>He was born at <b>Blenheim Palace</b> (Oxfordshire), the house of the Dukes of Marlborough.</li>
+            <li>His Nobel Prize (1953) was in <b>Literature</b>, not Peace.</li>
+            <li>“Never was so much owed by so many to so few”: about the RAF pilots in <b>the Battle of Britain</b>, 1940.</li>
+          </ul></div></details>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════════════════════════════════
+       TAB 4 — HISTORY: four events · decode · hooks · two Задание 10 sets · traps · Olympway 162
+  ══════════════════════════════════════════════════════════ -->
+  <div class="tab-content" id="tab-hist">
+
+    <div class="teacher-only" style="margin:0 0 16px">
+      <div class="to-label">👩‍🏫 Teacher only · what to say · history</div>
+      <ul>
+        <li><b>The cards:</b> “Three of these you know. One is new: a Friday in 1998.” She reads each card’s date, one name and one 🔎 line. Stop on Good Friday: “What is Good Friday in Russian?” (Страстная пятница). “Which century?” (20th: 1998, not 21st).</li>
+        <li><b>Hooks:</b> “Russia and Britain in the same years. Six pairs.” Make her say each pair aloud.</li>
+        <li><b>Two Задание 10 sets:</b> “Two minutes each. First two digits plus one.”</li>
+        <li><b>The traps:</b> “Five dates that catch people.”</li>
+        <li><b>Olympway 162:</b> “People, not events. When did they live?” Cromwell: the book says 16th (born 1599); we accept the 17th, when he did everything he is known for.</li>
+        <li><b>Into culture:</b> “Задание 9 doesn’t always describe a person. Sometimes it’s a place.”</li>
+      </ul>
+    </div>
+
+    <div class="step-title">In class · 14 min</div>
+
+    <div class="exercise">
+      <div class="exercise-label">Meet the events · 4 min</div>
+      <h3>Four events a text can describe without naming them</h3>
+      <p class="instr">Read each card aloud: the date, one name, and one 🔎 clue. The 🔎 lines are how a text would describe the event <b>without</b> its name.</p>
+      <p class="figs-credit">Pictures: Wikimedia Commons (public domain, or the free licence named under the picture).</p>
+      <div class="figs">
+        <div class="fig"><figure class="fig-pic ev"><img src="images/culture/places/tudorrose.png" alt="The Tudor rose, red and white" loading="lazy"><figcaption>the Tudor rose (drawing: Sodacan, CC BY-SA 3.0)</figcaption></figure><div class="fig-top"><span class="fig-name">The Wars of the Roses</span><span class="fig-tag">1455–1485 · 15th c.</span></div>
+          <div class="fig-meta">Война Алой и Белой розы · England · era 2</div>
+          <p><b>What:</b> thirty years of civil war between two branches of the royal family: the house of <b>Lancaster</b> (a <b>red</b> rose) and the house of <b>York</b> (a <b>white</b> rose). Kings: Henry VI (Lancaster), Edward IV (York), <b>Richard III</b> (York), who took the crown in 1483; his two young nephews, “the princes in the Tower”, were never seen again.</p>
+          <p><b>The end:</b> on 22 August 1485 the Welsh-born Henry Tudor defeated Richard III at <b>Bosworth</b>, near Leicester. Richard was the last English king to die in battle. Henry became <b>Henry VII</b>, married Elizabeth of York and joined the two roses into the <b>Tudor rose</b>.</p>
+          <div class="fig-clues"><b>🔎 Clues in a text:</b> two branches of the royal family · a red flower and a white flower · a weak king who lost his mind · two boys who disappeared in the Tower · a Welshman back from France · a battle near Leicester · a king found under a car park (2012)</div>
+          <div class="fig-lat"><b>Lateral:</b> the name came later, partly from a scene in Shakespeare where nobles pick red and white roses in a garden. <b>🇷🇺 Hook:</b> 1480 the Stand on the Ugra, 1485 Bosworth: a new strong monarchy in both countries.</div></div>
+
+        <div class="fig"><figure class="fig-pic ev"><img src="images/culture/places/teaparty.jpg" alt="Lithograph of the Boston Tea Party" loading="lazy"><figcaption>lithograph by Nathaniel Currier, 1846</figcaption></figure><div class="fig-top"><span class="fig-name">The Boston Tea Party</span><span class="fig-tag">16 Dec 1773 · 18th c.</span></div>
+          <div class="fig-meta">Бостонское чаепитие · Boston, Massachusetts · era 5</div>
+          <p><b>What:</b> British Parliament taxed the thirteen colonies, which had no members in it: “<b>No taxation without representation</b>.” After the Tea Act of 1773, a group of colonists, some dressed as <b>Mohawk Indians</b>, boarded three ships in Boston harbour and threw <b>342 chests</b> of the East India Company’s tea into the water.</p>
+          <p><b>After:</b> in 1774 London closed the port of Boston (the colonists called the new laws “the Intolerable Acts”); in 1775 the fighting began; on <b>4 July 1776</b> came the Declaration of Independence. The name “Tea Party” only appeared about fifty years later.</p>
+          <div class="fig-clues"><b>🔎 Clues in a text:</b> a December night in a harbour in Massachusetts · men disguised as Native Americans · chests thrown into the sea · a tax on a drink · “no taxation without representation” · a port closed as a punishment</div>
+          <div class="fig-lat"><b>Lateral:</b> the drink (tea), the company (the East India Company), what came three years later (the Declaration). <b>🇷🇺 Hook:</b> 1773, the same year as Pugachev’s rebellion.</div></div>
+
+        <div class="fig"><figure class="fig-pic ev"><img src="images/culture/places/waterloo.jpg" alt="Painting of the Battle of Waterloo" loading="lazy"><figcaption>painting by William Sadler (19th c.)</figcaption></figure><div class="fig-top"><span class="fig-name">The Battle of Waterloo</span><span class="fig-tag">18 June 1815 · 19th c.</span></div>
+          <div class="fig-meta">Битва при Ватерлоо · near Brussels, today’s Belgium · era 6</div>
+          <p><b>What:</b> the last battle of <b>Napoleon</b>. He had escaped from the island of Elba and ruled France again for about a hundred days (“the Hundred Days”). The British army and its allies under the <b>Duke of Wellington</b> held their position all day, and in the evening the <b>Prussian</b> army under <b>Blücher</b> arrived. Napoleon was sent to <b>St Helena</b>, an island in the South Atlantic, where he died in 1821.</p>
+          <p><b>Named after it:</b> Waterloo station and Waterloo Bridge in London; “to meet your Waterloo” = to suffer a final defeat; ABBA’s “Waterloo” won Eurovision in 1974. Wellington boots are named after the Duke.</p>
+          <div class="fig-clues"><b>🔎 Clues in a text:</b> a village south of Brussels · an emperor back from exile · a hundred days · a duke whose name is now a rubber boot · an army that arrived in the evening · a lonely island in the South Atlantic</div>
+          <div class="fig-lat"><b>Lateral:</b> the island he was sent to (St Helena); the London station. <b>🇷🇺 Hook:</b> 1812 Napoleon in Moscow, 1814 the Russian army in Paris, 1815 Waterloo.</div></div>
+
+        <div class="fig"><figure class="fig-pic ev"><img src="images/culture/places/stormont.jpg" alt="Parliament Buildings at Stormont, Belfast" loading="lazy"><figcaption>Stormont, Belfast, home of the Assembly (photo: Albert Bridge, CC BY-SA 2.0)</figcaption></figure><div class="fig-top"><span class="fig-name">The Good Friday Agreement</span><span class="fig-tag">10 April 1998 · 20th c. · NEW</span></div>
+          <div class="fig-meta">Соглашение Страстной пятницы · Belfast, Northern Ireland · era 7</div>
+          <p><b>What:</b> the peace agreement that ended most of the violence of <b>the Troubles</b> in <b>Northern Ireland</b> (from the late 1960s; more than 3,500 people were killed). <b>Unionists</b> (mostly Protestant) want to stay in the UK; <b>nationalists</b> (mostly Catholic) want one united Ireland. It was signed in <b>Belfast</b> on <b>Good Friday</b>, the Friday before Easter (Страстная пятница), so it is also called the Belfast Agreement.</p>
+          <p><b>Who:</b> the British Prime Minister <b>Tony Blair</b> and the Irish leader <b>Bertie Ahern</b>; the talks were chaired by the American senator <b>George Mitchell</b>. In May 1998 voters in <b>both parts of Ireland</b> approved it. Northern Ireland got its own assembly at <b>Stormont</b>, where both sides must share power. The Nobel Peace Prize went to John Hume and David Trimble.</p>
+          <div class="fig-clues"><b>🔎 Clues in a text:</b> a holy day before Easter · thirty years of “Troubles” · Protestants and Catholics · power-sharing · a senator from the USA · two referendums on the same day · Stormont</div>
+          <div class="fig-lat"><b>Lateral:</b> the city (Belfast), the British Prime Minister (Tony Blair), the century: <b>20th</b> (1998, not the 21st).</div></div>
+      </div>
+    </div>
+
+    <div class="exercise">
+      <div class="exercise-label">Decode the event · 2 min</div>
+      <h3>One clue, one event</h3>
+      <p class="instr">Four events from the cards and two from earlier lessons (the Gunpowder Plot, Lesson 15; Trafalgar, Lessons 17–18).</p>
+      <div class="bank dnd"><span>the Good Friday Agreement</span><span>the Battle of Trafalgar</span><span>the Gunpowder Plot</span><span>the Battle of Waterloo</span><span>the Boston Tea Party</span><span>the Wars of the Roses</span></div>
+      <p class="bank-hint">Drag an event to a clue, or tap the event and then the clue. Tap a filled clue to empty it.</p>
+      <div class="quiz">
+        <ul class="clue-list">
+          <li><span class="clue-t">Some of the men were dressed as Mohawk Indians.</span><span class="gap"><span class="gn">1</span><select class="exam-select ans" data-bank="1" data-answer="the Boston Tea Party"></select></span></li>
+          <li><span class="clue-t">Two branches of the royal family each had a flower as its badge.</span><span class="gap"><span class="gn">2</span><select class="exam-select ans" data-bank="1" data-answer="the Wars of the Roses"></select></span></li>
+          <li><span class="clue-t">It was signed in Belfast on the Friday before Easter.</span><span class="gap"><span class="gn">3</span><select class="exam-select ans" data-bank="1" data-answer="the Good Friday Agreement"></select></span></li>
+          <li><span class="clue-t">A man was caught in a cellar under the House of Lords, guarding thirty-six barrels.</span><span class="gap"><span class="gn">4</span><select class="exam-select ans" data-bank="1" data-answer="the Gunpowder Plot"></select></span></li>
+          <li><span class="clue-t">A British admiral won at sea in 1805 but was killed in the battle.</span><span class="gap"><span class="gn">5</span><select class="exam-select ans" data-bank="1" data-answer="the Battle of Trafalgar"></select></span></li>
+          <li><span class="clue-t">An emperor back from exile was beaten when a Prussian army arrived in the evening.</span><span class="gap"><span class="gn">6</span><select class="exam-select ans" data-bank="1" data-answer="the Battle of Waterloo"></select></span></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="exercise">
+      <div class="exercise-label">The Russian hooks · 1 min</div>
+      <h3>The same years in two countries</h3>
+      <p class="instr">Match each Russian event to the British or American event of the same time. Then say each pair aloud.</p>
+      <div class="bank dnd"><span>1815 · Waterloo</span><span>1861 · the American Civil War begins</span><span>1485 · Bosworth: the first Tudor king</span><span>1969 · Armstrong on the Moon</span><span>1773 · the Boston Tea Party</span><span>1603 · James I, the first Stuart king</span></div>
+      <p class="bank-hint">Drag an event to its pair, or tap it and then the pair. Tap a filled place to empty it.</p>
+      <div class="quiz">
+        <ul class="clue-list">
+          <li><span class="clue-t">🇷🇺 <b>1480</b> · the Stand on the Ugra: Moscow is free of the Horde</span><span class="gap"><span class="gn">1</span><select class="exam-select ans" data-bank="1" data-answer="1485 · Bosworth: the first Tudor king"></select></span></li>
+          <li><span class="clue-t">🇷🇺 <b>1613</b> · Michael, the first Romanov tsar</span><span class="gap"><span class="gn">2</span><select class="exam-select ans" data-bank="1" data-answer="1603 · James I, the first Stuart king"></select></span></li>
+          <li><span class="clue-t">🇷🇺 <b>1773</b> · Pugachev’s rebellion</span><span class="gap"><span class="gn">3</span><select class="exam-select ans" data-bank="1" data-answer="1773 · the Boston Tea Party"></select></span></li>
+          <li><span class="clue-t">🇷🇺 <b>1812</b> · Napoleon in Moscow</span><span class="gap"><span class="gn">4</span><select class="exam-select ans" data-bank="1" data-answer="1815 · Waterloo"></select></span></li>
+          <li><span class="clue-t">🇷🇺 <b>1861</b> · the serfs are freed</span><span class="gap"><span class="gn">5</span><select class="exam-select ans" data-bank="1" data-answer="1861 · the American Civil War begins"></select></span></li>
+          <li><span class="clue-t">🇷🇺 <b>1961</b> · Gagarin, the first man in space</span><span class="gap"><span class="gn">6</span><select class="exam-select ans" data-bank="1" data-answer="1969 · Armstrong on the Moon"></select></span></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="exercise">
+      <div class="review-head"><span class="task-num">Задание 10 · set 1</span><span class="pts">5 events · 7 centuries · 2 min</span></div>
+      <h3>Events and centuries · set 1</h3>
+      <p class="orig-instr">Соотнесите события, значимые для стран(ы) изучаемого языка, и века, в которых эти события происходили. Два века не соответствуют ни одному событию.</p>
+      <div class="timer" data-min="2"></div>
+      <div class="quiz">
+        <div class="answer-row"><span class="ar-num">1</span><span class="ar-txt">The Boston Tea Party</span><select class="exam-select ans" data-opts="11th,13th,15th,16th,17th,18th,20th" data-answer="18th"></select></div>
+        <div class="answer-row"><span class="ar-num">2</span><span class="ar-txt">King John seals Magna Carta</span><select class="exam-select ans" data-opts="11th,13th,15th,16th,17th,18th,20th" data-answer="13th"></select></div>
+        <div class="answer-row"><span class="ar-num">3</span><span class="ar-txt">The Good Friday Agreement</span><select class="exam-select ans" data-opts="11th,13th,15th,16th,17th,18th,20th" data-answer="20th"></select></div>
+        <div class="answer-row"><span class="ar-num">4</span><span class="ar-txt">The Gunpowder Plot</span><select class="exam-select ans" data-opts="11th,13th,15th,16th,17th,18th,20th" data-answer="17th"></select></div>
+        <div class="answer-row"><span class="ar-num">5</span><span class="ar-txt">Henry Tudor wins at Bosworth</span><select class="exam-select ans" data-opts="11th,13th,15th,16th,17th,18th,20th" data-answer="15th"></select></div>
+        <div class="after-check">
+          <details class="logic" open><summary><span>💡</span><span class="hint-txt">The dates</span></summary><div class="logic-body"><p>1773 → 18th · 1215 → 13th · 1998 → 20th · 1605 → 17th · 1485 → 15th. Not used: 11th and 16th.</p></div></details>
+        </div>
+      </div>
+    </div>
+
+    <div class="exercise">
+      <div class="review-head"><span class="task-num">Задание 10 · set 2</span><span class="pts">5 events · 7 centuries · 2 min</span></div>
+      <h3>Events and centuries · set 2</h3>
+      <div class="timer" data-min="2"></div>
+      <div class="quiz">
+        <div class="answer-row"><span class="ar-num">1</span><span class="ar-txt">The Battle of Agincourt</span><select class="exam-select ans" data-opts="11th,14th,15th,16th,19th,20th,21st" data-answer="15th"></select></div>
+        <div class="answer-row"><span class="ar-num">2</span><span class="ar-txt">The first people walk on the Moon</span><select class="exam-select ans" data-opts="11th,14th,15th,16th,19th,20th,21st" data-answer="20th"></select></div>
+        <div class="answer-row"><span class="ar-num">3</span><span class="ar-txt">The Battle of Waterloo</span><select class="exam-select ans" data-opts="11th,14th,15th,16th,19th,20th,21st" data-answer="19th"></select></div>
+        <div class="answer-row"><span class="ar-num">4</span><span class="ar-txt">Terrorist attacks on the World Trade Center in New York</span><select class="exam-select ans" data-opts="11th,14th,15th,16th,19th,20th,21st" data-answer="21st"></select></div>
+        <div class="answer-row"><span class="ar-num">5</span><span class="ar-txt">Henry VIII becomes head of the Church of England</span><select class="exam-select ans" data-opts="11th,14th,15th,16th,19th,20th,21st" data-answer="16th"></select></div>
+        <div class="after-check">
+          <details class="logic" open><summary><span>💡</span><span class="hint-txt">The dates</span></summary><div class="logic-body"><p>1415 → 15th · 1969 → 20th · 1815 → 19th · 2001 → 21st · 1534 → 16th. Not used: 11th and 14th.</p></div></details>
+        </div>
+      </div>
+    </div>
+
+    <div class="exercise">
+      <div class="exercise-label">The traps · 1 min</div>
+      <h3>Five dates that catch people</h3>
+      <div class="quiz">
+        <div class="answer-row"><span class="ar-num">1</span><span class="ar-txt"><b>1500</b> · Henry VII is king</span><select class="exam-select ans" data-opts="15th,16th" data-answer="15th"></select></div>
+        <div class="answer-row"><span class="ar-num">2</span><span class="ar-txt"><b>1066</b> · the Norman Conquest</span><select class="exam-select ans" data-opts="10th,11th" data-answer="11th"></select></div>
+        <div class="answer-row"><span class="ar-num">3</span><span class="ar-txt"><b>1901</b> · Queen Victoria dies</span><select class="exam-select ans" data-opts="19th,20th" data-answer="20th"></select></div>
+        <div class="answer-row"><span class="ar-num">4</span><span class="ar-txt"><b>2000</b> · Tate Modern opens on the Thames</span><select class="exam-select ans" data-opts="20th,21st" data-answer="20th"></select></div>
+        <div class="answer-row"><span class="ar-num">5</span><span class="ar-txt"><b>1485</b> · Bosworth</span><select class="exam-select ans" data-opts="14th,15th" data-answer="15th"></select></div>
+        <div class="after-check">
+          <details class="logic" open><summary><span>💡</span><span class="hint-txt">The rule</span></summary><div class="logic-body"><p>First two digits + 1 (10<b>66</b> → 11th). The exception is a round hundred: <b>1500</b> and <b>2000</b> are the <b>last</b> year of the 15th and 20th centuries; the next century starts in 1501 and 2001.</p></div></details>
+        </div>
+      </div>
+    </div>
+
+    <div class="exercise">
+      <div class="review-head"><span class="task-num">Olympway 162</span><span class="pts">7 of 15 lines · 2 min</span></div>
+      <h3>When did they live?</h3>
+      <p class="instr">The final mixed check. Only the people you were taught are kept.</p>
+      <div class="quiz cent-quiz">
+        <div class="answer-row"><span class="ar-num">1</span><span class="ar-txt">Oliver Cromwell</span><select class="exam-select ans" data-opts="16th,17th,18th,19th,20th" data-answer="17th"></select></div>
+        <div class="answer-row"><span class="ar-num">2</span><span class="ar-txt">Queen Victoria</span><select class="exam-select ans" data-opts="16th,17th,18th,19th,20th" data-answer="19th"></select></div>
+        <div class="answer-row"><span class="ar-num">3</span><span class="ar-txt">Anne Boleyn</span><select class="exam-select ans" data-opts="16th,17th,18th,19th,20th" data-answer="16th"></select></div>
+        <div class="answer-row"><span class="ar-num">4</span><span class="ar-txt">George Washington</span><select class="exam-select ans" data-opts="16th,17th,18th,19th,20th" data-answer="18th"></select></div>
+        <div class="answer-row"><span class="ar-num">5</span><span class="ar-txt">Edgar Allan Poe</span><select class="exam-select ans" data-opts="16th,17th,18th,19th,20th" data-answer="19th"></select></div>
+        <div class="answer-row"><span class="ar-num">6</span><span class="ar-txt">James Cook</span><select class="exam-select ans" data-opts="16th,17th,18th,19th,20th" data-answer="18th"></select></div>
+        <div class="answer-row"><span class="ar-num">7</span><span class="ar-txt">Abraham Lincoln</span><select class="exam-select ans" data-opts="16th,17th,18th,19th,20th" data-answer="19th"></select></div>
+        <div class="after-check">
+          <details class="logic" open><summary><span>💡</span><span class="hint-txt">Where you met them</span></summary><div class="logic-body"><ul>
+            <li>Cromwell: the Civil War, the king executed in 1649 (Lesson 15). Anne Boleyn: Henry VIII’s second wife, Elizabeth I’s mother (Lesson 12).</li>
+            <li>Washington: the first President, 1789. Cook: the Pacific voyages, 1768–79 (Lesson 16).</li>
+            <li>Victoria: 1837–1901. Poe: 1809–1849 (Lesson 17). Lincoln: the Civil War, 1861–65.</li>
+          </ul></div></details>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════════════════════════════════
+       TAB 5 — CULTURE: decode a place · the Thames · decode · What is it?
+  ══════════════════════════════════════════════════════════ -->
+  <div class="tab-content" id="tab-cult">
+
+    <div class="teacher-only" style="margin:0 0 16px">
+      <div class="to-label">👩‍🏫 Teacher only · what to say · culture</div>
+      <ul>
+        <li><b>Start:</b> “Задание 9 can describe a river, a city or a building, and never say its name. The clues change a little.” Read the table together.</li>
+        <li><b>The Thames card:</b> she reads it aloud. Stop on three things: the Isis (“What is the river called in Oxford? Who told a story there in 1862?”), Runnymede (“Which document? Which king?”) and the Globe (“Who built it, and where?”). Then: “What is the last thing the river reaches?” (the North Sea).</li>
+        <li><b>Decode the clue:</b> one clue, one answer, fast. Churchill’s clue comes from the Задание 5 box.</li>
+        <li><b>What is it?:</b> “Collect the clues first: a stone in a field, a goddess, a story on a boat, a meadow in 1215.” After Check: “Which answers were not in the text? Where did you find them?” (on the card; 3 and 4 also in earlier lessons).</li>
+        <li><b>Close:</b> open the Homework tab. The exam-day card is the last thing on it.</li>
+      </ul>
+    </div>
+
+    <div class="step-title">In class · 11 min</div>
+
+    <div class="exercise">
+      <div class="exercise-label">How to decode a place · 1 min</div>
+      <h3>Seven kinds of clue when the text describes a place</h3>
+      <div class="rule-box">
+        <div class="tbl-wrap"><table class="rule-table wrap">
+          <tr><th>Clue</th><th>What the text says (today: a river)</th></tr>
+          <tr><td>1 · Start and end</td><td><i>it rises in a field in the Cotswold Hills</i>, <i>it reaches the sea through a wide estuary</i></td></tr>
+          <tr><td>2 · Size and records</td><td><i>about 346 kilometres</i>, <i>the longest river entirely in England</i></td></tr>
+          <tr><td>3 · What stands on it</td><td><i>a royal castle</i>, <i>a bridge with two towers</i>, <i>the Houses of Parliament</i></td></tr>
+          <tr><td>4 · What happened there</td><td><i>a meadow where, in 1215, a king was forced to accept a document</i>, <i>fairs on the ice</i></td></tr>
+          <tr><td>5 · People linked to it</td><td><i>a mathematics lecturer who rowed three sisters</i>, <i>a German-born composer</i></td></tr>
+          <tr><td>6 · Works without titles</td><td><i>a story about a girl who falls down a rabbit hole</i>, <i>music for a king on a barge</i></td></tr>
+          <tr><td>7 · Its other names</td><td><i>the Romans called it Tamesis</i>, <i>in a university city it takes the name of an Egyptian goddess</i></td></tr>
+        </table></div>
+      </div>
+    </div>
+
+    <div class="exercise">
+      <div class="exercise-label">Meet the place · 4 min</div>
+      <h3>The Thames</h3>
+      <p class="instr">Read the card aloud. The 🔎 line is how a Задание 9 text would describe the river <b>without</b> its name.</p>
+      <div class="duo">
+        <figure><img src="images/culture/places/thames-head.jpg" alt="The stone that marks the source of the Thames" loading="lazy"><figcaption><b>The source:</b> the stone at Thames Head, Gloucestershire (photo: Eirian Evans, CC BY-SA 2.0)</figcaption></figure>
+        <figure><img src="images/culture/places/thames-westminster.jpg" alt="The Palace of Westminster from across the Thames" loading="lazy"><figcaption><b>In London:</b> the Houses of Parliament on the Thames (photo: Christian David, CC BY-SA 4.0)</figcaption></figure>
+      </div>
+      <div class="fig wide">
+        <div class="fig-top"><span class="fig-name">The Thames</span><span class="fig-tag">river · about 346 km</span></div>
+        <div class="fig-meta">Темза · from the Cotswold Hills to the North Sea · the Romans called it <i>Tamesis</i></div>
+        <p><b>Start and end:</b> it rises at <b>Thames Head</b>, near Kemble in Gloucestershire, in the <b>Cotswold Hills</b>; a stone under a tree marks the source, and in a dry summer there is no water there at all. It flows east and reaches the <b>North Sea</b> through the Thames Estuary. It is the <b>longest river entirely in England</b> (in the whole UK only the Severn is longer).</p>
+        <p><b>On the way:</b> at <b>Oxford</b> it is called the <b>Isis</b> (like the Egyptian goddess); there, on 4 July 1862, <b>Lewis Carroll</b> rowed the Liddell sisters up the river and told the story that became <i>Alice’s Adventures in Wonderland</i>. Then Henley (a famous rowing regatta), <b>Windsor Castle</b> and, opposite it, <b>Eton College</b>; <b>Runnymede</b>, the meadow where King John sealed <b>Magna Carta</b> in 1215; <b>Hampton Court</b>, Henry VIII’s palace.</p>
+        <p><b>In London:</b> the Houses of Parliament and Big Ben at <b>Westminster</b>, the <b>Tower of London</b>, <b>Tower Bridge</b> (1894: its two halves rise to let tall ships through), and on the south bank <b>the Globe</b>, Shakespeare’s round theatre (rebuilt in 1997). Downriver: the <b>Thames Barrier</b> (1980s), steel gates that protect London from floods.</p>
+        <p><b>Unusual:</b> in cold winters it used to freeze, and Londoners held <b>frost fairs</b> on the ice; the last was in <b>1814</b>, when an elephant was led across. <b>Handel’s <i>Water Music</i></b> was first played for George I on a barge on the river in 1717. Every spring <b>Oxford and Cambridge</b> race each other on it in <b>the Boat Race</b> (since 1829). <i>Three Men in a Boat</i> (Jerome K. Jerome, 1889) is a comic novel about a boat trip up the Thames.</p>
+        <div class="fig-clues"><b>🔎 Clues in a text:</b> a stone in a field in the Cotswolds · the longest river entirely in England · a university city where it takes a goddess’s name · a story on a boat in 1862 · a royal castle and a famous school · a meadow and a document of 1215 · a bridge that opens · a round theatre on the south bank · fairs on the ice · music for a king on a barge · two universities racing · steel gates against floods</div>
+        <div class="fig-lat"><b>Lateral:</b> its name at Oxford (<b>the Isis</b>), the sea it flows into (<b>the North Sea</b>), the document sealed on its bank (<b>Magna Carta</b>), the theatre on the south bank (<b>the Globe</b>), the barrier (<b>the Thames Barrier</b>).</div>
+      </div>
+    </div>
+
+    <div class="exercise">
+      <div class="exercise-label">Decode the clue · 2 min</div>
+      <h3>One clue, one answer</h3>
+      <p class="instr">People and a place. Two in the box are extra. If you’re not sure, find the 🔎 line on the card, or the Задание 5 box for Churchill.</p>
+      <div class="bank dnd faces"><span><img src="images/culture/figures/carroll.jpg" alt="">Lewis Carroll</span><span><img src="images/culture/figures/handel.jpg" alt="">George Frideric Handel</span><span><img src="images/culture/places/thames-westminster.jpg" alt="">the Thames</span><span><img src="images/culture/figures/austen.jpg" alt="">Jane Austen</span><span><img src="images/culture/figures/churchill.jpg" alt="">Winston Churchill</span><span><img src="images/culture/figures/dickens.jpg" alt="">Charles Dickens</span><span><img src="images/culture/figures/orwell.jpg" alt="">George Orwell</span><span><img src="images/culture/figures/shakespeare.jpg" alt="">William Shakespeare</span></div>
+      <p class="bank-hint">Drag an answer to a clue, or tap the answer and then the clue. Tap a filled clue to empty it.</p>
+      <div class="quiz">
+        <ul class="clue-list">
+          <li><span class="clue-t">Where it flows through Oxford, it takes the name of an Egyptian goddess.</span><span class="gap"><span class="gn">1</span><select class="exam-select ans" data-bank="1" data-answer="the Thames"></select></span></li>
+          <li><span class="clue-t">He was born in a palace in Oxfordshire, and his Nobel Prize was not for peace.</span><span class="gap"><span class="gn">2</span><select class="exam-select ans" data-bank="1" data-answer="Winston Churchill"></select></span></li>
+          <li><span class="clue-t">A shy mathematics lecturer who told a story to three sisters on a boat trip in 1862.</span><span class="gap"><span class="gn">3</span><select class="exam-select ans" data-bank="1" data-answer="Lewis Carroll"></select></span></li>
+          <li><span class="clue-t">His company built a round open-air theatre on the south bank of the river in 1599.</span><span class="gap"><span class="gn">4</span><select class="exam-select ans" data-bank="1" data-answer="William Shakespeare"></select></span></li>
+          <li><span class="clue-t">At twelve he pasted labels on pots of shoe polish while his father was in a debtors’ prison.</span><span class="gap"><span class="gn">5</span><select class="exam-select ans" data-bank="1" data-answer="Charles Dickens"></select></span></li>
+          <li><span class="clue-t">A German-born composer whose music was played for George I on a boat on the river.</span><span class="gap"><span class="gn">6</span><select class="exam-select ans" data-bank="1" data-answer="George Frideric Handel"></select></span></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="exercise">
+      <div class="review-head"><span class="task-num">Задание 9 · 10 баллов</span><span class="pts">1 text · 5 questions · 4 min</span></div>
+      <h3>What is it?</h3>
+      <p class="orig-instr">Прочитайте текст и выполните задание к нему.</p>
+      <div class="facts"><span class="fact">⏱ 4 min in class</span><span class="fact">🧠 some answers are outside the text</span><span class="fact">✍️ follow the format</span></div>
+      <div class="timer" data-min="4"></div>
+      <div class="quiz">
+        <div class="story">
+          <p>It rises in a quiet field in the Cotswold Hills, where a simple stone under a tree marks its source; in a dry summer there is no water there at all. From there it flows east for about 346 kilometres, which makes it the longest river entirely in England, until it reaches the sea through a wide estuary east of the capital. The Romans called it <i>Tamesis</i>, and the city they built beside it became the largest in the country.</p>
+          <p>Upstream, in a famous university city, the river takes another name: the name of an Egyptian goddess. It was here, on a summer afternoon in 1862, that a mathematics lecturer rowed three little sisters up the river and told them a story about a girl who falls down a rabbit hole. Further down, the river passes a royal castle and, opposite it, a school where many prime ministers were educated. Then comes a meadow where, in 1215, King John was forced to accept a document that limited the power of the king.</p>
+          <p>In the capital the river flows past the Houses of Parliament and an old royal fortress, and under a bridge whose two halves can be raised to let tall ships pass. On the south bank stands a copy of a round wooden theatre, named after the whole world, where a playwright from Stratford staged his plays. In 1717 a German-born composer wrote music for King George I to hear as he sailed along the river on a royal barge.</p>
+          <p>In cold winters the river used to freeze, and Londoners held fairs on the ice; the last one took place in 1814. Every spring, rowers from two old universities race each other on it, and since the 1980s huge steel gates across the river have protected the city from floods.</p>
+        </div>
+        <div class="answer-row"><span class="ar-num">1</span><span class="ar-txt">What is the name of the river? <i>Format: the …</i></span><input class="blank ans" data-answer="the Thames|Thames|the River Thames|River Thames" autocomplete="off" spellcheck="false"></div>
+        <div class="answer-row"><span class="ar-num">2</span><span class="ar-txt">What is the river called where it flows through the university city in paragraph 2? <i>Format: the …</i></span><input class="blank ans" data-answer="the Isis|Isis" autocomplete="off" spellcheck="false"></div>
+        <div class="answer-row"><span class="ar-num">3</span><span class="ar-txt">What is the name of the document of 1215?</span><input class="blank ans" data-answer="Magna Carta|the Magna Carta" autocomplete="off" spellcheck="false"></div>
+        <div class="answer-row"><span class="ar-num">4</span><span class="ar-txt">What is the name of the theatre on the south bank? <i>Format: the …</i></span><input class="blank ans" data-answer="the Globe|Globe|the Globe Theatre|Shakespeare's Globe|Globe Theatre" autocomplete="off" spellcheck="false"></div>
+        <div class="answer-row"><span class="ar-num">5</span><span class="ar-txt">Which sea does the river flow into? <i>Format: the … Sea</i></span><input class="blank ans" data-answer="the North Sea|North Sea" autocomplete="off" spellcheck="false"></div>
+        <div class="after-check">
+          <details class="logic" open><summary><span>🔎</span><span class="hint-txt">Where the answers come from</span></summary><div class="logic-body"><ul>
+            <li>1: a stone in the Cotswolds, the longest river in England, <i>Tamesis</i>: the Thames card.</li>
+            <li>2: the university city is Oxford (Carroll’s boat trip); the goddess is <b>Isis</b>.</li>
+            <li>3: King John, 1215, a meadow (Runnymede): <b>Magna Carta</b> (era 2, Lesson 13).</li>
+            <li>4: “named after the whole world”, a playwright from Stratford: <b>the Globe</b> (Lesson 15).</li>
+            <li>5: “an estuary east of the capital”: the text never names the sea; the card does: <b>the North Sea</b>.</li>
+          </ul></div></details>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════════════════════════════════
+       TAB 6 — HOMEWORK (60 min)
+  ══════════════════════════════════════════════════════════ -->
+  <div class="tab-content" id="tab-hw">
+    <div class="exercise">
+      <div class="exercise-label">Homework · 60 min</div>
+      <h3>Tick each part when it’s done</h3>
+      <ul class="hw-list" id="hwList">
+        <li><label><input type="checkbox"> <span class="t">🃏 <b>Flashcards</b> (10 min): the new deck V15 (five places and events), flip every card and read the back, then <b>Learn</b> mode. Then V14: Learn mode on the cards you miss.</span></label></li>
+        <li><label><input type="checkbox"> <span class="t">⚙️ <b>Задание 1</b> (8 min): “Napoleon’s last battle” below, timed.</span></label></li>
+        <li><label><input type="checkbox"> <span class="t">🔍 <b>Задание 3</b> (6 min): five texts about today’s events below, timed. Two lines at a time.</span></label></li>
+        <li><label><input type="checkbox"> <span class="t">🎧 <b>Задание 8</b> (10 min): “The most expensive pot of tea” below. Read the statements first, then listen <b>once</b>.</span></label></li>
+        <li><label><input type="checkbox"> <span class="t">📖 <b>Задание 9</b> (7 min): “What is it?” below, timed. Read the Wars of the Roses card in the <a href="#" onclick="switchTab('hist');return false">History tab</a> first if you need it.</span></label></li>
+        <li><label><input type="checkbox"> <span class="t">🗂 <b>Your exam-day card</b> (5 min): read your ten procedure cards once more, then write your time plan for the 60 minutes below.</span></label></li>
+      </ul>
+    </div>
+
+    <div class="exercise">
+      <div class="exercise-label">Flashcards · deck V15 · places &amp; events · new</div>
+      <h3>Five places and events</h3>
+      <p class="instr">The front: the name and the date. Tap to flip: the <b>back</b> has the picture, what it was, and the <b>names to know</b>. Learn mode asks you about the content: a clue → which place or event?</p>
+      <div class="fc-app" data-deck="v15"></div>
+    </div>
+    <div class="exercise">
+      <div class="exercise-label">Flashcards · deck V14 · culture figures</div>
+      <h3>41 people, from Shakespeare to Banksy</h3>
+      <p class="instr">Learn mode, the cards you miss first. Look again at Carroll, Dickens, Shakespeare and Handel: all four belong to the Thames.</p>
+      <div class="fc-app" data-deck="v14"></div>
+    </div>
+
+    <div class="exercise">
+      <div class="review-head"><span class="task-num">Задание 1 · 10 баллов</span><span class="pts">10 gaps · 8 min</span></div>
+      <h3>Napoleon’s last battle</h3>
+      <p class="instr">Read the text. Put the words in capitals into the correct form so that they fit grammatically. Some answers need more than one word.</p>
+      <div class="facts"><span class="fact">⏱ 8 min</span><span class="fact">⚙️ active or passive?</span><span class="fact">🕰 find the time marker</span><span class="fact">✍️ spelling counts</span></div>
+      <div class="timer" data-min="8"></div>
+      <div class="quiz">
+        <div class="gap-text">
+          <h4>Napoleon’s last battle</h4>
+          In 1814, after his disastrous campaign in Russia, Napoleon <span class="gn">1</span><input class="blank ans" data-answer="was forced" autocomplete="off" spellcheck="false"> <span class="cue">FORCE</span> to give up his throne, and he <span class="gn">2</span><input class="blank ans" data-answer="was sent" autocomplete="off" spellcheck="false"> <span class="cue">SEND</span> to the small island of Elba.
+          Less than a year later, however, he <span class="gn">3</span><input class="blank ans" data-answer="escaped" autocomplete="off" spellcheck="false"> <span class="cue">ESCAPE</span> and returned to France, where the army welcomed him back.
+          This short period of his rule <span class="gn">4</span><input class="blank ans" data-answer="is known|is now known" autocomplete="off" spellcheck="false"> <span class="cue">KNOW</span> today as the Hundred Days.
+          The final battle <span class="gn">5</span><input class="blank ans" data-answer="was fought" autocomplete="off" spellcheck="false"> <span class="cue">FIGHT</span> on 18 June 1815 near the village of Waterloo, in what is now Belgium.
+          It had rained all night. <span class="gn">6</span><input class="blank ans" data-answer="Wanting" autocomplete="off" spellcheck="false"> <span class="cue">WANT</span> the ground to dry, Napoleon did not attack until midday: a delay that may have cost him the battle.
+          All afternoon the British army under the Duke of Wellington <span class="gn">7</span><input class="blank ans" data-answer="held|was holding" autocomplete="off" spellcheck="false"> <span class="cue">HOLD</span> its position, and in the evening the Prussian army arrived to help.
+          By nightfall Napoleon’s army <span class="gn">8</span><input class="blank ans" data-answer="had been defeated|was defeated" autocomplete="off" spellcheck="false"> <span class="cue">DEFEAT</span>.
+          This time he <span class="gn">9</span><input class="blank ans" data-answer="was exiled" autocomplete="off" spellcheck="false"> <span class="cue">EXILE</span> to St Helena, a lonely island in the South Atlantic, where he died in 1821.
+          Since then, the name of the village <span class="gn">10</span><input class="blank ans" data-answer="has been given" autocomplete="off" spellcheck="false"> <span class="cue">GIVE</span> to a London station, a bridge and even a pop song, and “to meet your Waterloo” means to suffer a final defeat.
+        </div>
+        <div class="after-check">
+          <details class="logic" open><summary><span>🔎</span><span class="hint-txt">Why</span></summary><div class="logic-body"><ul class="why-list">
+            <li>1, 2, 5, 9: Napoleon and the battle don’t do the action, it is done to them, in the past → <b>was + V3</b>.</li>
+            <li>3: a finished action in the story → past simple <b>escaped</b>.</li>
+            <li>4: <i>today</i>: a fact that is still true → present simple passive <b>is known</b>.</li>
+            <li>6: a participle clause at the start of a sentence, the same subject (Napoleon) → <b>Wanting</b>.</li>
+            <li>7: <i>all afternoon</i> → <b>held</b> (or <i>was holding</i>). 8: <i>by nightfall</i> → before another past moment: <b>had been defeated</b>.</li>
+            <li>10: <i>since then</i> → present perfect, and a name is given by people → <b>has been given</b>.</li>
+          </ul></div></details>
+        </div>
+      </div>
+    </div>
+
+    <div class="exercise">
+      <div class="review-head"><span class="task-num">Задание 3 · 5 баллов</span><span class="pts">5 texts · 6 min</span></div>
+      <h3>Five texts about today’s events</h3>
+      <p class="orig-instr">Прочитайте тексты. Для каждого текста выберите строку, в которой содержится лексическая или грамматическая ошибка, и укажите букву, соответствующую строке. Если в тексте ошибок нет, то выберите “ОК”.</p>
+      <div class="timer" data-min="6"></div>
+      <div class="quiz">
+        <div class="z3">
+          <div class="z3-title">Text 1 · The red rose and the white</div>
+          <ul class="sent-list">
+          <li><span class="sl">A</span>For thirty years in the fifteenth century,</li>
+          <li><span class="sl">B</span>two branches of the royal family fought</li>
+          <li><span class="sl">C</span>for the English crown. The house of Lancaster</li>
+          <li><span class="sl">D</span>was represent by a red rose, and the house</li>
+          <li><span class="sl">E</span>of York by a white one. The wars ended at</li>
+          <li><span class="sl">F</span>Bosworth in 1485, when Richard III was killed.</li>
+          </ul>
+          <div class="answer-row letters"><span class="ar-num"></span><span class="ar-txt">The line with the mistake:</span><select class="exam-select ans" data-opts="A,B,C,D,E,F,OK" data-answer="D"></select></div>
+        </div>
+        <div class="z3">
+          <div class="z3-title">Text 2 · Tea in the harbour</div>
+          <ul class="sent-list">
+          <li><span class="sl">A</span>In 1773 a group of colonists in Boston,</li>
+          <li><span class="sl">B</span>some of them dressed as Mohawk Indians,</li>
+          <li><span class="sl">C</span>climbed onto three British ships and threw</li>
+          <li><span class="sl">D</span>342 chests of tea into the water. They were</li>
+          <li><span class="sl">E</span>angry because they had to pay taxes to a</li>
+          <li><span class="sl">F</span>parliament in which they had no voice.</li>
+          </ul>
+          <div class="answer-row letters"><span class="ar-num"></span><span class="ar-txt">The line with the mistake:</span><select class="exam-select ans" data-opts="A,B,C,D,E,F,OK" data-answer="OK"></select></div>
+        </div>
+        <div class="z3">
+          <div class="z3-title">Text 3 · The duke’s boots</div>
+          <ul class="sent-list">
+          <li><span class="sl">A</span>The Duke of Wellington, who defeated Napoleon</li>
+          <li><span class="sl">B</span>at Waterloo, was very interested on fashion.</li>
+          <li><span class="sl">C</span>He asked his shoemaker to make him a new kind</li>
+          <li><span class="sl">D</span>of boot that was comfortable enough to wear</li>
+          <li><span class="sl">E</span>all day. Today rubber boots of this shape</li>
+          <li><span class="sl">F</span>are still called “wellingtons” in Britain.</li>
+          </ul>
+          <div class="answer-row letters"><span class="ar-num"></span><span class="ar-txt">The line with the mistake:</span><select class="exam-select ans" data-opts="A,B,C,D,E,F,OK" data-answer="B"></select></div>
+        </div>
+        <div class="z3">
+          <div class="z3-title">Text 4 · Peace on a Friday</div>
+          <ul class="sent-list">
+          <li><span class="sl">A</span>The agreement that ended most of the violence</li>
+          <li><span class="sl">B</span>in Northern Ireland was signed in Belfast</li>
+          <li><span class="sl">C</span>on Good Friday, 10 April 1998. It had taken</li>
+          <li><span class="sl">D</span>almost two years of difficult talks, and</li>
+          <li><span class="sl">E</span>many people doubted that it would ever work.</li>
+          <li><span class="sl">F</span>A month later it were approved by voters.</li>
+          </ul>
+          <div class="answer-row letters"><span class="ar-num"></span><span class="ar-txt">The line with the mistake:</span><select class="exam-select ans" data-opts="A,B,C,D,E,F,OK" data-answer="F"></select></div>
+        </div>
+        <div class="z3">
+          <div class="z3-title">Text 5 · A river that froze</div>
+          <ul class="sent-list">
+          <li><span class="sl">A</span>In the past the Thames sometimes froze so</li>
+          <li><span class="sl">B</span>hard that Londoners held fairs on the ice.</li>
+          <li><span class="sl">C</span>In 1814 an elephant was led careful across</li>
+          <li><span class="sl">D</span>the river, but that was the last frost fair:</li>
+          <li><span class="sl">E</span>a new, wider London Bridge let the water</li>
+          <li><span class="sl">F</span>flow faster, and in London it has not frozen since.</li>
+          </ul>
+          <div class="answer-row letters"><span class="ar-num"></span><span class="ar-txt">The line with the mistake:</span><select class="exam-select ans" data-opts="A,B,C,D,E,F,OK" data-answer="C"></select></div>
+        </div>
+        <div class="after-check">
+          <details class="logic" open><summary><span>🔎</span><span class="hint-txt">The five mistakes</span></summary><div class="logic-body"><ul class="why-list">
+            <li><b>1 D</b> verb form: <i>was represent<b>ed</b></i> (passive: was + V3).</li>
+            <li><b>2 OK</b>: every line is correct.</li>
+            <li><b>3 B</b> preposition: <i>interested <b>in</b></i>.</li>
+            <li><b>4 F</b> agreement: <i>it <b>was</b> approved</i> (it = the agreement, singular).</li>
+            <li><b>5 C</b> adjective or adverb: <i>led <b>carefully</b></i> (how it was led → adverb).</li>
+          </ul></div></details>
+        </div>
+      </div>
+    </div>
+
+    <div class="exercise">
+      <div class="review-head"><span class="task-num">Задание 8 · 10 баллов</span><span class="pts">1 talk · 5 statements · heard once</span></div>
+      <h3>The most expensive pot of tea</h3>
+      <p class="instr">Read the statements first and underline the trap words (<i>mainly, exactly, some of</i>). Then listen <b>once</b> without stopping and decide if each statement is True or False.</p>
+      <div class="facts"><span class="fact">🎧 once, no stopping</span><span class="fact">✅ True / ❌ False</span><span class="fact">⏱ 2½ min audio</span></div>
+      <div class="player" data-src="audio/l19-teaparty.mp3" data-label="The most expensive pot of tea" data-once="1"></div>
+      <div class="quiz tf" data-k="hl-tea">
+        <div class="answer-row"><span class="ar-num">1</span><span class="ar-txt tf-s">The colonists were angry mainly because the new taxes were very high.</span><select class="exam-select ans" data-opts="True,False" data-answer="False"></select></div>
+        <div class="answer-row"><span class="ar-num">2</span><span class="ar-txt tf-s">The Tea Act made tea cheaper for the colonists.</span><select class="exam-select ans" data-opts="True,False" data-answer="True"></select></div>
+        <div class="answer-row"><span class="ar-num">3</span><span class="ar-txt tf-s">Exactly one hundred and thirty men took part.</span><select class="exam-select ans" data-opts="True,False" data-answer="False"></select></div>
+        <div class="answer-row"><span class="ar-num">4</span><span class="ar-txt tf-s">The men took some of the tea home for themselves.</span><select class="exam-select ans" data-opts="True,False" data-answer="False"></select></div>
+        <div class="answer-row"><span class="ar-num">5</span><span class="ar-txt tf-s">The event got its famous name decades later.</span><select class="exam-select ans" data-opts="True,False" data-answer="True"></select></div>
+        <div class="after-check">
+          <details class="script"><summary>📜 The script, with the paraphrase and the traps</summary><div class="sc-body">
+            <p>… The colonists were furious. <span class="trap">It was not so much about the money</span>: <mark class="para">what made them angry was that they had no members in that Parliament</mark>. (1: False)</p>
+            <p>… the Tea Act … <mark class="para">Strangely, this actually made the tea cheaper.</mark> (2: True)</p>
+            <p>… <span class="trap">Nobody knows exactly how many there were: perhaps thirty, perhaps more than a hundred.</span> (3: False)</p>
+            <p>… <span class="trap">when one man tried to fill his pockets with tea, the others stopped him.</span> (4: False)</p>
+            <p>… <mark class="para">the name “the Boston Tea Party” only appeared about fifty years later.</mark> (5: True)</p>
+          </div></details>
+        </div>
+      </div>
+    </div>
+
+    <div class="exercise">
+      <div class="review-head"><span class="task-num">Задание 9 · 10 баллов</span><span class="pts">1 text · 5 questions</span></div>
+      <h3>What is it? · 7 min</h3>
+      <div class="teacher-only">
+        <div class="to-label">👩‍🏫 Teacher only · key</div>
+        <ul><li>1 the Wars of the Roses · 2 Lancaster · 3 Richard III · 4 Bosworth · 5 the Tudors.</li><li>The text names none of them. 2 comes from “a city in the north-west” + the red flower; all five are on the History card.</li></ul>
+      </div>
+      <p class="orig-instr">Прочитайте текст и выполните задание к нему.</p>
+      <div class="facts"><span class="fact">⏱ 7 min, exam pace</span><span class="fact">🧠 the answers are outside the text</span><span class="fact">✍️ follow the format</span></div>
+      <div class="timer" data-min="7"></div>
+      <div class="quiz">
+        <div class="story">
+          <p>In the middle of the fifteenth century, soon after England had lost the Hundred Years’ War against France, two branches of the royal family began to fight for the crown. One branch took its name from a town in the north-west of England, the other from a great city in the north-east, and each had its own badge: one a red flower, the other a white one.</p>
+          <p>The king at the start, Henry VI, was gentle but weak, and at times he lost his mind. The first battle was fought at St Albans in 1455, and over the next thirty years the crown changed hands several times. In 1483, when the next king died, his brother took the throne for himself, and the dead king’s two young sons, who had been staying in the Tower of London, were never seen again.</p>
+          <p>Two years later a young Welshman who had spent years in exile in France landed in Wales with a small army. In August 1485 he met the king in battle near Leicester. The king was killed, the last English king to die in battle, and the winner was crowned on the battlefield.</p>
+          <p>To end the quarrel, the new king married Elizabeth, the daughter of the white flower’s family, and joined the two flowers into one badge, which is still a symbol of England. The wars got their famous name much later, partly thanks to a scene by Shakespeare in which noblemen pick flowers in a garden to show which side they are on. In 2012 the body of the king killed in 1485 was found under a car park in Leicester.</p>
+        </div>
+        <div class="answer-row"><span class="ar-num">1</span><span class="ar-txt">What are these wars called? <i>Format: the Wars of the …</i></span><input class="blank ans" data-answer="the Wars of the Roses|Wars of the Roses" autocomplete="off" spellcheck="false"></div>
+        <div class="answer-row"><span class="ar-num">2</span><span class="ar-txt">Which family had the red flower? <i>Format: the house of …</i></span><input class="blank ans" data-answer="Lancaster|the house of Lancaster|house of Lancaster" autocomplete="off" spellcheck="false"></div>
+        <div class="answer-row"><span class="ar-num">3</span><span class="ar-txt">Who was the king killed in 1485? <i>Format: Name + number</i></span><input class="blank ans" data-answer="Richard III|Richard the Third|Richard 3" autocomplete="off" spellcheck="false"></div>
+        <div class="answer-row"><span class="ar-num">4</span><span class="ar-txt">What is the name of the battle of 1485? <i>Format: the Battle of …</i></span><input class="blank ans" data-answer="Bosworth|the Battle of Bosworth|Battle of Bosworth|Bosworth Field|the Battle of Bosworth Field" autocomplete="off" spellcheck="false"></div>
+        <div class="answer-row"><span class="ar-num">5</span><span class="ar-txt">Which royal house began with the new king? <i>Format: the …s</i></span><input class="blank ans" data-answer="the Tudors|Tudors|Tudor|the Tudor|the house of Tudor" autocomplete="off" spellcheck="false"></div>
+        <div class="after-check">
+          <details class="logic" open><summary><span>🔎</span><span class="hint-txt">Where the answers come from</span></summary><div class="logic-body"><ul>
+            <li>1: two branches of the royal family, two flowers: the History card.</li>
+            <li>2: the north-west and the red flower → <b>Lancaster</b> (York is the great city in the north-east, the white rose).</li>
+            <li>3–4: the king who took the throne in 1483 and died in 1485 near Leicester → <b>Richard III</b> at <b>Bosworth</b>.</li>
+            <li>5: the Welshman is Henry Tudor → Henry VII → <b>the Tudors</b>, the T in “To Study”.</li>
+          </ul></div></details>
+        </div>
+      </div>
+    </div>
+
+    <div class="exercise">
+      <div class="exercise-label">Exam day · 5 min</div>
+      <h3>Your exam-day card</h3>
+      <p class="instr">Read your ten procedure cards once more. Then write your own plan for the 60 minutes: the order you will do the tasks in, how many minutes each gets, and the one thing you will check at the end. (Remember the points: Задание 5 alone is 20.)</p>
+      <textarea class="free-write" data-k="exam-plan" placeholder="e.g. Задание 1: … min · Задание 2: … min · … · last 3 minutes: check spelling in 1 and 4"></textarea>
+    </div>
+  </div>
+  <div class="btn-row" style="margin:6px 0 30px">
+    <button class="btn btn-danger" onclick="resetAll()">Clear all my answers</button>
+  </div>
+</div>
+<div class="save-indicator" id="saveIndicator">✓ Saved</div>
+
+<script>
+const LESSON_KEY = 'lesson-19';
+
+// ── Lesson 16: statements become tappable words (before the engine reads them) ──
+document.querySelectorAll('.tf-s, .st-t').forEach(s => {
+  if (s.querySelector('.u')) return;
+  s.innerHTML = s.textContent.trim().split(/\s+/).map(w => '<span class="u">' + w.replace(/&/g, '&amp;').replace(/</g, '&lt;') + '</span>').join(' ');
+});
+let data = {};
+try { data = JSON.parse(localStorage.getItem(LESSON_KEY)) || {}; } catch(e) {}
+
+function save(patch) {
+  Object.assign(data, patch);
+  try { localStorage.setItem(LESSON_KEY, JSON.stringify(data)); } catch(e) {}
+  const el = document.getElementById('saveIndicator');
+  el.classList.add('show');
+  clearTimeout(save.t);
+  save.t = setTimeout(() => el.classList.remove('show'), 1400);
+}
+
+// ── TABS ───────────────────────────────────────────────────────
+function showTab(name) {
+  const btn = document.querySelector('.tab-btn[onclick*="\'' + name + '\'"]');
+  if (!btn) return;
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  btn.classList.add('active');
+}
+function switchTab(name) {
+  showTab(name);
+  save({ activeTab: name });
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ── BUILD THE CONTROLS ─────────────────────────────────────────
+const QUIZZES = [...document.querySelectorAll('.quiz')];
+QUIZZES.forEach((q, qi) => {
+  q.id = 'q' + qi;
+  q.querySelectorAll('.ans').forEach((el, i) => { el.dataset.key = 'q' + qi + '-' + i; });
+});
+const isChecked = q => !!data['chk-' + q.id];
+
+// word-bank gaps take their options from the box above the text
+document.querySelectorAll('select[data-bank]').forEach(sel => {
+  const words = [...sel.closest('.exercise').querySelectorAll('.bank span')].map(s => s.textContent);
+  sel.dataset.opts = words.join('|');   // sentences contain commas
+});
+document.querySelectorAll('select.ans').forEach(sel => {
+  const blank = document.createElement('option');
+  blank.value = ''; blank.textContent = '—';
+  sel.appendChild(blank);
+  sel.dataset.opts.split(sel.dataset.bank ? '|' : ',').forEach(v => {
+    const o = document.createElement('option');
+    o.value = v; o.textContent = v;
+    sel.appendChild(o);
+  });
+  if (data[sel.dataset.key] !== undefined) sel.value = data[sel.dataset.key];
+  sel.addEventListener('change', () => save({ [sel.dataset.key]: sel.value }));
+});
+// word box: cross out every word that is already in a gap, with the gap's number
+function paintBank(ex) {
+  const used = {};
+  ex.querySelectorAll('select[data-bank]').forEach(sel => {
+    sel.classList.toggle('filled', !!sel.value);
+    if (sel.value) used[sel.value] = sel.closest('.gap').querySelector('.gn').textContent;
+  });
+  ex.querySelectorAll('.bank span').forEach(w => {
+    const n = used[w.textContent];
+    w.classList.toggle('used', !!n);
+    if (n) w.dataset.gap = n; else delete w.dataset.gap;
+  });
+  ex.querySelectorAll('select[data-bank] option').forEach(o => {
+    if (!o.value) return;
+    o.textContent = (used[o.value] && o.parentElement.value !== o.value ? '✓ ' : '') + o.value;   // ✓ = already used in another gap
+  });
+}
+// Задание 2 word box: drag a word into a gap (or tap a word, then tap the gap); tap a filled gap to empty it
+document.querySelectorAll('.bank').forEach(bank => {
+  const ex = bank.closest('.exercise');
+  const sels = [...ex.querySelectorAll('select[data-bank]')];
+  let picked = null;
+  const pick = w => {
+    picked = w;
+    bank.querySelectorAll('span').forEach(s => s.classList.toggle('picked', s === w));
+    ex.classList.toggle('picking', !!w);
+  };
+  const setGap = (sel, word) => { sel.value = word; sel.dispatchEvent(new Event('change')); };
+  const put = (sel, word) => {
+    if (sel.disabled) return;
+    sels.forEach(o => { if (o !== sel && o.value === word) setGap(o, ''); });   // each word goes in one gap only
+    setGap(sel, word);
+  };
+  const paintZone = sel => {
+    const dz = sel._dz;
+    dz.textContent = sel.value || '\u00a0';
+    dz.classList.toggle('filled', !!sel.value);
+    ['correct', 'wrong'].forEach(c => dz.classList.toggle(c, sel.classList.contains(c)));
+    dz.classList.toggle('locked', sel.disabled);
+  };
+  sels.forEach(sel => {
+    const dz = document.createElement('span');
+    dz.className = 'dz';
+    sel.before(dz); sel.hidden = true; sel._dz = dz;
+    dz.addEventListener('click', () => {
+      if (sel.disabled) return;
+      if (picked) { put(sel, picked.textContent); pick(null); }
+      else if (sel.value) setGap(sel, '');
+    });
+    sel.addEventListener('change', () => { paintZone(sel); paintBank(ex); });
+    new MutationObserver(() => paintZone(sel)).observe(sel, { attributes: true, attributeFilter: ['class', 'disabled'] });   // Check / Try again
+    paintZone(sel);
+  });
+  bank.querySelectorAll('span').forEach(w => {
+    w.addEventListener('pointerdown', e => {
+      if (sels[0].disabled) return;
+      e.preventDefault();
+      const x0 = e.clientX, y0 = e.clientY;
+      let ghost = null;
+      const zoneAt = ev => { const el = document.elementFromPoint(ev.clientX, ev.clientY); const dz = el && el.closest('.dz'); return dz && ex.contains(dz) ? dz : null; };
+      const move = ev => {
+        if (!ghost && Math.hypot(ev.clientX - x0, ev.clientY - y0) < 6) return;
+        if (!ghost) { ghost = document.createElement('span'); ghost.className = 'drag-ghost'; ghost.textContent = w.textContent; document.body.appendChild(ghost); pick(null); }
+        ghost.style.left = ev.clientX + 'px'; ghost.style.top = ev.clientY + 'px';
+        const dz = zoneAt(ev);
+        ex.querySelectorAll('.dz').forEach(d => d.classList.toggle('over', d === dz));
+      };
+      const up = ev => {
+        removeEventListener('pointermove', move); removeEventListener('pointerup', up); removeEventListener('pointercancel', up);
+        if (!ghost) { pick(picked === w ? null : w); return; }   // a tap: pick the word
+        ghost.remove();
+        ex.querySelectorAll('.dz.over').forEach(d => d.classList.remove('over'));
+        const dz = ev.type === 'pointerup' && zoneAt(ev);
+        if (dz) put(sels.find(s => s._dz === dz), w.textContent);
+      };
+      addEventListener('pointermove', move); addEventListener('pointerup', up); addEventListener('pointercancel', up);
+    });
+  });
+  paintBank(ex);
+});
+document.querySelectorAll('input.blank.ans').forEach(inp => {
+  if (data[inp.dataset.key] !== undefined) inp.value = data[inp.dataset.key];
+  inp.addEventListener('input', () => save({ [inp.dataset.key]: inp.value }));
+});
+
+// ── MARKING ────────────────────────────────────────────────────
+// typed answers: capitals, curly apostrophes and extra spaces don't matter; spelling does
+const norm = s => s.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[’‘`]/g, "'").replace(/[.,!?;:"“”]/g, ' ').replace(/\s+/g, ' ').trim();
+function given(el) {
+  // first-letter gaps: she types the rest of the word ("reaty"), or the whole word ("treaty")
+  const v = el.value, pre = el.dataset.prefix;
+  return pre && !norm(v).startsWith(pre) ? pre + v : v;
+}
+function mark(el) {
+  const keys = el.dataset.answer.split('|');
+  const ok = el.tagName === 'SELECT' ? keys.includes(el.value) : keys.some(k => norm(k) === norm(given(el)));
+  el.classList.add(ok ? 'correct' : 'wrong');
+  const shown = el.closest('.slots') ? keys[0].split(' ')[0] : keys.join(' / ');   // sentence places show just the letter
+  el.insertAdjacentHTML('afterend', '<span class="key">' + shown + '</span>');   // the correct answer next to every gap
+  el.disabled = true;
+  return ok ? 1 : 0;
+}
+function unmark(el) {
+  el.classList.remove('correct', 'wrong'); el.disabled = false; el.value = '';
+  if (el.nextElementSibling && el.nextElementSibling.classList.contains('key')) el.nextElementSibling.remove();
+}
+
+// ── CHECK / TRY AGAIN ──────────────────────────────────────────
+QUIZZES.forEach(q => {
+  const foot = document.createElement('div');
+  foot.className = 'quiz-foot';
+  foot.innerHTML = '<button class="btn btn-primary">Check ✓</button>' +
+                   '<button class="btn btn-ghost" style="display:none">Try again ↺</button>' +
+                   '<span class="q-result"></span>';
+  const after = q.querySelector(':scope > .after-check');
+  after ? q.insertBefore(foot, after) : q.appendChild(foot);
+  const [bCheck, bRetry] = foot.querySelectorAll('button');
+  bCheck.addEventListener('click', () => checkQuiz(q, true));
+  bRetry.addEventListener('click', () => retryQuiz(q));
+  q._foot = foot;
+});
+function checkQuiz(q, doSave) {
+  const els = [...q.querySelectorAll('.ans')];
+  const got = els.reduce((a, el) => a + mark(el), 0), max = els.length;
+  const res = q._foot.querySelector('.q-result');
+  res.textContent = got + ' / ' + max + (got === max ? ' — perfect! 🎉' : '');
+  res.className = 'q-result ' + (got === max ? 'full' : got === 0 ? 'zero' : 'part');
+  q._foot.children[0].style.display = 'none';
+  q._foot.children[1].style.display = '';
+  q.classList.add('checked');
+  q._score = [got, max];
+  if (doSave) save({ ['chk-' + q.id]: true });
+  updateProgress();
+}
+function retryQuiz(q) {
+  const patch = { ['chk-' + q.id]: false };
+  q.querySelectorAll('.ans').forEach(el => { unmark(el); patch[el.dataset.key] = undefined; });
+  q._foot.querySelector('.q-result').textContent = '';
+  const ex = q.closest('.exercise'); if (ex.querySelector('.bank')) paintBank(ex);
+  q._foot.children[0].style.display = '';
+  q._foot.children[1].style.display = 'none';
+  q.classList.remove('checked');
+  q._score = null;
+  save(patch);
+  updateProgress();
+}
+function updateProgress() {
+  const done = QUIZZES.filter(q => q._score);
+  const got = done.reduce((a, q) => a + q._score[0], 0);
+  const max = done.reduce((a, q) => a + q._score[1], 0);
+  document.getElementById('pgCount').textContent = done.length + ' / ' + QUIZZES.length;
+  document.getElementById('pgScore').textContent = got + ' / ' + max;
+  document.getElementById('pgFill').style.width = (done.length / QUIZZES.length * 100) + '%';
+}
+
+// ── AUDIO PLAYER: play/pause, drag or click the bar, ⏪ 10 s / ⏩ 10 s ──
+const fmt = s => Math.floor(s / 60) + ':' + String(Math.floor(s % 60)).padStart(2, '0');
+document.querySelectorAll('.player[data-src]').forEach(pl => {
+  const audio = new Audio(pl.dataset.src);
+  audio.preload = 'metadata';
+  pl.innerHTML =
+    '<button type="button" class="pl-btn" aria-label="Play">' +
+      '<svg class="i-play" viewBox="0 0 24 24"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.2-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z"/></svg>' +
+      '<svg class="i-pause" viewBox="0 0 24 24"><rect x="6" y="5" width="4.2" height="14" rx="1.2"/><rect x="13.8" y="5" width="4.2" height="14" rx="1.2"/></svg>' +
+    '</button>' +
+    '<div class="pl-main"><div class="pl-top"><span class="pl-label">🎧 ' + pl.dataset.label + '</span><span class="pl-time">0:00</span></div>' +
+    '<div class="pl-track"><div class="pl-fill"></div><div class="pl-knob"></div></div></div>' +
+    '<button type="button" class="pl-skip" data-s="-10" title="Back 10 seconds">⏪ 10</button>' +
+    '<button type="button" class="pl-skip" data-s="10" title="Forward 10 seconds">10 ⏩</button>';
+  pl.appendChild(audio);
+  const fill = pl.querySelector('.pl-fill'), knob = pl.querySelector('.pl-knob');
+  const time = pl.querySelector('.pl-time'), track = pl.querySelector('.pl-track');
+  const paint = () => {
+    const pct = audio.duration ? audio.currentTime / audio.duration * 100 : 0;
+    fill.style.width = pct + '%'; knob.style.left = pct + '%';
+    time.textContent = fmt(audio.currentTime) + ' / ' + (audio.duration ? fmt(audio.duration) : '…');
+  };
+  pl.querySelector('.pl-btn').addEventListener('click', () => { if (pl.classList.contains('locked')) return; audio.paused ? audio.play() : audio.pause(); });
+  pl.querySelectorAll('.pl-skip').forEach(b => b.addEventListener('click', () => {
+    if (!audio.duration || pl.classList.contains('once')) return;
+    audio.currentTime = Math.min(audio.duration, Math.max(0, audio.currentTime + +b.dataset.s));
+    paint();
+  }));
+  const seek = e => {
+    if (!audio.duration || pl.classList.contains('once')) return;
+    const r = track.getBoundingClientRect();
+    audio.currentTime = Math.min(1, Math.max(0, (e.clientX - r.left) / r.width)) * audio.duration;
+    paint();
+  };
+  track.addEventListener('pointerdown', e => { track.setPointerCapture(e.pointerId); pl.classList.add('dragging'); seek(e); });
+  track.addEventListener('pointermove', e => { if (pl.classList.contains('dragging')) seek(e); });
+  track.addEventListener('pointerup', () => pl.classList.remove('dragging'));
+  track.addEventListener('pointercancel', () => pl.classList.remove('dragging'));
+  audio.addEventListener('play', () => pl.classList.add('playing'));
+  audio.addEventListener('pause', () => pl.classList.remove('playing'));
+  audio.addEventListener('ended', () => pl.classList.remove('playing'));
+  audio.addEventListener('timeupdate', paint);
+  audio.addEventListener('loadedmetadata', paint);
+  if (pl.dataset.once) oncePlayer(pl, audio);
+});
+
+// ── PRACTICE 1 PAIRS: tap the first sentence, then a link word (values live in hidden inputs) ──
+document.querySelectorAll('.pp').forEach(pp => {
+  const first = pp.querySelector('.pp-first'), link = pp.querySelector('.pp-link');
+  const quiz = pp.closest('.quiz'), step = pp.querySelector('.pp-step');
+  const set = (inp, v) => { inp.value = v; inp.dispatchEvent(new Event('input')); };
+  const paint = () => {
+    const f = first.value;
+    pp.classList.toggle('ordered', !!f);
+    pp.querySelectorAll('.pp-s').forEach(s => {
+      const isF = s.dataset.l === f;
+      s.classList.toggle('first', isF);
+      s.classList.toggle('second', !!f && !isF);
+      s.querySelector('.pp-b').textContent = f ? (isF ? '1st' : '2nd') : s.dataset.l;
+      s.classList.toggle('ok', isF && f === first.dataset.answer);
+      s.classList.toggle('bad', isF && f !== first.dataset.answer);
+    });
+    const box = pp.querySelector('.pp-ss'), sA = box.querySelector('[data-l="A"]'), sB = box.querySelector('[data-l="B"]');
+    if (f === 'B') box.prepend(sB); else box.prepend(sA);   // the chosen sentence moves to the top
+    pp.querySelectorAll('.w').forEach(w => w.classList.toggle('pick', !!link.value && w.dataset.ph === link.value));
+    step.textContent = !f ? '① Tap the sentence that comes first' : !link.value ? '② Now tap the word that links back' : '✓ Done';
+  };
+  pp.querySelectorAll('.pp-s').forEach(s => s.addEventListener('click', () => {
+    if (quiz.classList.contains('checked') || first.value) return;
+    set(first, s.dataset.l); paint();
+  }));
+  pp.querySelectorAll('.w').forEach(w => w.addEventListener('click', e => {
+    if (quiz.classList.contains('checked') || !first.value) return;
+    e.stopPropagation();
+    set(link, link.value === w.dataset.ph ? '' : w.dataset.ph); paint();
+  }));
+  pp.querySelector('.pp-swap').addEventListener('click', () => { set(first, ''); set(link, ''); paint(); });
+  new MutationObserver(paint).observe(quiz, { attributes: true, attributeFilter: ['class'] });   // Check / Try again
+  paint();
+});
+
+
+// ── TIMERS: Start / Pause / Reset; the clock stops when the task is checked ──
+document.querySelectorAll('.timer[data-min]').forEach((tm, ti) => {
+  const limit = +tm.dataset.min * 60, key = 'tm-' + ti;
+  const quiz = tm.closest('.exercise').querySelector('.quiz');
+  let spent = +data[key] || 0, t0 = null, tick = null;
+  tm.innerHTML = '<span class="tm-clock">⏱ <b></b></span>' +
+                 '<button type="button" class="btn btn-primary">Start</button>' +
+                 '<button type="button" class="btn btn-ghost">Reset</button><span class="tm-msg"></span>';
+  const clock = tm.querySelector('b'), [go, reset] = tm.querySelectorAll('button'), msg = tm.querySelector('.tm-msg');
+  const now = () => spent + (t0 ? (Date.now() - t0) / 1000 : 0);
+  const paint = () => {
+    const left = limit - now();
+    clock.textContent = left >= 0 ? fmt(Math.ceil(left)) : '+' + fmt(-left);   // over the limit: counts up in red
+    tm.classList.toggle('over', left < 0);
+    tm.classList.toggle('running', !!t0);
+    go.textContent = t0 ? 'Pause' : spent ? 'Go on' : 'Start';
+  };
+  const stop = () => {
+    if (!t0) return;
+    spent = now(); t0 = null; clearInterval(tick);
+    save({ [key]: Math.round(spent) }); paint();
+  };
+  go.addEventListener('click', () => { if (t0) stop(); else { t0 = Date.now(); tick = setInterval(paint, 250); paint(); } });
+  reset.addEventListener('click', () => { stop(); spent = 0; msg.textContent = ''; save({ [key]: 0 }); paint(); });
+  new MutationObserver(() => {
+    if (!quiz.classList.contains('checked')) { msg.textContent = ''; return; }
+    stop();
+    if (spent && tm.dataset.kind !== 'read') msg.textContent = 'Your time: ' + fmt(spent) + (spent <= limit ? ' ✓ in time' : ' (over the limit)');
+  }).observe(quiz, { attributes: true, attributeFilter: ['class'] });
+  paint();
+});
+
+
+// ── WORDS TO USE (tap when used) · HOMEWORK ────────────────────
+document.querySelectorAll('.use-words').forEach((box, bi) => {
+  const need = +box.dataset.need || 5, out = box.nextElementSibling;
+  const paint = () => { out.textContent = box.querySelectorAll('.used').length + ' / ' + need + ' used'; };
+  box.querySelectorAll('span').forEach((w, i) => {
+    const k = 'uw-' + bi + '-' + i;
+    if (data[k]) w.classList.add('used');
+    w.addEventListener('click', () => { save({ [k]: w.classList.toggle('used') }); paint(); });
+  });
+  paint();
+});
+document.querySelectorAll('#hwList input').forEach((c, i) => {
+  c.checked = !!data['hw-' + i];
+  c.closest('li').classList.toggle('done', c.checked);
+  c.addEventListener('change', () => { save({ ['hw-' + i]: c.checked }); c.closest('li').classList.toggle('done', c.checked); });
+});
+
+// ── ONCE-ONLY PLAYER (Задание 7/8 practice): plays once, no skipping; the full player comes back after Check ──
+function oncePlayer(pl, audio) {
+  const quiz = pl.closest('.exercise').querySelector('.quiz');
+  const heard = 'heard-' + pl.dataset.src, opened = 'open-' + pl.dataset.src;
+  const note = document.createElement('p');
+  note.className = 'pl-note';
+  pl.after(note);
+  const paintOnce = () => {
+    const free = document.documentElement.classList.contains('watching') || data[opened];
+    pl.classList.toggle('once', !free);
+    pl.classList.toggle('locked', !free && !!data[heard] && audio.paused);
+    note.textContent = free ? '' : data[heard] ? (audio.paused ? '🔒 You have heard it once. Check your answers to listen again.' : '')
+                                               : '🎧 It plays once, like in the Olympiad: no going back.';
+  };
+  audio.addEventListener('ended', () => { save({ [heard]: true }); paintOnce(); });
+  audio.addEventListener('play', paintOnce);
+  if (quiz) new MutationObserver(() => {
+    if (quiz.classList.contains('checked') && !data[opened]) { save({ [opened]: true }); paintOnce(); }
+  }).observe(quiz, { attributes: true, attributeFilter: ['class'] });
+  paintOnce();
+}
+
+// ── STATEMENTS: tap a word to underline it (saved, so the teacher sees it too) ──
+document.querySelectorAll('.st-list[data-k], .quiz.tf[data-k]').forEach(list => {
+  const k = list.dataset.k, us = [...list.querySelectorAll('.u')];
+  (data[k] || []).forEach(i => us[i] && us[i].classList.add('hl'));
+  us.forEach((u, i) => u.addEventListener('click', () => {
+    u.classList.toggle('hl');
+    save({ [k]: us.map((x, j) => x.classList.contains('hl') ? j : -1).filter(j => j >= 0) });
+  }));
+});
+// ── NOTES while listening (not marked) ──
+document.querySelectorAll('input.note[data-k]').forEach(inp => {
+  inp.value = data[inp.dataset.k] || '';
+  inp.addEventListener('input', () => save({ [inp.dataset.k]: inp.value }));
+});
+// ── FREE WRITING (saved, not marked) ──
+document.querySelectorAll('textarea[data-k]').forEach(t => {
+  t.value = data[t.dataset.k] || '';
+  t.addEventListener('input', () => save({ [t.dataset.k]: t.value }));
+});
+function resetAll() {
+  if (!confirm('Clear every answer on this page (flashcard progress stays)?')) return;
+  try { localStorage.removeItem(LESSON_KEY); } catch(e) {}
+  location.reload();
+}
+
+// ── INIT ───────────────────────────────────────────────────────
+if (data.activeTab) showTab(data.activeTab);
+QUIZZES.forEach(q => { if (isChecked(q)) checkQuiz(q, false); });
+updateProgress();
+</script>
+
+<script src="../flashcards.js"></script>
+<script src="../choices.js"></script>
+<script src="../dictionary.js"></script>
+</body>
+</html>
