@@ -1,0 +1,1635 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lesson 20 – Высшая проба Round 2 · Final Mock Paper (9–10)</title>
+  <link rel="stylesheet" href="../style.css">
+  <style>
+    /* ── exam-specific bits (same look as the lesson 3 mock) ───── */
+    .exam-banner {
+      background: rgba(212,87,42,.08);
+      border: 2px dashed var(--primary);
+      border-radius: var(--radius);
+      padding: 16px 20px;
+      margin-bottom: 22px;
+      text-align: center;
+    }
+    .exam-banner strong { color: var(--primary); font-size: 1.05rem; }
+    .exam-banner p { margin: 6px 0 0; color: var(--muted); font-size: .92rem; line-height: 1.6; }
+
+    .progress-wrap {
+      position: sticky; top: 0; z-index: 30;
+      background: var(--bg);
+      padding: 12px 0 14px;
+      margin-bottom: 8px;
+      border-bottom: 1px solid var(--border);
+    }
+    .progress-top {
+      display: flex; justify-content: space-between; align-items: center;
+      gap: 12px; flex-wrap: wrap; margin-bottom: 8px;
+    }
+    .progress-label { font-weight: 600; font-size: .92rem; }
+    .progress-label span { color: var(--primary); }
+    .progress-bar { height: 10px; border-radius: 99px; background: var(--border); overflow: hidden; }
+    .progress-fill {
+      height: 100%; width: 0%; border-radius: 99px;
+      background: linear-gradient(90deg, var(--primary), var(--accent-dk));
+      transition: width .3s ease;
+    }
+
+    .section-head {
+      text-align: center;
+      border-bottom: 3px double var(--border);
+      padding-bottom: 14px;
+      margin-bottom: 22px;
+    }
+    .section-head h2 {
+      font-family: 'Fraunces', Georgia, serif;
+      font-size: 1.6rem; letter-spacing: .12em; text-transform: uppercase;
+      color: var(--primary);
+    }
+    .section-head .sh-meta { color: var(--muted); font-size: .9rem; margin-top: 4px; }
+
+    .task-num {
+      display: inline-block;
+      font-weight: 700; color: var(--accent-dk);
+      background: rgba(201,160,48,.15);
+      padding: 3px 12px; border-radius: 99px;
+      font-size: .85rem; margin-bottom: 10px;
+    }
+    .orig-instr {
+      font-weight: 600;
+      border-left: 3px solid var(--border);
+      padding-left: 14px; margin: 0 0 18px;
+      line-height: 1.7; font-size: .98rem;
+    }
+    .demo-note {
+      display: inline-block; font-size: .84rem; color: var(--blue);
+      background: rgba(95,142,196,.10); border-radius: 8px;
+      padding: 5px 12px; margin: -6px 0 16px; line-height: 1.55;
+    }
+
+    /* timer */
+    .timer-box {
+      display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+      background: var(--card); border: 2px solid var(--border);
+      border-radius: var(--radius); padding: 12px 16px; margin-bottom: 20px;
+    }
+    .timer-clock {
+      font-family: 'Fraunces', Georgia, serif;
+      font-size: 1.5rem; font-weight: 700; color: var(--primary);
+      min-width: 82px; letter-spacing: .04em;
+    }
+    .timer-clock.over { color: var(--red); }
+    .timer-hint { color: var(--muted); font-size: .85rem; flex: 1; min-width: 140px; }
+    .btn-mini {
+      padding: 6px 14px; font-size: .84rem; border-radius: 99px;
+      border: 2px solid var(--border); background: transparent;
+      color: var(--muted); cursor: pointer; font-weight: 600;
+    }
+    .btn-mini:hover { border-color: var(--primary); color: var(--primary); }
+
+    /* MC cards */
+    .q-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+    @media (max-width: 760px) { .q-grid { grid-template-columns: 1fr; } }
+    .q-card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 18px 20px 20px;
+      display: flex; flex-direction: column; gap: 11px;
+    }
+    .q-text { font-weight: 600; line-height: 1.55; }
+    .mc-options.stack { grid-template-columns: 1fr; gap: 8px; margin-top: auto; }
+    .mc-options.stack .mc-option { padding: 11px 15px; font-size: .98rem; }
+
+    /* matching layout */
+    .exam-select {
+      font: inherit; font-weight: 700; text-align: center;
+      padding: 8px 10px; border-radius: 10px;
+      border: 2px solid var(--border); background: var(--card);
+      color: var(--text); cursor: pointer; min-width: 74px;
+    }
+    .exam-select:focus { border-color: var(--primary); outline: none; }
+    .exam-select.correct { border-color: var(--green); color: var(--green); background: rgba(91,140,69,.08); }
+    .exam-select.wrong   { border-color: var(--red);   color: var(--red);   background: rgba(200,64,64,.06); }
+    .exam-select:disabled { cursor: default; opacity: 1; }
+
+    .pair-grid { display: grid; grid-template-columns: 3fr 2fr; gap: 22px; align-items: start; }
+    @media (max-width: 720px) { .pair-grid { grid-template-columns: 1fr; } }
+    .opt-box {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: var(--radius); overflow: hidden;
+    }
+    .opt-row { display: flex; border-bottom: 1px solid var(--border); }
+    .opt-row:last-child { border-bottom: none; }
+    .opt-letter {
+      flex: 0 0 46px; display: flex; align-items: center; justify-content: center;
+      font-weight: 700; color: var(--accent-dk); background: rgba(201,160,48,.10);
+      border-right: 1px solid var(--border);
+    }
+    .opt-body { padding: 10px 14px; line-height: 1.6; }
+    .answer-row {
+      display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+      padding: 10px 0; border-bottom: 1px dashed var(--border);
+    }
+    .answer-row:last-child { border-bottom: none; }
+    .answer-row .ar-num {
+      font-family: 'Fraunces', Georgia, serif; font-weight: 700;
+      color: var(--primary); min-width: 26px;
+    }
+    .answer-row .ar-txt { flex: 1; min-width: 200px; line-height: 1.65; }
+    .ipa { font-family: 'Charis SIL', 'Doulos SIL', 'Lucida Sans Unicode', 'Arial Unicode MS', sans-serif; }
+
+    /* the correct answer next to every gap, revealed only after submitting */
+    .key {
+      display: none; margin-left: 4px; font-size: .85rem;
+      font-weight: 700; color: var(--green);
+      background: rgba(91,140,69,.10); padding: 2px 9px; border-radius: 6px;
+    }
+    body.revealed .key:not(:empty) { display: inline-block; }
+
+    /* pick-the-words / pick-the-sentences */
+    .pick { line-height: 2.5; font-size: 1.02rem; text-align: left; }
+    .pick.items { display: flex; flex-direction: column; gap: 8px; line-height: 1.5; }
+    .pick.list  { display: flex; flex-wrap: wrap; gap: 8px; line-height: 1.5; }
+    .chip {
+      display: inline-block; padding: 3px 8px; margin: 0 1px;
+      border-radius: 8px; border: 2px solid transparent;
+      cursor: pointer; transition: all .15s; user-select: none;
+    }
+    .pick.list .chip, .pick.items .chip {
+      border-color: var(--border); background: var(--card); padding: 9px 15px;
+    }
+    .chip:hover { border-color: var(--primary); }
+    .chip.on { background: var(--primary); border-color: var(--primary); color: #fff; }
+    .chip.ok { background: var(--green); border-color: var(--green); color: #fff; }
+    .chip.no { background: rgba(200,64,64,.10); border-color: var(--red); color: var(--red); }
+    .chip.miss { border-color: var(--green); border-style: dashed; color: var(--green); }
+    .pick-count { font-size: .85rem; color: var(--muted); margin-top: 8px; }
+    .passage-box {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 16px 20px;
+    }
+
+    /* build-the-phrase */
+    .build-item { padding: 14px 0; border-bottom: 1px dashed var(--border); }
+    .build-item:last-child { border-bottom: none; }
+    .build-line { line-height: 2.2; font-size: 1.02rem; }
+    .build-slot {
+      display: inline-flex; flex-wrap: wrap; gap: 5px; align-items: center;
+      min-width: 220px; min-height: 38px; padding: 3px 8px; margin: 0 4px;
+      border-bottom: 2px solid var(--primary); vertical-align: middle;
+    }
+    .build-slot.correct { border-color: var(--green); }
+    .build-slot.wrong   { border-color: var(--red); }
+    .tile {
+      font: inherit; font-size: .95rem; font-weight: 600;
+      padding: 5px 12px; border-radius: 9px; cursor: pointer;
+      border: 2px solid var(--border); background: var(--card); color: var(--text);
+    }
+    .tile:hover { border-color: var(--primary); }
+    .tile.placed { background: rgba(212,87,42,.10); border-color: var(--primary); }
+    .tile.used { visibility: hidden; }
+    .tile b { color: var(--accent-dk); margin-right: 4px; }
+    .tile-bank { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 10px; }
+    .tile:disabled { cursor: default; }
+
+    /* pictures for Задание 27 */
+    .pic-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 16px; }
+    .pic-card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: var(--radius); overflow: hidden;
+      display: flex; flex-direction: column;
+    }
+    .pic-card img { width: 100%; height: 190px; object-fit: cover; display: block; }
+    .pic-foot { display: flex; align-items: center; gap: 10px; padding: 10px 14px; flex-wrap: wrap; }
+    .pic-foot .ar-num { font-family: 'Fraunces', Georgia, serif; font-weight: 700; color: var(--primary); }
+
+    .dialogue p { margin-bottom: 6px; line-height: 1.7; }
+    .tone { color: var(--primary); font-weight: 700; }
+
+    /* results */
+    .locked-card {
+      text-align: center; background: var(--card);
+      border: 2px dashed var(--border); border-radius: var(--radius);
+      padding: 46px 26px;
+    }
+    .locked-card .lock-ico { font-size: 3rem; }
+    .locked-card h3 { font-family: 'Fraunces', Georgia, serif; font-size: 1.4rem; margin: 10px 0 6px; }
+    .locked-card p { color: var(--muted); line-height: 1.7; }
+    .todo-list { list-style: none; margin: 18px auto 0; max-width: 420px; text-align: left; }
+    .todo-list li {
+      display: flex; justify-content: space-between; gap: 10px;
+      padding: 9px 0; border-bottom: 1px dashed var(--border); font-size: .94rem;
+    }
+    .todo-list li.done { color: var(--green); }
+    .todo-list li b { font-variant-numeric: tabular-nums; }
+    .todo-list small { display: block; color: var(--muted); font-size: .8rem; }
+
+    .score-hero { text-align: center; padding: 10px 0 4px; }
+    .score-big {
+      font-family: 'Fraunces', Georgia, serif;
+      font-size: 3.6rem; font-weight: 700; color: var(--primary); line-height: 1;
+    }
+    .score-big small { font-size: 1.4rem; color: var(--muted); font-weight: 400; }
+    .score-verdict { font-size: 1.05rem; margin-top: 8px; color: var(--muted); }
+    .score-rows { margin-top: 26px; }
+    .score-row { margin-bottom: 18px; }
+    .score-row-top {
+      display: flex; justify-content: space-between;
+      font-weight: 600; font-size: .95rem; margin-bottom: 6px;
+    }
+    .score-track { height: 12px; border-radius: 99px; background: var(--border); overflow: hidden; }
+    .score-meter { height: 100%; border-radius: 99px; width: 0; transition: width .6s ease; }
+    .m1 { background: var(--primary); }
+    .m2 { background: var(--blue); }
+    .m3 { background: var(--accent-dk); }
+    .m4 { background: var(--rose); }
+
+    .task-table { display: grid; grid-template-columns: repeat(auto-fill, minmax(92px, 1fr)); gap: 8px; margin-top: 10px; }
+    .tt-cell {
+      border: 2px solid var(--border); border-radius: 10px; padding: 6px 8px;
+      text-align: center; font-size: .82rem; background: var(--card);
+    }
+    .tt-cell b { display: block; font-size: 1rem; font-variant-numeric: tabular-nums; }
+    .tt-cell.full { border-color: var(--green); color: var(--green); }
+    .tt-cell.part { border-color: var(--accent-dk); color: var(--accent-dk); }
+    .tt-cell.zero { border-color: var(--red); color: var(--red); }
+    .tt-sec { font-weight: 700; margin: 20px 0 4px; font-size: .92rem; }
+
+    .script-box { line-height: 1.8; font-size: .95rem; }
+    .script-box p { margin-bottom: 6px; }
+
+    /* custom audio player */
+    .player {
+      display: flex; align-items: center; gap: 14px;
+      background: linear-gradient(135deg, rgba(212,87,42,.09), rgba(201,160,48,.10));
+      border: 2px solid rgba(212,87,42,.25); border-radius: 18px;
+      padding: 12px 16px; margin: 0 0 18px;
+    }
+    .pl-btn {
+      flex: 0 0 52px; width: 52px; height: 52px; border-radius: 50%; border: none;
+      background: var(--primary); color: #fff; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 4px 12px rgba(212,87,42,.35);
+      transition: transform .15s, background .15s;
+    }
+    .pl-btn:hover { transform: scale(1.07); background: var(--primary-dk); }
+    .pl-btn svg { width: 22px; height: 22px; fill: currentColor; }
+    .pl-btn .i-pause { display: none; }
+    .player.playing .pl-btn .i-play  { display: none; }
+    .player.playing .pl-btn .i-pause { display: block; }
+    .pl-main { flex: 1; min-width: 0; }
+    .pl-top { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 8px; }
+    .pl-label { font-weight: 700; font-size: .9rem; color: var(--primary-dk); display: flex; align-items: center; gap: 8px; }
+    .pl-time { font-size: .82rem; color: var(--muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
+    .pl-track {
+      position: relative; height: 8px; border-radius: 99px;
+      background: rgba(44,32,16,.10); cursor: pointer;
+    }
+    .pl-fill {
+      position: absolute; inset: 0 auto 0 0; width: 0; border-radius: 99px;
+      background: linear-gradient(90deg, var(--primary), var(--accent-dk));
+    }
+    .pl-knob {
+      position: absolute; top: 50%; left: 0; width: 16px; height: 16px; margin: -8px 0 0 -8px;
+      border-radius: 50%; background: #fff; border: 3px solid var(--primary);
+      box-shadow: 0 1px 4px rgba(0,0,0,.2); transition: transform .15s;
+    }
+    .pl-track:hover .pl-knob { transform: scale(1.2); }
+    .pl-replay {
+      flex: 0 0 36px; width: 36px; height: 36px; border-radius: 50%;
+      border: 2px solid var(--border); background: var(--card); color: var(--muted);
+      cursor: pointer; font-size: 1.05rem; line-height: 1;
+    }
+    .pl-replay:hover { border-color: var(--primary); color: var(--primary); }
+    .pl-plays { font-size: .75rem; color: var(--muted); font-weight: 600; }
+    /* little equaliser that dances while playing */
+    .eq { display: inline-flex; align-items: flex-end; gap: 2px; height: 14px; }
+    .eq i { width: 3px; height: 4px; border-radius: 2px; background: var(--primary); }
+    .player.playing .eq i { animation: eq .8s ease-in-out infinite; }
+    .player.playing .eq i:nth-child(2) { animation-delay: .2s; }
+    .player.playing .eq i:nth-child(3) { animation-delay: .4s; }
+    .player.playing .eq i:nth-child(4) { animation-delay: .1s; }
+    @keyframes eq { 0%,100% { height: 4px; } 50% { height: 14px; } }
+    @media (max-width: 520px) { .pl-replay { display: none; } .player { gap: 10px; padding: 10px 12px; } }
+
+    /* send-to-teacher box */
+    .send-box {
+      margin-top: 26px; padding: 18px 20px; border-radius: var(--radius);
+      background: rgba(91,140,69,.08); border: 2px solid rgba(91,140,69,.35);
+    }
+    .send-box h4 { font-family: 'Fraunces', Georgia, serif; font-size: 1.1rem; color: var(--green); margin-bottom: 4px; }
+    .send-box p { color: var(--muted); line-height: 1.6; font-size: .93rem; }
+    .send-msg { margin-top: 10px; font-weight: 600; color: var(--green); min-height: 1.2em; }
+    #reportText {
+      display: none; width: 100%; height: 220px; margin-top: 10px; padding: 12px;
+      font: .85rem/1.5 ui-monospace, Menlo, monospace; border-radius: 10px;
+      border: 2px solid var(--border); background: var(--card); color: var(--text);
+    }
+    #reportText.show { display: block; }
+
+    .tab-btn:nth-child(5).active { background: var(--green); border-color: var(--green); }
+
+    /* ── round 2 extras ───────────────────────────────────────── */
+    .gap-passage { line-height: 2.35; font-size: 1.01rem; }
+    .gap-passage p { margin-bottom: 12px; }
+    .gap-passage .blank { width: 170px; text-align: center; font-weight: 600; background: transparent; color: var(--text); }
+    .gap-passage .blank.short { width: 120px; }
+    .gap-passage .exam-select { padding: 4px 8px; font-weight: 600; min-width: 130px; }
+    .gn { font-weight: 700; color: var(--primary); font-size: .85rem; margin-right: 2px; }
+    .stem { font-weight: 700; color: var(--accent-dk); letter-spacing: .02em; }
+    .blank:disabled { opacity: 1; }
+
+    .word-bank { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 18px; }
+    .word-bank span {
+      border: 2px solid var(--border); background: var(--card); border-radius: 9px;
+      padding: 6px 13px; font-weight: 600; font-size: .95rem;
+    }
+
+    .err-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 16px; }
+    .err-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 16px 16px; }
+    .err-card h4 { font-family: 'Fraunces', Georgia, serif; color: var(--primary); margin: 0 0 6px; font-size: 1.15rem; }
+    .err-line { display: flex; gap: 10px; padding: 4px 0; line-height: 1.5; font-size: .96rem; }
+    .err-line b { flex: 0 0 18px; color: var(--accent-dk); }
+    .err-card .answer-row { border-bottom: none; padding-top: 12px; }
+
+    .read-para { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 18px; margin-bottom: 14px; line-height: 1.7; }
+    .read-para .answer-row { border-bottom: none; padding: 0 0 8px; }
+    .order-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 10px; margin-top: 16px; }
+    .order-cell { display: flex; align-items: center; gap: 8px; background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 8px 10px; }
+    .order-cell .ar-num { font-family: 'Fraunces', Georgia, serif; font-weight: 700; color: var(--primary); min-width: 20px; }
+    .order-cell .exam-select { min-width: 60px; }
+
+    .q-list .answer-row { flex-direction: column; align-items: stretch; gap: 6px; }
+    .q-list .blank { width: 100%; max-width: 420px; }
+
+    .player.used .pl-btn { background: var(--border); box-shadow: none; cursor: default; }
+    .player.used .pl-btn:hover { transform: none; }
+    .player .pl-track { cursor: default; }
+    /* ── lesson 20 extras ─────────────────────────────────────── */
+    /* teacher-only: shown only inside teacher.html (sync.js adds html.watching in watch mode) */
+    .teacher-only { display: none; }
+    html.watching .teacher-only, html.teacher .teacher-only { display: block; margin: 0 0 18px; background: #FDEAF2; border: 2px dashed #D9628F; border-radius: var(--radius); padding: 12px 16px; line-height: 1.75; }
+    .teacher-only .to-label { font-size: .75rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: #B0416C; margin-bottom: 6px; }
+    .teacher-only b { color: #9A3F64; }
+    .teacher-only ul { margin: 4px 0 0 18px; }
+    .teacher-only.notes h4 { font-family: 'Fraunces', Georgia, serif; color: #9A3F64; margin: 14px 0 4px; font-size: 1.05rem; }
+    .teacher-only.notes p { margin: 0 0 8px; }
+
+    /* the explanation under every task: hidden until the paper is handed in */
+    .why { display: none; }
+    body.revealed .why {
+      display: block; margin-top: 20px; padding: 14px 18px 12px;
+      background: rgba(91,140,69,.07); border: 1px solid rgba(91,140,69,.35);
+      border-left: 5px solid var(--green); border-radius: var(--radius); line-height: 1.7;
+    }
+    .why-h { font-family: 'Fraunces', Georgia, serif; font-weight: 700; color: var(--green); font-size: 1.05rem; margin-bottom: 6px; }
+    .why ul { margin: 0 0 0 20px; }
+    .why li { margin-bottom: 3px; }
+    .why-rev { margin: 10px 0 0; font-size: .88rem; font-weight: 600; color: var(--accent-dk); }
+    .why-fig { display: flex; gap: 18px; align-items: flex-start; }
+    .why-fig img { flex: 0 0 110px; width: 110px; height: 140px; object-fit: cover; border-radius: 12px; border: 1px solid var(--border); }
+    @media (max-width: 560px) { .why-fig { flex-direction: column; } }
+
+    /* the revision map on the result page */
+    .revise-box { margin-top: 26px; padding: 16px 20px; border-radius: var(--radius); background: rgba(201,160,48,.10); border: 2px solid rgba(201,160,48,.45); }
+    .revise-box h4 { font-family: 'Fraunces', Georgia, serif; font-size: 1.12rem; color: var(--accent-dk); margin-bottom: 4px; }
+    .revise-box p { color: var(--muted); font-size: .93rem; line-height: 1.6; }
+    .revise-box ul { list-style: none; margin: 10px 0 0; }
+    .revise-box li { display: flex; gap: 14px; padding: 9px 0; border-top: 1px dashed var(--border); line-height: 1.55; font-size: .95rem; }
+    .revise-box li b { flex: 0 0 132px; color: var(--red); font-variant-numeric: tabular-nums; }
+    @media (max-width: 560px) { .revise-box li { flex-direction: column; gap: 2px; } .revise-box li b { flex: none; } }
+
+    .score-time { margin-top: 6px; color: var(--muted); font-size: .92rem; font-variant-numeric: tabular-nums; }
+    .timer-clock.late { color: var(--accent-dk); }
+    .player.review .pl-track { cursor: pointer; }
+    .locked-card .btn-mini { margin-top: 8px; }
+  </style>
+<script src="../sync.js"></script>
+</head>
+<body>
+
+<header class="site-header">
+  <h1>Lesson 20 — The final mock paper: Высшая проба, Round 2</h1>
+  <a class="back-link" href="../index.html">← All Lessons</a>
+</header>
+
+<div class="container">
+
+  <div class="lesson-meta">
+    <h2>«Высшая проба» · Второй тур отборочного этапа · 9–10 классы · пробный вариант</h2>
+    <p>📅 November 2026 &nbsp;·&nbsp; Lesson 20 &nbsp;·&nbsp; one full paper in the real format, built from everything in Lessons 11–19</p>
+  </div>
+
+  <details class="teacher-only to-plan">
+    <summary class="to-label" style="cursor:pointer">👩‍🏫 Teacher only · Lesson 20 plan · the paper is the lesson (tap to open / close)</summary>
+    <p><b>The thread:</b> one sitting of the whole paper under exam rules, then a debrief led by the points she lost. Nothing new is taught. Every text is new to her, but every word, form, date and name it tests comes from Lessons 11–19.</p>
+    <ul>
+      <li><b>0–3 · Rules:</b> 60 minutes, four sections in any order, each recording plays once, nothing is marked until she hands in. She puts her exam-day card (Lesson 19) next to her and presses Start.</li>
+      <li><b>3–63 · The paper:</b> you only watch. Note the clock when she leaves each section (her card says when she planned to). Don’t help, don’t react.</li>
+      <li><b>63–66 · Hand in:</b> «Результат» → Show my score. If the clock ran out, she uses “Hand in now, with the gaps empty”: gaps count as wrong, as in the round.</li>
+      <li><b>66–88 · Debrief (in a 90-minute class):</b> open each task where she lost points; the green box under it gives the reason for every answer and the lesson it comes from. Order: Задание 5 first (20 points), then listening with the scripts, then 9 and 10, then Section 1.</li>
+      <li><b>88–90 · Last days:</b> read the revision map on the result page together; she sends the report.</li>
+      <li><b>If the class is 60 minutes:</b> the paper takes all of it. She sends the report, and the debrief is done from the green boxes at home or in a short call.</li>
+    </ul>
+    <p><b>Her suggested clock:</b> Язык 16 min · Чтение 18 · Аудирование 10 (the recordings are 4:45 and 2:40) · Страноведение 8 · checking 8.</p>
+  </details>
+
+  <details class="teacher-only notes">
+    <summary class="to-label" style="cursor:pointer">👩‍🏫 Teacher only · Lesson notes: what the paper checks, the key and the traps (tap to open / close)</summary>
+
+    <h4>1 · What this page is</h4>
+    <p>A second complete Round 2 paper, written for Polina. It has the format of the official demo (Lesson 9): ten tasks, four sections, 100 points, 60 minutes, recordings heard once, score locked until she hands in. The difference from Lesson 9 is the content. Each task is a container for one part of the course, so that a single sitting shows what she remembers of all of it: the six theme decks V8–V13 with their phrasal verbs, the grammar of Lessons 11–14, the cohesion work of Lessons 12–13, the listening routines of Lessons 15–16, word formation (17), error types and headings (18), the seven history eras and the culture figures (V14). All ten texts and both recordings are new; none repeats a text from an earlier lesson. Nothing is asked that was not taught on an earlier page.</p>
+    <p>After she hands in, a green box opens under every task with the reason for each answer and the lesson to go back to, and the result page builds a <b>revision map</b> from the tasks where points were lost. That is your debrief script.</p>
+
+    <h4>2 · The coverage map</h4>
+    <p><b>Задание 1</b> (the Great Fire of London; era 4, Lesson 15; Wren from Lesson 16) checks the grammar of Lessons 11 and 14 and the participle clauses of Lesson 12: past simple with a date, past continuous for the background, past perfect for “earlier”, the passive in three tenses and after a modal, an -ing clause, an -ed clause, a superlative with <i>the</i>. Deck V8 words in the text: <i>broke out, medieval</i>.<br>
+    <b>Задание 2</b> (the seed vault on Spitsbergen) checks decks V10 and V11 and the Lesson 14 routine “label the form of every option first”: <i>rely on, wipe out, die out, come up with, carry out, point out, threaten, figure out, adapt, run out of</i>; the extras are <i>conduct, use up, cut down</i>. Also in the text: <i>vulnerable, drought, varieties</i>.<br>
+    <b>Задание 3</b> (exam nerves) checks the Lesson 18 error checklist with deck V13 words (<i>anxiety, cope with, peers</i>): a preposition, agreement, one OK text, a missing <i>been</i> in a passive, adjective vs adverb.<br>
+    <b>Задание 4</b> (Banksy; card from Lesson 18) checks Lesson 17 with deck V12 roots: a negative prefix, an adjective suffix, -ed for a feeling, a noun after an adjective, a plural noun.<br>
+    <b>Задание 5</b> (J. K. Rowling; card from Lesson 18) checks Lessons 12–13: pronoun chains, <i>however / despite / even so</i>, time order, <i>the thirteenth</i> after <i>twelve</i>. Deck V9 and V12 words: <i>obstacles, give up, turned it down, came out</i>.<br>
+    <b>Задание 6</b> (the kakapo) checks Lesson 18 headings with deck V11: <i>species, adapted, predators, prey, died out, wiped out, breed, fragile, vulnerable</i>. Two trap headings share a detail with a paragraph.<br>
+    <b>Задание 7</b> (five people and the arts) checks the Lesson 15 routine with deck V12 and V9 in the recordings: <i>adaptation, coming out, put on, critic, outstanding, contemporary, exhibition, sold out</i>.<br>
+    <b>Задание 8</b> (a talk about forgetting) checks the Lesson 16 traps with deck V10: <i>conducted, outcome, accurate, figured out, turned out, rely on</i>.<br>
+    <b>Задание 9</b> (Agatha Christie; taught in Lesson 18, a portrait in Lesson 19, never a full text) checks decoding a person from clues: all five answers are on her card and none is in the text.<br>
+    <b>Задание 10</b> has ten events and twelve centuries, both countries, all seven eras, with the 1901 trap.</p>
+    <p>Left out on purpose: idioms, phonetics, conditionals and reported speech (Lessons 1–6). Round 2 has no task for them.</p>
+
+    <h4>3 · The key, with the reason for each answer</h4>
+    <p><b>Задание 1:</b> broke · were sleeping · had fallen · were built (had been built is accepted) · be stopped · had been destroyed · leaving · the worst · designed · has been climbed. The likely slips: 3 <i>fell</i> (she misses <i>since the previous autumn</i> inside a past story), 6 <i>were destroyed</i> (<i>by the time</i> asks for the past perfect), 8 <i>worst</i> without <i>the</i> (the same trap as “The largest” in the demo), 10 <i>was climbed</i> (<i>since it opened</i> → present perfect).<br>
+    <b>Задание 2:</b> relied on · wipe out · died out · came up · carried out · pointed out · threatened · figure out · adapt · running out. Extras: conduct, use up, cutting down. The form decides seven of the ten gaps before meaning: <i>could</i> + base, <i>have already</i> + participle, <i>with</i> after gap 4, <i>that</i> after gap 6, <i>has been</i> + participle, <i>to</i> + base twice, <i>of</i> + -ing … <i>of</i>. <i>Conduct</i> is there to tempt her in gap 5: the meaning fits, the form doesn’t.<br>
+    <b>Задание 3:</b> 1 D (<i>cope <u>with</u></i>) · 2 F (<i>most of their peers <u>feel</u></i>) · 3 OK · 4 B (<i>has <u>been</u> learnt</i>) · 5 C (<i>seem <u>easy</u></i>: an adjective after <i>seem</i>). Text 5 is the hard one: she has been trained to change adjectives into adverbs, and here it is the other way round.<br>
+    <b>Задание 4:</b> unknown · controversial · amazed · imagination · exhibitions (exhibits is accepted).<br>
+    <b>Задание 5:</b> H E C K G A L I D F. Extras: B (<i>on the other hand</i> has nothing to contrast with, and no sister is in the story) and J (no film is mentioned). The links: H opens (full name, a year, no pronoun) → E <i>no pen … he</i> (the boy wizard) → C <i>those ideas</i> + Portugal → K <i>back in Britain</i> + a baby daughter → G <i>these obstacles … the child</i> → A <i>finally finished … twelve publishers</i> → L <i>every one of them</i> → I <i>the thirteenth</i> → D <i>even so, her new editor</i> → F <i>he could not have been more wrong</i>. Each wrong place costs 2 points, so one swapped pair is −4.<br>
+    <b>Задание 6:</b> 1 D · 2 A · 3 G · 4 C · 5 F. Not used: B (“Scientists Give Up Hope” shares <i>scientists believed … had died out</i> with paragraph 3, but the paragraph is about the move to the islands) and E (“Attacked from the Sky”: the eagle is one detail of paragraph 2).<br>
+    <b>Задание 7:</b> 1 E · 2 C · 3 A · 4 G · 5 D. Not used: B (Speaker 1 <i>nearly</i> walked out but stayed) and F (Speaker 5’s tour had <i>nearly</i> sold out, but they got in). Speaker 2 could tempt her to G; he has loved the theatre for thirty years, so nothing changed in his taste.<br>
+    <b>Задание 8:</b> F · F · T · F · T. 1 he had no volunteers and worked on himself. 2 the “wrong number” trap: half was gone after an hour, two thirds after a day. 3 Amsterdam, 2015, almost identical. 4 the readers felt more confident and predicted they would remember more. 5 a paraphrase of “feels harder and less pleasant, and that’s precisely why it works”.<br>
+    <b>Задание 9:</b> Agatha Christie · Hercule Poirot and Miss Marple (either order, with or without the first name and <i>Miss</i>) · the Orient Express · Mary Westmacott · The Mousetrap.<br>
+    <b>Задание 10:</b> Alaska 19th (1867) · the Armada 16th (1588) · Athelstan 10th (927) · the UK leaves the EU 21st (2020) · Washington 18th (1789) · the Black Death 14th (1348) · Victoria dies 20th (1901) · the Norman Conquest 11th (1066) · Columbus 15th (1492) · the Glorious Revolution 17th (1688). Not used: 12th and 13th. As in the demo there are ten events, 1 point each; the guide says the real paper has five events and seven centuries, 2 points each.</p>
+
+    <h4>4 · How to read the result</h4>
+    <p>The paper is a little harder than the demo in Section 1 and about the same elsewhere. Compare the four section bars with her Lesson 9 result, not only the total. What each loss usually means: points lost in Задание 1 on gaps 3, 6 or 10 are about time markers (Lesson 11), on 4–6 about the passive (Lesson 14). In Задание 2, a wrong word of the right form is vocabulary (decks V10, V11); a word of the wrong form is the routine. In Задание 5, look at where the chain broke: a break at C/K is time order, at D/F it is a pronoun. In listening, check whether she fell for <i>nearly</i> (twice in Задание 7) and for the number in statement 2. In Задание 9 every lost answer is a V14 card; in Задание 10 it is a date on the timeline.</p>
+    <p>The page also records how long she took. If she finished with more than eight minutes to spare and lost points in Section 1, the advice for the round is to use the spare time on Задания 1 and 4 (spelling, <i>the</i>, plural), not to hand in early.</p>
+
+    <h4>5 · The last days</h4>
+    <p>Only what the revision map shows, plus the daily minimum from the plan: decks V14 and V15, one sentence-ordering text and one one-listen set every other day, the timeline the day before the round. No new material.</p>
+  </details>
+
+  <div class="exam-banner">
+    <strong>ПРОБНЫЙ ВАРИАНТ ВТОРОГО ТУРА · АНГЛИЙСКИЙ ЯЗЫК · 9–10 КЛАССЫ</strong>
+    <p>Время выполнения – 60 минут. Максимальное количество баллов – 100.<br>
+       Язык (30) · Чтение (30) · Аудирование (20) · Страноведение (20)</p>
+    <p>A new paper, written for you: the same ten tasks as the real round, and everything in it comes from our lessons.
+       Your score stays locked 🔒 until you hand in. Each recording plays <b>once only</b>.</p>
+  </div>
+
+  <div class="timer-box">
+    <div class="timer-clock" id="clock">60:00</div>
+    <button class="btn-mini" onclick="toggleTimer()" id="tbtn">Start</button>
+    <button class="btn-mini" onclick="resetTimer()" id="trst">Reset</button>
+    <div class="timer-hint">60 minutes for all four sections, in any order. Keep your exam-day card next to you.</div>
+  </div>
+
+  <div class="progress-wrap">
+    <div class="progress-top">
+      <div class="progress-label">Tasks done: <span id="pgCount">0 / 10</span></div>
+      <div class="progress-label" id="pgHint" style="color:var(--muted);font-weight:500;">Score unlocks at 10 / 10</div>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="pgFill"></div></div>
+  </div>
+
+  <div class="tab-bar">
+    <button class="tab-btn active" onclick="switchTab('lang', this)">✏️ Язык</button>
+    <button class="tab-btn"        onclick="switchTab('read', this)">📖 Чтение</button>
+    <button class="tab-btn"        onclick="switchTab('listen', this)">🎧 Аудирование</button>
+    <button class="tab-btn"        onclick="switchTab('cult', this)">🌍 Страноведение</button>
+    <button class="tab-btn"        onclick="switchTab('score',this)">🔒 Результат</button>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════
+       РАЗДЕЛ 1 — ЯЗЫК (30 баллов) · Задания 1–4
+  ══════════════════════════════════════════════════════════ -->
+  <div class="tab-content active" id="tab-lang">
+
+    <div class="section-head">
+      <h2>Раздел 1. Язык</h2>
+      <div class="sh-meta">Задания 1–4 &nbsp;·&nbsp; максимум 30 баллов</div>
+    </div>
+
+    <!-- Задание 1 · grammar forms · the Great Fire of London -->
+    <div class="exercise task" data-n="1" data-sec="lang" data-points="10"
+         data-revise="Lesson 11 (narrative tenses, time markers) · Lesson 12 (participle clauses) · Lesson 14 (the passive in all tenses)">
+      <span class="task-num">Задание 1 · 10 баллов</span>
+      <p class="orig-instr">Прочитайте текст и поставьте данные в скобках слова в нужную грамматическую форму таким образом, чтобы они соответствовали содержанию текста.</p>
+      <div class="demo-note">Type your answer in each gap.</div>
+      <div class="passage-box gap-passage">
+        <p>In the early hours of Sunday, 2 September 1666, a fire <span class="stem">[BREAK]</span> <span class="gn">1</span><input class="blank short ans" id="t1-1" data-answer="broke" autocomplete="off" spellcheck="false"> out in a baker’s shop in Pudding Lane,
+          a narrow street near London Bridge. At that moment most Londoners <span class="stem">[SLEEP]</span> <span class="gn">2</span><input class="blank ans" id="t1-2" data-answer="were sleeping" autocomplete="off" spellcheck="false">, and at first
+          nobody took the danger seriously. The Lord Mayor himself looked at the flames, said that they were nothing to worry
+          about, and went back to bed.</p>
+        <p>He was wrong. Hardly any rain <span class="stem">[FALL]</span> <span class="gn">3</span><input class="blank ans" id="t1-3" data-answer="had fallen" autocomplete="off" spellcheck="false"> since the previous autumn, and a strong wind was blowing
+          from the east. Medieval London was a city of narrow streets in which almost all the houses <span class="stem">[BUILD]</span>
+          <span class="gn">4</span><input class="blank ans" id="t1-4" data-answer="were built|had been built" autocomplete="off" spellcheck="false"> of wood, so the flames jumped easily from roof to roof. Within hours it was
+          clear that the fire could not <span class="stem">[STOP]</span> <span class="gn">5</span><input class="blank ans" id="t1-5" data-answer="be stopped" autocomplete="off" spellcheck="false"> with buckets of water. In the end, whole rows of
+          houses were pulled down or blown up with gunpowder to make empty spaces that the fire could not cross.</p>
+        <p>By the time the wind finally dropped, four days later, more than 13,000 houses and 87 churches <span class="stem">[DESTROY]</span>
+          <span class="gn">6</span><input class="blank ans" id="t1-6" data-answer="had been destroyed" autocomplete="off" spellcheck="false">, <span class="stem">[LEAVE]</span> <span class="gn">7</span><input class="blank short ans" id="t1-7" data-answer="leaving" autocomplete="off" spellcheck="false"> tens of thousands of
+          people homeless. Surprisingly, fewer than ten deaths were recorded. It was nevertheless <span class="stem">[BAD]</span>
+          <span class="gn">8</span><input class="blank short ans" id="t1-8" data-answer="the worst" autocomplete="off" spellcheck="false"> fire in the history of the city.</p>
+        <p>London was rebuilt in brick and stone. The new St Paul’s Cathedral, <span class="stem">[DESIGN]</span> <span class="gn">9</span><input class="blank short ans" id="t1-9" data-answer="designed" autocomplete="off" spellcheck="false"> by
+          Sir Christopher Wren, took thirty-five years to complete and still dominates the skyline. Wren also worked on the
+          Monument, a stone column 61 metres high, which stands exactly 61 metres from the spot where the bakery once stood.
+          Since it opened in 1677, the Monument <span class="stem">[CLIMB]</span> <span class="gn">10</span><input class="blank ans" id="t1-10" data-answer="has been climbed" autocomplete="off" spellcheck="false"> by millions of visitors,
+          who go up its 311 steps for a view over the city that grew out of the ashes.</p>
+      </div>
+      <div class="why">
+        <div class="why-h">🔎 Why · the marker decides the form</div>
+        <ul>
+          <li><b>1 broke:</b> a finished event with a date (<i>2 September 1666</i>) → past simple.</li>
+          <li><b>2 were sleeping:</b> <i>at that moment</i>: the background, in progress when the fire began → past continuous.</li>
+          <li><b>3 had fallen:</b> <i>since the previous autumn</i>, inside a past story: earlier than the fire → past perfect.</li>
+          <li><b>4 were built:</b> houses don’t build themselves → passive; <i>houses</i> is plural → <i>were</i>.</li>
+          <li><b>5 be stopped:</b> after a modal (<i>could not</i>) the passive is <i>be</i> + the third form.</li>
+          <li><b>6 had been destroyed:</b> <i>by the time</i> + past → past perfect; the houses did not act → passive.</li>
+          <li><b>7 leaving:</b> a comma and no new subject: an -ing clause that gives the result.</li>
+          <li><b>8 the worst:</b> <i>in the history of the city</i> → superlative, and a superlative needs <i>the</i>.</li>
+          <li><b>9 designed:</b> between two commas, a passive meaning (it was designed by Wren) → an -ed clause.</li>
+          <li><b>10 has been climbed:</b> <i>since it opened</i> up to now → present perfect; <i>by</i> millions → passive.</li>
+        </ul>
+        <p class="why-rev">🔁 Go back to: Lesson 11 (narrative tenses) · Lesson 12 (participle clauses) · Lesson 14 (the passive)</p>
+      </div>
+    </div>
+
+    <!-- Задание 2 · word bank · the seed vault -->
+    <div class="exercise task" data-n="2" data-sec="lang" data-points="10"
+         data-revise="Lesson 14 (label the form of every option) · decks V10 Science &amp; technology and V11 Nature: the phrasal verbs">
+      <span class="task-num">Задание 2 · 10 баллов</span>
+      <p class="orig-instr">Перетащите слова, лексически подходящие по смыслу в соответствующие пропуски в тексте. Три слова являются лишними.</p>
+      <div class="demo-note">Choose a word for each gap from the list.</div>
+      <div class="word-bank">
+        <span>figure out</span><span>threatened</span><span>conduct</span><span>came up</span>
+        <span>running out</span><span>relied on</span><span>use up</span><span>pointed out</span>
+        <span>wipe out</span><span>cutting down</span><span>adapt</span><span>died out</span><span>carried out</span>
+      </div>
+      <div class="passage-box gap-passage">
+        <p>Deep inside a frozen mountain on the Norwegian island of Spitsbergen, about 1,300 kilometres from the North Pole,
+          lies one of the most important buildings in the world. It contains no gold and no works of art, only seeds: more
+          than a million samples of them.</p>
+        <p>For thousands of years people have <span class="gn">1</span><select class="exam-select ans" id="t2-1" data-bank="1" data-answer="relied on"></select> a surprisingly small number of plants for their food.
+          Today just three of them, rice, wheat and maize, provide nearly half of the calories we eat. That makes us
+          vulnerable. A single new disease or a long drought could <span class="gn">2</span><select class="exam-select ans" id="t2-2" data-bank="1" data-answer="wipe out"></select> a crop across a whole region. In the past,
+          farmers grew thousands of local varieties, and some of them could survive heat, insects or salty soil. Many of
+          those varieties have already <span class="gn">3</span><select class="exam-select ans" id="t2-3" data-bank="1" data-answer="died out"></select>, simply because nobody plants them any more.</p>
+        <p>In the early 2000s an American scientist, Cary Fowler, <span class="gn">4</span><select class="exam-select ans" id="t2-4" data-bank="1" data-answer="came up"></select> with a plan: a safe store, far from wars and
+          natural disasters, where every country could keep copies of its seeds. Engineers
+          <span class="gn">5</span><select class="exam-select ans" id="t2-5" data-bank="1" data-answer="carried out"></select> tests on the mountain before any building began. They
+          <span class="gn">6</span><select class="exam-select ans" id="t2-6" data-bank="1" data-answer="pointed out"></select> that the ground there is frozen all year round, so the seeds would stay cold even
+          if the electricity failed. The vault opened in 2008, and its rooms, cut 130 metres into the rock, are kept at
+          minus 18 degrees.</p>
+        <p>It has already proved its value. During the war in Syria, researchers who had lost their own seed bank in Aleppo
+          asked for their samples back and grew them again in Morocco and Lebanon. Yet even this building has been
+          <span class="gn">7</span><select class="exam-select ans" id="t2-7" data-bank="1" data-answer="threatened"></select> by the changing climate: after one unusually warm winter, water from melting ice
+          ran into the entrance tunnel. No seeds were damaged, but the entrance had to be rebuilt.</p>
+        <p>Scientists are still trying to <span class="gn">8</span><select class="exam-select ans" id="t2-8" data-bank="1" data-answer="figure out"></select> which of the old varieties will be most useful in a hotter world.
+          They hope that, with the right seeds, farmers will be able to <span class="gn">9</span><select class="exam-select ans" id="t2-9" data-bank="1" data-answer="adapt"></select> to whatever the future brings. Thanks to
+          the vault, we are no longer in danger of <span class="gn">10</span><select class="exam-select ans" id="t2-10" data-bank="1" data-answer="running out"></select> of choices.</p>
+      </div>
+      <div class="why">
+        <div class="why-h">🔎 Why · label the form first, then check the little word after the gap</div>
+        <ul>
+          <li><b>1 relied on:</b> <i>have</i> + third form; <i>rely on</i> plants for food.</li>
+          <li><b>2 wipe out:</b> <i>could</i> + base form; a disease destroys a crop completely.</li>
+          <li><b>3 died out:</b> <i>have already</i> + third form, and no object after the gap.</li>
+          <li><b>4 came up:</b> the word after the gap is <i>with</i>: come up with a plan.</li>
+          <li><b>5 carried out:</b> a past form + <i>tests</i>. <i>Conduct</i> has the right meaning but the wrong form.</li>
+          <li><b>6 pointed out:</b> a past form + <i>that</i>.</li>
+          <li><b>7 threatened:</b> <i>has been</i> + third form + <i>by</i>.</li>
+          <li><b>8 figure out:</b> <i>to</i> + base form + <i>which</i>.</li>
+          <li><b>9 adapt:</b> <i>to</i> + base form, and <i>to</i> again after the gap: adapt to.</li>
+          <li><b>10 running out:</b> <i>in danger of</i> + -ing, and <i>of</i> after the gap: run out of.</li>
+          <li>Not used: <i>conduct</i>, <i>use up</i>, <i>cutting down</i>.</li>
+        </ul>
+        <p class="why-rev">🔁 Go back to: Lesson 14 (Задание 2) · decks V10 and V11</p>
+      </div>
+    </div>
+
+    <!-- Задание 3 · find the line · exam nerves -->
+    <div class="exercise task" data-n="3" data-sec="lang" data-points="5"
+         data-revise="Lesson 18 (the six kinds of error; “OK” is a real answer) · deck V13 Mind &amp; society">
+      <span class="task-num">Задание 3 · 5 баллов</span>
+      <p class="orig-instr">Прочитайте тексты. Для каждого текста выберите строку, в которой содержится лексическая или грамматическая ошибка, и укажите букву, соответствующую строке. Если в тексте ошибок нет, то выберите “ОК”.</p>
+      <div class="err-grid">
+        <div class="err-card">
+          <h4>1</h4>
+          <div class="err-line"><b>A.</b><span>Almost every student feels nervous before</span></div>
+          <div class="err-line"><b>B.</b><span>an important exam, and that is completely normal.</span></div>
+          <div class="err-line"><b>C.</b><span>Psychologists say that a little anxiety</span></div>
+          <div class="err-line"><b>D.</b><span>can even help us to cope at pressure,</span></div>
+          <div class="err-line"><b>E.</b><span>because it keeps the mind awake</span></div>
+          <div class="err-line"><b>F.</b><span>and focused on the task.</span></div>
+          <div class="answer-row"><span class="ar-txt">Answer:</span>
+            <select class="exam-select ans" id="t3-1" data-opts="A,B,C,D,E,F,OK" data-answer="D"></select></div>
+        </div>
+        <div class="err-card">
+          <h4>2</h4>
+          <div class="err-line"><b>A.</b><span>The problems begin when the fear grows too strong.</span></div>
+          <div class="err-line"><b>B.</b><span>Your heart beats fast, your hands shake,</span></div>
+          <div class="err-line"><b>C.</b><span>and it becomes hard to think clearly.</span></div>
+          <div class="err-line"><b>D.</b><span>Many students believe that they are</span></div>
+          <div class="err-line"><b>E.</b><span>the only ones who suffer in this way,</span></div>
+          <div class="err-line"><b>F.</b><span>although most of their peers feels exactly the same.</span></div>
+          <div class="answer-row"><span class="ar-txt">Answer:</span>
+            <select class="exam-select ans" id="t3-2" data-opts="A,B,C,D,E,F,OK" data-answer="F"></select></div>
+        </div>
+        <div class="err-card">
+          <h4>3</h4>
+          <div class="err-line"><b>A.</b><span>In one well-known experiment, students were asked</span></div>
+          <div class="err-line"><b>B.</b><span>to write about their worries for ten minutes</span></div>
+          <div class="err-line"><b>C.</b><span>just before a difficult maths test.</span></div>
+          <div class="err-line"><b>D.</b><span>Those who had done so got better marks</span></div>
+          <div class="err-line"><b>E.</b><span>than those who had sat quietly,</span></div>
+          <div class="err-line"><b>F.</b><span>as if the paper had taken the fear away.</span></div>
+          <div class="answer-row"><span class="ar-txt">Answer:</span>
+            <select class="exam-select ans" id="t3-3" data-opts="A,B,C,D,E,F,OK" data-answer="OK"></select></div>
+        </div>
+        <div class="err-card">
+          <h4>4</h4>
+          <div class="err-line"><b>A.</b><span>Sleep matters more than one last evening of revision.</span></div>
+          <div class="err-line"><b>B.</b><span>During the night, everything that has learnt</span></div>
+          <div class="err-line"><b>C.</b><span>during the day is moved into long-term memory.</span></div>
+          <div class="err-line"><b>D.</b><span>A tired brain, on the other hand,</span></div>
+          <div class="err-line"><b>E.</b><span>works slowly and makes careless mistakes,</span></div>
+          <div class="err-line"><b>F.</b><span>however hard its owner tries.</span></div>
+          <div class="answer-row"><span class="ar-txt">Answer:</span>
+            <select class="exam-select ans" id="t3-4" data-opts="A,B,C,D,E,F,OK" data-answer="B"></select></div>
+        </div>
+        <div class="err-card">
+          <h4>5</h4>
+          <div class="err-line"><b>A.</b><span>So what do the experts advise?</span></div>
+          <div class="err-line"><b>B.</b><span>Breathe slowly, read every task twice,</span></div>
+          <div class="err-line"><b>C.</b><span>and begin with the tasks that seem easily.</span></div>
+          <div class="err-line"><b>D.</b><span>If you get stuck, move on and come back later.</span></div>
+          <div class="err-line"><b>E.</b><span>Above all, remember that one exam</span></div>
+          <div class="err-line"><b>F.</b><span>does not decide who you are.</span></div>
+          <div class="answer-row"><span class="ar-txt">Answer:</span>
+            <select class="exam-select ans" id="t3-5" data-opts="A,B,C,D,E,F,OK" data-answer="C"></select></div>
+        </div>
+      </div>
+      <div class="why">
+        <div class="why-h">🔎 Why · the five texts, by kind of error</div>
+        <ul>
+          <li><b>1 → D · preposition:</b> cope <b>with</b> pressure.</li>
+          <li><b>2 → F · agreement:</b> most of their peers <b>feel</b> (plural subject). <i>Think clearly</i> in line C is correct: an adverb after a verb.</li>
+          <li><b>3 → OK:</b> <i>those who had done so</i>, <i>as if the paper had taken</i>: all correct.</li>
+          <li><b>4 → B · missing word:</b> everything that has <b>been</b> learnt (passive: you learn it, it is learnt).</li>
+          <li><b>5 → C · adjective, not adverb:</b> the tasks that seem <b>easy</b>. After <i>seem, look, feel, sound, be</i> comes an adjective.</li>
+        </ul>
+        <p class="why-rev">🔁 Go back to: Lesson 18 (Задание 3) · deck V13</p>
+      </div>
+    </div>
+
+    <!-- Задание 4 · word formation · Banksy -->
+    <div class="exercise task" data-n="4" data-sec="lang" data-points="5"
+         data-revise="Lesson 17 and Lesson 19 Block A (the four questions for every gap) · deck V12 Culture, arts &amp; media">
+      <span class="task-num">Задание 4 · 5 баллов</span>
+      <p class="orig-instr">Заполните пропуски в тексте, преобразовав данные в скобках слова таким образом, чтобы они лексически и грамматически соответствовали тексту.</p>
+      <div class="demo-note">Type your answer in each gap.</div>
+      <div class="passage-box gap-passage">
+        <p>Nobody can say for certain who Banksy is. The street artist from Bristol has never shown his face in public, and
+          his real name remains <span class="stem">[KNOW]</span> <span class="gn">1</span><input class="blank ans" id="t4-1" data-answer="unknown" autocomplete="off" spellcheck="false">. For some people he is a criminal who paints
+          on other people’s walls; for others he is the most original artist in Britain. He is certainly one of the most
+          <span class="stem">[CONTROVERSY]</span> <span class="gn">2</span><input class="blank ans" id="t4-2" data-answer="controversial" autocomplete="off" spellcheck="false">.</p>
+        <p>In October 2018 one of his best-known pictures, <i>Girl with Balloon</i>, was sold at an auction in London for
+          just over a million pounds. A few seconds later an alarm sounded inside the frame, and the picture began to slide
+          down through a shredder that had been hidden there. The <span class="stem">[AMAZE]</span>
+          <span class="gn">3</span><input class="blank ans" id="t4-3" data-answer="amazed" autocomplete="off" spellcheck="false"> crowd could only watch as half of it was cut into thin strips. Banksy had
+          built the machine into the frame years earlier, in case the picture was ever put up for sale.</p>
+        <p>Critics at once called it a moment of pure <span class="stem">[IMAGINE]</span> <span class="gn">4</span><input class="blank ans" id="t4-4" data-answer="imagination" autocomplete="off" spellcheck="false">: for the first
+          time, a work of art had been created during its own sale. The picture was given a new name, <i>Love Is in the
+          Bin</i>, and three years later it was sold again for more than eighteen million pounds. Today his
+          <span class="stem">[EXHIBIT]</span> <span class="gn">5</span><input class="blank ans" id="t4-5" data-answer="exhibitions|exhibits" autocomplete="off" spellcheck="false"> attract huge crowds in cities all over the world,
+          although the artist himself is never seen at them.</p>
+      </div>
+      <div class="why">
+        <div class="why-h">🔎 Why · part of speech → plural or negative → feeling or cause → spelling</div>
+        <ul>
+          <li><b>1 unknown:</b> after <i>remains</i> an adjective; nobody knows it → negative: <b>un</b>known.</li>
+          <li><b>2 controversial:</b> <i>one of the most ___</i> → adjective: controversy → controvers<b>ial</b>.</li>
+          <li><b>3 amazed:</b> before a noun → adjective; the crowd <b>feels</b> it → -ed (the event was amazing).</li>
+          <li><b>4 imagination:</b> after the adjective <i>pure</i> → a noun: imagin<b>ation</b>.</li>
+          <li><b>5 exhibitions:</b> <i>his ___ attract</i> → a plural noun.</li>
+        </ul>
+        <p class="why-rev">🔁 Go back to: Lesson 17 (Задание 4) · Lesson 19, Block A · deck V12</p>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-ghost" onclick="switchTabByName('read')">Next: Чтение →</button>
+      </div>
+    </div>
+
+  </div><!-- /tab-lang -->
+
+  <!-- ══════════════════════════════════════════════════════════
+       РАЗДЕЛ 2 — ЧТЕНИЕ (30 баллов) · Задания 5–6
+  ══════════════════════════════════════════════════════════ -->
+  <div class="tab-content" id="tab-read">
+
+    <div class="section-head">
+      <h2>Раздел 2. Чтение</h2>
+      <div class="sh-meta">Задания 5–6 &nbsp;·&nbsp; максимум 30 баллов</div>
+    </div>
+
+    <!-- Задание 5 · sentence ordering · J. K. Rowling -->
+    <div class="exercise task" data-n="5" data-sec="read" data-points="20"
+         data-revise="Lessons 12 and 13 (the opener, pronoun chains, linkers, time order, the two extras) · Lesson 19 Block B">
+      <span class="task-num">Задание 5 · 20 баллов</span>
+      <p class="orig-instr">Поставьте предложения в логическую цепочку, чтобы получился связный текст. Два предложения являются лишними.</p>
+      <div class="opt-box">
+        <div class="opt-row"><span class="opt-letter">A</span><span class="opt-body">When the manuscript was finally finished in 1995, she sent it to twelve publishers.</span></div>
+        <div class="opt-row"><span class="opt-letter">B</span><span class="opt-body">Her sister, on the other hand, had always wanted to become a lawyer.</span></div>
+        <div class="opt-row"><span class="opt-letter">C</span><span class="opt-body">The next few years, however, left her very little time to turn those ideas into a book: her mother died, she moved to Portugal to teach English, and her short marriage there fell apart.</span></div>
+        <div class="opt-row"><span class="opt-letter">D</span><span class="opt-body">Even so, her new editor advised her to look for a teaching job, since children’s authors rarely earned a living.</span></div>
+        <div class="opt-row"><span class="opt-letter">E</span><span class="opt-body">She had no pen with her, so for four hours she simply sat and thought about the school he would go to.</span></div>
+        <div class="opt-row"><span class="opt-letter">F</span><span class="opt-body">He could not have been more wrong: the book came out in 1997 and has since sold more than 120 million copies.</span></div>
+        <div class="opt-row"><span class="opt-letter">G</span><span class="opt-body">Despite these obstacles, she refused to give up and wrote in cafés while the child slept.</span></div>
+        <div class="opt-row"><span class="opt-letter">H</span><span class="opt-body">In 1990 Joanne Rowling was travelling on a delayed train from Manchester to London when a boy wizard walked into her imagination.</span></div>
+        <div class="opt-row"><span class="opt-letter">I</span><span class="opt-body">The thirteenth, a small London company called Bloomsbury, said yes only because the chairman’s eight-year-old daughter had read the first chapter and demanded the rest.</span></div>
+        <div class="opt-row"><span class="opt-letter">J</span><span class="opt-body">As a result, the film was finished two months earlier than planned.</span></div>
+        <div class="opt-row"><span class="opt-letter">K</span><span class="opt-body">By the end of 1993 she was back in Britain, living in Edinburgh with a baby daughter and almost no money.</span></div>
+        <div class="opt-row"><span class="opt-letter">L</span><span class="opt-body">Every one of them turned it down.</span></div>
+      </div>
+      <div class="demo-note" style="margin-top:16px;">Choose the letter of the sentence for each place in the text, 1 to 10.</div>
+      <div class="order-grid">
+        <div class="order-cell"><span class="ar-num">1</span><select class="exam-select ans" id="t5-1"  data-w="2" data-opts="A,B,C,D,E,F,G,H,I,J,K,L" data-answer="H"></select></div>
+        <div class="order-cell"><span class="ar-num">2</span><select class="exam-select ans" id="t5-2"  data-w="2" data-opts="A,B,C,D,E,F,G,H,I,J,K,L" data-answer="E"></select></div>
+        <div class="order-cell"><span class="ar-num">3</span><select class="exam-select ans" id="t5-3"  data-w="2" data-opts="A,B,C,D,E,F,G,H,I,J,K,L" data-answer="C"></select></div>
+        <div class="order-cell"><span class="ar-num">4</span><select class="exam-select ans" id="t5-4"  data-w="2" data-opts="A,B,C,D,E,F,G,H,I,J,K,L" data-answer="K"></select></div>
+        <div class="order-cell"><span class="ar-num">5</span><select class="exam-select ans" id="t5-5"  data-w="2" data-opts="A,B,C,D,E,F,G,H,I,J,K,L" data-answer="G"></select></div>
+        <div class="order-cell"><span class="ar-num">6</span><select class="exam-select ans" id="t5-6"  data-w="2" data-opts="A,B,C,D,E,F,G,H,I,J,K,L" data-answer="A"></select></div>
+        <div class="order-cell"><span class="ar-num">7</span><select class="exam-select ans" id="t5-7"  data-w="2" data-opts="A,B,C,D,E,F,G,H,I,J,K,L" data-answer="L"></select></div>
+        <div class="order-cell"><span class="ar-num">8</span><select class="exam-select ans" id="t5-8"  data-w="2" data-opts="A,B,C,D,E,F,G,H,I,J,K,L" data-answer="I"></select></div>
+        <div class="order-cell"><span class="ar-num">9</span><select class="exam-select ans" id="t5-9"  data-w="2" data-opts="A,B,C,D,E,F,G,H,I,J,K,L" data-answer="D"></select></div>
+        <div class="order-cell"><span class="ar-num">10</span><select class="exam-select ans" id="t5-10" data-w="2" data-opts="A,B,C,D,E,F,G,H,I,J,K,L" data-answer="F"></select></div>
+      </div>
+      <div class="why">
+        <div class="why-h">🔗 Why this order · the link that holds each sentence</div>
+        <ul>
+          <li><b>1 H:</b> the opener: a full name, a year, no pronoun to explain.</li>
+          <li><b>2 E:</b> <i>no pen with her … for four hours</i> = on the train; <i>he</i> = the boy wizard.</li>
+          <li><b>3 C:</b> <i>those ideas</i> = what she thought about; <i>however</i>: no time to write.</li>
+          <li><b>4 K:</b> <i>back in Britain</i> needs Portugal before it; a new person: <i>a baby daughter</i>.</li>
+          <li><b>5 G:</b> <i>these obstacles</i> = no money, a baby; <i>the child</i> = the daughter.</li>
+          <li><b>6 A:</b> <i>finally finished</i> comes after the writing; <i>twelve publishers</i> are new.</li>
+          <li><b>7 L:</b> <i>every one of them</i> = the twelve; <i>it</i> = the manuscript.</li>
+          <li><b>8 I:</b> <i>the thirteenth</i> comes after twelve.</li>
+          <li><b>9 D:</b> <i>even so</i> (they said yes, but…); <i>her new editor</i> is at the company that accepted her.</li>
+          <li><b>10 F:</b> <i>he</i> = the editor; <i>the book came out</i> closes the story.</li>
+          <li><b>Extras:</b> B (<i>on the other hand</i> has nothing to contrast with) and J (no film is mentioned).</li>
+        </ul>
+        <p class="why-rev">🔁 Go back to: Lessons 12 and 13 (Задание 5) · Lesson 19, Block B</p>
+      </div>
+    </div>
+
+    <!-- Задание 6 · headings · the kakapo -->
+    <div class="exercise task" data-n="6" data-sec="read" data-points="10"
+         data-revise="Lesson 18 (main idea, not detail; a heading that shares a word is usually a trap) · deck V11 Nature">
+      <span class="task-num">Задание 6 · 10 баллов</span>
+      <p class="orig-instr">Прочитайте фрагменты текста и подберите заголовок к каждому фрагменту. Два заголовка являются лишними.</p>
+      <div class="opt-box" style="margin-bottom:18px;">
+        <div class="opt-row"><span class="opt-letter">A</span><span class="opt-body">A Defence That No Longer Works</span></div>
+        <div class="opt-row"><span class="opt-letter">B</span><span class="opt-body">Scientists Give Up Hope</span></div>
+        <div class="opt-row"><span class="opt-letter">C</span><span class="opt-body">Dependent on a Single Tree</span></div>
+        <div class="opt-row"><span class="opt-letter">D</span><span class="opt-body">A Parrot Unlike Any Other</span></div>
+        <div class="opt-row"><span class="opt-letter">E</span><span class="opt-body">Attacked from the Sky</span></div>
+        <div class="opt-row"><span class="opt-letter">F</span><span class="opt-body">Technology Joins the Rescue</span></div>
+        <div class="opt-row"><span class="opt-letter">G</span><span class="opt-body">A New Home across the Water</span></div>
+      </div>
+
+      <div class="read-para">
+        <div class="answer-row"><span class="ar-num">1</span>
+          <select class="exam-select ans" id="t6-1" data-w="2" data-opts="A,B,C,D,E,F,G" data-answer="D"></select></div>
+        If you were asked to design a parrot, you would probably not come up with the kakapo. Found only in New Zealand,
+        it is the heaviest parrot in the world, weighing up to four kilograms, and the only one that cannot fly. It is
+        active at night, climbs trees with its claws and beak, and may live for ninety years, longer than almost any other
+        bird. It even has a strong, sweet smell, which people have compared to honey or to the inside of an old violin
+        case. In nearly every way, this species stands out from the rest of its colourful, noisy family.
+      </div>
+      <div class="read-para">
+        <div class="answer-row"><span class="ar-num">2</span>
+          <select class="exam-select ans" id="t6-2" data-w="2" data-opts="A,B,C,D,E,F,G" data-answer="A"></select></div>
+        For millions of years there were no land mammals in New Zealand apart from bats, and the kakapo’s main enemy was
+        a giant eagle that hunted by sight. The parrot adapted perfectly: its green feathers matched the forest floor, and
+        whenever it sensed danger it simply stood still. Then people arrived, bringing rats, cats, dogs and stoats with
+        them. These predators hunt with their noses, not their eyes, so a bird that freezes and smells of honey is the
+        easiest prey imaginable. What had protected the species for so long now made it helpless.
+      </div>
+      <div class="read-para">
+        <div class="answer-row"><span class="ar-num">3</span>
+          <select class="exam-select ans" id="t6-3" data-w="2" data-opts="A,B,C,D,E,F,G" data-answer="G"></select></div>
+        By the 1970s many scientists believed that the kakapo had died out. Then a small group was discovered on Stewart
+        Island, in the far south, but cats were killing those birds too. The government took a bold decision. Between 1980
+        and 1997 every bird that could be caught was carried, one by one, to a few small islands off the coast from which
+        all predators had been removed. No kakapo now lives in the place where its ancestors lived. It was a huge risk, yet
+        without it the species would almost certainly have been wiped out.
+      </div>
+      <div class="read-para">
+        <div class="answer-row"><span class="ar-num">4</span>
+          <select class="exam-select ans" id="t6-4" data-w="2" data-opts="A,B,C,D,E,F,G" data-answer="C"></select></div>
+        Safety did not solve everything, because kakapo breed extremely slowly. Females lay eggs only in the years when the
+        rimu, a tall native conifer, produces a heavy crop of fruit, which happens once every two to four years. The chicks
+        are fed almost entirely on that fruit. In the other years, no eggs are laid at all. Scientists have tried offering
+        the birds extra food, but nothing they have come up with has persuaded them to nest more often. The future of the
+        whole species therefore rises and falls with the harvest of one kind of plant.
+      </div>
+      <div class="read-para">
+        <div class="answer-row"><span class="ar-num">5</span>
+          <select class="exam-select ans" id="t6-5" data-w="2" data-opts="A,B,C,D,E,F,G" data-answer="F"></select></div>
+        Today each kakapo has a name and wears a tiny radio transmitter that tells rangers where it is, whether it has
+        mated and whether it is sitting on a nest. Eggs at risk are hatched in incubators, and the DNA of every living bird
+        has been read in order to keep the fragile population healthy. Drones have even been used to carry samples from
+        one island to another. Thanks to these methods the population has grown from 51 birds in 1995 to about 250. That is
+        real progress, but the kakapo remains one of the most vulnerable birds on Earth.
+      </div>
+      <div class="why">
+        <div class="why-h">🔎 Why · the main idea of each paragraph</div>
+        <ul>
+          <li><b>1 → D:</b> every sentence lists a way in which it differs from other parrots; the last line sums it up: <i>stands out from the rest of its family</i>.</li>
+          <li><b>2 → A:</b> standing still worked against the eagle and fails against animals that hunt by smell: <i>what had protected the species now made it helpless</i>.</li>
+          <li><b>3 → G:</b> the birds were carried to islands off the coast. B is the trap: scientists <i>believed</i> it had died out, but then birds were found and saved.</li>
+          <li><b>4 → C:</b> no rimu fruit, no eggs: <i>rises and falls with the harvest of one kind of plant</i>.</li>
+          <li><b>5 → F:</b> transmitters, incubators, DNA, drones.</li>
+          <li><b>Not used:</b> B, and E: the eagle is one detail in paragraph 2, not its main idea.</li>
+        </ul>
+        <p class="why-rev">🔁 Go back to: Lesson 18 (Задание 6) · deck V11</p>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-ghost" onclick="switchTabByName('listen')">Next: Аудирование →</button>
+      </div>
+    </div>
+
+  </div><!-- /tab-read -->
+
+  <!-- ══════════════════════════════════════════════════════════
+       РАЗДЕЛ 3 — АУДИРОВАНИЕ (20 баллов) · Задания 7–8
+  ══════════════════════════════════════════════════════════ -->
+  <div class="tab-content" id="tab-listen">
+
+    <div class="section-head">
+      <h2>Раздел 3. Аудирование</h2>
+      <div class="sh-meta">Задания 7–8 &nbsp;·&nbsp; максимум 20 баллов</div>
+    </div>
+
+    <!-- Задание 7 · five speakers · the arts -->
+    <div class="exercise task" data-n="7" data-sec="listen" data-points="10"
+         data-revise="Lesson 15 (underline what happened + why; expect a paraphrase; 2–3 words per speaker) · deck V12">
+      <span class="task-num">Задание 7 · 10 баллов</span>
+      <p class="orig-instr">Ниже представлено семь утверждений. Прослушайте пять аудиотекстов и соотнесите утверждения с информацией, представленной в них. Два утверждения являются лишними. Прослушайте текст 1 раз.</p>
+      <div class="demo-note">Read the statements first. The recording plays once only, and you can’t rewind it.</div>
+      <div class="audio-wrap" style="margin:0 0 16px;"><audio controls preload="none"><source src="audio/l20-task07.mp3" type="audio/mpeg">Your browser does not support audio.</audio></div>
+      <div class="pair-grid">
+        <div>
+          <div class="answer-row"><span class="ar-num">1</span><span class="ar-txt">Speaker 1</span>
+            <select class="exam-select ans" id="t7-1" data-w="2" data-opts="A,B,C,D,E,F,G" data-answer="E"></select></div>
+          <div class="answer-row"><span class="ar-num">2</span><span class="ar-txt">Speaker 2</span>
+            <select class="exam-select ans" id="t7-2" data-w="2" data-opts="A,B,C,D,E,F,G" data-answer="C"></select></div>
+          <div class="answer-row"><span class="ar-num">3</span><span class="ar-txt">Speaker 3</span>
+            <select class="exam-select ans" id="t7-3" data-w="2" data-opts="A,B,C,D,E,F,G" data-answer="A"></select></div>
+          <div class="answer-row"><span class="ar-num">4</span><span class="ar-txt">Speaker 4</span>
+            <select class="exam-select ans" id="t7-4" data-w="2" data-opts="A,B,C,D,E,F,G" data-answer="G"></select></div>
+          <div class="answer-row"><span class="ar-num">5</span><span class="ar-txt">Speaker 5</span>
+            <select class="exam-select ans" id="t7-5" data-w="2" data-opts="A,B,C,D,E,F,G" data-answer="D"></select></div>
+        </div>
+        <div class="opt-box">
+          <div class="opt-row"><span class="opt-letter">A</span><span class="opt-body">The speaker ended up performing instead of just watching.</span></div>
+          <div class="opt-row"><span class="opt-letter">B</span><span class="opt-body">The speaker left an event before it had finished.</span></div>
+          <div class="opt-row"><span class="opt-letter">C</span><span class="opt-body">The speaker’s opinion was the opposite of the professionals’.</span></div>
+          <div class="opt-row"><span class="opt-letter">D</span><span class="opt-body">The speaker was surprised to learn how a work is made.</span></div>
+          <div class="opt-row"><span class="opt-letter">E</span><span class="opt-body">The speaker was let down by a new version of a familiar story.</span></div>
+          <div class="opt-row"><span class="opt-letter">F</span><span class="opt-body">The speaker was unable to get into an event.</span></div>
+          <div class="opt-row"><span class="opt-letter">G</span><span class="opt-body">The speaker became interested in a kind of art they used to dislike.</span></div>
+        </div>
+      </div>
+      <div class="why">
+        <div class="why-h">🔎 Why · the paraphrase and the traps (the full script is on the «Результат» tab)</div>
+        <ul>
+          <li><b>Speaker 1 → E:</b> a film adaptation of a novel she had read five or six times; the heroine and the ending were changed. Trap B: she <i>nearly</i> walked out, but stayed.</li>
+          <li><b>Speaker 2 → C:</b> the critics gave it one star; he puts it in his top five. Not G: he has loved the theatre for thirty years.</li>
+          <li><b>Speaker 3 → A:</b> she sells the programmes, and this time she was pushed on stage in a grey wig.</li>
+          <li><b>Speaker 4 → G:</b> “contemporary art was a joke” → back at the gallery nearly every month.</li>
+          <li><b>Speaker 5 → D:</b> she thought computers did it; every model is moved by hand 24 times a second. Trap F: the tour had <i>nearly</i> sold out, but they got the last places.</li>
+        </ul>
+        <p class="why-rev">🔁 Go back to: Lesson 15 (Задание 7) · deck V12</p>
+      </div>
+    </div>
+
+    <!-- Задание 8 · True / False · the forgetting curve -->
+    <div class="exercise task" data-n="8" data-sec="listen" data-points="10"
+         data-revise="Lesson 16 (the False traps: a wrong number, a wrong person, the opposite, not said) · deck V10">
+      <span class="task-num">Задание 8 · 10 баллов</span>
+      <p class="orig-instr">Ниже представлено пять утверждений. Прослушайте аудиотекст и определите, являются ли утверждения верными или неверными в соответствии с информацией из аудиотекста. Прослушайте текст 1 раз.</p>
+      <div class="demo-note">Read the statements first. The recording plays once only, and you can’t rewind it.</div>
+      <div class="audio-wrap" style="margin:0 0 16px;"><audio controls preload="none"><source src="audio/l20-task08.mp3" type="audio/mpeg">Your browser does not support audio.</audio></div>
+      <div class="answer-row"><span class="ar-num">1</span><span class="ar-txt">Ebbinghaus tested the memory of a large group of volunteers.</span>
+        <select class="exam-select ans" id="t8-1" data-w="2" data-opts="True,False" data-answer="False"></select></div>
+      <div class="answer-row"><span class="ar-num">2</span><span class="ar-txt">It took Ebbinghaus about a day to forget half of what he had learned.</span>
+        <select class="exam-select ans" id="t8-2" data-w="2" data-opts="True,False" data-answer="False"></select></div>
+      <div class="answer-row"><span class="ar-num">3</span><span class="ar-txt">When the experiment was repeated in this century, the results were very similar.</span>
+        <select class="exam-select ans" id="t8-3" data-w="2" data-opts="True,False" data-answer="True"></select></div>
+      <div class="answer-row"><span class="ar-num">4</span><span class="ar-txt">In the American study, the students who only reread the text expected to do worse than the others.</span>
+        <select class="exam-select ans" id="t8-4" data-w="2" data-opts="True,False" data-answer="False"></select></div>
+      <div class="answer-row"><span class="ar-num">5</span><span class="ar-txt">The speaker believes that the most useful kind of revision is the one that feels difficult.</span>
+        <select class="exam-select ans" id="t8-5" data-w="2" data-opts="True,False" data-answer="True"></select></div>
+      <div class="why">
+        <div class="why-h">🔎 Why · the sentence of the talk that decides each statement</div>
+        <ul>
+          <li><b>1 False · wrong person:</b> “He had no laboratory and no volunteers, so he conducted every experiment on himself.”</li>
+          <li><b>2 False · wrong number:</b> “After about an hour, he had already lost more than half… After a day, about two thirds had gone.”</li>
+          <li><b>3 True:</b> “in 2015 two researchers in Amsterdam repeated the whole experiment… the curve they got was almost identical to his.”</li>
+          <li><b>4 False · the opposite:</b> “the readers felt much more confident, and they predicted that they would remember more.”</li>
+          <li><b>5 True · paraphrase:</b> recalling “feels harder and less pleasant, and that’s precisely why it works.”</li>
+        </ul>
+        <p class="why-rev">🔁 Go back to: Lesson 16 (Задание 8) · deck V10</p>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-ghost" onclick="switchTabByName('cult')">Next: Страноведение →</button>
+      </div>
+    </div>
+
+  </div><!-- /tab-listen -->
+
+  <!-- ══════════════════════════════════════════════════════════
+       РАЗДЕЛ 4 — СТРАНОВЕДЕНИЕ (20 баллов) · Задания 9–10
+  ══════════════════════════════════════════════════════════ -->
+  <div class="tab-content" id="tab-cult">
+
+    <div class="section-head">
+      <h2>Раздел 4. Страноведение</h2>
+      <div class="sh-meta">Задания 9–10 &nbsp;·&nbsp; максимум 20 баллов</div>
+    </div>
+
+    <!-- Задание 9 · Who is it? · Agatha Christie -->
+    <div class="exercise task" data-n="9" data-sec="cult" data-points="10"
+         data-revise="Lessons 16–19, the Culture tabs (the seven kinds of clue) · deck V14 Culture figures, every card">
+      <span class="task-num">Задание 9 · 10 баллов</span>
+      <p class="orig-instr">Прочитайте текст и выполните задание к нему.</p>
+      <div class="passage-box" style="line-height:1.75; margin-bottom:18px;">
+        <p>She was born in 1890 in a seaside resort on the south coast of Devon, the youngest child of an American father
+          and an English mother. She never went to school as a small child: she taught herself to read and was educated at
+          home.</p>
+        <p>During the First World War she worked first as a nurse and then in a hospital dispensary, where she prepared
+          medicines and learned a great deal about poisons. That knowledge turned out to be useful. Her sister had bet her
+          that she could not write a detective story; she finished one in 1916, although several publishers turned it down
+          and it did not come out until 1920. In it, readers met a small Belgian refugee with an egg-shaped head, a
+          magnificent moustache and complete faith in his “little grey cells”. He went on to appear in 33 novels. Her other
+          famous detective, who arrived in 1930, could hardly be more different: an elderly lady who sits knitting in a
+          quiet English village and understands human nature better than any policeman.</p>
+        <p>In December 1926 she herself became a mystery. Her car was found abandoned at the side of a road, and for eleven
+          days thousands of volunteers searched the countryside for her, until she was recognised in a hotel in the north of
+          England. She never explained what had happened.</p>
+        <p>Four years later she married an archaeologist fourteen years younger than herself and began to spend part of
+          every year at his excavations in the Middle East. She loved the journey there on the luxury train that ran
+          between Paris and Istanbul, and in 1934 she set one of her best-known murders on board it.</p>
+        <p>She wrote 66 detective novels, and also six novels about love and family life, which she published under another
+          name; for nearly twenty years almost nobody knew that they were hers. A play of hers opened in London in 1952 and,
+          apart from one break in 2020, has been performed there ever since. Only the Bible and Shakespeare are said to have
+          sold more copies than her books.</p>
+      </div>
+      <div class="q-list">
+        <div class="answer-row"><span class="ar-txt"><b>1.</b> What is the name of the person described in the text? Формат написания ответа First Name Last Name</span>
+          <input class="blank ans" id="t9-1" data-w="2" data-answer="Agatha Christie" data-re="^(dame )?agatha( mary clarissa)? christie$" autocomplete="off" spellcheck="false"></div>
+        <div class="answer-row"><span class="ar-txt"><b>2.</b> What are the names of the two detectives described in the second paragraph? (write the names with an “and”)</span>
+          <input class="blank ans" id="t9-2" data-w="2" data-answer="Hercule Poirot and Miss Marple" data-re="^(?=.*\bpoirot\b)(?=.*\bmarple\b).*$" autocomplete="off" spellcheck="false"></div>
+        <div class="answer-row"><span class="ar-txt"><b>3.</b> What was the name of the train mentioned in the fourth paragraph?</span>
+          <input class="blank ans" id="t9-3" data-w="2" data-answer="the Orient Express" data-re="\borient[ -]express\b" autocomplete="off" spellcheck="false"></div>
+        <div class="answer-row"><span class="ar-txt"><b>4.</b> Under what name did she publish the six novels mentioned in the last paragraph? Формат написания ответа First Name Last Name</span>
+          <input class="blank ans" id="t9-4" data-w="2" data-answer="Mary Westmacott" data-re="^mary westmacott$" autocomplete="off" spellcheck="false"></div>
+        <div class="answer-row"><span class="ar-txt"><b>5.</b> What is the title of the play mentioned in the last paragraph?</span>
+          <input class="blank ans" id="t9-5" data-w="2" data-answer="The Mousetrap" data-re="^(the )?mouse[ -]?trap$" autocomplete="off" spellcheck="false"></div>
+      </div>
+      <div class="why">
+        <div class="why-h">🔎 Why · the clues that give her away</div>
+        <div class="why-fig">
+          <img src="images/culture/figures/christie.png" alt="Agatha Christie">
+          <ul>
+            <li><b>1 Agatha Christie:</b> a seaside town in Devon (Torquay) · a hospital dispensary and poisons · eleven missing days in 1926 · an archaeologist husband (Max Mallowan).</li>
+            <li><b>2 Hercule Poirot and Miss Marple:</b> the Belgian with the “little grey cells”; the old lady from the village of St Mary Mead.</li>
+            <li><b>3 the Orient Express:</b> Paris to Istanbul; <i>Murder on the Orient Express</i>, 1934.</li>
+            <li><b>4 Mary Westmacott:</b> her second pen name.</li>
+            <li><b>5 The Mousetrap:</b> in London since 1952, the longest run of any play.</li>
+          </ul>
+        </div>
+        <p class="why-rev">🔁 Go back to: her card in Lesson 18 (Culture tab) · deck V14 · the seven kinds of clue</p>
+      </div>
+    </div>
+
+    <!-- Задание 10 · events and centuries -->
+    <div class="exercise task" data-n="10" data-sec="cult" data-points="10"
+         data-revise="the timelines of Lessons 12–18 · Lesson 19, History tab (the traps: 1066 → 11th, 1500 → 15th, 1901 → 20th)">
+      <span class="task-num">Задание 10 · 10 баллов</span>
+      <p class="orig-instr">Соотнесите события, значимые для стран(ы) изучаемого языка, и века, в которых эти события происходили. Два века не соответствуют ни одному событию.</p>
+      <div class="demo-note">Ten events, as in the demo: 1 балл each. Every century is used once at most.</div>
+      <div class="answer-row"><span class="ar-txt">The purchase of Alaska by the United States</span>
+        <select class="exam-select ans" id="t10-1" data-opts="10th,11th,12th,13th,14th,15th,16th,17th,18th,19th,20th,21st" data-answer="19th"></select></div>
+      <div class="answer-row"><span class="ar-txt">The defeat of the Spanish Armada</span>
+        <select class="exam-select ans" id="t10-2" data-opts="10th,11th,12th,13th,14th,15th,16th,17th,18th,19th,20th,21st" data-answer="16th"></select></div>
+      <div class="answer-row"><span class="ar-txt">Athelstan becoming the first king of all England</span>
+        <select class="exam-select ans" id="t10-3" data-opts="10th,11th,12th,13th,14th,15th,16th,17th,18th,19th,20th,21st" data-answer="10th"></select></div>
+      <div class="answer-row"><span class="ar-txt">The United Kingdom’s departure from the European Union</span>
+        <select class="exam-select ans" id="t10-4" data-opts="10th,11th,12th,13th,14th,15th,16th,17th,18th,19th,20th,21st" data-answer="21st"></select></div>
+      <div class="answer-row"><span class="ar-txt">George Washington’s first inauguration as President</span>
+        <select class="exam-select ans" id="t10-5" data-opts="10th,11th,12th,13th,14th,15th,16th,17th,18th,19th,20th,21st" data-answer="18th"></select></div>
+      <div class="answer-row"><span class="ar-txt">The arrival of the Black Death in England</span>
+        <select class="exam-select ans" id="t10-6" data-opts="10th,11th,12th,13th,14th,15th,16th,17th,18th,19th,20th,21st" data-answer="14th"></select></div>
+      <div class="answer-row"><span class="ar-txt">The death of Queen Victoria</span>
+        <select class="exam-select ans" id="t10-7" data-opts="10th,11th,12th,13th,14th,15th,16th,17th,18th,19th,20th,21st" data-answer="20th"></select></div>
+      <div class="answer-row"><span class="ar-txt">The Norman Conquest of England</span>
+        <select class="exam-select ans" id="t10-8" data-opts="10th,11th,12th,13th,14th,15th,16th,17th,18th,19th,20th,21st" data-answer="11th"></select></div>
+      <div class="answer-row"><span class="ar-txt">Columbus’s first voyage across the Atlantic</span>
+        <select class="exam-select ans" id="t10-9" data-opts="10th,11th,12th,13th,14th,15th,16th,17th,18th,19th,20th,21st" data-answer="15th"></select></div>
+      <div class="answer-row"><span class="ar-txt">The Glorious Revolution</span>
+        <select class="exam-select ans" id="t10-10" data-opts="10th,11th,12th,13th,14th,15th,16th,17th,18th,19th,20th,21st" data-answer="17th"></select></div>
+      <div class="why">
+        <div class="why-h">💡 The dates · first two digits + 1</div>
+        <ul>
+          <li>Alaska <b>1867</b> → 19th · the Armada <b>1588</b> → 16th · Athelstan <b>927</b> → 10th · the UK leaves the EU <b>2020</b> → 21st · Washington <b>1789</b> → 18th</li>
+          <li>the Black Death <b>1348</b> → 14th · Queen Victoria dies <b>1901</b> → 20th (the trap: her reign is the 19th century, but 1901 is the first year of the 20th) · the Norman Conquest <b>1066</b> → 11th · Columbus <b>1492</b> → 15th · the Glorious Revolution <b>1688</b> → 17th</li>
+          <li>Not used: the 12th and the 13th.</li>
+        </ul>
+        <p class="why-rev">🔁 Go back to: your timelines (Lessons 12–18) · Lesson 19, History tab</p>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-ghost" onclick="switchTabByName('score')">Next: Результат →</button>
+      </div>
+    </div>
+
+  </div><!-- /tab-cult -->
+
+  <!-- ══════════════════════════════════════════════════════════
+       РЕЗУЛЬТАТ — locked until the paper is handed in
+  ══════════════════════════════════════════════════════════ -->
+  <div class="tab-content" id="tab-score">
+
+    <div id="scoreLocked">
+      <div class="locked-card">
+        <div class="lock-ico">🔒</div>
+        <h3>Your score is locked</h3>
+        <p>Finish every task first. Then the score appears and all the answers are explained.<br>
+           Nothing is marked before that, so make a sensible guess rather than leaving a gap!</p>
+        <ul class="todo-list" id="todoList"></ul>
+        <p style="margin-top:22px; font-size:.9rem;">Is the time up? In the real round the paper is collected as it is.</p>
+        <button class="btn-mini" onclick="handInEarly()">Hand in now, with the gaps empty</button>
+      </div>
+    </div>
+
+    <div id="scoreReady" style="display:none;">
+      <div class="exercise">
+        <div class="exercise-label">Ready</div>
+        <h3>All 10 tasks are answered. 🎉</h3>
+        <p>If you still have time on the clock, use it: go back to Задания 1 and 4 and check the spelling, <i>the</i> and
+          the plurals. When you press the button, every answer on the page is marked, the correct answers are explained
+          and nothing can be changed.</p>
+        <div class="btn-row">
+          <button class="btn btn-primary" onclick="submitPaper()">Hand in and show my score 🏆</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="scoreResult" style="display:none;">
+      <div class="exercise">
+        <div class="exercise-label">Result</div>
+        <div class="score-hero">
+          <div class="score-big"><span id="scTotal">0</span><small> / 100</small></div>
+          <div class="score-verdict" id="scVerdict"></div>
+          <div class="score-time" id="scTime"></div>
+        </div>
+
+        <div class="score-rows">
+          <div class="score-row">
+            <div class="score-row-top"><span>✏️ Язык (Задания 1–4)</span><span id="sc-lang">0 / 30</span></div>
+            <div class="score-track"><div class="score-meter m1" id="m-lang"></div></div>
+          </div>
+          <div class="score-row">
+            <div class="score-row-top"><span>📖 Чтение (Задания 5–6)</span><span id="sc-read">0 / 30</span></div>
+            <div class="score-track"><div class="score-meter m2" id="m-read"></div></div>
+          </div>
+          <div class="score-row">
+            <div class="score-row-top"><span>🎧 Аудирование (Задания 7–8)</span><span id="sc-listen">0 / 20</span></div>
+            <div class="score-track"><div class="score-meter m3" id="m-listen"></div></div>
+          </div>
+          <div class="score-row">
+            <div class="score-row-top"><span>🌍 Страноведение (Задания 9–10)</span><span id="sc-cult">0 / 20</span></div>
+            <div class="score-track"><div class="score-meter m4" id="m-cult"></div></div>
+          </div>
+        </div>
+
+        <div id="taskBreakdown"></div>
+
+        <div class="revise-box" id="reviseBox">
+          <h4>🧭 Your revision map for the last days</h4>
+          <p id="reviseIntro"></p>
+          <ul id="reviseList"></ul>
+        </div>
+
+        <p style="margin-top:24px; color:var(--muted); line-height:1.7;">
+          Now go back through the four tabs: green = correct, red = wrong, and the green tag next to an answer shows what
+          was expected. Under every task a box explains each answer and names the lesson it comes from.
+        </p>
+
+        <details style="margin-top:18px;">
+          <summary style="cursor:pointer; font-weight:600;">🎧 Audio script, Задание 7</summary>
+          <div class="script-box" style="margin-top:10px;">
+            <p><b>Speaker 1 → E.</b> I must have read that novel five or six times as a teenager, so when I heard that <b>a film
+              adaptation was coming out</b>, I booked tickets for the very first evening. Well. The landscape was beautiful, I’ll give
+              them that, and the music was lovely. But <b>the heroine, who is shy and awkward in the book, had been turned into a
+              sort of action hero, and they’d cut the whole ending</b> and replaced it with a wedding. I sat there thinking, have
+              these people even read it? <u>I nearly walked out halfway through</u>, to be honest, but I’d paid for the ticket, so
+              I stayed until the lights came on. My friend, who had never opened the book, thought it was great. Perhaps that’s
+              the secret: don’t go and see films of stories you love.</p>
+            <p><b>Speaker 2 → C.</b> Last month our local theatre put on a new play about a lighthouse keeper. One actor, one chair,
+              ninety minutes. The newspapers were merciless. <b>One critic wrote that it was the longest evening of his life, and
+              another gave it a single star.</b> So I honestly expected to be bored stiff, and I only went because my neighbour had
+              a spare ticket. And do you know, I can’t remember when I was last so moved by anything on a stage. The man was
+              outstanding. When it ended, nobody clapped for a few seconds, because half the audience was in tears. <u>I’ve been
+              going to the theatre for thirty years</u>, and <b>I’d put that evening in my top five. I really don’t know what those
+              reviewers were watching.</b></p>
+            <p><b>Speaker 3 → A.</b> Our school puts on a musical every spring, and I’ve never wanted to be in it. I’m the person who
+              sells the programmes at the door. This year, on the morning of the last performance, the girl who played the
+              grandmother lost her voice completely. It was only a small part, eleven lines and half a song, but the show couldn’t
+              go on without it. The teacher looked round the room, and her eyes stopped on me, because I’d watched every rehearsal
+              and I knew the whole thing by heart. I’ve never been so frightened in my life. <b>They put a grey wig on me and
+              pushed me on, and somehow the words came out in the right order.</b> People actually laughed in the right places!
+              Next year I’m not selling programmes. I’m going to the auditions.</p>
+            <p><b>Speaker 4 → G.</b> <b>I used to say that contemporary art was a joke.</b> A pile of bricks, an unmade bed, a blank canvas,
+              and somebody pays a million for it. Anyone could do that. Then my sister dragged me to an exhibition in an old power
+              station, mostly because it was raining and it was free. In one enormous dark room, an artist had hung thousands of
+              tiny lights at different heights, and you walked through them as if you were walking through the night sky. I stayed
+              in there for forty minutes. I can’t explain what it meant, and I’m not sure it meant anything, but I didn’t want to
+              leave. <b>I’ve been back to that gallery nearly every month since, and I’ve even started reading about the
+              artists.</b> My sister finds this very funny.</p>
+            <p><b>Speaker 5 → D.</b> For my birthday, my parents booked a tour of an animation studio. <u>It had nearly sold out, and we
+              got the last three places.</u> <b>I’d always imagined that cartoons were made by computers these days</b>, with someone
+              just pressing a button. <b>In fact</b>, for the film we saw, every character was a real little model, about as tall as
+              my hand, and for each second of film the animators had moved it twenty-four times, a tiny bit each time, and taken a
+              photograph. The guide told us that on a good day one animator produces about four seconds of film. Four seconds! The
+              whole thing had taken five years. I’ve watched that film again since, and <b>I can’t see it in the same way.</b> Every
+              time a character blinks, I think, somebody spent a whole morning on that.</p>
+            <p style="color:var(--muted);">Bold = the words that decide the answer. Underlined = the traps. Not used: B (Speaker 1 only
+              <i>nearly</i> walked out) and F (Speaker 5’s tour had <i>nearly</i> sold out, but they got in).</p>
+          </div>
+        </details>
+
+        <details style="margin-top:12px;">
+          <summary style="cursor:pointer; font-weight:600;">🎧 Audio script, Задание 8</summary>
+          <div class="script-box" style="margin-top:10px;">
+            <p>Good morning, everybody. Since most of you have exams in a few weeks, I thought I’d talk today about forgetting.</p>
+            <p>The first person to study it scientifically was a German psychologist, Hermann Ebbinghaus, in the 1880s. <b>He had no
+              laboratory and no volunteers, so he conducted every experiment on himself.</b> <b>[1 → False]</b> He made up more than two
+              thousand meaningless syllables, things like <i>zof</i> and <i>wid</i>, learned lists of them by heart, and then tested
+              himself after twenty minutes, after an hour, after a day, a week and a month. He carried on like this for years.</p>
+            <p>The outcome was what we now call the forgetting curve. Ebbinghaus found that memory doesn’t fade at a steady speed.
+              <b>After about an hour, he had already lost more than half of what he had learned. After a day, about two thirds had
+              gone.</b> <b>[2 → False: half was gone after an hour, not a day]</b> But after that, the line became almost flat: what he
+              still knew after a week, he mostly still knew after a month. In other words, forgetting is fastest at the very
+              beginning.</p>
+            <p>Now, you might think that results from one man and his notebook, nearly a century and a half ago, can’t be very
+              accurate. <b>But in 2015, two researchers in Amsterdam repeated the whole experiment, with the same kind of syllables
+              and the same timetable, and the curve they got was almost identical to his.</b> <b>[3 → True]</b></p>
+            <p>So what can we do about it? Ebbinghaus himself figured out the first answer. Every time he went back to a list, he
+              forgot it more slowly afterwards. So it’s far better to revise something for ten minutes on five different days than
+              for fifty minutes on one evening.</p>
+            <p>The second answer is more recent. In 2006, two American psychologists gave students a short text to study. Half of
+              the students read it four times. The other half read it once and then, three times, tried to write down everything
+              they could remember, without looking. <b>Straight afterwards, the readers felt much more confident, and they predicted
+              that they would remember more.</b> <b>[4 → False: the opposite]</b> A week later, it turned out to be the other way round:
+              the students who had tested themselves remembered about sixty per cent of the text, and the readers only forty.</p>
+            <p>And that’s the trap. Reading your notes again feels like learning, because the page looks familiar. But recognising
+              something isn’t the same as being able to produce it. <b>Closing the book and trying to recall what was in it feels
+              harder and less pleasant, and that’s precisely why it works.</b> <b>[5 → True]</b></p>
+            <p>So, my advice. Don’t rely on one long night with your notes before the exam. Start early, come back to each topic
+              several times, and test yourself every time. And then go to bed, because sleep is when the brain decides what to
+              keep.</p>
+          </div>
+        </details>
+
+        <div class="send-box">
+          <h4>📤 Send your results to your teacher</h4>
+          <p>This makes a short report with your score, your time and every answer you gave, so your teacher can
+            go through your mistakes with you.</p>
+          <div class="btn-row" style="margin-top:10px;">
+            <button class="btn btn-primary" onclick="shareReport()">📤 Send my results</button>
+            <button class="btn btn-ghost" onclick="copyReport()">📋 Copy report</button>
+          </div>
+          <div class="send-msg" id="sendMsg"></div>
+          <textarea id="reportText" readonly></textarea>
+        </div>
+
+        <div class="btn-row">
+          <button class="btn btn-danger" onclick="restartPaper()">Clear everything and start again</button>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /tab-score -->
+
+</div><!-- /container -->
+
+<div class="save-indicator" id="saveIndicator">✓ Saved</div>
+
+<script>
+const LESSON_KEY = 'lesson-20';
+const TIMER_KEY  = 'lesson-20-timer';
+const PAPER_SEC  = 60 * 60;
+const SECTIONS = [
+  { id: 'lang',   label: '✏️ Язык',           max: 30 },
+  { id: 'read',   label: '📖 Чтение',          max: 30 },
+  { id: 'listen', label: '🎧 Аудирование',     max: 20 },
+  { id: 'cult',   label: '🌍 Страноведение',   max: 20 }
+];
+const WORD_BANK = ['figure out','threatened','conduct','came up','running out','relied on','use up',
+                   'pointed out','wipe out','cutting down','adapt','died out','carried out'];
+// data-n = the Задание number (sync.js keeps data-task for its own ids)
+const TASKS = [...document.querySelectorAll('.task')];
+const TOTAL_TASKS = TASKS.length;   // 10
+
+let data = {};
+try { data = JSON.parse(localStorage.getItem(LESSON_KEY)) || {}; } catch(e) {}
+
+function save(patch) {
+  Object.assign(data, patch);
+  try { localStorage.setItem(LESSON_KEY, JSON.stringify(data)); } catch(e) {}
+  flashSaved();
+}
+let saveTimer;
+function flashSaved() {
+  const el = document.getElementById('saveIndicator');
+  el.classList.add('show');
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(() => el.classList.remove('show'), 1600);
+}
+const locked = () => !!data.submitted;
+
+// ── TABS ───────────────────────────────────────────────────────
+function showTab(name) {
+  const btn = document.querySelector('.tab-btn[onclick*="\'' + name + '\'"]');
+  if (!btn) return;
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  btn.classList.add('active');
+}
+function switchTab(name, btn) {
+  showTab(name);
+  save({ activeTab: name });
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+function switchTabByName(name) { switchTab(name); }
+
+// ── ONE-LISTEN AUDIO PLAYERS ───────────────────────────────────
+// Play / pause only: no rewinding, and once a recording has finished it can't be played again.
+// After the paper is handed in, the recordings open again for the debrief.
+function fmtT(t) { t = Math.max(0, Math.floor(t || 0)); return Math.floor(t / 60) + ':' + String(t % 60).padStart(2, '0'); }
+document.querySelectorAll('.audio-wrap audio').forEach(audio => {
+  const wrap = audio.parentElement;
+  const task = wrap.closest('.task').dataset.n;
+  const key = 'played-' + task;
+  audio.removeAttribute('controls');
+  audio.preload = 'metadata';
+  const pl = document.createElement('div');
+  pl.className = 'player';
+  pl.innerHTML =
+    '<button type="button" class="pl-btn" aria-label="Play">' +
+      '<svg class="i-play" viewBox="0 0 24 24"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.2-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z"/></svg>' +
+      '<svg class="i-pause" viewBox="0 0 24 24"><rect x="6" y="5" width="4.2" height="14" rx="1.2"/><rect x="13.8" y="5" width="4.2" height="14" rx="1.2"/></svg>' +
+    '</button>' +
+    '<div class="pl-main">' +
+      '<div class="pl-top"><span class="pl-label"><span class="eq"><i></i><i></i><i></i><i></i></span>Recording · Задание ' + task +
+        ' <span class="pl-plays">· plays once</span></span><span class="pl-time">0:00</span></div>' +
+      '<div class="pl-track"><div class="pl-fill"></div><div class="pl-knob"></div></div>' +
+    '</div>';
+  wrap.replaceWith(pl);
+  pl.appendChild(audio);
+
+  const btn = pl.querySelector('.pl-btn');
+  const fill = pl.querySelector('.pl-fill'), knob = pl.querySelector('.pl-knob');
+  const time = pl.querySelector('.pl-time'), plays = pl.querySelector('.pl-plays');
+  const track = pl.querySelector('.pl-track');
+  const used = () => data[key] && !locked();          // heard once, paper not handed in yet
+  const paint = () => {
+    const pct = audio.duration ? audio.currentTime / audio.duration * 100 : 0;
+    fill.style.width = pct + '%'; knob.style.left = pct + '%';
+    time.textContent = fmtT(audio.currentTime) + ' / ' + fmtT(audio.duration);
+  };
+  const markUsed = () => {
+    pl.classList.add('used'); btn.disabled = true;
+    plays.textContent = '· played ✓';
+    fill.style.width = '100%'; knob.style.left = '100%';
+  };
+  pl.openForReview = () => {
+    pl.classList.remove('used'); pl.classList.add('review'); btn.disabled = false;
+    plays.textContent = '· listen again with the script';
+    paint();
+  };
+  if (locked()) pl.openForReview(); else if (data[key]) markUsed();
+  btn.addEventListener('click', () => {
+    if (used()) return;
+    if (audio.paused) {
+      document.querySelectorAll('.player audio').forEach(a => { if (a !== audio) a.pause(); });
+      audio.play();
+    } else audio.pause();
+  });
+  track.addEventListener('click', e => {               // rewinding: only in the debrief
+    if (!locked() || !audio.duration) return;
+    const r = track.getBoundingClientRect();
+    audio.currentTime = Math.min(1, Math.max(0, (e.clientX - r.left) / r.width)) * audio.duration;
+    paint();
+  });
+  audio.addEventListener('play',  () => pl.classList.add('playing'));
+  audio.addEventListener('pause', () => pl.classList.remove('playing'));
+  audio.addEventListener('ended', () => {
+    pl.classList.remove('playing');
+    if (!locked()) { save({ [key]: true }); markUsed(); }
+  });
+  audio.addEventListener('timeupdate', paint);
+  audio.addEventListener('loadedmetadata', () => { if (!used()) paint(); });
+});
+
+// ── BUILD THE CONTROLS ─────────────────────────────────────────
+// dropdowns (data-bank = the Задание 2 word list)
+document.querySelectorAll('select.ans').forEach(sel => {
+  const blank = document.createElement('option');
+  blank.value = ''; blank.textContent = '—';
+  sel.appendChild(blank);
+  (sel.dataset.bank ? WORD_BANK : sel.dataset.opts.split(',')).forEach(v => {
+    const o = document.createElement('option');
+    o.value = v; o.textContent = v;
+    sel.appendChild(o);
+  });
+  if (data[sel.id] !== undefined) sel.value = data[sel.id];
+  sel.addEventListener('change', () => { save({ [sel.id]: sel.value }); updateProgress(); });
+});
+
+// typed gaps
+document.querySelectorAll('input.blank.ans').forEach(inp => {
+  if (data[inp.id] !== undefined) inp.value = data[inp.id];
+  inp.addEventListener('input', () => { save({ [inp.id]: inp.value }); updateProgress(); });
+});
+
+// ── ANSWERED / MARKING PER CONTROL ─────────────────────────────
+// typed answers: ignore capitals, curly quotes, extra spaces and end punctuation.
+// data-re (optional) = a pattern for answers that can be written in several ways (Задание 9).
+const norm = s => s.toLowerCase().replace(/[’‘`]/g, "'").replace(/[.,!?;:"“”]/g, ' ').replace(/\s+/g, ' ').trim();
+const keys = el => el.dataset.answer.split('|');
+const isRight = el => el.tagName === 'SELECT'
+  ? keys(el).includes(el.value)
+  : el.dataset.re ? new RegExp(el.dataset.re).test(norm(el.value))
+                  : keys(el).some(k => norm(k) === norm(el.value));
+const weight = el => +(el.dataset.w || 1);
+
+function isAnswered(el) { return el.value.trim() !== ''; }
+// returns points earned; with paint=true it also colours the control
+function mark(el, paint) {
+  const ok = isRight(el);
+  if (paint) {
+    el.classList.add(ok ? 'correct' : 'wrong');
+    el.insertAdjacentHTML('afterend', '<span class="key">' + keys(el).join(' / ') + '</span>');
+  }
+  return ok ? weight(el) : 0;
+}
+function taskDone(t) { return [...t.querySelectorAll('.ans')].every(isAnswered); }
+function taskScore(t, paint) {
+  return [...t.querySelectorAll('.ans')].reduce((a, el) => a + mark(el, paint), 0);
+}
+
+// ── PROGRESS ───────────────────────────────────────────────────
+function updateProgress() {
+  const done = TASKS.filter(taskDone).length;
+  document.getElementById('pgCount').textContent = done + ' / ' + TOTAL_TASKS;
+  document.getElementById('pgFill').style.width = (done / TOTAL_TASKS * 100) + '%';
+
+  const complete = done === TOTAL_TASKS;
+  const scoreBtn = document.querySelectorAll('.tab-btn')[4];
+  if (!locked()) {
+    document.getElementById('pgHint').textContent =
+      complete ? '✅ All done — open «Результат»' : 'Score unlocks at ' + TOTAL_TASKS + ' / ' + TOTAL_TASKS;
+    scoreBtn.textContent = complete ? '🏆 Результат' : '🔒 Результат';
+    document.getElementById('scoreLocked').style.display = complete ? 'none'  : 'block';
+    document.getElementById('scoreReady').style.display  = complete ? 'block' : 'none';
+  }
+
+  const list = document.getElementById('todoList');
+  list.innerHTML = '';
+  SECTIONS.forEach(s => {
+    const ts = TASKS.filter(t => t.dataset.sec === s.id);
+    const d = ts.filter(taskDone);
+    const missing = ts.filter(t => !taskDone(t)).map(t => t.dataset.n);
+    const li = document.createElement('li');
+    li.className = d.length === ts.length ? 'done' : '';
+    li.innerHTML = '<span>' + (d.length === ts.length ? '✓ ' : '') + s.label +
+      (missing.length ? '<small>Not finished: Задание ' + missing.join(', ') + '</small>' : '') +
+      '</span><b>' + d.length + ' / ' + ts.length + '</b>';
+    list.appendChild(li);
+  });
+}
+
+// ── SUBMIT & RESULT ────────────────────────────────────────────
+function lockAll() {
+  document.querySelectorAll('select.ans, input.blank.ans').forEach(el => el.disabled = true);
+  document.querySelectorAll('.player').forEach(pl => pl.openForReview && pl.openForReview());
+}
+function markEverything() {
+  const perTask = {};
+  TASKS.forEach(t => { perTask[t.dataset.n] = taskScore(t, true); });
+  document.body.classList.add('revealed');
+  return perTask;
+}
+function usedText() {
+  if (data.usedSec == null) return '';
+  const m = Math.floor(data.usedSec / 60), s = data.usedSec % 60;
+  return m + ' min ' + String(s).padStart(2, '0') + ' s of 60 min' + (data.usedSec > PAPER_SEC ? ' (over time)' : '');
+}
+function showResult(perTask) {
+  let total = 0;
+  const bd = document.getElementById('taskBreakdown');
+  bd.innerHTML = '';
+  SECTIONS.forEach(s => {
+    const ts = TASKS.filter(t => t.dataset.sec === s.id);
+    const got = ts.reduce((a, t) => a + perTask[t.dataset.n], 0);
+    total += got;
+    document.getElementById('sc-' + s.id).textContent = got + ' / ' + s.max;
+    document.getElementById('m-' + s.id).style.width = (got / s.max * 100) + '%';
+
+    const h = document.createElement('div'); h.className = 'tt-sec';
+    h.textContent = s.label + ' — ' + got + ' / ' + s.max;
+    const grid = document.createElement('div'); grid.className = 'task-table';
+    ts.forEach(t => {
+      const g = perTask[t.dataset.n], m = +t.dataset.points;
+      const c = document.createElement('div');
+      c.className = 'tt-cell ' + (g === m ? 'full' : g === 0 ? 'zero' : 'part');
+      c.innerHTML = 'Задание ' + t.dataset.n + '<b>' + g + ' / ' + m + '</b>';
+      grid.appendChild(c);
+    });
+    bd.appendChild(h); bd.appendChild(grid);
+  });
+
+  document.getElementById('scTotal').textContent = total;
+  document.getElementById('scVerdict').textContent =
+    total >= 85 ? 'Excellent — you are ready for the second round. 🌟' :
+    total >= 70 ? 'Strong work — polish the tasks on your revision map and you are there. 💪' :
+    total >= 50 ? 'A solid base. The revision map below shows exactly what to repeat. 📌' :
+                  'Good that you did the whole paper — now we know exactly what to work on. 🔧';
+  document.getElementById('scTime').textContent = data.usedSec != null ? '⏱ Time used: ' + usedText() : '';
+
+  // the revision map: the tasks where points were lost, biggest loss first
+  const lost = TASKS.map(t => ({ t, lost: +t.dataset.points - perTask[t.dataset.n] }))
+                    .filter(x => x.lost > 0).sort((a, b) => b.lost - a.lost);
+  const ul = document.getElementById('reviseList'); ul.innerHTML = '';
+  document.getElementById('reviseIntro').textContent = lost.length
+    ? 'The tasks where you lost points, the biggest loss first. Repeat only these.'
+    : 'Full marks: nothing to repair. Keep to the daily minimum: decks V14 and V15, one listening, the timeline.';
+  lost.forEach(x => {
+    const li = document.createElement('li');
+    li.innerHTML = '<b>Задание ' + x.t.dataset.n + ' · −' + x.lost + '</b><span>' + x.t.dataset.revise + '</span>';
+    ul.appendChild(li);
+  });
+
+  document.getElementById('scoreLocked').style.display = 'none';
+  document.getElementById('scoreReady').style.display  = 'none';
+  document.getElementById('scoreResult').style.display = 'block';
+  document.querySelectorAll('.tab-btn')[4].textContent = '🏆 Результат';
+  document.getElementById('pgHint').textContent = 'Paper handed in — ' + total + ' / 100';
+}
+function submitPaper(force) {
+  if (!force && TASKS.filter(taskDone).length < TOTAL_TASKS) { updateProgress(); return; }   // safety net
+  const used = timerUsed();
+  stopTimer();
+  save({ submitted: true, usedSec: used });
+  lockAll();
+  showResult(markEverything());
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+function handInEarly() {
+  if (!confirm('Hand in the paper now? Empty gaps count as wrong, and nothing can be changed afterwards.')) return;
+  submitPaper(true);
+}
+
+// ── REPORT FOR THE TEACHER ─────────────────────────────────────
+function describe(el) {
+  return { given: el.value.trim() || '—', key: keys(el)[0], ok: isRight(el) };
+}
+function buildReport() {
+  let name = '';
+  try { name = localStorage.getItem('studentName') || ''; } catch(e) {}
+  const perTask = {};
+  TASKS.forEach(t => { perTask[t.dataset.n] = taskScore(t, false); });
+  const total = Object.values(perTask).reduce((a, b) => a + b, 0);
+  const L = [];
+  L.push('Lesson 20 — Высшая проба Round 2, final mock paper (9–10)');
+  if (name) L.push('Student: ' + name);
+  L.push('Date: ' + new Date().toLocaleString('ru-RU'));
+  if (data.usedSec != null) L.push('Time used: ' + usedText());
+  L.push('TOTAL: ' + total + ' / 100');
+  SECTIONS.forEach(s => {
+    const got = TASKS.filter(t => t.dataset.sec === s.id).reduce((a, t) => a + perTask[t.dataset.n], 0);
+    L.push('  ' + s.label + ': ' + got + ' / ' + s.max);
+  });
+  const lost = TASKS.filter(t => perTask[t.dataset.n] < +t.dataset.points);
+  L.push('');
+  L.push(lost.length ? 'MISTAKES (✗ = student’s answer → correct answer)' : 'No mistakes — full marks! 🎉');
+  lost.forEach(t => {
+    L.push('');
+    L.push('Задание ' + t.dataset.n + ' — ' + perTask[t.dataset.n] + ' / ' + t.dataset.points);
+    [...t.querySelectorAll('.ans')].forEach((el, i) => {
+      const d = describe(el);
+      L.push('  ' + (i + 1) + ') ' + (d.ok ? '✓ ' + d.given : '✗ ' + d.given + '  →  ' + d.key));
+    });
+    L.push('  Revise: ' + t.dataset.revise);
+  });
+  L.push('');
+  L.push('All answers in brief:');
+  TASKS.forEach(t => {
+    const parts = [...t.querySelectorAll('.ans')].map(describe);
+    L.push('  ' + t.dataset.n + '. ' + parts.map(d => (d.ok ? '' : '✗') + d.given).join(' | '));
+  });
+  return L.join('\n');
+}
+function showReportBox(msg) {
+  const ta = document.getElementById('reportText');
+  ta.value = buildReport(); ta.classList.add('show');
+  document.getElementById('sendMsg').textContent = msg || '';
+  return ta;
+}
+async function copyReport() {
+  const ta = showReportBox();
+  try {
+    await navigator.clipboard.writeText(ta.value);
+    document.getElementById('sendMsg').textContent = '✓ Copied! Now paste it into your chat with your teacher.';
+  } catch (e) {
+    ta.focus(); ta.select();
+    document.getElementById('sendMsg').textContent = 'Select all the text below, copy it and send it to your teacher.';
+  }
+}
+async function shareReport() {
+  const text = buildReport();
+  if (navigator.share) {
+    try { await navigator.share({ title: 'My final mock paper results', text }); showReportBox('✓ Sent!'); return; }
+    catch (e) { if (e.name === 'AbortError') return; }
+  }
+  copyReport();   // computers without a share menu: copy instead
+}
+
+function restartPaper() {
+  if (!confirm('This clears every answer, your score, the clock and the “played” recordings. Start the whole paper again?')) return;
+  try { localStorage.removeItem(LESSON_KEY); localStorage.removeItem(TIMER_KEY); } catch(e) {}
+  location.reload();
+}
+
+// ── 60-MINUTE TIMER ────────────────────────────────────────────
+// Kept in its own key, so a reload or a closed tab doesn't give extra time:
+// while it runs we store when the 60 minutes end; when paused, how much is left.
+let timer = { left: PAPER_SEC, endAt: null };
+try { timer = Object.assign(timer, JSON.parse(localStorage.getItem(TIMER_KEY)) || {}); } catch(e) {}
+let tId = null;
+const timerLeft = () => timer.endAt ? Math.round((timer.endAt - Date.now()) / 1000) : timer.left;
+const timerUsed = () => timer.started ? Math.max(0, PAPER_SEC - timerLeft()) : null;
+function saveTimerState() { try { localStorage.setItem(TIMER_KEY, JSON.stringify(timer)); } catch(e) {} }
+function fmt(s) {
+  const neg = s < 0; s = Math.abs(s);
+  return (neg ? '-' : '') + String(Math.floor(s / 60)).padStart(2, '0') + ':' + String(s % 60).padStart(2, '0');
+}
+function paintTimer() {
+  const el = document.getElementById('clock'), left = timerLeft();
+  el.textContent = fmt(left);
+  el.classList.toggle('over', left <= 0);
+  el.classList.toggle('late', left > 0 && left <= 5 * 60);
+  document.getElementById('tbtn').textContent = timer.endAt ? 'Pause' : (timer.started ? 'Continue' : 'Start');
+}
+function tick() { if (!tId) tId = setInterval(paintTimer, 1000); }
+function stopTimer() {
+  if (timer.endAt) { timer.left = timerLeft(); timer.endAt = null; }
+  if (tId) { clearInterval(tId); tId = null; }
+  saveTimerState(); paintTimer();
+}
+function toggleTimer() {
+  if (locked()) return;
+  if (timer.endAt) stopTimer();
+  else { timer.endAt = Date.now() + timer.left * 1000; timer.started = true; saveTimerState(); tick(); paintTimer(); }
+}
+function resetTimer() {
+  if (locked()) return;
+  if (timer.started && !confirm('Put the clock back to 60:00?')) return;
+  if (tId) { clearInterval(tId); tId = null; }
+  timer = { left: PAPER_SEC, endAt: null };
+  saveTimerState(); paintTimer();
+}
+
+// ── INIT ───────────────────────────────────────────────────────
+if (data.activeTab) showTab(data.activeTab);
+updateProgress();
+if (locked()) { timer.endAt = null; lockAll(); showResult(markEverything()); }
+else if (timer.endAt) tick();
+paintTimer();
+</script>
+
+<script src="../dictionary.js"></script>
+</body>
+</html>
