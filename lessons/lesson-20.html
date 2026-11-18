@@ -390,7 +390,7 @@
 
     /* the explanation under every task: hidden until the paper is handed in */
     .why { display: none; }
-    body.revealed .why {
+    body.revealed .why, .p9.checked .why {
       display: block; margin-top: 20px; padding: 14px 18px 12px;
       background: rgba(91,140,69,.07); border: 1px solid rgba(91,140,69,.35);
       border-left: 5px solid var(--green); border-radius: var(--radius); line-height: 1.7;
@@ -419,6 +419,27 @@
     .word-bank span { transition: opacity .15s, color .15s; }
     .word-bank span.used { text-decoration: line-through; text-decoration-thickness: 2px; color: var(--muted); opacity: .55; background: transparent; }
     select option.used { color: #b3a68f; }
+
+    /* ── Задание 9 practice tab (outside the paper) ───────────── */
+    .tab-btn.p9-tab { border-style: dashed; }
+    .p9-intro { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 18px; margin-bottom: 22px; line-height: 1.7; }
+    .p9-intro p { margin: 0 0 8px; }
+    .p9-total { font-size: .95rem; }
+    .p9-total b { color: var(--primary); font-variant-numeric: tabular-nums; }
+    .p9-total span { color: var(--muted); font-size: .88rem; }
+    .p9-nav { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
+    .p9-nav a { min-width: 34px; text-align: center; padding: 4px 8px; border-radius: 9px; border: 2px solid var(--border); background: var(--bg); color: var(--text); font-weight: 700; text-decoration: none; font-size: .9rem; }
+    .p9-nav a:hover { border-color: var(--primary); color: var(--primary); }
+    .p9-nav a.full { border-color: var(--green); color: var(--green); }
+    .p9-nav a.part { border-color: var(--accent-dk); color: var(--accent-dk); }
+    .p9-kind { font-family: 'Fraunces', Georgia, serif; color: var(--primary); margin-left: 6px; }
+    .p9 { scroll-margin-top: 90px; }
+    .p9 .fmt { color: var(--muted); font-size: .9em; }
+    .p9 .blank.correct { border-color: var(--green); color: var(--green); }
+    .p9 .blank.wrong { border-color: var(--red); color: var(--red); }
+    .p9 .key { display: none; }
+    .p9.checked .key:not(:empty) { display: inline-block; margin-top: 2px; align-self: flex-start; }
+    .p9-score { font-weight: 700; color: var(--primary); align-self: center; font-variant-numeric: tabular-nums; }
   </style>
 <script src="../sync.js"></script>
 </head>
@@ -488,6 +509,7 @@
 
     <h4>5 · The last days</h4>
     <p>Only what the revision map shows, plus the daily minimum from the plan: decks V14 and V15, one sentence-ordering text and one one-listen set every other day, the timeline the day before the round. No new material.</p>
+    <p>For Задание 9 there is a separate tab, <b>🎭 Задание 9 · practice</b>: ten more texts (Dickens, the Wars of the Roses, Wren, Austen, Chaplin, Handel, Waterloo, the Brontës, Tolkien, Wilde), each with its own Check button. It is outside the paper: no clock, no lock, not in the 100, and “Clear everything” on the result page leaves those answers alone. Every answer is on a V14 / V15 card; the notes at the top of that tab say which.</p>
   </details>
 
   <div class="exam-banner">
@@ -519,6 +541,7 @@
     <button class="tab-btn"        onclick="switchTab('listen', this)">🎧 Аудирование</button>
     <button class="tab-btn"        onclick="switchTab('cult', this)">🌍 Страноведение</button>
     <button class="tab-btn"        onclick="switchTab('score',this)">🔒 Результат</button>
+    <button class="tab-btn p9-tab" onclick="switchTab('p9', this)">🎭 Задание 9 · practice</button>
   </div>
 
   <!-- ══════════════════════════════════════════════════════════
@@ -1255,6 +1278,412 @@
 
   </div><!-- /tab-score -->
 
+  <!-- ══════════════════════════════════════════════════════════
+       ЗАДАНИЕ 9 · PRACTICE — ten texts, outside the mock paper (not timed, not in the score)
+  ══════════════════════════════════════════════════════════ -->
+  <div class="tab-content" id="tab-p9">
+
+    <div class="section-head">
+      <h2>Задание 9 · Practice</h2>
+      <div class="sh-meta">10 texts &nbsp;·&nbsp; 10 баллов each &nbsp;·&nbsp; not part of the mock paper</div>
+    </div>
+
+    <details class="teacher-only notes">
+      <summary class="to-label" style="cursor:pointer">👩‍🏫 Teacher only · About the ten practice texts (tap to open / close)</summary>
+      <p>Ten Задание 9 texts in the exam format: a description that never gives the name, five typed answers, 2 points each. They are separate from the mock paper: no clock, no lock, their own Check button, and they do not count towards the 100. Use them after the paper, or as the last homework before the round.</p>
+      <p><b>What is tested.</b> Only what was taught on a card. Eight people from deck V14 and two events from deck V15: Dickens, Austen, the Brontës (Lesson 17); Wren, Handel (Lesson 16); Tolkien, Chaplin (Lesson 18); Wilde (Lesson 17); the Wars of the Roses, Waterloo (Lesson 19). Every one of the fifty answers is a name on that card’s front, its “Know” line or its 🔎 / lateral lines, and none of them is written in its text. The descriptions use the card’s own clues; where a text adds colour (Wren’s fire starting in a baker’s shop, Chaplin’s first full-length film), it is never asked. None of the ten had a full text before: Shakespeare, Burns, Defoe, Conan Doyle, Carroll, Orwell, the Beatles, the Thames and Christie are left out because she has already done them.</p>
+      <p><b>Two lateral answers to watch:</b> Tolkien’s birthplace, Bloemfontein (only on the card, Lesson 18), and Anne Brontë’s pen name, Acton Bell (the “same first letters” trick). The spelling traps: <i>Earnest</i> (not Ernest), <i>Blücher</i> (Blucher is accepted), <i>Sheldonian</i>, <i>Wuthering</i>.</p>
+      <p><b>Marking.</b> Capitals, articles and end punctuation don’t matter; surnames alone are accepted where the exam would accept them (Scrooge, Handel, Tolkien, Darcy). After Check, a green box under the text gives the clue behind each answer and the card to go back to.</p>
+    </details>
+
+    <div class="p9-intro">
+      <p><b>How to do each text:</b> read it once and underline the clues (dates, places, jobs, works described without their titles). Decide <b>who or what it is</b> before you look at the questions. Then answer: the answers are <b>not in the text</b>, they are on the cards you learned. Spelling counts.</p>
+      <p class="p9-total">Your score so far: <b id="p9Total">0 / 0</b> <span id="p9Count">(0 of 10 texts checked)</span></p>
+      <div class="p9-nav"><a href="#p9-1">1</a><a href="#p9-2">2</a><a href="#p9-3">3</a><a href="#p9-4">4</a><a href="#p9-5">5</a><a href="#p9-6">6</a><a href="#p9-7">7</a><a href="#p9-8">8</a><a href="#p9-9">9</a><a href="#p9-10">10</a></div>
+    </div>
+
+    <!-- Practice 1 · dickens -->
+    <div class="exercise p9" id="p9-1" data-p9="1">
+      <span class="task-num">Задание 9 · practice 1 · 10 баллов</span>
+      <div class="teacher-only tk"><div class="to-label">🔑 Teacher only · Key, practice 1</div><ol><li><b>Charles Dickens</b></li><li><b>Boz</b></li><li><b>Oliver Twist</b></li><li><b>Fagin</b></li><li><b>Ebenezer Scrooge</b></li></ol><p class="tk-note">From: Lesson 17 card (Culture tab) · deck V14</p></div>
+      <p class="orig-instr">Прочитайте текст и выполните задание к нему. <span class="p9-kind">Who is it?</span></p>
+      <div class="passage-box" style="line-height:1.75; margin-bottom:18px;">
+        <p>He was born in 1812 in Portsmouth, but his family soon moved to London, the city that fills almost every one of his books. When he was twelve, his father was sent to prison for debt, and the boy had to leave school and work in a factory, pasting labels on pots of shoe polish. He never forgot the shame of it.</p>
+        <p>He started as a journalist, and he signed his first sketches of London life not with his own name but with a short nickname. His first great success was a comic book about a club of gentlemen and their travels. Like all his later novels, it came out in monthly parts, and readers waited impatiently for each one.</p>
+        <p>In one of his early novels, a hungry orphan from the workhouse dares to ask for more food and later falls in among a gang of boy pickpockets, led by a cunning old man. A few years later he wrote a short Christmas story about a cold, mean old businessman who hates Christmas and answers every kind word with “Bah! Humbug!”, until three ghosts visit him in one night.</p>
+        <p>He became the most popular novelist of Victorian England, and when he died in 1870 he was buried in Westminster Abbey.</p>
+      </div>
+      <div class="q-list">
+        <div class="answer-row"><span class="ar-txt"><b>1.</b> What is the name of the person described in the text? <span class="fmt">Формат написания ответа First Name Last Name</span></span>
+          <input class="blank p9in" id="p9-1-1" data-w="2" data-answer="Charles Dickens" data-re="^charles( john huffam)? dickens$" autocomplete="off" spellcheck="false"></div>
+        <div class="answer-row"><span class="ar-txt"><b>2.</b> What nickname did he use to sign his first sketches (paragraph 2)?</span>
+          <input class="blank p9in" id="p9-1-2" data-w="2" data-answer="Boz" data-re="^(“|&quot;)?boz$" autocomplete="off" spellcheck="false"></div>
+        <div class="answer-row"><span class="ar-txt"><b>3.</b> What is the title of the novel about the orphan (paragraph 3)?</span>
+          <input class="blank p9in" id="p9-1-3" data-w="2" data-answer="Oliver Twist" data-re="^oliver twist$" autocomplete="off" spellcheck="false"></div>
+        <div class="answer-row"><span class="ar-txt"><b>4.</b> What is the name of the old man who leads the gang of pickpockets?</span>
+          <input class="blank p9in" id="p9-1-4" data-w="2" data-answer="Fagin" data-re="^fagin$" autocomplete="off" spellcheck="false"></div>
+        <div class="answer-row"><span class="ar-txt"><b>5.</b> What is the name of the old businessman in the Christmas story? <span class="fmt">Формат написания ответа First Name Last Name</span></span>
+          <input class="blank p9in" id="p9-1-5" data-w="2" data-answer="Ebenezer Scrooge" data-re="^(ebenezer )?scrooge$" autocomplete="off" spellcheck="false"></div>
+      </div>
+      <div class="why">
+        <div class="why-h">🔎 Why · the clues that give it away</div>
+        <div class="why-fig">
+          <img src="images/culture/figures/dickens.jpg" alt="Charles Dickens">
+          <ul><li><b>1 Charles Dickens:</b> Portsmouth · the shoe-polish factory at twelve · a father in a debtors’ prison · novels in monthly parts.</li><li><b>2 Boz:</b> his early pen name (the lateral question on his card).</li><li><b>3 Oliver Twist:</b> the orphan who asks for more.</li><li><b>4 Fagin:</b> the old leader of the boy pickpockets.</li><li><b>5 Ebenezer Scrooge:</b> <i>A Christmas Carol</i>: “Bah! Humbug!” and three ghosts. <i>The Pickwick Papers</i> is the comic club book in paragraph 2.</li></ul>
+        </div>
+        <p class="why-rev">🔁 Go back to: Lesson 17 card (Culture tab) · deck V14</p>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="p9Check(1)">Check</button>
+        <button class="btn btn-ghost" onclick="p9Reset(1)">Try again</button>
+        <span class="p9-score" id="p9s-1"></span>
+      </div>
+    </div>
+
+    <!-- Practice 2 · roses -->
+    <div class="exercise p9" id="p9-2" data-p9="2">
+      <span class="task-num">Задание 9 · practice 2 · 10 баллов</span>
+      <div class="teacher-only tk"><div class="to-label">🔑 Teacher only · Key, practice 2</div><ol><li><b>the Wars of the Roses</b></li><li><b>Lancaster</b></li><li><b>Richard III</b></li><li><b>Bosworth</b></li><li><b>the Tudor rose</b></li></ol><p class="tk-note">From: Lesson 19 card (History tab) · deck V15 · era 2 (Lesson 13)</p></div>
+      <p class="orig-instr">Прочитайте текст и выполните задание к нему. <span class="p9-kind">What is it?</span></p>
+      <div class="passage-box" style="line-height:1.75; margin-bottom:18px;">
+        <p>For thirty years, from 1455 to 1485, England was torn apart by a civil war between two branches of its own royal family. Each side had a flower as its badge: one family wore a red one, the other a white one. The trouble began under a weak king who more than once lost his mind and could not rule.</p>
+        <p>In 1483 the king of the white-rose family died, and his brother took the crown for himself. His two young nephews, the dead king’s sons, were taken to the Tower of London and were never seen again. Nobody knows for certain what happened to them.</p>
+        <p>Two years later a Welsh-born nobleman who had lived in exile came back from France with an army. On 22 August 1485, in a battle near Leicester, the king was defeated and killed: he was the last English king to die in battle. In 2012 his body was found under a car park in Leicester.</p>
+        <p>The winner became king and married a princess from the other family. He joined the red flower and the white one into a single new badge, and his family ruled England for the next 118 years. The name we use for these wars was given to them much later, partly because of a scene in Shakespeare in which noblemen pick red and white flowers in a garden.</p>
+      </div>
+      <div class="q-list">
+        <div class="answer-row"><span class="ar-txt"><b>1.</b> What is the name of the wars described in the text?</span>
+          <input class="blank p9in" id="p9-2-1" data-w="2" data-answer="the Wars of the Roses" data-re="^(the )?wars? of the roses$" autocomplete="off" spellcheck="false"></div>
+        <div class="answer-row"><span class="ar-txt"><b>2.</b> Which family had the red flower as its badge? (one word)</span>
+          <input class="blank p9in" id="p9-2-2" data-w="2" data-answer="Lancaster" data-re="^(the )?(house of )?lancast(er|rians?)$" autocomplete="off" spellcheck="false"></div>
+        <div class="answer-row"><span class="ar-txt"><b>3.</b> What was the name of the king killed in 1485? (name + number)</span>
+          <input class="blank p9in" id="p9-2-3" data-w="2" data-answer="Richard III" data-re="^(king )?richard (iii|the third|3)$" autocomplete="off" spellcheck="false"></div>
+        <div class="answer-row"><span class="ar-txt"><b>4.</b> What is the name of the battle of 1485?</span>
+          <input class="blank p9in" id="p9-2-4" data-w="2" data-answer="Bosworth" data-re="^(the )?(battle of )?bosworth( field)?$" autocomplete="off" spellcheck="false"></div>
+        <div class="answer-row"><span class="ar-txt"><b>5.</b> What is the name of the new badge described in the last paragraph?</span>
+          <input class="blank p9in" id="p9-2-5" data-w="2" data-answer="the Tudor rose" data-re="^(the )?tudor rose$" autocomplete="off" spellcheck="false"></div>
+      </div>
+      <div class="why">
+        <div class="why-h">🔎 Why · the clues that give it away</div>
+        <div class="why-fig">
+          <img src="images/culture/places/tudorrose.png" alt="The Tudor rose">
+          <ul><li><b>1 the Wars of the Roses:</b> two branches of the royal family · a red flower and a white flower · 1455–1485.</li><li><b>2 Lancaster:</b> Lancaster = red (Henry VI, the weak king); York = white.</li><li><b>3 Richard III:</b> took the crown in 1483; the princes in the Tower; found under a car park in Leicester in 2012.</li><li><b>4 Bosworth:</b> 22 August 1485, near Leicester.</li><li><b>5 the Tudor rose:</b> Henry Tudor became Henry VII, married Elizabeth of York and joined the two roses. 1485 + 118 = 1603, the end of the Tudors.</li></ul>
+        </div>
+        <p class="why-rev">🔁 Go back to: Lesson 19 card (History tab) · deck V15 · era 2 (Lesson 13)</p>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="p9Check(2)">Check</button>
+        <button class="btn btn-ghost" onclick="p9Reset(2)">Try again</button>
+        <span class="p9-score" id="p9s-2"></span>
+      </div>
+    </div>
+
+    <!-- Practice 3 · wren -->
+    <div class="exercise p9" id="p9-3" data-p9="3">
+      <span class="task-num">Задание 9 · practice 3 · 10 баллов</span>
+      <div class="teacher-only tk"><div class="to-label">🔑 Teacher only · Key, practice 3</div><ol><li><b>Christopher Wren</b></li><li><b>the Royal Society</b></li><li><b>the Sheldonian Theatre</b></li><li><b>the Great Fire of London</b></li><li><b>St Paul’s Cathedral</b></li></ol><p class="tk-note">From: Lesson 16 card (Culture tab) · deck V14 · Lesson 20, Задание 1</p></div>
+      <p class="orig-instr">Прочитайте текст и выполните задание к нему. <span class="p9-kind">Who is it?</span></p>
+      <div class="passage-box" style="line-height:1.75; margin-bottom:18px;">
+        <p>He was born in 1632 in a village in Wiltshire, the son of a clergyman, and for the first half of his life he was not an architect at all but a scientist. He became a professor of astronomy at Oxford and was one of the founders of a scientific society that still exists today.</p>
+        <p>His first building was a theatre in Oxford, where the university holds its ceremonies. Then, in September 1666, a fire that started in a baker’s shop burned for four days and destroyed most of the old City of London.</p>
+        <p>He was asked to rebuild the city’s churches, and he designed more than fifty of them. His masterpiece was a new cathedral with a great dome, built between 1675 and 1710. He also designed an observatory in Greenwich and a hospital in Chelsea for old soldiers.</p>
+        <p>He lived to the age of ninety and was buried inside his own cathedral. His grave has no statue, only a Latin inscription that means: “Reader, if you seek his monument, look around you.”</p>
+      </div>
+      <div class="q-list">
+        <div class="answer-row"><span class="ar-txt"><b>1.</b> What is the name of the person described in the text? <span class="fmt">Формат написания ответа First Name Last Name</span></span>
+          <input class="blank p9in" id="p9-3-1" data-w="2" data-answer="Christopher Wren" data-re="^(sir )?christopher wren$" autocomplete="off" spellcheck="false"></div>
+        <div class="answer-row"><span class="ar-txt"><b>2.</b> What is the name of the scientific society mentioned in paragraph 1?</span>
+          <input class="blank p9in" id="p9-3-2" data-w="2" data-answer="the Royal Society" data-re="^(the )?royal society$" autocomplete="off" spellcheck="false"></div>
+        <div class="answer-row"><span class="ar-txt"><b>3.</b> What is the name of his first building, the theatre in Oxford?</span>
+          <input class="blank p9in" id="p9-3-3" data-w="2" data-answer="the Sheldonian Theatre" data-re="^(the )?sheldonian( theat(re|er))?$" autocomplete="off" spellcheck="false"></div>
+        <div class="answer-row"><span class="ar-txt"><b>4.</b> What is the name of the disaster of 1666?</span>
+          <input class="blank p9in" id="p9-3-4" data-w="2" data-answer="the Great Fire of London" data-re="^(the )?great fire( of london)?$" autocomplete="off" spellcheck="false"></div>
+        <div class="answer-row"><span class="ar-txt"><b>5.</b> What is the name of the cathedral described in paragraph 3?</span>
+          <input class="blank p9in" id="p9-3-5" data-w="2" data-answer="St Paul’s Cathedral" data-re="^(the )?(st|saint) paul&#x27;?s( cathedral)?$" autocomplete="off" spellcheck="false"></div>
+      </div>
+      <div class="why">
+        <div class="why-h">🔎 Why · the clues that give it away</div>
+        <div class="why-fig">
+          <img src="images/culture/figures/wren.jpg" alt="Christopher Wren">
+          <ul><li><b>1 Christopher Wren:</b> an astronomer who became an architect · London after the fire of 1666 · a great dome · fifty churches · buried in his own building.</li><li><b>2 the Royal Society:</b> the scientific society he helped to found.</li><li><b>3 the Sheldonian Theatre:</b> his first building, in Oxford.</li><li><b>4 the Great Fire of London:</b> 1666, the city he rebuilt (and the text of Задание 1 in this paper).</li><li><b>5 St Paul’s Cathedral:</b> 1675–1710. The observatory is the Royal Observatory; the hospital is the Royal Hospital, Chelsea.</li></ul>
+        </div>
+        <p class="why-rev">🔁 Go back to: Lesson 16 card (Culture tab) · deck V14 · Lesson 20, Задание 1</p>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="p9Check(3)">Check</button>
+        <button class="btn btn-ghost" onclick="p9Reset(3)">Try again</button>
+        <span class="p9-score" id="p9s-3"></span>
+      </div>
+    </div>
+
+    <!-- Practice 4 · austen -->
+    <div class="exercise p9" id="p9-4" data-p9="4">
+      <span class="task-num">Задание 9 · practice 4 · 10 баллов</span>
+      <div class="teacher-only tk"><div class="to-label">🔑 Teacher only · Key, practice 4</div><ol><li><b>Jane Austen</b></li><li><b>By a Lady</b></li><li><b>Pride and Prejudice</b></li><li><b>Elizabeth Bennet and Mr Darcy</b></li><li><b>Winchester Cathedral</b></li></ol><p class="tk-note">From: Lesson 17 card (Culture tab) · deck V14</p></div>
+      <p class="orig-instr">Прочитайте текст и выполните задание к нему. <span class="p9-kind">Who is it?</span></p>
+      <div class="passage-box" style="line-height:1.75; margin-bottom:18px;">
+        <p>She was born in 1775 in a small village in Hampshire, where her father was the clergyman. She lived there for twenty-five years, then for a few years in a fashionable spa town in the west of England, and finally in another Hampshire village, where she wrote her last novels at a small table in the sitting room.</p>
+        <p>She never married. She wrote six novels about young women, money and marriage among the country gentry, full of gentle irony. Her name never appeared on any of them while she was alive: the title page of the first one said only that it had been written by a woman, without saying which one.</p>
+        <p>Her most famous novel came out in 1813. A family has five daughters and not much money, so the girls must marry well. The clever second daughter takes a strong dislike to a rich, proud gentleman, and he at first looks down on her family. Its first line, “It is a truth universally acknowledged…”, is one of the best known in English.</p>
+        <p>She died in 1817, aged only forty-one, and was buried in a cathedral not far from her last home. Since 2017 her portrait has been on one of the Bank of England’s notes.</p>
+      </div>
+      <div class="q-list">
+        <div class="answer-row"><span class="ar-txt"><b>1.</b> What is the name of the person described in the text? <span class="fmt">Формат написания ответа First Name Last Name</span></span>
+          <input class="blank p9in" id="p9-4-1" data-w="2" data-answer="Jane Austen" data-re="^jane austen$" autocomplete="off" spellcheck="false"></div>
+        <div class="answer-row"><span class="ar-txt"><b>2.</b> What words appeared instead of her name on the title page of her first novel?</span>
+          <input class="blank p9in" id="p9-4-2" data-w="2" data-answer="By a Lady" data-re="^(“|&quot;)?(by )?a lady(”|&quot;)?$" autocomplete="off" spellcheck="false"></div>
+        <div class="answer-row"><span class="ar-txt"><b>3.</b> What is the title of the novel of 1813?</span>
+          <input class="blank p9in" id="p9-4-3" data-w="2" data-answer="Pride and Prejudice" data-re="^pride (and|&amp;) prejudice$" autocomplete="off" spellcheck="false"></div>
+        <div class="answer-row"><span class="ar-txt"><b>4.</b> What are the names of the second daughter and the proud gentleman? (write the names with an “and”)</span>
+          <input class="blank p9in" id="p9-4-4" data-w="2" data-answer="Elizabeth Bennet and Mr Darcy" data-re="^(?=.*\b(elizabeth|lizzy|bennet)\b)(?=.*\bdarcy\b).*$" autocomplete="off" spellcheck="false"></div>
+        <div class="answer-row"><span class="ar-txt"><b>5.</b> In which cathedral is she buried?</span>
+          <input class="blank p9in" id="p9-4-5" data-w="2" data-answer="Winchester Cathedral" data-re="^(in )?winchester( cathedral)?$" autocomplete="off" spellcheck="false"></div>
+      </div>
+      <div class="why">
+        <div class="why-h">🔎 Why · the clues that give it away</div>
+        <div class="why-fig">
+          <img src="images/culture/figures/austen.jpg" alt="Jane Austen">
+          <ul><li><b>1 Jane Austen:</b> a clergyman’s daughter from Hampshire (Steventon) · Bath, the spa town · Chawton · six novels about money and marriage.</li><li><b>2 By a Lady:</b> her first novel, <i>Sense and Sensibility</i>, was signed “By a Lady”.</li><li><b>3 Pride and Prejudice:</b> five sisters who must marry; the famous first line.</li><li><b>4 Elizabeth Bennet and Mr Darcy:</b> the clever heroine and the proud hero; either order, surnames are enough.</li><li><b>5 Winchester Cathedral:</b> where she is buried. The note is the £10.</li></ul>
+        </div>
+        <p class="why-rev">🔁 Go back to: Lesson 17 card (Culture tab) · deck V14</p>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="p9Check(4)">Check</button>
+        <button class="btn btn-ghost" onclick="p9Reset(4)">Try again</button>
+        <span class="p9-score" id="p9s-4"></span>
+      </div>
+    </div>
+
+    <!-- Practice 5 · chaplin -->
+    <div class="exercise p9" id="p9-5" data-p9="5">
+      <span class="task-num">Задание 9 · practice 5 · 10 баллов</span>
+      <div class="teacher-only tk"><div class="to-label">🔑 Teacher only · Key, practice 5</div><ol><li><b>Charlie Chaplin</b></li><li><b>the Tramp</b></li><li><b>The Gold Rush</b></li><li><b>The Great Dictator</b></li><li><b>Switzerland</b></li></ol><p class="tk-note">From: Lesson 18 card (Culture tab) · deck V14</p></div>
+      <p class="orig-instr">Прочитайте текст и выполните задание к нему. <span class="p9-kind">Who is it?</span></p>
+      <div class="passage-box" style="line-height:1.75; margin-bottom:18px;">
+        <p>He was born in London in 1889. His childhood was very poor: his mother was ill, and at the age of seven he was sent to the workhouse. As a young man he went to America with a group of comedians and stayed there, and within a few years his was the most famous face in the cinema, although his films had no sound at all.</p>
+        <p>The character he played in almost all of them is a poor little man with a bowler hat, a cane, baggy trousers, huge shoes and a small moustache, who makes the world laugh and cry at the same time.</p>
+        <p>In his first full-length film, in 1921, this little man finds an abandoned baby and brings him up. In a film of 1925 he is a gold seeker so hungry that he cooks his own boot and eats it like a fine dinner. In 1936 he played a factory worker who is swallowed by an enormous machine and caught in its gears, and in 1940 he made fun of Hitler.</p>
+        <p>In 1952, while he was on a trip to Europe, he was told that he would not be allowed back into the United States. He settled in a small European country and spent the rest of his life there. He was knighted in 1975 and died on Christmas Day 1977.</p>
+      </div>
+      <div class="q-list">
+        <div class="answer-row"><span class="ar-txt"><b>1.</b> What is the name of the person described in the text? <span class="fmt">Формат написания ответа First Name Last Name</span></span>
+          <input class="blank p9in" id="p9-5-1" data-w="2" data-answer="Charlie Chaplin" data-re="^(sir )?(charlie|charles)( spencer)? chaplin$" autocomplete="off" spellcheck="false"></div>
+        <div class="answer-row"><span class="ar-txt"><b>2.</b> What is the name of the character described in paragraph 2?</span>
+          <input class="blank p9in" id="p9-5-2" data-w="2" data-answer="the Tramp" data-re="^(the )?(little )?tramp$" autocomplete="off" spellcheck="false"></div>
+        <div class="answer-row"><span class="ar-txt"><b>3.</b> What is the title of the film of 1925?</span>
+          <input class="blank p9in" id="p9-5-3" data-w="2" data-answer="The Gold Rush" data-re="^(the )?gold rush$" autocomplete="off" spellcheck="false"></div>
+        <div class="answer-row"><span class="ar-txt"><b>4.</b> What is the title of the film of 1940?</span>
+          <input class="blank p9in" id="p9-5-4" data-w="2" data-answer="The Great Dictator" data-re="^(the )?great dictator$" autocomplete="off" spellcheck="false"></div>
+        <div class="answer-row"><span class="ar-txt"><b>5.</b> In which country did he spend the rest of his life?</span>
+          <input class="blank p9in" id="p9-5-5" data-w="2" data-answer="Switzerland" data-re="^(in )?switzerland$" autocomplete="off" spellcheck="false"></div>
+      </div>
+      <div class="why">
+        <div class="why-h">🔎 Why · the clues that give it away</div>
+        <div class="why-fig">
+          <img src="images/culture/figures/chaplin.jpg" alt="Charlie Chaplin">
+          <ul><li><b>1 Charlie Chaplin:</b> a London boy in the workhouse · silent films · not allowed back into America · Christmas Day 1977.</li><li><b>2 the Tramp:</b> bowler hat, cane, baggy trousers.</li><li><b>3 The Gold Rush:</b> he cooks and eats his own boot. The 1921 film is <i>The Kid</i>, the 1936 one <i>Modern Times</i>.</li><li><b>4 The Great Dictator:</b> his mockery of Hitler.</li><li><b>5 Switzerland:</b> where he lived from 1952.</li></ul>
+        </div>
+        <p class="why-rev">🔁 Go back to: Lesson 18 card (Culture tab) · deck V14</p>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="p9Check(5)">Check</button>
+        <button class="btn btn-ghost" onclick="p9Reset(5)">Try again</button>
+        <span class="p9-score" id="p9s-5"></span>
+      </div>
+    </div>
+
+    <!-- Practice 6 · handel -->
+    <div class="exercise p9" id="p9-6" data-p9="6">
+      <span class="task-num">Задание 9 · practice 6 · 10 баллов</span>
+      <div class="teacher-only tk"><div class="to-label">🔑 Teacher only · Key, practice 6</div><ol><li><b>George Frideric Handel</b></li><li><b>George I</b></li><li><b>the Thames</b></li><li><b>Messiah</b></li><li><b>Dublin</b></li></ol><p class="tk-note">From: Lesson 16 card (Culture tab) · deck V14 · the Thames card (Lesson 19)</p></div>
+      <p class="orig-instr">Прочитайте текст и выполните задание к нему. <span class="p9-kind">Who is it?</span></p>
+      <div class="passage-box" style="line-height:1.75; margin-bottom:18px;">
+        <p>He was born in 1685 in Halle, in Germany, and as a young man he studied music in Italy, where he learned to write Italian operas. Then he became music director at the court of a German prince, the Elector of Hanover.</p>
+        <p>He soon moved to London, and in 1714 something happened that made his life much easier: his old employer, the Elector, became King of Great Britain. One summer evening in 1717 the new king sailed up the river through London on a royal barge, and on a boat beside it musicians played a suite that the composer had written specially for the trip. The king liked it so much that he asked for it to be played three times.</p>
+        <p>He became a British citizen and stayed in London for the rest of his life. His most famous oratorio, about the life of Christ, was first performed in 1742, not in London but in the capital of Ireland. It is still sung all over the world every Christmas, and audiences traditionally stand up for one of its choruses.</p>
+        <p>In 1749 he wrote music for a royal fireworks display in a London park. When he died ten years later, he was buried in Westminster Abbey.</p>
+      </div>
+      <div class="q-list">
+        <div class="answer-row"><span class="ar-txt"><b>1.</b> What is the name of the person described in the text? <span class="fmt">Формат написания ответа First Name Last Name</span></span>
+          <input class="blank p9in" id="p9-6-1" data-w="2" data-answer="George Frideric Handel" data-re="^(george )?(frideric |frederick |friedrich )?handel$" autocomplete="off" spellcheck="false"></div>
+        <div class="answer-row"><span class="ar-txt"><b>2.</b> Under what name did the Elector of Hanover become King of Great Britain? (name + number)</span>
+          <input class="blank p9in" id="p9-6-2" data-w="2" data-answer="George I" data-re="^(king )?george (i|the first|1)$" autocomplete="off" spellcheck="false"></div>
+        <div class="answer-row"><span class="ar-txt"><b>3.</b> What is the name of the river in paragraph 2?</span>
+          <input class="blank p9in" id="p9-6-3" data-w="2" data-answer="the Thames" data-re="^(the )?(river )?thames( river)?$" autocomplete="off" spellcheck="false"></div>
+        <div class="answer-row"><span class="ar-txt"><b>4.</b> What is the title of the oratorio of 1742?</span>
+          <input class="blank p9in" id="p9-6-4" data-w="2" data-answer="Messiah" data-re="^(the )?messiah$" autocomplete="off" spellcheck="false"></div>
+        <div class="answer-row"><span class="ar-txt"><b>5.</b> In which city was it first performed?</span>
+          <input class="blank p9in" id="p9-6-5" data-w="2" data-answer="Dublin" data-re="^(in )?dublin$" autocomplete="off" spellcheck="false"></div>
+      </div>
+      <div class="why">
+        <div class="why-h">🔎 Why · the clues that give it away</div>
+        <div class="why-fig">
+          <img src="images/culture/figures/handel.jpg" alt="George Frideric Handel">
+          <ul><li><b>1 George Frideric Handel:</b> born in Germany, settled in London · his employer became King of Britain · music on a boat on the Thames.</li><li><b>2 George I:</b> the Elector of Hanover, King from 1714 (era 5: the house of Hanover).</li><li><b>3 the Thames:</b> <i>Water Music</i>, 1717, on the Thames card too.</li><li><b>4 Messiah:</b> the audience stands for the <i>Hallelujah</i> chorus.</li><li><b>5 Dublin:</b> first performed there in 1742. The 1749 music is <i>Music for the Royal Fireworks</i>.</li></ul>
+        </div>
+        <p class="why-rev">🔁 Go back to: Lesson 16 card (Culture tab) · deck V14 · the Thames card (Lesson 19)</p>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="p9Check(6)">Check</button>
+        <button class="btn btn-ghost" onclick="p9Reset(6)">Try again</button>
+        <span class="p9-score" id="p9s-6"></span>
+      </div>
+    </div>
+
+    <!-- Practice 7 · waterloo -->
+    <div class="exercise p9" id="p9-7" data-p9="7">
+      <span class="task-num">Задание 9 · practice 7 · 10 баллов</span>
+      <div class="teacher-only tk"><div class="to-label">🔑 Teacher only · Key, practice 7</div><ol><li><b>the Battle of Waterloo</b></li><li><b>the Duke of Wellington</b></li><li><b>Elba</b></li><li><b>Blücher</b></li><li><b>St Helena</b></li></ol><p class="tk-note">From: Lesson 19 card (History tab) · deck V15 · era 6 (Lessons 17–18)</p></div>
+      <p class="orig-instr">Прочитайте текст и выполните задание к нему. <span class="p9-kind">What is it?</span></p>
+      <div class="passage-box" style="line-height:1.75; margin-bottom:18px;">
+        <p>It was fought on 18 June 1815, near a small village a few miles south of Brussels, in what is today Belgium. It was the last battle of a famous emperor.</p>
+        <p>A year earlier he had been forced to give up his throne and sent into exile on a small island. But in 1815 he escaped, landed in France with a small group of soldiers and ruled the country again for about a hundred days.</p>
+        <p>On the day of the battle, the British army and its allies, commanded by a duke whose name is today worn on everyone’s feet on rainy days, held their position all day under heavy attacks. In the evening a second allied army, the Prussians, arrived under its old general, and the emperor’s army broke and ran.</p>
+        <p>This time he was sent to a lonely island in the South Atlantic, where he died in 1821. In London a railway station and a bridge are named after the battle, and in English, people who suffer a final, complete defeat are said to “meet” it. In 1974 a Swedish pop group won the Eurovision Song Contest with a song of the same name.</p>
+      </div>
+      <div class="q-list">
+        <div class="answer-row"><span class="ar-txt"><b>1.</b> What is the name of the battle described in the text?</span>
+          <input class="blank p9in" id="p9-7-1" data-w="2" data-answer="the Battle of Waterloo" data-re="^(the )?(battle of )?waterloo$" autocomplete="off" spellcheck="false"></div>
+        <div class="answer-row"><span class="ar-txt"><b>2.</b> What was the title of the British commander? <span class="fmt">Формат написания ответа the Duke of …</span></span>
+          <input class="blank p9in" id="p9-7-2" data-w="2" data-answer="the Duke of Wellington" data-re="^(the )?(duke of )?wellington$" autocomplete="off" spellcheck="false"></div>
+        <div class="answer-row"><span class="ar-txt"><b>3.</b> What is the name of the island that the emperor escaped from (paragraph 2)?</span>
+          <input class="blank p9in" id="p9-7-3" data-w="2" data-answer="Elba" data-re="^(the island of )?elba$" autocomplete="off" spellcheck="false"></div>
+        <div class="answer-row"><span class="ar-txt"><b>4.</b> What is the name of the Prussian general?</span>
+          <input class="blank p9in" id="p9-7-4" data-w="2" data-answer="Blücher" data-re="^(general |marshal |field marshal )?bl(u|ü|ue)cher$" autocomplete="off" spellcheck="false"></div>
+        <div class="answer-row"><span class="ar-txt"><b>5.</b> What is the name of the island in the South Atlantic?</span>
+          <input class="blank p9in" id="p9-7-5" data-w="2" data-answer="St Helena" data-re="^(the island of )?(st|saint) helena$" autocomplete="off" spellcheck="false"></div>
+      </div>
+      <div class="why">
+        <div class="why-h">🔎 Why · the clues that give it away</div>
+        <div class="why-fig">
+          <img src="images/culture/places/waterloo.jpg" alt="The Battle of Waterloo">
+          <ul><li><b>1 the Battle of Waterloo:</b> a village south of Brussels · an emperor back from exile · a hundred days · Waterloo station, “to meet your Waterloo”, ABBA.</li><li><b>2 the Duke of Wellington:</b> wellington boots are named after him.</li><li><b>3 Elba:</b> the island of his first exile; “the Hundred Days” followed.</li><li><b>4 Blücher:</b> the Prussian general who arrived in the evening.</li><li><b>5 St Helena:</b> his last exile; he died there in 1821. 🇷🇺 1812 Moscow → 1814 Paris → 1815 Waterloo.</li></ul>
+        </div>
+        <p class="why-rev">🔁 Go back to: Lesson 19 card (History tab) · deck V15 · era 6 (Lessons 17–18)</p>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="p9Check(7)">Check</button>
+        <button class="btn btn-ghost" onclick="p9Reset(7)">Try again</button>
+        <span class="p9-score" id="p9s-7"></span>
+      </div>
+    </div>
+
+    <!-- Practice 8 · brontes -->
+    <div class="exercise p9" id="p9-8" data-p9="8">
+      <span class="task-num">Задание 9 · practice 8 · 10 баллов</span>
+      <div class="teacher-only tk"><div class="to-label">🔑 Teacher only · Key, practice 8</div><ol><li><b>the Brontë sisters</b></li><li><b>Haworth</b></li><li><b>Jane Eyre</b></li><li><b>Wuthering Heights</b></li><li><b>Acton Bell</b></li></ol><p class="tk-note">From: Lesson 17 card (Culture tab) · deck V14</p></div>
+      <p class="orig-instr">Прочитайте текст и выполните задание к нему. <span class="p9-kind">Who are they?</span></p>
+      <div class="passage-box" style="line-height:1.75; margin-bottom:18px;">
+        <p>They were three sisters, daughters of a poor clergyman, and they grew up in a stone parsonage at the edge of the wild Yorkshire moors. Their mother died when they were small. As children they wrote tiny books, no bigger than a matchbox, about imaginary kingdoms. Their only brother painted a portrait of the three of them and then painted himself out of the picture.</p>
+        <p>Two of them worked as governesses, and they hated it. In 1846 they paid to publish a book of their poems; it sold two copies. So they turned to novels, and in 1847 each of the three published one, under a man’s name, so that the critics would take them seriously. The three false names had the same surname, and each began with the same letter as the sister’s real first name.</p>
+        <p>The eldest sister’s novel tells the story of a poor, plain orphan who becomes a governess and falls in love with her employer, the dark and moody Mr Rochester, who is hiding a terrible secret in his house. The second sister wrote about the wild, destructive love of Heathcliff and Cathy on the moors. The youngest sister’s first novel was also about a governess.</p>
+        <p>None of the three lived to the age of forty. Their home is now a museum.</p>
+      </div>
+      <div class="q-list">
+        <div class="answer-row"><span class="ar-txt"><b>1.</b> Who are the people described in the text? <span class="fmt">Формат написания ответа the … sisters</span></span>
+          <input class="blank p9in" id="p9-8-1" data-w="2" data-answer="the Brontë sisters" data-re="^(the )?bront(e|ë)s?( sisters)?$" autocomplete="off" spellcheck="false"></div>
+        <div class="answer-row"><span class="ar-txt"><b>2.</b> In which village in Yorkshire did they grow up?</span>
+          <input class="blank p9in" id="p9-8-2" data-w="2" data-answer="Haworth" data-re="^(in )?haworth$" autocomplete="off" spellcheck="false"></div>
+        <div class="answer-row"><span class="ar-txt"><b>3.</b> What is the title of the eldest sister’s novel (paragraph 3)?</span>
+          <input class="blank p9in" id="p9-8-3" data-w="2" data-answer="Jane Eyre" data-re="^jane eyre$" autocomplete="off" spellcheck="false"></div>
+        <div class="answer-row"><span class="ar-txt"><b>4.</b> What is the title of the novel about Heathcliff and Cathy?</span>
+          <input class="blank p9in" id="p9-8-4" data-w="2" data-answer="Wuthering Heights" data-re="^wuthering heights$" autocomplete="off" spellcheck="false"></div>
+        <div class="answer-row"><span class="ar-txt"><b>5.</b> Under what name did Anne, the youngest sister, publish her novel? <span class="fmt">Формат написания ответа First Name Last Name</span></span>
+          <input class="blank p9in" id="p9-8-5" data-w="2" data-answer="Acton Bell" data-re="^acton bell$" autocomplete="off" spellcheck="false"></div>
+      </div>
+      <div class="why">
+        <div class="why-h">🔎 Why · the clues that give it away</div>
+        <div class="why-fig">
+          <img src="images/culture/figures/brontes.jpg" alt="The Brontë sisters">
+          <ul><li><b>1 the Brontë sisters:</b> three sisters · a parsonage on the Yorkshire moors · a clergyman father · a brother who painted himself out · 1847.</li><li><b>2 Haworth:</b> their village; the Brontë Parsonage Museum.</li><li><b>3 Jane Eyre:</b> Charlotte’s novel: the governess and Mr Rochester.</li><li><b>4 Wuthering Heights:</b> Emily’s novel.</li><li><b>5 Acton Bell:</b> Currer = Charlotte, Ellis = Emily, Acton = Anne (the same first letters). Anne’s governess novel is <i>Agnes Grey</i>.</li></ul>
+        </div>
+        <p class="why-rev">🔁 Go back to: Lesson 17 card (Culture tab) · deck V14</p>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="p9Check(8)">Check</button>
+        <button class="btn btn-ghost" onclick="p9Reset(8)">Try again</button>
+        <span class="p9-score" id="p9s-8"></span>
+      </div>
+    </div>
+
+    <!-- Practice 9 · tolkien -->
+    <div class="exercise p9" id="p9-9" data-p9="9">
+      <span class="task-num">Задание 9 · practice 9 · 10 баллов</span>
+      <div class="teacher-only tk"><div class="to-label">🔑 Teacher only · Key, practice 9</div><ol><li><b>J. R. R. Tolkien</b></li><li><b>Bloemfontein</b></li><li><b>the Somme</b></li><li><b>Smaug</b></li><li><b>C. S. Lewis</b></li></ol><p class="tk-note">From: Lesson 18 card (Culture tab) · deck V14</p></div>
+      <p class="orig-instr">Прочитайте текст и выполните задание к нему. <span class="p9-kind">Who is it?</span></p>
+      <div class="passage-box" style="line-height:1.75; margin-bottom:18px;">
+        <p>He was born in 1892 in South Africa, but his mother brought him to England when he was three, and he grew up in and around Birmingham. Both his parents died while he was still a boy.</p>
+        <p>In 1916 he fought as a young officer in the trenches of France, in one of the bloodiest battles of the First World War, which began on 1 July and in which more than a million men were killed or wounded. Two of his closest friends from school died in the war.</p>
+        <p>After the war he became a professor of Old English, the language of the Anglo-Saxons, at a famous university. He loved languages so much that he invented several of his own for his elves, and then a whole world for them to live in. One day, while he was marking exam papers, he found a blank page and wrote on it: “In a hole in the ground there lived a…”</p>
+        <p>That sentence became the first line of a children’s book, published in 1937, about a small creature with hairy feet who goes on a journey to a mountain guarded by a dragon. Its long sequel, published in 1954–55, is about a ring that must be destroyed. His closest friend at the university was another writer, the author of the Narnia books.</p>
+      </div>
+      <div class="q-list">
+        <div class="answer-row"><span class="ar-txt"><b>1.</b> What is the name of the person described in the text? <span class="fmt">Формат написания ответа Initials Last Name</span></span>
+          <input class="blank p9in" id="p9-9-1" data-w="2" data-answer="J. R. R. Tolkien" data-re="^(j ?r ?r |john ronald reuel |john )?tolkien$" autocomplete="off" spellcheck="false"></div>
+        <div class="answer-row"><span class="ar-txt"><b>2.</b> In which city was he born?</span>
+          <input class="blank p9in" id="p9-9-2" data-w="2" data-answer="Bloemfontein" data-re="^(in )?bloemfontein$" autocomplete="off" spellcheck="false"></div>
+        <div class="answer-row"><span class="ar-txt"><b>3.</b> What is the name of the battle in paragraph 2? <span class="fmt">Формат написания ответа the Battle of the …</span></span>
+          <input class="blank p9in" id="p9-9-3" data-w="2" data-answer="the Somme" data-re="^(the )?(battle of )?(the )?somme$" autocomplete="off" spellcheck="false"></div>
+        <div class="answer-row"><span class="ar-txt"><b>4.</b> What is the name of the dragon in the book of 1937?</span>
+          <input class="blank p9in" id="p9-9-4" data-w="2" data-answer="Smaug" data-re="^smaug$" autocomplete="off" spellcheck="false"></div>
+        <div class="answer-row"><span class="ar-txt"><b>5.</b> What is the name of his friend, the author of the Narnia books? <span class="fmt">Формат написания ответа Initials Last Name</span></span>
+          <input class="blank p9in" id="p9-9-5" data-w="2" data-answer="C. S. Lewis" data-re="^(c ?s |clive staples |clive )?lewis$" autocomplete="off" spellcheck="false"></div>
+      </div>
+      <div class="why">
+        <div class="why-h">🔎 Why · the clues that give it away</div>
+        <div class="why-fig">
+          <img src="images/culture/figures/tolkien.jpg" alt="J. R. R. Tolkien">
+          <ul><li><b>1 J. R. R. Tolkien:</b> born in South Africa, grew up in Birmingham · the trenches in 1916 · an Oxford professor of Old English · invented languages.</li><li><b>2 Bloemfontein:</b> the lateral question on his card.</li><li><b>3 the Somme:</b> 1916, the First World War battle he fought in.</li><li><b>4 Smaug:</b> <i>The Hobbit</i>: Bilbo Baggins and the dragon Smaug. The sequel is <i>The Lord of the Rings</i>.</li><li><b>5 C. S. Lewis:</b> they met in a writers’ club, the Inklings.</li></ul>
+        </div>
+        <p class="why-rev">🔁 Go back to: Lesson 18 card (Culture tab) · deck V14</p>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="p9Check(9)">Check</button>
+        <button class="btn btn-ghost" onclick="p9Reset(9)">Try again</button>
+        <span class="p9-score" id="p9s-9"></span>
+      </div>
+    </div>
+
+    <!-- Practice 10 · wilde -->
+    <div class="exercise p9" id="p9-10" data-p9="10">
+      <span class="task-num">Задание 9 · practice 10 · 10 баллов</span>
+      <div class="teacher-only tk"><div class="to-label">🔑 Teacher only · Key, practice 10</div><ol><li><b>Oscar Wilde</b></li><li><b>The Picture of Dorian Gray</b></li><li><b>The Canterville Ghost</b></li><li><b>The Importance of Being Earnest</b></li><li><b>Paris</b></li></ol><p class="tk-note">From: Lesson 17 card (Culture tab) · deck V14</p></div>
+      <p class="orig-instr">Прочитайте текст и выполните задание к нему. <span class="p9-kind">Who is it?</span></p>
+      <div class="passage-box" style="line-height:1.75; margin-bottom:18px;">
+        <p>He was born in Dublin in 1854 and studied first in his home city and then at one of the two great English universities, where he won a prize for poetry. In London he soon became the star of society, famous for his long hair, his velvet suits, the flower in his buttonhole and his paradoxes, such as “I can resist everything except temptation.”</p>
+        <p>He wrote only one novel, published in 1890: a beautiful young man stays young and handsome for years, while his portrait, hidden in a locked room, grows old and ugly in his place. He also wrote fairy tales, among them the story of a golden statue of a prince who asks a swallow to give away his gold and jewels to the poor, and a comic story about an American family who buy an old English country house with a ghost in it and refuse to be frightened.</p>
+        <p>In 1895 his most famous comedy opened in London. In it two young men both pretend to be called by the same name, and the title is a pun: the name sounds exactly like an adjective that means “serious”.</p>
+        <p>That same year, at the very top of his fame, he was sent to prison for two years, and later he wrote a long poem about the prison. He left England for good and died poor in a foreign capital in 1900.</p>
+      </div>
+      <div class="q-list">
+        <div class="answer-row"><span class="ar-txt"><b>1.</b> What is the name of the person described in the text? <span class="fmt">Формат написания ответа First Name Last Name</span></span>
+          <input class="blank p9in" id="p9-10-1" data-w="2" data-answer="Oscar Wilde" data-re="^oscar( fingal o\&#x27;?flahertie wills)? wilde$" autocomplete="off" spellcheck="false"></div>
+        <div class="answer-row"><span class="ar-txt"><b>2.</b> What is the title of his only novel?</span>
+          <input class="blank p9in" id="p9-10-2" data-w="2" data-answer="The Picture of Dorian Gray" data-re="^(the )?picture of dorian gr[ae]y$" autocomplete="off" spellcheck="false"></div>
+        <div class="answer-row"><span class="ar-txt"><b>3.</b> What is the title of the story about the American family and the ghost?</span>
+          <input class="blank p9in" id="p9-10-3" data-w="2" data-answer="The Canterville Ghost" data-re="^(the )?canterville ghost$" autocomplete="off" spellcheck="false"></div>
+        <div class="answer-row"><span class="ar-txt"><b>4.</b> What is the title of the comedy of 1895?</span>
+          <input class="blank p9in" id="p9-10-4" data-w="2" data-answer="The Importance of Being Earnest" data-re="^(the )?importance of being earnest$" autocomplete="off" spellcheck="false"></div>
+        <div class="answer-row"><span class="ar-txt"><b>5.</b> In which city did he die?</span>
+          <input class="blank p9in" id="p9-10-5" data-w="2" data-answer="Paris" data-re="^(in )?paris$" autocomplete="off" spellcheck="false"></div>
+      </div>
+      <div class="why">
+        <div class="why-h">🔎 Why · the clues that give it away</div>
+        <div class="why-fig">
+          <img src="images/culture/figures/wilde.jpg" alt="Oscar Wilde">
+          <ul><li><b>1 Oscar Wilde:</b> born in Dublin, studied at Oxford · paradoxes and dandy clothes · prison · died in Paris.</li><li><b>2 The Picture of Dorian Gray:</b> the portrait grows old instead of him.</li><li><b>3 The Canterville Ghost:</b> an American family in a haunted English house. The statue and the swallow are <i>The Happy Prince</i>.</li><li><b>4 The Importance of Being Earnest:</b> the pun: <i>earnest</i> (serious) and the name Ernest. Watch the spelling: <b>Earnest</b>, not Ernest.</li><li><b>5 Paris:</b> where he died, poor. The prison poem is <i>The Ballad of Reading Gaol</i>.</li></ul>
+        </div>
+        <p class="why-rev">🔁 Go back to: Lesson 17 card (Culture tab) · deck V14</p>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="p9Check(10)">Check</button>
+        <button class="btn btn-ghost" onclick="p9Reset(10)">Try again</button>
+        <span class="p9-score" id="p9s-10"></span>
+      </div>
+    </div>
+
+  </div><!-- /tab-p9 -->
+
 </div><!-- /container -->
 
 <div class="save-indicator" id="saveIndicator">✓ Saved</div>
@@ -1617,9 +2046,70 @@ async function shareReport() {
 
 function restartPaper() {
   if (!confirm('This clears every answer, your score, the clock and the “played” recordings. Start the whole paper again?')) return;
-  try { localStorage.removeItem(LESSON_KEY); localStorage.removeItem(TIMER_KEY); } catch(e) {}
+  // the Задание 9 practice answers (p9-…) are not part of the paper: keep them
+  const keep = {};
+  Object.keys(data).forEach(k => { if (k.startsWith('p9-')) keep[k] = data[k]; });
+  try {
+    localStorage.removeItem(TIMER_KEY);
+    if (Object.keys(keep).length) localStorage.setItem(LESSON_KEY, JSON.stringify(keep));
+    else localStorage.removeItem(LESSON_KEY);
+  } catch(e) {}
   location.reload();
 }
+
+// ── ЗАДАНИЕ 9 · PRACTICE (outside the paper: own Check, never locked, not in the 100) ──
+// saved in the lesson key as p9-<text>-<question> (answers) and p9-done-<text> (checked)
+const P9 = [...document.querySelectorAll('.p9')];
+P9.forEach(box => box.querySelectorAll('input.p9in').forEach(inp => {
+  if (data[inp.id] !== undefined) inp.value = data[inp.id];
+  inp.addEventListener('input', () => save({ [inp.id]: inp.value }));
+}));
+function p9Paint(n) {
+  const box = document.getElementById('p9-' + n);
+  let got = 0;
+  box.querySelectorAll('input.p9in').forEach(inp => {
+    inp.classList.remove('correct', 'wrong');
+    const old = inp.nextElementSibling; if (old && old.classList.contains('key')) old.remove();
+    const ok = isRight(inp);
+    if (ok) got += weight(inp);
+    inp.classList.add(ok ? 'correct' : 'wrong');
+    if (!ok) inp.insertAdjacentHTML('afterend', '<span class="key">' + inp.dataset.answer + '</span>');
+  });
+  box.classList.add('checked');
+  document.getElementById('p9s-' + n).textContent = got + ' / 10';
+  return got;
+}
+function p9Totals() {
+  let got = 0, done = 0;
+  P9.forEach(box => {
+    const n = box.dataset.p9, a = document.querySelector('.p9-nav a[href="#p9-' + n + '"]');
+    a.classList.remove('full', 'part');
+    if (!box.classList.contains('checked')) return;
+    const g = parseInt(document.getElementById('p9s-' + n).textContent, 10);
+    got += g; done++;
+    a.classList.add(g === 10 ? 'full' : 'part');
+  });
+  document.getElementById('p9Total').textContent = got + ' / ' + done * 10;
+  document.getElementById('p9Count').textContent = '(' + done + ' of ' + P9.length + ' texts checked)';
+}
+function p9Check(n) {
+  p9Paint(n);
+  save({ ['p9-done-' + n]: true });
+  p9Totals();
+}
+function p9Reset(n) {
+  const box = document.getElementById('p9-' + n), patch = { ['p9-done-' + n]: false };
+  box.classList.remove('checked');
+  box.querySelectorAll('input.p9in').forEach(inp => {
+    inp.value = ''; inp.classList.remove('correct', 'wrong'); patch[inp.id] = '';
+    const k = inp.nextElementSibling; if (k && k.classList.contains('key')) k.remove();
+  });
+  document.getElementById('p9s-' + n).textContent = '';
+  save(patch);
+  p9Totals();
+}
+P9.forEach(box => { if (data['p9-done-' + box.dataset.p9]) p9Paint(box.dataset.p9); });
+p9Totals();
 
 // ── 60-MINUTE TIMER ────────────────────────────────────────────
 // Kept in its own key, so a reload or a closed tab doesn't give extra time:
