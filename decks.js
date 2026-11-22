@@ -180,7 +180,7 @@ window.DECKS = [
               bio = who the person was and what they are famous for,
               keys = names to know, each [name, a very short explanation],
               e = one unusual fact, n = the lateral clue a Задание 9 question likes. */
-    id: 'v14', name: 'Culture figures', lesson: 'Lessons 15–18',
+    id: 'v14', name: 'Culture figures', lesson: 'Lessons 15–18, 21',
     imgBase: 'lessons/images/culture/figures/',
     cards: [
       // era 4 · 1603–1714 (Shakespeare: Lesson 15; the other four: Lesson 16)
@@ -730,14 +730,89 @@ window.DECKS = [
           ['Pittsburgh', 'his home town, with his museum'],
           ['15 minutes of fame', 'his famous prediction about everyone']
         ],
-        e: 'He wore a silver wig, and in 1968 he was shot and nearly killed.', n: 'the Factory; real name Warhola' }
+        e: 'He wore a silver wig, and in 1968 he was shot and nearly killed.', n: 'the Factory; real name Warhola' },
+      // Lesson 21 · after the round: her paper's events and the woman on the island
+      { w: 'Henry II', p: 'king of England', l: '1154–1189 · 12th c.', img: 'henry2.jpg',
+        t: 'Генрих II',
+        bio: 'The first Plantagenet king, son of Geoffrey of Anjou and Empress Matilda. He ruled England and half of France with his wife Eleanor of Aquitaine. His quarrel with Archbishop Thomas Becket ended with Becket murdered in Canterbury Cathedral in 1170.',
+        keys: [
+          ['1154', 'becomes king; crowned at Westminster Abbey on 19 December'],
+          ['Geoffrey of Anjou and Empress Matilda', 'his parents'],
+          ['Eleanor of Aquitaine', 'his wife, once queen of France'],
+          ['Thomas Becket', 'the archbishop murdered in Canterbury Cathedral, 1170'],
+          ['Richard the Lionheart and John', 'his sons, both kings'],
+          ['Windsor Castle', 'he rebuilt it in stone in the 1170s']
+        ],
+        e: 'His father’s badge, a sprig of broom (planta genista), gave the family the name Plantagenet.', n: 'Henry II ≠ Henry VIII: 12th century' },
+      { w: 'Elizabeth I', p: 'queen of England', l: '1558–1603 · 16th c.', img: 'elizabeth1.jpg',
+        t: 'Елизавета I',
+        bio: 'The last Tudor, daughter of Henry VIII and Anne Boleyn. Her long reign saw the defeat of the Spanish Armada, Drake’s voyage round the world and the plays of Shakespeare. She never married, and when she died in 1603 James VI of Scotland became James I.',
+        keys: [
+          ['7 September 1533', 'born at Greenwich Palace'],
+          ['1558 / 1559', 'becomes queen / crowned at Westminster Abbey'],
+          ['Henry VIII and Anne Boleyn', 'her parents'],
+          ['Mary I', 'her half-sister, queen before her'],
+          ['1588', 'the Spanish Armada'],
+          ['Virginia', 'the colony named after “the Virgin Queen”'],
+          ['24 March 1603', 'her death = the end of the Tudor dynasty (17th c.)']
+        ],
+        e: 'She was born in 1533, the year three-year-old Ivan IV became Grand Prince of Moscow; later the two wrote letters to each other.', n: 'died 1603: the 17th century' },
+      { w: 'L. M. Montgomery', a: ['Lucy Maud Montgomery', 'Montgomery', 'Maud Montgomery'], p: 'writer (Canada)', l: '1874–1942 · 19th–20th c.', img: 'montgomery.jpg',
+        t: 'Люси Мод Монтгомери',
+        bio: 'A Canadian writer from Prince Edward Island. Her mother died when she was a baby and she was brought up by her grandparents; she sold hundreds of short poems and stories before her novel about a red-haired orphan made her famous. After her grandmother’s death she married a minister and moved to Ontario.',
+        keys: [
+          ['Prince Edward Island', 'her island, Canada’s smallest province'],
+          ['Anne of Green Gables (1908)', 'an orphan girl sent by mistake to a farm'],
+          ['Anne Shirley', 'the talkative red-haired heroine'],
+          ['Cavendish', 'the village of her grandparents’ farm'],
+          ['Ewan Macdonald', 'her husband, a Presbyterian minister'],
+          ['Ontario', 'where she lived after her marriage in 1911']
+        ],
+        e: 'Mark Twain called Anne the dearest child in fiction since “the immortal Alice”.', n: 'the island: Prince Edward Island, Canada' },
+      { w: 'Robert Louis Stevenson', a: ['Stevenson', 'R. L. Stevenson'], p: 'writer (Scotland)', l: '1850–1894 · 19th c.', img: 'stevenson.jpg',
+        t: 'Роберт Льюис Стивенсон',
+        bio: 'A Scottish writer from a family of lighthouse engineers. He married the American Fanny Osbourne, and after his father’s death in 1887 left Britain with his wife and mother, sailed the Pacific and settled on Samoa, where he died. He wrote adventure novels, a famous horror story and short poems for children.',
+        keys: [
+          ['Edinburgh', 'his birthplace'],
+          ['Treasure Island', 'a map, Jim Hawkins and buried gold'],
+          ['Long John Silver', 'the one-legged cook with a parrot'],
+          ['Dr Jekyll and Mr Hyde', 'a doctor who turns into a monster'],
+          ['A Child’s Garden of Verses', 'short poems for children'],
+          ['Samoa', 'the Pacific islands where he lived and died'],
+          ['Tusitala', '“the teller of tales”, the Samoans’ name for him']
+        ],
+        e: 'Treasure Island began as a map he drew for his stepson on a rainy holiday in Scotland.', n: 'Tusitala, “the teller of tales”' },
+      { w: 'Elizabeth Barrett Browning', a: ['Barrett Browning', 'Elizabeth Barrett'], p: 'poet', l: '1806–1861 · 19th c.', img: 'barrett-browning.jpg',
+        t: 'Элизабет Барретт Браунинг',
+        bio: 'The most famous woman poet of Victorian England. An invalid kept at home by a strict father, she married the poet Robert Browning in secret in 1846 and ran away with him to Italy, where she lived in Florence until her death.',
+        keys: [
+          ['Robert Browning', 'her husband, also a poet'],
+          ['Sonnets from the Portuguese', 'her love poems: “How do I love thee? Let me count the ways”'],
+          ['Aurora Leigh', 'a novel in verse'],
+          ['Wimpole Street', 'her London home before she eloped'],
+          ['Florence', 'where they lived and she died'],
+          ['Flush', 'her spaniel; Virginia Woolf wrote his “biography”']
+        ],
+        e: 'Her father never forgave her secret marriage and never opened her letters again.', n: 'eloped to Italy, not islands' },
+      { w: 'Knute Rockne', a: ['Rockne'], p: 'American football coach', l: '1888–1931 · 20th c.', img: 'rockne.jpg',
+        t: 'Кнут Рокни',
+        bio: 'Born in Voss, near Bergen in Norway, he grew up in Chicago and was too light for football at first. At Notre Dame he and Gus Dorais made the forward pass famous in a 1913 win over Army, and as head coach (1918–1930) he lost only twelve games.',
+        keys: [
+          ['Notre Dame', 'his university and team, in Indiana'],
+          ['the forward pass', 'the tactic that made him famous'],
+          ['Gus Dorais', 'the teammate who threw to him'],
+          ['Army, 1913', 'the famous 35–13 win at West Point'],
+          ['the pigskin', 'the leather ball of American football'],
+          ['“Win one for the Gipper”', 'his speech about his player George Gipp']
+        ],
+        e: 'In the 1940 film about him, Ronald Reagan played George Gipp, and “the Gipper” became Reagan’s nickname.', n: 'Ronald Reagan as the Gipper' }
     ]
   }
   ,{
     /* Places and events for Задания 9 and 10 (Lesson 19): built like V14.
        Front: w = name, p = what it is, l = date / century. Back: img (in imgBase), t = Russian name only,
        bio, keys = [name, short explanation], e = one unusual fact, n = the lateral clue. */
-    id: 'v15', name: 'Places & events', lesson: 'Lesson 19',
+    id: 'v15', name: 'Places & events', lesson: 'Lessons 19, 21',
     imgBase: 'lessons/images/culture/places/',
     cards: [
       { w: 'the Thames', a: ['Thames', 'the River Thames', 'River Thames'], p: 'river', l: 'about 346 km', img: 'thames-westminster.jpg',
@@ -807,7 +882,43 @@ window.DECKS = [
           ['Stormont', 'the Northern Ireland Assembly, where both sides share power'],
           ['Good Friday', 'the Friday before Easter (Страстная пятница)']
         ],
-        e: 'The Nobel Peace Prize of 1998 went to two Northern Irish politicians from opposite sides, John Hume and David Trimble.', n: '1998: the 20th century' }
+        e: 'The Nobel Peace Prize of 1998 went to two Northern Irish politicians from opposite sides, John Hume and David Trimble.', n: '1998: the 20th century' },
+      { w: 'Windsor Castle', p: 'royal castle', l: 'begun c. 1070 · 11th c.', img: 'windsor.jpg',
+        t: 'Виндзорский замок',
+        bio: 'The oldest and largest castle in the world that is still lived in, on the Thames west of London. William the Conqueror began it soon after 1066 as a wooden fort on a mound; Henry II rebuilt it in stone. The royal family took its name in 1917.',
+        keys: [
+          ['c. 1070', 'begun by William the Conqueror (11th c.)'],
+          ['Henry II', 'rebuilt it in stone in the 1170s'],
+          ['the Round Tower', 'stands on the original mound'],
+          ['St George’s Chapel (1475)', 'begun by Edward IV; the chapel of the Order of the Garter'],
+          ['1917', 'the royal family takes the name Windsor'],
+          ['1992', 'a great fire'],
+          ['Eton', 'the famous school across the river']
+        ],
+        e: 'Elizabeth II was buried in St George’s Chapel at Windsor in 2022.', n: 'begun 11th c.; rebuilt in stone 12th c.' },
+      { w: 'Salisbury Cathedral', p: 'cathedral, Wiltshire', l: 'begun 1220 · 13th c.', img: 'salisbury.jpg',
+        t: 'Солсберийский собор',
+        bio: 'A Gothic cathedral built in only 38 years (1220–1258) after it moved down from the hill-fort of Old Sarum, so it is all in one style. Its spire, added about 1320, is the tallest in Britain.',
+        keys: [
+          ['1220', 'the first stone (13th c.)'],
+          ['c. 1320', 'the spire, 123 m (14th c.)'],
+          ['Old Sarum', 'the hill where the first cathedral stood'],
+          ['Magna Carta', 'the best of the four surviving 1215 copies is here'],
+          ['the clock (c. 1386)', 'one of the oldest working clocks in the world'],
+          ['John Constable', 'painted it many times']
+        ],
+        e: 'It has the tallest church spire in Britain.', n: 'if not St Paul’s: begun 1220' },
+      { w: 'the Glorious Revolution', a: ['Glorious Revolution'], p: 'change of monarch, England', l: '1688–89 · 17th c.', img: 'glorious.jpg',
+        t: 'Славная революция',
+        bio: 'In 1688 Protestant lords invited the Dutch prince William of Orange to replace the Catholic James II. William landed at Torbay, James fled to France, and William III and Mary II ruled together. The Bill of Rights of 1689 limited the power of the crown.',
+        keys: [
+          ['James II', 'the Catholic Stuart king who fled'],
+          ['William of Orange', 'the Dutch prince who landed in Devon, 5 November 1688'],
+          ['Mary II', 'James’s daughter, William’s wife (mother: Anne Hyde)'],
+          ['the Bill of Rights (1689)', 'Parliament now controls taxes and the army'],
+          ['the Battle of the Boyne (1690)', 'James defeated in Ireland']
+        ],
+        e: 'It is called “glorious” because in England it was almost bloodless.', n: '1688: the 17th century' }
     ]
   }
 ];

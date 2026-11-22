@@ -1,0 +1,1578 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lesson 21 – The Paper Again · Windsor, Henry II, Elizabeth I, 1688, Wilde · Rockne · Montgomery</title>
+  <link rel="stylesheet" href="../style.css">
+  <style>
+    .exam-select {
+      font: inherit; font-weight: 700; text-align: center; padding: 7px 10px; border-radius: 10px;
+      border: 2px solid var(--border); background: var(--card); color: var(--text); cursor: pointer; min-width: 64px;
+    }
+    .exam-select:focus { border-color: var(--primary); outline: none; }
+    .exam-select.correct, .blank.correct { border-color: var(--green); color: var(--green); background: rgba(91,140,69,.08); }
+    .exam-select.wrong,   .blank.wrong   { border-color: var(--red);   color: var(--red);   background: rgba(200,64,64,.06); }
+    .blank { min-width: 130px; font-weight: 600; border: 2px solid var(--border); border-radius: 10px; padding: 5px 10px; background: var(--card); }
+    .blank.short { min-width: 100px; width: 120px; }
+    .blank:focus { border-color: var(--primary); outline: none; }
+    .key { margin-left: 4px; font-size: .82rem; font-weight: 700; color: var(--green); background: rgba(91,140,69,.10); padding: 2px 8px; border-radius: 6px; }
+
+    .answer-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; padding: 9px 0; border-bottom: 1px dashed var(--border); }
+    .answer-row:last-child { border-bottom: none; }
+    .ar-num { font-family: 'Fraunces', Georgia, serif; font-weight: 700; color: var(--primary); min-width: 26px; }
+    .ar-txt { flex: 1; min-width: 200px; line-height: 1.75; }
+    .cue { font-weight: 700; letter-spacing: .04em; color: var(--accent-dk); background: rgba(201,160,48,.14); padding: 1px 8px; border-radius: 6px; font-size: .86rem; white-space: nowrap; }
+    .gap-text { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px 20px; line-height: 2.3; font-size: 1.02rem; }
+    .gap-text .gn { font-family: 'Fraunces', Georgia, serif; font-weight: 700; color: var(--primary); font-size: .85rem; margin-right: 2px; }
+    .gap-text h4 { font-family: 'Fraunces', Georgia, serif; text-align: center; font-size: 1.15rem; margin-bottom: 4px; line-height: 1.5; }
+    /* word box: a word crosses itself out when it's used in a gap (or when she taps it) */
+    .bank { display: flex; flex-wrap: wrap; gap: 8px; padding: 14px 16px; margin-bottom: 14px; border: 2px dashed rgba(201,160,48,.55); border-radius: 14px; background: rgba(201,160,48,.07); }
+    .bank span { position: relative; font-weight: 700; padding: 5px 14px; border-radius: 99px; background: #fff; border: 2px solid var(--border); cursor: pointer; user-select: none; transition: .2s; }
+    .bank span:hover { border-color: var(--accent); }
+    .bank span.used, .bank span.struck { color: var(--muted); background: transparent; border-style: dashed; text-decoration: line-through; text-decoration-thickness: 2px; text-decoration-color: var(--primary); opacity: .75; }
+    .bank span.used::after { content: attr(data-gap); position: absolute; top: -8px; right: -6px; min-width: 18px; height: 18px; padding: 0 4px; border-radius: 99px; background: var(--primary); color: #fff; font-size: .68rem; line-height: 18px; text-align: center; text-decoration: none; display: inline-block; }
+    /* Задание 2 as in the demo: drag a word into a gap (or tap the word, then the gap) */
+    .orig-instr { font-weight: 600; border-left: 3px solid var(--border); padding-left: 14px; margin: 0 0 18px; line-height: 1.7; font-size: .98rem; }
+    .bank.dnd span { cursor: grab; touch-action: none; }
+    .bank.dnd span.picked { border-color: var(--primary); background: rgba(212,87,42,.10); box-shadow: 0 0 0 3px rgba(212,87,42,.18); }
+    .drag-ghost { position: fixed; z-index: 100; pointer-events: none; transform: translate(-50%, -70%); font-weight: 700; padding: 5px 14px; border-radius: 99px; background: #fff; border: 2px solid var(--primary); box-shadow: 0 8px 18px rgba(44,32,16,.22); }
+    .dz { display: inline-block; min-width: 128px; padding: 2px 16px; border-radius: 99px; border: 2px dashed rgba(212,87,42,.45); background: #fff; font-weight: 700; color: var(--text); text-align: center; line-height: 1.6; vertical-align: middle; cursor: pointer; transition: .15s; }
+    .dz.filled { border-style: solid; border-color: var(--blue); background: #EAF2FB; }
+    .dz.over, .picking .dz:not(.filled):not(.locked) { border-color: var(--primary); background: rgba(212,87,42,.08); }
+    .dz.correct { border-style: solid; border-color: var(--green); color: var(--green); background: rgba(91,140,69,.10); }
+    .dz.wrong { border-style: solid; border-color: var(--red); color: var(--red); background: rgba(200,64,64,.07); }
+    .dz.locked { cursor: default; }
+    .bank-hint { font-size: .82rem; color: var(--muted); margin: -8px 0 12px; }
+
+    /* gaps in a word-box text: number badge + pill-shaped choice */
+    .gap { display: inline-flex; align-items: center; white-space: nowrap; margin: 0 2px; vertical-align: middle; }
+    .gap .gn { display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; border-radius: 50%; background: var(--primary); color: #fff !important; font-family: 'DM Sans', system-ui, sans-serif !important; font-size: .74rem !important; font-weight: 700; margin-right: -6px; position: relative; z-index: 1; box-shadow: 0 0 0 3px var(--card); }
+    .gap select.exam-select {
+      appearance: none; -webkit-appearance: none; min-width: 138px; padding: 4px 30px 4px 16px; border-radius: 99px;
+      font-weight: 700; text-align: left; color: var(--primary-dk); background-color: #fff;
+      border: 2px dashed rgba(212,87,42,.45);
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%23D4572A' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat; background-position: right 11px center; background-size: 11px 8px;
+    }
+    .gap select.exam-select:hover:not(:disabled) { border-color: var(--primary); }
+    .gap select.exam-select.filled { border-style: solid; border-color: var(--blue); color: var(--text); background-color: #EAF2FB; }
+    .gap select.exam-select.correct { border-style: solid; border-color: var(--green); color: var(--green); background-color: rgba(91,140,69,.10); background-image: none; padding-right: 16px; }
+    .gap select.exam-select.wrong { border-style: solid; border-color: var(--red); color: var(--red); background-color: rgba(200,64,64,.07); background-image: none; padding-right: 16px; }
+
+    .step-title { font-weight: 700; font-size: .8rem; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin: 22px 0 10px; display: flex; align-items: center; gap: 8px; }
+    .step-title::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+    .task-num { font-weight: 700; color: var(--accent-dk); background: rgba(201,160,48,.15); padding: 3px 12px; border-radius: 99px; font-size: .85rem; }
+    .pts { font-weight: 700; font-size: .82rem; padding: 3px 10px; border-radius: 99px; color: var(--blue); background: rgba(95,142,196,.12); }
+    .review-head { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 6px; }
+    .talk { background: rgba(95,142,196,.09); border-left: 4px solid var(--blue); border-radius: 0 10px 10px 0; padding: 10px 14px; margin: 10px 0; line-height: 1.6; font-size: .97rem; }
+    .book { display: inline-flex; align-items: center; gap: 6px; font-size: .88rem; font-weight: 700; color: var(--rose); background: rgba(196,122,150,.12); padding: 4px 12px; border-radius: 99px; margin-top: 10px; }
+
+    /* instruction + key-fact chips (as in lesson 10) */
+    .instr { margin: 10px 0 8px; color: var(--text); font-size: 1rem; line-height: 1.7; }
+    .facts { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 16px; }
+    .fact { display: inline-flex; align-items: center; gap: 4px; padding: 5px 13px; border-radius: 99px; font-size: .86rem; font-weight: 700; color: #fff; background: var(--primary); box-shadow: 0 2px 6px rgba(44,32,16,.12); }
+    .fact:nth-child(4n+2) { background: var(--blue); } .fact:nth-child(4n+3) { background: var(--rose); } .fact:nth-child(4n+4) { background: var(--green); }
+
+    /* hints: closed until she taps them (as in lesson 10) */
+    details.logic { background: rgba(201,160,48,.09); border: 2px solid rgba(201,160,48,.35); border-radius: var(--radius); margin-top: 12px; overflow: hidden; }
+    details.logic summary { list-style: none; cursor: pointer; display: flex; align-items: center; gap: 10px; padding: 11px 16px; font-weight: 700; color: var(--accent-dk); user-select: none; }
+    details.logic summary::-webkit-details-marker { display: none; }
+    details.logic summary:hover { background: rgba(201,160,48,.12); }
+    details.logic summary::after { content: '▾'; margin-left: auto; font-size: 1.1rem; transition: transform .2s; }
+    details.logic[open] summary::after { transform: rotate(180deg); }
+    details.logic[open] summary { border-bottom: 1px dashed rgba(201,160,48,.45); }
+    .hint-txt { font-family: 'Fraunces', Georgia, serif; font-size: 1.02rem; }
+    .logic-body { padding: 12px 18px; line-height: 1.7; }
+    .logic-body ul, .logic-body ol { padding-left: 22px; }
+
+    /* the rule table stays open: it is the lesson */
+    .rule-table { border-collapse: collapse; width: 100%; font-size: .95rem; }
+    .rule-table th, .rule-table td { border: 1px solid var(--border); padding: 8px 10px; text-align: left; vertical-align: top; background: #fff; }
+    .rule-table th { background: rgba(212,87,42,.08); }
+    .rule-table td:first-child { font-weight: 700; white-space: nowrap; }
+    .rule-table i { color: var(--primary-dk); font-style: normal; font-weight: 600; }
+    .tbl-wrap { overflow-x: auto; }
+
+    /* revealed after Check */
+    .after-check { display: none; margin-top: 14px; }
+    .quiz.checked .after-check { display: block; }
+    details.script { border: 2px solid rgba(95,142,196,.35); border-radius: 12px; background: rgba(95,142,196,.05); }
+    details.script summary { cursor: pointer; padding: 9px 14px; font-weight: 700; color: var(--blue); }
+    details.script .sc-body { padding: 2px 16px 12px; line-height: 1.7; }
+
+    .timeline { list-style: none; border-left: 3px solid var(--primary); margin-left: 8px; }
+    .timeline li { position: relative; padding: 6px 0 6px 18px; line-height: 1.5; }
+    .timeline li::before { content: ''; position: absolute; left: -8px; top: 12px; width: 13px; height: 13px; border-radius: 50%; background: #fff; border: 3px solid var(--primary); }
+    .timeline b { font-family: 'Fraunces', Georgia, serif; color: var(--primary); margin-right: 6px; }
+
+    .quiz-foot { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-top: 14px; }
+    .q-result { font-weight: 700; }
+    .q-result.full { color: var(--green); } .q-result.part { color: var(--accent-dk); } .q-result.zero { color: var(--red); }
+    .progress-wrap { position: sticky; top: 0; z-index: 30; background: var(--bg); padding: 10px 0 12px; margin-bottom: 8px; border-bottom: 1px solid var(--border); }
+    .progress-top { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 7px; font-weight: 600; font-size: .92rem; }
+    .progress-top span { color: var(--primary); }
+    .progress-bar { height: 9px; border-radius: 99px; background: var(--border); overflow: hidden; }
+    .progress-fill { height: 100%; width: 0%; border-radius: 99px; background: linear-gradient(90deg, var(--primary), var(--accent-dk)); transition: width .3s ease; }
+    /* audio player: play/pause, drag the bar, ⏪ 10 s / ⏩ 10 s (as in lesson 10) */
+    .player { display: flex; align-items: center; gap: 12px; background: linear-gradient(135deg, rgba(212,87,42,.09), rgba(201,160,48,.10)); border: 2px solid rgba(212,87,42,.25); border-radius: 18px; padding: 12px 16px; margin: 4px 0 16px; }
+    .pl-btn { flex: 0 0 52px; width: 52px; height: 52px; border-radius: 50%; border: none; background: var(--primary); color: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(212,87,42,.35); }
+    .pl-btn:hover { background: var(--primary-dk); }
+    .pl-btn svg { width: 22px; height: 22px; fill: currentColor; }
+    .pl-btn .i-pause { display: none; }
+    .player.playing .pl-btn .i-play { display: none; } .player.playing .pl-btn .i-pause { display: block; }
+    .pl-main { flex: 1; min-width: 0; }
+    .pl-top { display: flex; justify-content: space-between; gap: 10px; margin-bottom: 8px; font-size: .88rem; }
+    .pl-label { font-weight: 700; color: var(--primary-dk); }
+    .pl-time { color: var(--muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
+    .pl-track { position: relative; height: 10px; border-radius: 99px; background: rgba(44,32,16,.10); cursor: pointer; touch-action: none; }
+    .pl-fill { position: absolute; inset: 0 auto 0 0; width: 0; border-radius: 99px; background: linear-gradient(90deg, var(--primary), var(--accent-dk)); }
+    .pl-knob { position: absolute; top: 50%; left: 0; width: 18px; height: 18px; margin: -9px 0 0 -9px; border-radius: 50%; background: #fff; border: 3px solid var(--primary); box-shadow: 0 1px 4px rgba(0,0,0,.2); transition: transform .15s; }
+    .pl-track:hover .pl-knob, .player.dragging .pl-knob { transform: scale(1.25); }
+    .pl-skip { flex: 0 0 auto; height: 36px; padding: 0 10px; border-radius: 99px; border: 2px solid var(--border); background: var(--card); color: var(--muted); cursor: pointer; font: inherit; font-size: .8rem; font-weight: 700; white-space: nowrap; }
+    .pl-skip:hover { border-color: var(--primary); color: var(--primary); }
+    @media (max-width: 560px) { .player { flex-wrap: wrap; gap: 10px; padding: 10px 12px; } .pl-main { flex-basis: calc(100% - 64px); } .pl-skip { flex: 1; } }
+
+    /* ── History tab ── */
+    .story { background: #fff; border: 1px solid var(--border); border-radius: var(--radius); padding: 18px 22px; line-height: 1.9; font-size: 1.02rem; box-shadow: 0 2px 10px rgba(44,32,16,.05); margin-bottom: 16px; }
+    .story h4 { font-family: 'Fraunces', Georgia, serif; text-align: center; font-size: 1.2rem; margin-bottom: 6px; }
+    .story p { margin-bottom: 8px; }
+    .spine-row { margin: 6px 0 14px; }
+    .spine-row > small { display: block; font-size: .72rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
+    .spine { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+    .spine .h { display: inline-flex; flex-direction: column; align-items: center; padding: 6px 12px; border-radius: 12px; background: rgba(95,142,196,.12); border: 2px solid rgba(95,142,196,.45); line-height: 1.2; }
+    .spine .h b { font-family: 'Fraunces', Georgia, serif; font-size: 1rem; }
+    .spine .h b::first-letter { color: var(--primary); font-size: 1.15em; }
+    .spine .h span { font-size: .78rem; font-weight: 700; color: var(--muted); }
+    .spine .h.old { background: rgba(201,160,48,.12); border-color: rgba(201,160,48,.5); }
+    .spine .arr { color: var(--muted); font-weight: 700; }
+    .mnemo { font-family: 'Fraunces', Georgia, serif; font-size: 1.12rem; text-align: center; padding: 10px; margin: 4px 0 10px; }
+    .mnemo b { color: var(--primary); font-size: 1.2em; }
+    .pre { font-weight: 700; color: var(--primary); margin-right: 1px; }
+    .place-list { list-style: none; border-left: 3px solid var(--primary); margin-left: 8px; }
+    .place-list li { position: relative; padding: 7px 0 7px 18px; line-height: 1.6; }
+    .place-list li::before { content: ''; position: absolute; left: -8px; top: 15px; width: 13px; height: 13px; border-radius: 50%; background: #fff; border: 3px solid var(--primary); }
+    .place-list .yr { display: inline-block; min-width: 92px; font-family: 'Fraunces', Georgia, serif; font-weight: 700; color: var(--primary); }
+
+    /* ── Lesson 12 blocks A/B ── */
+    .tab-btn:nth-child(4).active { background: var(--blue); border-color: var(--blue); }
+    .tab-btn:nth-child(5).active { background: var(--green); border-color: var(--green); }
+    .rule-box { background: linear-gradient(160deg, #fff, rgba(95,142,196,.07)); border: 2px solid rgba(95,142,196,.45); border-radius: var(--radius); padding: 16px 18px; }
+    .rule-title { font-family: 'Fraunces', Georgia, serif; font-size: 1.15rem; font-weight: 700; color: var(--blue); margin-bottom: 12px; }
+    .ru-note { background: rgba(196,122,150,.09); border-left: 4px solid var(--rose); border-radius: 0 10px 10px 0; padding: 9px 14px; font-size: .93rem; line-height: 1.6; margin-top: 8px; }
+    .rule-tip { margin-top: 10px; font-size: .95rem; line-height: 1.7; }
+    .lk { font-weight: 700; padding: 1px 6px; border-radius: 6px; }
+    .lk-pr { color: #2F5F96; background: rgba(95,142,196,.18); }
+    .lk-th { color: #9A3F64; background: rgba(196,122,150,.20); }
+    .lk-the { color: #3F6E2B; background: rgba(91,140,69,.16); }
+    .lk-ln { color: #8A6A10; background: rgba(201,160,48,.22); }
+    .snum { font-family: 'Fraunces', Georgia, serif; font-weight: 700; color: var(--primary); margin-right: 4px; }
+    /* Practice 1: pair cards — tap the first sentence, then the link word */
+    .pp-quiz { display: grid; gap: 14px; }
+    .pp { background: #fff; border: 1px solid var(--border); border-radius: 16px; padding: 14px 16px; box-shadow: 0 2px 10px rgba(44,32,16,.05); }
+    .pp-head { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+    .pp-n { width: 28px; height: 28px; border-radius: 50%; background: var(--primary); color: #fff; font-weight: 700; display: inline-flex; align-items: center; justify-content: center; font-size: .9rem; flex-shrink: 0; }
+    .pp-step { font-size: .88rem; font-weight: 700; color: var(--muted); }
+    .pp-swap { margin-left: auto; display: none; font: inherit; font-size: .8rem; font-weight: 700; color: var(--muted); background: none; border: 2px solid var(--border); border-radius: 99px; padding: 3px 12px; cursor: pointer; }
+    .pp-swap:hover { color: var(--primary); border-color: var(--primary); }
+    .pp.ordered .pp-swap { display: inline-block; }
+    .quiz.checked .pp-swap { display: none; }
+    .pp-ss { display: flex; flex-direction: column; gap: 8px; }
+    .pp-s { display: flex; gap: 12px; align-items: flex-start; padding: 10px 14px; border-radius: 12px; border: 2px solid var(--border); background: var(--bg); line-height: 1.65; transition: .15s; }
+    .pp:not(.ordered) .pp-s { cursor: pointer; }
+    .pp:not(.ordered) .pp-s:hover { border-color: var(--primary); background: rgba(212,87,42,.05); }
+    .pp-b { flex-shrink: 0; min-width: 34px; height: 26px; padding: 0 8px; border-radius: 99px; background: var(--border); color: var(--text); font-size: .78rem; font-weight: 700; display: inline-flex; align-items: center; justify-content: center; margin-top: 1px; }
+    .pp-s.first { border-color: var(--blue); background: #EAF2FB; }
+    .pp-s.first .pp-b { background: var(--blue); color: #fff; }
+    .pp-s.second .pp-b { background: var(--primary); color: #fff; }
+    .pp.ordered .w { cursor: pointer; border-radius: 5px; padding: 0 1px; transition: background .12s; }
+    .pp.ordered .w:hover { background: rgba(201,160,48,.25); }
+    .w.pick { background: rgba(201,160,48,.45); box-shadow: 0 0 0 2px rgba(201,160,48,.6); }
+    .quiz.checked .w { cursor: default; }
+    .quiz.checked .w.is-link { background: rgba(91,140,69,.18); color: #3F6E2B; font-weight: 700; }
+    .quiz.checked .w.pick:not(.is-link) { background: rgba(200,64,64,.15); box-shadow: 0 0 0 2px rgba(200,64,64,.5); }
+    .quiz.checked .pp-s.first.ok { border-color: var(--green); background: rgba(91,140,69,.08); }
+    .quiz.checked .pp-s.first.bad { border-color: var(--red); background: rgba(200,64,64,.06); }
+    .pp-keys { display: none; margin-top: 10px; font-size: .88rem; font-weight: 700; color: var(--muted); }
+    .quiz.checked .pp-keys { display: block; }
+    .pp-keys input { display: none; }
+    .pp-why { font-size: .93rem; line-height: 1.6; background: rgba(95,142,196,.08); border-radius: 10px; padding: 8px 12px; margin-top: 8px; }
+    .bank.sent { flex-direction: column; }
+    .bank.sent span { border-radius: 12px; font-weight: 500; line-height: 1.5; padding: 7px 14px; }
+    .slots .slot { margin: 8px 0; }
+    .slots .gap { display: flex; align-items: flex-start; white-space: normal; }
+    .slots .gap .gn { margin-top: 8px; margin-right: 8px; flex-shrink: 0; }
+    .slots .dz { display: block; flex: 1; text-align: left; border-radius: 12px; padding: 7px 14px; min-height: 40px; font-weight: 500; line-height: 1.5; }
+    .slots .key { display: inline-block; margin-top: 10px; }
+    .why-list { padding-left: 22px; line-height: 1.7; }
+    .use-words { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; padding: 10px 14px; border-radius: 12px; background: rgba(201,160,48,.08); border: 2px dashed rgba(201,160,48,.45); margin: 6px 0; }
+    .use-words span { font-weight: 700; font-size: .9rem; padding: 3px 12px; border-radius: 99px; background: #fff; border: 1px solid var(--border); cursor: pointer; user-select: none; }
+    .use-words span.used { background: var(--green); border-color: var(--green); color: #fff; }
+    .hw-list { list-style: none; }
+    .hw-list li { padding: 10px 0; border-bottom: 1px dashed var(--border); }
+    .hw-list li:last-child { border-bottom: none; }
+    .hw-list label { display: flex; gap: 12px; align-items: flex-start; cursor: pointer; line-height: 1.55; }
+    .hw-list input { width: 22px; height: 22px; accent-color: var(--green); flex-shrink: 0; margin-top: 1px; }
+    .hw-list li.done span.t { color: var(--green); text-decoration: line-through; }
+    .free-write { min-height: 150px; }
+  
+    /* ── Lesson 14 ── */
+    .vt { font-weight: 700; padding: 1px 6px; border-radius: 6px; }
+    .mk { font-weight: 700; color: #8A6A10; border-bottom: 3px solid rgba(201,160,48,.7); }
+    .subj { text-decoration: underline wavy rgba(212,87,42,.7); text-underline-offset: 4px; font-weight: 600; }
+    /* passive: the be-part shows the tense, V3 never changes */
+    .pv { font-weight: 700; white-space: nowrap; }
+    .pv-be { color: #2F5F96; background: rgba(95,142,196,.16); padding: 1px 4px; border-radius: 6px 0 0 6px; }
+    .pv-v3 { color: #9A3F64; background: rgba(196,122,150,.18); padding: 1px 4px; border-radius: 0 6px 6px 0; }
+    .pv-act { color: var(--muted); font-weight: 700; border-bottom: 2px dotted var(--muted); }
+    /* Задание 2: the filled word and the clue around it */
+    .fw { font-weight: 700; color: #3F6E2B; background: rgba(91,140,69,.16); padding: 1px 6px; border-radius: 6px; }
+    .clue { font-weight: 700; color: #8A6A10; border-bottom: 3px solid rgba(201,160,48,.7); }
+    .lbl { display: inline-block; font-size: .72rem; font-weight: 800; letter-spacing: .03em; padding: 1px 7px; border-radius: 99px; margin-left: 4px; vertical-align: 2px; }
+    .lbl-v1 { background: rgba(95,142,196,.18); color: #2F5F96; }
+    .lbl-v2 { background: rgba(196,122,150,.20); color: #9A3F64; }
+    .lbl-ing { background: rgba(91,140,69,.18); color: #3F6E2B; }
+    .lbl-n { background: rgba(201,160,48,.22); color: #8A6A10; }
+    /* timer */
+    .timer { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin: 4px 0 14px; padding: 10px 14px; border-radius: 14px; background: rgba(95,142,196,.08); border: 2px solid rgba(95,142,196,.35); }
+    .timer .btn { padding: 6px 16px; }
+    .tm-clock { font-size: 1.25rem; font-variant-numeric: tabular-nums; min-width: 96px; }
+    .tm-clock b { font-family: 'Fraunces', Georgia, serif; }
+    .timer.running { border-color: var(--blue); }
+    .timer.over { border-color: var(--red); background: rgba(200,64,64,.06); }
+    .timer.over .tm-clock { color: var(--red); }
+    .tm-msg { font-weight: 700; color: var(--green); }
+    /* lists of lettered lines / meanings */
+    .sent-list { list-style: none; margin-bottom: 10px; background: #fff; border: 1px solid var(--border); border-radius: 14px; padding: 6px 14px; }
+    .sent-list li { display: flex; gap: 10px; padding: 5px 0; line-height: 1.55; border-bottom: 1px dashed var(--border); }
+    .sent-list li:last-child { border-bottom: none; }
+    .sl { flex-shrink: 0; width: 26px; height: 26px; border-radius: 50%; background: var(--border); font-weight: 700; font-size: .82rem; display: inline-flex; align-items: center; justify-content: center; }
+    .z3 { background: #fff; border: 1px solid var(--border); border-radius: 16px; padding: 12px 16px; margin-bottom: 12px; }
+    .z3-title { font-weight: 800; margin-bottom: 4px; }
+    .z3 .sent-list { border: none; padding: 0; margin-bottom: 4px; }
+    .answer-row.letters .ch-l { display: none; }
+    .answer-row.letters .ch-group { grid-template-columns: repeat(auto-fill, minmax(52px, 1fr)); }
+    .answer-row.letters .ch-t { text-align: center; width: 100%; font-weight: 700; }
+    .three { line-height: 1.75; }
+    .three span { display: block; }
+    .rule-table.wrap td:first-child { white-space: normal; }
+    .fmt-note { font-size: .85rem; color: var(--muted); font-weight: 600; }
+    /* warm-up: story card + random word check */
+    .scard { background: #fff; border: 2px solid rgba(196,122,150,.45); border-radius: 18px; padding: 14px 18px; margin-bottom: 10px; box-shadow: 0 2px 12px rgba(44,32,16,.06); }
+    .scard-top { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 6px; }
+    .scard-n { font-size: .75rem; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: var(--rose); }
+    .scard h4 { font-family: 'Fraunces', Georgia, serif; font-size: 1.2rem; margin: 0; flex: 1 1 220px; }
+    .scard ul { margin: 4px 0 0 18px; line-height: 1.7; }
+    .draw-btn { margin-left: auto; }
+    .vc-quiz input.blank { width: 250px; max-width: 100%; letter-spacing: .02em; text-align: left; }
+    .vc-quiz input.blank::placeholder { color: #B9AC97; letter-spacing: .06em; font-weight: 600; }
+    .vc-bar { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 10px; }
+    .vc-bar small { color: var(--muted); }
+    .vc-bar .draw-btn { margin-left: 0; }
+    html.watching .draw-btn { display: none; }
+    /* history pictures */
+    .duo { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 6px 0 14px; }
+    .duo figure, .pic { margin: 0; }
+    .duo img { width: 100%; height: 280px; object-fit: cover; object-position: 50% 12%; border-radius: 12px; box-shadow: var(--shadow); display: block; }
+    .duo figcaption, .pic figcaption { font-size: .8rem; color: var(--muted); margin-top: 5px; line-height: 1.35; }
+    .duo figcaption b { color: var(--text); }
+    .pic img { width: 100%; max-height: 300px; object-fit: cover; border-radius: 12px; box-shadow: var(--shadow); display: block; }
+    @media (max-width: 560px) { .duo img { height: 200px; } }
+    .story b.ps { color: #9A3F64; }
+    /* teacher-only: shown only inside teacher.html (sync.js adds html.watching in watch mode) */
+    .teacher-only { display: none; }
+    html.watching .teacher-only, html.teacher .teacher-only { display: block; margin-top: 14px; background: #FDEAF2; border: 2px dashed #D9628F; border-radius: var(--radius); padding: 12px 16px; line-height: 1.75; }
+    .teacher-only .to-label { font-size: .75rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: #B0416C; margin-bottom: 6px; }
+    .teacher-only b { color: #9A3F64; }
+    .teacher-only ul { margin: 4px 0 0 18px; }
+    /* ── Lesson 15 ── */
+    .op { background: #fff; border: 1px solid var(--border); border-radius: 14px; padding: 10px 14px 6px; margin-bottom: 10px; }
+    .op:last-child { margin-bottom: 0; }
+    .gap-text.ops { padding: 0; border: none; background: none; }
+    .op-head { display: flex; align-items: center; gap: 8px; line-height: 1.4; font-size: .95rem; }
+    .op-n { width: 26px; height: 26px; border-radius: 50%; background: var(--primary); color: #fff; font-weight: 700; display: inline-flex; align-items: center; justify-content: center; font-size: .85rem; flex-shrink: 0; }
+    .op-role { color: var(--muted); font-size: .88rem; }
+    .op p { margin: 2px 0 0; }
+    /* Задание 7: statements she can tap-underline */
+    .st-list { list-style: none; background: #fff; border: 1px solid var(--border); border-radius: 14px; padding: 6px 14px; margin-bottom: 6px; }
+    .st-list li { display: flex; gap: 10px; padding: 6px 0; line-height: 1.6; border-bottom: 1px dashed var(--border); }
+    .st-list li:last-child { border-bottom: none; }
+    .st-list .u { cursor: pointer; border-radius: 3px; transition: background .12s; }
+    .st-list .u:hover { background: rgba(201,160,48,.15); }
+    .st-list .u.hl { background: linear-gradient(transparent 55%, rgba(201,160,48,.6) 55%); }
+    .ul-hint { font-size: .82rem; color: var(--muted); margin: 0 0 14px; }
+    .note { font: inherit; font-size: .92rem; border: none; border-bottom: 2px dashed var(--border); background: transparent; padding: 2px 4px; margin-left: 10px; width: 240px; max-width: 62%; color: var(--text); }
+    .note:focus { outline: none; border-bottom-color: var(--primary); }
+    .note:disabled { color: var(--muted); }
+    /* once-only player: no skipping, no dragging; unlocks after Check */
+    .player.once .pl-skip, .player.once .pl-knob { display: none; }
+    .player.once .pl-track { cursor: default; }
+    .player.locked { opacity: .65; }
+    .player.locked .pl-btn { background: var(--muted); box-shadow: none; cursor: default; }
+    .pl-note { font-size: .82rem; font-weight: 700; color: var(--muted); margin: -8px 0 14px; }
+    /* audio scripts: the paraphrase and the traps */
+    mark.para { background: rgba(91,140,69,.20); color: #2F5A1F; padding: 0 3px; border-radius: 4px; }
+    .trap { text-decoration: underline wavy rgba(200,64,64,.75); text-underline-offset: 4px; }
+    .sc-body p { margin-bottom: 10px; }
+    .legend { display: flex; gap: 14px; flex-wrap: wrap; font-size: .84rem; margin: 4px 0 10px; color: var(--muted); }
+    /* history: 1603 / 1613 cards and the time links */
+    .duo-card { background: #fff; border: 2px solid rgba(95,142,196,.4); border-radius: 14px; padding: 12px 16px; }
+    .dc-yr { font-family: 'Fraunces', Georgia, serif; font-size: 1.7rem; font-weight: 700; color: var(--primary); line-height: 1.1; }
+    .dc-name { font-weight: 700; margin: 2px 0 4px; }
+    .duo-card p { font-size: .9rem; color: var(--muted); line-height: 1.5; margin: 0; }
+    .story .tx { font-weight: 700; color: #8A6A10; border-bottom: 3px solid rgba(201,160,48,.7); }
+    .tab-btn:nth-child(6).active { background: var(--rose); border-color: var(--rose); }
+    .figs { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 14px; margin: 6px 0 14px; }
+    .fig { background: #fff; border: 2px solid rgba(196,122,150,.4); border-radius: 16px; padding: 12px 16px; line-height: 1.6; font-size: .95rem; box-shadow: 0 2px 10px rgba(44,32,16,.05); }
+    .fig p { margin: 0 0 6px; }
+    .fig-top { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; }
+    .fig-name { font-family: 'Fraunces', Georgia, serif; font-size: 1.2rem; font-weight: 700; color: var(--primary-dk); }
+    .fig-tag { font-size: .78rem; font-weight: 700; color: #fff; background: var(--rose); padding: 1px 9px; border-radius: 99px; }
+    .fig-meta { font-size: .86rem; color: var(--muted); margin: 2px 0 8px; }
+    .fig-clues { background: rgba(201,160,48,.10); border-left: 4px solid var(--accent); border-radius: 0 10px 10px 0; padding: 7px 11px; margin: 8px 0 6px; font-size: .92rem; }
+    .fig-lat { font-size: .9rem; color: #2F5F96; }
+    .fig-pic { float: right; width: 150px; margin: 2px 0 10px 14px; }
+    .fig-pic img { width: 150px; height: 190px; object-fit: cover; object-position: 50% 18%; border-radius: 10px; box-shadow: var(--shadow); display: block; }
+    .fig-pic figcaption { font-size: .72rem; color: var(--muted); line-height: 1.25; margin-top: 3px; }
+    @media (max-width: 560px) { .figs { grid-template-columns: 1fr; } .fig-pic { width: 120px; } .fig-pic img { width: 120px; height: 152px; } }
+    .fig::after { content: ''; display: block; clear: both; }
+    .figs-credit { font-size: .75rem; color: var(--muted); margin: -6px 0 4px; }
+    .bank.faces span { display: inline-flex; align-items: center; gap: 10px; padding: 4px 16px 4px 4px; }
+    .bank.faces img { width: 52px; height: 52px; border-radius: 50%; object-fit: cover; object-position: 50% 20%; pointer-events: none; flex-shrink: 0; }
+    .bank.faces span.used img { opacity: .45; filter: grayscale(1); }
+    .clue-list { list-style: none; display: grid; gap: 10px; }
+    .clue-list li { display: flex; align-items: center; justify-content: space-between; gap: 10px 16px; flex-wrap: wrap; background: #fff; border: 1px solid var(--border); border-radius: 14px; padding: 10px 14px; line-height: 1.55; }
+    .clue-t { flex: 1 1 300px; }
+    .clue-list .dz { min-width: 210px; }
+    /* ── Lesson 16 ── */
+    .tf-s .u { cursor: pointer; border-radius: 3px; transition: background .12s; }
+    .tf-s .u:hover { background: rgba(201,160,48,.15); }
+    .tf-s .u.hl { background: linear-gradient(transparent 55%, rgba(201,160,48,.6) 55%); }
+    .ar-txt .talk { display: block; margin: 0 0 8px; }
+    .teacher-only.notes h4 { font-family: 'Fraunces', Georgia, serif; color: #9A3F64; margin: 14px 0 4px; font-size: 1.05rem; }
+    .teacher-only.notes p { margin: 0 0 8px; }
+    /* ── Lesson 17 ── */
+    .root { display: inline-block; font-size: .78rem; font-weight: 800; letter-spacing: .05em; color: #2F5F96; background: rgba(95,142,196,.14); border: 1px solid rgba(95,142,196,.4); padding: 0 7px; border-radius: 6px; margin-right: 2px; vertical-align: 1px; line-height: 1.6; }
+    .gap-text input.blank { min-width: 150px; width: 170px; }
+    .gap-text .gn { margin-left: 2px; }
+    .fam-table td:first-child { white-space: nowrap; }
+    .fam-table td:nth-child(2) { color: var(--muted); font-size: .9rem; }
+    .people6 { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 10px; margin: 8px 0 6px; }
+    .p6 { display: flex; gap: 10px; align-items: center; background: #fff; border: 1px solid var(--border); border-radius: 14px; padding: 8px 12px; font-size: .9rem; line-height: 1.45; }
+    .p6 img { width: 54px; height: 54px; border-radius: 50%; object-fit: cover; object-position: 50% 20%; flex-shrink: 0; }
+    .clue-list .clue-t { line-height: 1.6; }
+    /* prefix task: guide + word cards */
+    .px-guide { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 4px 0 16px; padding: 12px; border-radius: 14px; background: rgba(196,122,150,.07); border: 2px dashed rgba(196,122,150,.4); }
+    .px-g { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; background: #fff; border-radius: 10px; padding: 7px 10px; }
+    .px-chip { font-weight: 800; font-size: .92rem; color: #9A3F64; background: rgba(196,122,150,.15); border: 2px solid rgba(196,122,150,.55); border-radius: 99px; padding: 0 10px; }
+    .px-when { font-size: .88rem; }
+    .px-g small { flex-basis: 100%; color: var(--muted); font-style: italic; font-size: .82rem; }
+    .px-quiz { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+    .px-quiz > .quiz-foot, .px-quiz > .after-check { grid-column: 1 / -1; }
+    @media (max-width: 640px) { .px-quiz, .px-guide { grid-template-columns: 1fr; } }
+    .answer-row.px-card { position: relative; display: block; margin: 0; padding: 14px 14px 12px; background: #fff; border: 2px solid var(--border); border-radius: 16px; box-shadow: 0 2px 10px rgba(44,32,16,.05); }
+    .answer-row.px-card:last-of-type { border-bottom: 2px solid var(--border); }
+    .answer-row.px-card .ar-num { position: absolute; top: 12px; left: 12px; width: 26px; height: 26px; min-width: 0; border-radius: 50%; background: var(--rose); color: #fff; font-family: 'DM Sans', system-ui, sans-serif; font-size: .82rem; display: inline-flex; align-items: center; justify-content: center; margin: 0; }
+    .answer-row.px-card .ar-txt { display: block; text-align: center; margin: 0 0 10px; }
+    .px-word { display: block; font-family: 'Fraunces', Georgia, serif; font-size: 1.6rem; font-weight: 700; letter-spacing: .01em; margin: 2px 0 4px; }
+    .px-word .ch-slot { display: inline-block; min-width: 34px; margin: 0 1px 0 0 !important; padding: 0 1px !important; border-bottom: 3px dashed rgba(196,122,150,.8); color: #9A3F64; text-align: center; }
+    .px-word .ch-slot.filled, .px-word .ch-slot.right, .px-word .ch-slot.wrong { min-width: 0; }
+    .px-word .ch-slot:empty::before { content: '?'; color: rgba(196,122,150,.7); }
+    .px-ctx { display: block; font-size: .9rem; color: var(--muted); line-height: 1.5; }
+    .px-ctx i { color: var(--text); font-weight: 600; }
+    .px-card .ch-group { grid-template-columns: repeat(7, 1fr) !important; gap: 5px; }
+    .px-card .ch-btn { padding: 6px 0; min-height: 0; }
+    .px-card .ch-t { font-size: .9rem; }
+    .sfx { display: inline-block; font-weight: 800; font-size: .9rem; color: #2F5F96; background: rgba(95,142,196,.15); border: 2px solid rgba(95,142,196,.55); border-radius: 99px; padding: 1px 9px; margin: 2px 1px; line-height: 1.5; white-space: nowrap; }
+    .sfx-table td { vertical-align: middle; }
+    .sfx-table b.sfx-x { color: #2F5F96; background: rgba(95,142,196,.18); border-radius: 0 5px 5px 0; padding: 0; box-shadow: inset 0 -2px 0 rgba(95,142,196,.6); }
+    .st4-intro { margin: -4px 0 12px; font-size: .95rem; color: var(--muted); }
+    .steps4 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+    @media (max-width: 640px) { .steps4 { grid-template-columns: 1fr; } }
+    .st4 { --c: var(--blue); background: #fff; border: 2px solid var(--border); border-top: 5px solid var(--c); border-radius: 14px; padding: 12px 14px; }
+    .st4-a { --c: #5F8EC4; } .st4-b { --c: #C9A030; } .st4-c { --c: #C47A96; } .st4-d { --c: #5B8C45; }
+    .st4-head { display: flex; align-items: center; gap: 10px; margin-bottom: 4px; }
+    .st4-n { width: 30px; height: 30px; border-radius: 50%; background: var(--c); color: #fff; font-weight: 800; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .st4-q { font-family: 'Fraunces', Georgia, serif; font-size: 1.12rem; font-weight: 700; }
+    .st4-tip { font-size: .88rem; color: var(--muted); margin: 0 0 8px 40px; }
+    .st4-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 7px; }
+    .st4-list li { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 2px 10px; padding: 7px 10px; border-radius: 10px; background: var(--bg); line-height: 1.4; }
+    .st4-list .pat { font-weight: 700; font-size: .92rem; }
+    .st4-list .pat u { text-decoration: none; display: inline-block; min-width: 26px; text-align: center; border-bottom: 2px dashed var(--primary); color: var(--primary); }
+    .st4-list .arrow { display: none; }
+    .st4-list small { grid-column: 1 / -1; font-size: .85rem; color: var(--muted); font-style: italic; }
+    .st4-list small b { color: var(--text); font-style: normal; }
+    .pos { justify-self: end; white-space: nowrap; font-size: .78rem; font-weight: 800; color: #fff; padding: 2px 10px; border-radius: 99px; }
+    .pos-adj { background: #C47A96; } .pos-n { background: #C9A030; } .pos-adv { background: #5B8C45; } .pos-neg { background: #C84040; } .pos-ed { background: #5F8EC4; } .pos-ing { background: #D4572A; }
+    /* ── Lesson 18 ── */
+    .bank.hdg span { font-weight: 700; }
+    .hp { background: #fff; border: 1px solid var(--border); border-radius: 14px; padding: 12px 16px; margin-bottom: 12px; line-height: 1.75; font-size: 1rem; }
+    .hp-top { margin-bottom: 8px; }
+    .hp-top .gap { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; white-space: normal; }
+    .hp-top .gap .gn { margin-right: 4px; }
+    .hp-top .dz { display: block; flex: 1 1 260px; text-align: left; border-radius: 12px; padding: 5px 14px; min-height: 36px; }
+    .hp-top .dz:empty::before, .hp-top .dz:not(.filled)::after { content: ''; }
+    .quiz.checked .mi { background: rgba(91,140,69,.16); box-shadow: inset 0 -2px 0 rgba(91,140,69,.55); border-radius: 4px; }
+    .logic-body .mi { background: rgba(91,140,69,.16); border-radius: 4px; padding: 0 3px; }
+    .v13-table td:first-child { white-space: nowrap; }
+    .rule-table s { color: var(--red); }
+    .kind-quiz .ch-group { grid-template-columns: repeat(3, 1fr) !important; }
+    .kind-quiz .ch-l, .cent-quiz .ch-l { display: none; }
+    .kind-quiz input.blank { margin-bottom: 8px; }
+    .cent-quiz .ch-group { grid-template-columns: repeat(auto-fill, minmax(64px, 1fr)) !important; gap: 6px; }
+    .cent-quiz .ch-t { text-align: center; width: 100%; }
+    @media (max-width: 560px) { .kind-quiz .ch-group { grid-template-columns: repeat(2, 1fr) !important; } }
+    /* ── Lesson 19 ── */
+    .faces6 { grid-template-columns: repeat(auto-fill, minmax(135px, 1fr)); }
+    .faces6 li { flex-direction: column; align-items: center; justify-content: flex-start; text-align: center; }
+    .faces6 img { width: 110px; height: 140px; object-fit: cover; object-position: 50% 18%; border-radius: 10px; box-shadow: var(--shadow); }
+    .faces6 li { min-width: 0; overflow: hidden; }
+    .faces6 .gap { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; width: 100%; white-space: normal; }
+    .faces6 .gap .gn { margin-right: 0; }
+    .faces6 .dz { min-width: 0; flex: 1 1 100px; max-width: 100%; }
+    .faces6 .key { flex-basis: 100%; text-align: center; margin: 0; }
+    .fig-pic.ev { width: 180px; }
+    .fig-pic.ev img { width: 180px; height: 130px; object-position: 50% 50%; }
+    .fig.wide { margin-top: 4px; }
+    .duo img.top { object-position: 50% 60%; }
+    @media (max-width: 560px) { .fig-pic.ev, .fig-pic.ev img { width: 130px; } .fig-pic.ev img { height: 100px; } }
+    .fig p.ladder { background: rgba(95,142,196,.08); border-left: 3px solid var(--blue); border-radius: 6px; padding: 6px 10px; font-size: .9rem; }
+  </style>
+<script src="../sync.js"></script>
+<script src="../decks.js"></script>
+</head>
+<body>
+
+<header class="site-header">
+  <h1>Lesson 21 — The paper again · Windsor, Henry II, Elizabeth I, 1688, Wilde, a cathedral · a coach · a writer on an island</h1>
+  <a class="back-link" href="../index.html">← All Lessons</a>
+</header>
+
+<div class="container">
+
+  <div class="lesson-meta">
+    <h2>«Высшая проба» after Round 2 · the paper again: Задание 10 (her six events), Задание 5 (a sports life), Задание 9 (a woman writer)</h2>
+    <p>📅 November 2026 &nbsp;·&nbsp; Lesson 21 &nbsp;·&nbsp; history: the six events she remembers from the paper, the dates around each one, and how an event is worded · castles and cathedrals · sentence ordering: the boy who became a coach · culture: women writers, islands, and the Dickens / Dickinson trap · new from Olympway: monarchs’ parents, birthdays, Wilde, Tasks 92 and 98</p>
+  </div>
+
+  <div class="progress-wrap">
+    <div class="progress-top">
+      <div>Blocks checked: <span id="pgCount">0 / 0</span></div>
+      <div>Points today: <span id="pgScore">0 / 0</span></div>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="pgFill"></div></div>
+  </div>
+
+  <details class="teacher-only to-plan">
+    <summary class="to-label" style="cursor:pointer">👩‍🏫 Teacher only · Lesson 21 plan · 60 min (tap to open / close)</summary>
+    <p><b>The thread:</b> the houses and the century rule from memory → six event cards (the paper’s events, each with the dates around it) → which date is the question asking about → castles and cathedrals → families → two Задание 10 sets built like her paper → Olympway 98 → Задание 5 on Knute Rockne → three women writers, Stevenson, and the Dickinson trap → decode → a full Задание 9 on L. M. Montgomery.</p>
+    <ul>
+      <li><b>0–5 · Warm-up:</b> “what was on your paper?” (1) · six monarchs → houses (2) · six century traps (2).</li>
+      <li><b>5–25 · History:</b> how an event is worded (2) · six cards (7) · which date? (3) · cathedrals (2) · families (2) · Задание 10 set 1, her paper (2) · set 2, the traps (2).</li>
+      <li><b>25–37 · Задание 5:</b> the links reminder (1) · Rockne, 10 of 12, timed 8 min (8) · reasons aloud (3).</li>
+      <li><b>37–40 · Break.</b></li>
+      <li><b>40–58 · Culture:</b> the Dickens / Dickinson trap (2) · four cards (7) · decode the clue (2) · Задание 9 on Montgomery, timed 5 min (5) · what was your text? (2).</li>
+      <li><b>58–60 · Homework:</b> open the tab together. Olympway 98 moves to homework if History runs long.</li>
+    </ul>
+  </details>
+
+  <details class="teacher-only notes">
+    <summary class="to-label" style="cursor:pointer">👩‍🏫 Teacher only · Lesson notes: what this lesson teaches and why (tap to open / close)</summary>
+
+    <h4>1 · Where this lesson sits</h4>
+    <p>Polina has sat Round 2. This lesson treats her report of the paper as a map of what the setters like and drills it as if she were sitting the same paper again. She remembered three blocks. <b>Задание 10</b>, events → centuries: Oscar Wilde’s birthday, the year Windsor Castle was built, something about Henry II, something about Elizabeth I (“just ‘Elizabeth’, so probably the First”), the building of a cathedral that was not St Paul’s, and the Glorious Revolution. <b>Задание 5</b>, the 20-point sentence-ordering task: a boy who first lived in a town beginning with B and ran and trained alone in the mornings, then moved with his parents, found he was not fit enough for basketball and “the game with a leather ball”, became famous, was written about in the newspaper, got into the team and invented a special tactic. <b>Задание 9</b>: a woman who wrote short poems and stories, had a husband, lost her parents early, and after their death moved with her husband to some islands. She guessed “someone with the same surname as Charles Dickens”.</p>
+    <p>Two things follow. <b>(1)</b> In Задание 10 the setters do not ask for the famous date. They ask for a <b>birth</b> (Wilde 1854), a <b>beginning of construction</b> (Windsor c. 1070; a cathedral), an <b>accession or coronation</b> (Henry II 1154, Elizabeth I 1558/59). The demo paper had the same habit: “the birth of Christopher Marlowe”, “the beginning of construction of the first Norman stone castle in Wales”, “the end of the Tudor dynasty”, “Henry II’s ascension to the throne”. So each card gives a <b>ladder of dates</b> (born, crowned, the famous event, died, built, rebuilt, burnt), and the “Which date?” task trains reading the wording. The killer traps are <b>Elizabeth I’s death = 1603 = 17th c.</b> (and that is also “the end of the Tudor dynasty” in the demo), <b>Wilde’s death = 1900 = 19th c.</b>, and <b>Henry II = 12th c.</b> (not Henry VIII). <b>(2)</b> Задание 9 can be about anyone in the English-speaking world, Canada included, and the trap is a famous name that only sounds right. Dickinson never married and never left Amherst, so a text with a husband and islands cannot be her.</p>
+
+    <h4>2 · What I found in Olympway (Gulov) for these topics</h4>
+    <p>I went through the whole collection (425 tasks; the history and culture tasks are 86–98, 141, 160–162, 205, 220–222, 243–246 and the BRITISH MONARCHS pairs 293–294, 323–324, 353–354, 383–384, 413–414). What matches her paper, and what is new:</p>
+    <ul>
+      <li><b>Task 98 [ERA, 11th–15th]</b> has “Henry II crowned at Westminster Abbey” (12th): almost certainly the kind of Henry II item she saw. Used in class (8 of 15 lines: only what she was taught).</li>
+      <li><b>Task 92</b> has “Glorious Revolution — 1688” next to Act of Union 1707, the Slave Trade Act 1807, the Bessemer Process 1855 and the Treaty of Edinburgh–Northampton 1328. <b>Task 97</b> has it as a century item (17th). Used in homework (taught items only).</li>
+      <li><b>Task 94</b> is a list of <b>castle construction dates</b> (Cambridge 1068, Leicester, Nottingham …): the same idea as “when was Windsor built”. The answer pattern is the point: almost every royal castle in England was begun in the <b>11th century</b>, right after 1066.</li>
+      <li><b>Task 246</b>: <b>birthdays</b> as exact dates (Elizabeth I 7 Sept 1533, Mary I 18 Feb 1516, Victoria 24 May 1819, Jane Austen and Catherine of Aragon both 16 December). Wilde’s birthday on her paper is the same kind of item. In homework with a table to learn first.</li>
+      <li><b>Task 243</b>: a gap text on <b>Wilde</b>: Irish · early death · De Profundis written in <b>prison</b> (1897) · died in <b>Paris</b> at 46 · pardoned under the Policing and <b>Crime</b> Act 2017. All on today’s Wilde card; the task is in homework.</li>
+      <li><b>Tasks 324, 354, 414</b>: monarchs’ <b>parents</b>: Henry II ← Geoffrey of Anjou and Empress Matilda; John ← Henry II and Eleanor of Aquitaine; Elizabeth I ← Henry VIII and Anne Boleyn; Henry VIII ← Henry VII and Elizabeth of York. <b>Task 413</b> gives Henry II 1154–1189 and the House of Angevin. Used in class (“Families”).</li>
+      <li><b>Task 141</b>: Canterbury Cathedral is in <b>Kent</b>; <b>Task 205</b>: Wren and St Paul’s (taught in Lesson 16). Cathedrals in general are not drilled in Olympway, so the cathedral table here is mine: the ones a setter would pick when “not St Paul’s”.</li>
+      <li><b>Task 160</b>: Wilde studied at <b>Oxford</b> (Magdalen); on the card.</li>
+    </ul>
+    <p>Nothing in Olympway matches the two reading texts (there is no basketball or island-poet text in the book), so the Задание 5 and Задание 9 texts below are new, written in the exam format.</p>
+
+    <h4>3 · History: the six events</h4>
+    <p><b>Windsor Castle:</b> begun <b>c. 1070</b> by William the Conqueror (11th), a wooden castle on a mound, one of a ring of castles around London; rebuilt in stone by <b>Henry II</b> (1170s, 12th); St George’s Chapel begun <b>1475</b> by Edward IV (15th); the royal family took the name Windsor in <b>1917</b>; the fire of <b>1992</b> (20th); Elizabeth II buried in St George’s Chapel in 2022. The demo item “the first Norman stone castle in Wales” is <b>Chepstow, begun 1067</b> (11th). <b>Henry II:</b> born 1133 in Le Mans; son of <b>Geoffrey, Count of Anjou</b>, and <b>Empress Matilda</b>; married <b>Eleanor of Aquitaine</b> (1152); king in 1154, crowned at Westminster Abbey on 19 December <b>1154</b>; the first Plantagenet; <b>Thomas Becket</b> murdered in Canterbury Cathedral on 29 December <b>1170</b>; sons <b>Richard the Lionheart</b> and <b>John</b>; died 1189. <b>Elizabeth I:</b> born at Greenwich on 7 September <b>1533</b>; queen on 17 November <b>1558</b>, crowned at Westminster Abbey on 15 January <b>1559</b>; the Armada <b>1588</b>; the East India Company <b>1600</b> (still 16th); died at Richmond on 24 March <b>1603</b> (17th) = the end of the Tudors. <b>The Glorious Revolution:</b> <b>1688</b>; James II (Catholic) has a son; William of Orange, husband of James’s daughter <b>Mary</b>, lands at <b>Torbay</b> in Devon on 5 November 1688; James flees to France; William III and Mary II rule together from <b>1689</b>; the <b>Bill of Rights 1689</b>; the Battle of the <b>Boyne 1690</b> in Ireland. <b>Oscar Wilde:</b> born in Dublin on 16 October <b>1854</b>; died in Paris on 30 November <b>1900</b> (19th: 1900 is the last year of the 19th century); pardoned in <b>2017</b> (21st). <b>Salisbury Cathedral:</b> begun <b>1220</b>, finished <b>1258</b> (13th); the spire c. <b>1320</b> (14th), 123 m, the tallest in Britain; it keeps the best of the four 1215 copies of Magna Carta; Constable painted it.</p>
+    <p><b>Russian hooks</b> (on the cards): 1147 Moscow first mentioned / 1154 Henry II · 1533 Ivan IV becomes Grand Prince at three / Elizabeth I born · 1689 Peter I takes power / the Bill of Rights · 1854 the Crimean War / Wilde born.</p>
+    <p><b>Keys.</b> Which date: 1 1603 · 2 1154 · 3 1854 · 4 1688 · 5 1170 · 6 1559 · 7 1900 · 8 1689 (extras 1066, 1533). Cathedrals: Salisbury 13th · Liverpool 20th · Durham 11th · Lincoln (tallest building) 14th · Canterbury (first cathedral) 6th · St Paul’s 17th · Westminster Abbey (today’s church) 13th. Families: John ← Henry II and Eleanor · Elizabeth I ← Henry VIII and Anne Boleyn · Henry II ← Geoffrey and Matilda · Mary II ← James II and Anne Hyde · Henry VIII ← Henry VII and Elizabeth of York (extras: Henry VIII and Catherine of Aragon = Mary I; William I and Matilda of Flanders). Set 1 (her paper): Wilde born 19th · Windsor begun 11th · Glorious Revolution 17th · Henry II crowned 12th · Salisbury begun 13th · Elizabeth I crowned 16th (unused 15th, 20th). Set 2 (the traps): Windsor fire 20th · Elizabeth I dies 17th · Becket 12th · Wilde pardoned 21st · Durham begun 11th · Wilde dies 19th · St George’s Chapel 15th · Salisbury spire 14th (unused 13th, 16th). Olympway 98 (8 lines): Henry II crowned 12th · Agincourt 15th · Magna Carta 13th · William crowned 11th · Caxton 15th · Hundred Years’ War 14th · Domesday 11th · Richard to the Crusades 12th.</p>
+
+    <h4>4 · Задание 5: the boy who became a coach</h4>
+    <p>Her text sounds like a sports biography in the Babe Ruth style of the demo. I can’t tell who it was from her description (it could even be a story), so the practice text is a real life with the same shape: <b>Knute Rockne</b> (1888–1931), born in <b>Voss</b>, near <b>Bergen</b>, Norway; to <b>Chicago</b> at five; too light for football, so he ran; four years at the post office; <b>Notre Dame</b> at 22; in summer 1913 he and <b>Gus Dorais</b> practised passing on a Lake Erie beach; on 1 November 1913 Notre Dame beat <b>Army</b> 35–13 with the <b>forward pass</b>, and the newspapers made it famous; head coach from 1918 (105 wins, 12 losses, 5 ties). The vocabulary she lacked: American football is “the game with a <b>leather ball</b>”, the ball is the <b>pigskin</b>; a <b>coach</b>, a <b>tactic</b>, the <b>forward pass</b>. The key: <b>C H A F K D J B G E</b>; extras <b>I</b> (the pass “was soon forbidden”: the text says the newspapers made it famous and his teams went on winning) and <b>L</b> (“She”: no woman in the text). The “keep” box adds the Задание 9 lateral: in the 1940 film about him, <b>Ronald Reagan</b> played George Gipp, and “Win one for the Gipper” became Reagan’s nickname.</p>
+
+    <h4>5 · Culture: who was the woman on the island?</h4>
+    <p>From “short poems and stories, a husband, parents who died early, then a move with the husband after their death, islands”, the best fit I can find is <b>L. M. Montgomery</b> (1874–1942): born on <b>Prince Edward Island</b> (Canada); her mother died when she was 21 months old and her father in 1900; she sold hundreds of <b>short poems and stories</b> to magazines before <i>Anne of Green Gables</i> (1908); she married only after her grandmother died (1911) and moved with her husband to Ontario. The direction is the other way round (she left the island), so Polina may have mixed it up, or the text was about someone else. Other people who match parts of it: <b>Robert Louis Stevenson</b> (after his father’s death in 1887 he left Britain with his wife and settled on the islands of <b>Samoa</b>; <i>A Child’s Garden of Verses</i> is a book of little poems), and <b>Elizabeth Barrett Browning</b> (a poet who married secretly and moved abroad with her husband, to Italy). Ask her: was it a “he” or a “she”? Which country? An ocean, or a gulf? Did the text mention a red-haired girl, a map, or a dog? The Dickinson card she knows is the trap: <b>no husband, no move, no islands</b>.</p>
+    <p>The Culture tab teaches Montgomery, Stevenson and Barrett Browning on cards (Wilde is on the History tab), recalls Dickinson, then decodes. <b>Decode key:</b> 1 Montgomery · 2 Dickinson · 3 Stevenson · 4 Barrett Browning · 5 Wilde · 6 Dickens (extras: Austen, Charlotte Brontë). <b>Задание 9 key (Montgomery):</b> 1 Lucy Maud Montgomery · 2 Prince Edward Island · 3 <i>Anne of Green Gables</i> · 4 Canada · 5 Lewis Carroll (“the immortal Alice”; Twain praised Anne as the dearest child in fiction since Alice). <b>Homework Задание 9 (Stevenson):</b> 1 Robert Louis Stevenson · 2 Edinburgh · 3 <i>Treasure Island</i> · 4 Long John Silver · 5 Jekyll and Hyde. <b>Homework Задание 9 (Montgomery, the second text):</b> 1 Anne Shirley · 2 Cavendish · 3 the Gulf of St Lawrence · 4 Ontario · 5 Mark Twain.</p>
+
+    <h4>6 · Homework and the decks</h4>
+    <p>Six new V14 cards (Henry II, Elizabeth I, L. M. Montgomery, R. L. Stevenson, Elizabeth Barrett Browning, Knute Rockne) and three new V15 cards (Windsor Castle, Salisbury Cathedral, the Glorious Revolution), built like the others. Then Olympway 246 (birthdays, with the table to learn first), Olympway 243 (Wilde), a mixed Задание 10 set in the demo’s wording (key: 12th · 17th · 11th · 15th · 20th · 19th · 16th · 21st; unused 13th, 14th), Olympway 92 (taught lines only: 1688 · 1707 · 1066 · 1415 · 1815) and the Stevenson Задание 9.</p>
+  </details>
+
+  <div class="tab-bar">
+    <button class="tab-btn active" onclick="switchTab('warm', this)">🔁 Warm-up</button>
+    <button class="tab-btn"        onclick="switchTab('hist', this)">🏛 Задание 10 · your paper</button>
+    <button class="tab-btn"        onclick="switchTab('ord', this)">🔗 Order · Задание 5</button>
+    <button class="tab-btn"        onclick="switchTab('cult', this)">🎭 Culture · Задание 9</button>
+    <button class="tab-btn"        onclick="switchTab('hw', this)">🏠 Homework</button>
+  </div>
+
+
+  <!-- ══════════════════════════════════════════════════════════
+       TAB 1 — WARM-UP (5 min)
+  ══════════════════════════════════════════════════════════ -->
+  <div class="tab-content active" id="tab-warm">
+
+    <div class="teacher-only" style="margin:0 0 16px">
+      <div class="to-label">👩‍🏫 Teacher only · what to say · warm-up</div>
+      <ul>
+        <li><b>Hello:</b> “Imagine you are sitting the same paper again next week. Today we go back to exactly what you saw: six events, a sports text, a writer on an island.”</li>
+        <li><b>What was on your paper:</b> she writes, in one minute, everything she remembers. Keep it: it is the list for the last part of the Culture tab.</li>
+        <li><b>Houses:</b> “Every event on your paper hangs on a royal house.” If she stops, the mnemonic: No Plan Like Yours To Study History Wisely.</li>
+        <li><b>The century traps:</b> “First two digits plus one, except the round hundreds.” Stop on 1603: “Whose death is that?” (Elizabeth I: the end of the Tudors.)</li>
+      </ul>
+    </div>
+
+    <div class="exercise">
+      <div class="exercise-label">Warm-up 1 · 1 min</div>
+      <h3>What was on your paper?</h3>
+      <p class="instr">Write down everything you remember from Задания 5, 9 and 10: names, places, numbers, single words. Spelling doesn’t matter.</p>
+      <textarea class="free-write" data-k="paper-memory" placeholder="e.g. Wilde’s birthday · Windsor Castle · Henry II … · a boy from B… · basketball · a woman, poems, islands …"></textarea>
+    </div>
+
+    <div class="exercise">
+      <div class="exercise-label">Warm-up 2 · the houses · 2 min</div>
+      <h3>Which royal house?</h3>
+      <div class="mnemo"><b>N</b>o <b>P</b>lan <b>L</b>ike <b>Y</b>ours <b>T</b>o <b>S</b>tudy <b>H</b>istory <b>W</b>isely</div>
+      <div class="quiz kind-quiz">
+        <div class="answer-row"><span class="ar-num">1</span><span class="ar-txt">Elizabeth I</span><select class="exam-select ans" data-opts="Norman,Plantagenet,Tudor,Stuart,Hanover,Windsor" data-answer="Tudor"></select></div>
+        <div class="answer-row"><span class="ar-num">2</span><span class="ar-txt">Victoria</span><select class="exam-select ans" data-opts="Norman,Plantagenet,Tudor,Stuart,Hanover,Windsor" data-answer="Hanover"></select></div>
+        <div class="answer-row"><span class="ar-num">3</span><span class="ar-txt">William the Conqueror</span><select class="exam-select ans" data-opts="Norman,Plantagenet,Tudor,Stuart,Hanover,Windsor" data-answer="Norman"></select></div>
+        <div class="answer-row"><span class="ar-num">4</span><span class="ar-txt">Elizabeth II</span><select class="exam-select ans" data-opts="Norman,Plantagenet,Tudor,Stuart,Hanover,Windsor" data-answer="Windsor"></select></div>
+        <div class="answer-row"><span class="ar-num">5</span><span class="ar-txt">Henry II</span><select class="exam-select ans" data-opts="Norman,Plantagenet,Tudor,Stuart,Hanover,Windsor" data-answer="Plantagenet"></select></div>
+        <div class="answer-row"><span class="ar-num">6</span><span class="ar-txt">James II, who lost his throne in 1688</span><select class="exam-select ans" data-opts="Norman,Plantagenet,Tudor,Stuart,Hanover,Windsor" data-answer="Stuart"></select></div>
+        <div class="after-check">
+          <details class="logic" open><summary><span>💡</span><span class="hint-txt">Remember</span></summary><div class="logic-body"><p>Henry <b>II</b> (1154) is the <b>first Plantagenet</b>; Henry <b>VIII</b> is a Tudor. Don’t let the Roman numerals blur.</p></div></details>
+        </div>
+      </div>
+    </div>
+
+    <div class="exercise">
+      <div class="exercise-label">Warm-up 3 · the century rule · 2 min</div>
+      <h3>Six years from your paper</h3>
+      <div class="quiz cent-quiz">
+        <div class="answer-row"><span class="ar-num">1</span><span class="ar-txt"><b>1603</b></span><select class="exam-select ans" data-opts="15th,16th,17th" data-answer="17th"></select></div>
+        <div class="answer-row"><span class="ar-num">2</span><span class="ar-txt"><b>1154</b></span><select class="exam-select ans" data-opts="11th,12th,13th" data-answer="12th"></select></div>
+        <div class="answer-row"><span class="ar-num">3</span><span class="ar-txt"><b>2017</b></span><select class="exam-select ans" data-opts="19th,20th,21st" data-answer="21st"></select></div>
+        <div class="answer-row"><span class="ar-num">4</span><span class="ar-txt"><b>1533</b></span><select class="exam-select ans" data-opts="16th,17th,18th" data-answer="16th"></select></div>
+        <div class="answer-row"><span class="ar-num">5</span><span class="ar-txt"><b>1900</b></span><select class="exam-select ans" data-opts="19th,20th,21st" data-answer="19th"></select></div>
+        <div class="answer-row"><span class="ar-num">6</span><span class="ar-txt"><b>1688</b></span><select class="exam-select ans" data-opts="16th,17th,18th" data-answer="17th"></select></div>
+        <div class="after-check">
+          <details class="logic" open><summary><span>💡</span><span class="hint-txt">The rule</span></summary><div class="logic-body"><p>First two digits + 1 (<b>16</b>03 → 17th). A round hundred is the <b>last</b> year of its century: <b>1900</b> → 19th, 2000 → 20th.</p></div></details>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════════════════════════════════
+       TAB 2 — HISTORY: Задание 10, the six events from her paper
+  ══════════════════════════════════════════════════════════ -->
+  <div class="tab-content" id="tab-hist">
+
+    <div class="teacher-only" style="margin:0 0 16px">
+      <div class="to-label">👩‍🏫 Teacher only · what to say · Задание 10</div>
+      <ul>
+        <li><b>The wording:</b> “The paper never says ‘Elizabeth I’. It says <i>the birth of</i>, <i>the coronation of</i>, <i>the death of</i>, <i>the beginning of construction of</i>. Each one is a different year, sometimes a different century.” Read the table together.</li>
+        <li><b>The cards:</b> she reads the 📅 ladder of each card aloud. Stop on: “Windsor: who started it, who rebuilt it in stone?” (William I, Henry II) · “Elizabeth I died in 1603: which century, and what else ended then?” (17th; the Tudors) · “Wilde died in 1900: which century?” (19th).</li>
+        <li><b>Which date:</b> fast, from the cards. Then <b>cathedrals</b>: “If it’s not St Paul’s, it’s probably one of these.” The rule: the great medieval cathedrals were mostly begun in the 11th or 13th century.</li>
+        <li><b>Families:</b> Olympway 324 / 354 / 414 ask for parents. “Henry II’s mother was an empress. Elizabeth I’s mother was executed.”</li>
+        <li><b>Set 1:</b> “This is your paper, as you remember it. Two minutes.” <b>Set 2:</b> “Same people, the other dates.”</li>
+      </ul>
+    </div>
+
+    <div class="step-title">In class · 20 min</div>
+
+    <div class="exercise">
+      <div class="exercise-label">How Задание 10 words an event · 2 min</div>
+      <h3>Which year is the question really asking for?</h3>
+      <div class="rule-box">
+        <div class="tbl-wrap"><table class="rule-table wrap">
+          <tr><th>The paper says</th><th>It means</th><th>Example</th></tr>
+          <tr><td><i>the birth of …</i></td><td>the year the person was born, not when they were famous</td><td>the birth of Oscar Wilde → 1854 → <b>19th</b></td></tr>
+          <tr><td><i>… ascension to the throne</i> / <i>… becomes king</i></td><td>the first year of the reign</td><td>Henry II’s ascension → 1154 → <b>12th</b></td></tr>
+          <tr><td><i>the coronation of …</i></td><td>the crowning, sometimes the next year</td><td>Elizabeth I: queen 1558, crowned 1559 → <b>16th</b> both</td></tr>
+          <tr><td><i>the death of …</i> / <i>the end of the … dynasty</i></td><td>the last year</td><td>Elizabeth I dies = the end of the Tudors → 1603 → <b>17th</b></td></tr>
+          <tr><td><i>the beginning of construction of …</i></td><td>the first stone, not the finished building</td><td>Salisbury Cathedral: 1220 (finished 1258) → <b>13th</b></td></tr>
+          <tr><td><i>the completion of …</i></td><td>the last stone</td><td>York Minster: begun 1220, completed 1472 → <b>15th</b></td></tr>
+        </table></div>
+      </div>
+    </div>
+
+    <div class="exercise">
+      <div class="exercise-label">Meet the events · 7 min</div>
+      <h3>Six things from your paper, and the dates around them</h3>
+      <p class="instr">Read each card aloud: the 📅 ladder first, then one 🔎 clue. The ladder is the point: the paper can ask for <b>any</b> rung of it.</p>
+      <p class="figs-credit">Pictures: Wikimedia Commons (public domain, or the free licence named under the picture).</p>
+      <div class="figs">
+
+        <div class="fig"><figure class="fig-pic ev"><img src="images/culture/places/windsor.jpg" alt="Windsor Castle at sunset" loading="lazy"><figcaption>Windsor Castle and the Round Tower (photo: Diliff, CC BY-SA 3.0)</figcaption></figure><div class="fig-top"><span class="fig-name">Windsor Castle</span><span class="fig-tag">begun c. 1070 · 11th c.</span></div>
+          <div class="fig-meta">Виндзорский замок · on the Thames, west of London, opposite Eton</div>
+          <p><b>What:</b> the oldest and largest castle in the world that people still live in. <b>William the Conqueror</b> began it soon after 1066, a wooden fort on a mound, one of a ring of castles around London a day’s march apart. <b>Henry II</b> rebuilt it in stone in the 1170s. The <b>Round Tower</b> stands on the original mound.</p>
+          <p class="ladder">📅 <b>c. 1070</b> begun (11th) · <b>1170s</b> rebuilt in stone by Henry II (12th) · <b>1475</b> St George’s Chapel begun by Edward IV (15th) · <b>1917</b> the royal family takes the name Windsor (20th) · <b>1992</b> a great fire (20th) · <b>2022</b> Elizabeth II buried in St George’s Chapel (21st)</p>
+          <div class="fig-clues"><b>🔎 Clues in a text:</b> a fortress begun by the Norman conqueror · a mound with a round tower · a chapel of the Order of the Garter · a name taken in the First World War instead of a German one · a fire in November 1992</div>
+          <div class="fig-lat"><b>The demo’s twin:</b> “the first Norman stone castle in Wales” = <b>Chepstow</b>, begun <b>1067</b> (11th). Nearly every royal castle in England was begun in the 11th century.</div></div>
+
+        <div class="fig"><figure class="fig-pic"><img src="images/culture/figures/henry2.jpg" alt="Henry II in a medieval manuscript" loading="lazy"><figcaption>Henry II, from a medieval manuscript</figcaption></figure><div class="fig-top"><span class="fig-name">Henry II</span><span class="fig-tag">king 1154–1189 · 12th c.</span></div>
+          <div class="fig-meta">Генрих II · the first Plantagenet · born in Le Mans, France</div>
+          <p><b>Family:</b> son of <b>Geoffrey, Count of Anjou</b> (whose badge, a sprig of broom, <i>planta genista</i>, gave the name Plantagenet) and <b>Empress Matilda</b>, Henry I’s daughter. Husband of <b>Eleanor of Aquitaine</b>; father of <b>Richard the Lionheart</b> and <b>John</b> (Magna Carta). He ruled England and half of France.</p>
+          <p><b>Famous for:</b> a quarrel with his friend <b>Thomas Becket</b>, Archbishop of Canterbury. Four knights who heard the angry king (“Will no one rid me of this turbulent priest?”) killed Becket in <b>Canterbury Cathedral</b>. Henry also laid the base of English common law, with travelling judges and juries.</p>
+          <p class="ladder">📅 <b>1133</b> born · <b>1152</b> marries Eleanor · <b>1154</b> becomes king, crowned at Westminster Abbey on 19 December · <b>1170</b> Becket murdered · <b>1189</b> dies. All <b>12th</b>.</p>
+          <div class="fig-clues"><b>🔎 Clues in a text:</b> a king who ruled from Scotland’s border to the Pyrenees · a wife who had been queen of France · an archbishop killed in his own cathedral · two sons who both became kings</div>
+          <div class="fig-lat"><b>🇷🇺 Hook:</b> 1147, Moscow first mentioned; seven years later Henry II is crowned. <b>Trap:</b> Henry <b>II</b> ≠ Henry VIII.</div></div>
+
+        <div class="fig"><figure class="fig-pic ev"><img src="images/culture/places/salisbury.jpg" alt="Salisbury Cathedral from the east" loading="lazy"><figcaption>Salisbury Cathedral (photo: wyrdlight, CC BY-SA 3.0)</figcaption></figure><div class="fig-top"><span class="fig-name">Salisbury Cathedral</span><span class="fig-tag">begun 1220 · 13th c.</span></div>
+          <div class="fig-meta">Солсберийский собор · Wiltshire, near Stonehenge</div>
+          <p><b>What:</b> the cathedral moved down from the windy hill of <b>Old Sarum</b>. The first stone was laid in <b>1220</b> and the main church was finished in only 38 years, so it is all in one style (Early English Gothic). The <b>spire</b>, added about <b>1320</b>, is 123 m high, the tallest in Britain.</p>
+          <p><b>Inside:</b> the best of the four surviving copies of <b>Magna Carta</b> (1215) and one of the oldest working clocks in the world (c. 1386). <b>John Constable</b> painted it again and again.</p>
+          <p class="ladder">📅 <b>1220</b> begun (13th) · <b>1258</b> consecrated (13th) · <b>c. 1320</b> the spire (14th)</p>
+          <div class="fig-clues"><b>🔎 Clues in a text:</b> the tallest spire in Britain · a copy of the 1215 charter · a cathedral that moved from a hill-fort · painted by the man who painted <i>The Hay Wain</i></div>
+          <div class="fig-lat"><b>Not St Paul’s?</b> See the table of cathedrals below: it is the list a setter would choose from.</div></div>
+
+        <div class="fig"><figure class="fig-pic"><img src="images/culture/figures/elizabeth1.jpg" alt="The Darnley Portrait of Elizabeth I" loading="lazy"><figcaption>the “Darnley Portrait”, c. 1575</figcaption></figure><div class="fig-top"><span class="fig-name">Elizabeth I</span><span class="fig-tag">queen 1558–1603 · 16th c.</span></div>
+          <div class="fig-meta">Елизавета I · the last Tudor · born at Greenwich Palace</div>
+          <p><b>Family:</b> daughter of <b>Henry VIII</b> and <b>Anne Boleyn</b>, who was beheaded when Elizabeth was two. Her half-sister <b>Mary I</b> (the daughter of Catherine of Aragon) reigned before her. She never married: “the Virgin Queen”, and <b>Virginia</b> is named after her.</p>
+          <p><b>Her reign:</b> the Church of England restored · the defeat of the Spanish <b>Armada</b> · Drake sails round the world · Shakespeare and the Globe · the East India Company. When she died, her cousin’s son <b>James VI of Scotland</b> became James I: the first Stuart.</p>
+          <p class="ladder">📅 <b>7 Sept 1533</b> born (16th) · <b>17 Nov 1558</b> becomes queen · <b>15 Jan 1559</b> crowned at Westminster Abbey · <b>1588</b> the Armada · <b>1600</b> the East India Company (still 16th!) · <b>24 March 1603</b> dies at Richmond = the end of the Tudor dynasty (<b>17th</b>)</p>
+          <div class="fig-clues"><b>🔎 Clues in a text:</b> a queen whose mother was executed · a queen who never married · an American colony named after her · a fleet from Spain · the last of her family to rule</div>
+          <div class="fig-lat"><b>🇷🇺 Hook:</b> 1533, the year she is born, three-year-old Ivan IV becomes Grand Prince of Moscow; later they wrote letters to each other.</div></div>
+
+        <div class="fig"><figure class="fig-pic ev"><img src="images/culture/places/glorious.jpg" alt="William of Orange landing at Brixham in 1688" loading="lazy"><figcaption>William of Orange lands at Brixham, Torbay, 1688 (19th-century painting)</figcaption></figure><div class="fig-top"><span class="fig-name">The Glorious Revolution</span><span class="fig-tag">1688–89 · 17th c.</span></div>
+          <div class="fig-meta">Славная революция · England · the end of James II</div>
+          <p><b>What:</b> the Catholic king <b>James II</b> (a Stuart) had a son in 1688, and Protestant lords feared a line of Catholic kings. They invited the Dutch prince <b>William of Orange</b>, husband of James’s Protestant daughter <b>Mary</b> (her mother was <b>Anne Hyde</b>). William landed at <b>Torbay</b>, in Devon, on 5 November 1688; James fled to France. It was called “glorious” because in England it was almost bloodless.</p>
+          <p><b>After:</b> <b>William III and Mary II</b> ruled together; the <b>Bill of Rights</b> (1689) limited the king’s power: Parliament now decided taxes and the army. James fought back in Ireland and lost at the <b>Battle of the Boyne</b> (1690), still marked by the “Orangemen” on 12 July.</p>
+          <p class="ladder">📅 <b>1685</b> James II king · <b>1688</b> William lands · <b>1689</b> William and Mary crowned; the Bill of Rights · <b>1690</b> the Boyne. All <b>17th</b>.</p>
+          <div class="fig-clues"><b>🔎 Clues in a text:</b> a king who ran away to France · a Dutch prince invited by Parliament · a husband and wife on the throne together · a bill that limited the crown</div>
+          <div class="fig-lat"><b>🇷🇺 Hook:</b> 1689, the year of the Bill of Rights, the young Peter I takes power from his sister Sophia.</div></div>
+
+        <div class="fig"><figure class="fig-pic"><img src="images/culture/figures/wilde.jpg" alt="Oscar Wilde" loading="lazy"><figcaption>photo by Napoleon Sarony, 1882</figcaption></figure><div class="fig-top"><span class="fig-name">Oscar Wilde</span><span class="fig-tag">1854–1900 · 19th c.</span></div>
+          <div class="fig-meta">Оскар Уайльд · Oscar Fingal O’Flahertie Wills Wilde · born in Dublin</div>
+          <p><b>You know:</b> <i>The Picture of Dorian Gray</i>, <i>The Importance of Being Earnest</i>, <i>The Canterville Ghost</i>, <i>The Happy Prince</i>. <b>New:</b> he studied at Trinity College Dublin and Magdalen College, <b>Oxford</b>. In 1895 he was sent to prison for two years; in <b>Reading Gaol</b> he wrote a long letter, <i>De Profundis</i> (1897, published 1905), and after his release <i>The Ballad of Reading Gaol</i> (1898). He died poor in <b>Paris</b> at 46 and is buried in Père Lachaise. In <b>2017</b> a new law (the Policing and Crime Act) pardoned him with about 50,000 other men.</p>
+          <p class="ladder">📅 <b>16 Oct 1854</b> born (19th) · <b>1891</b> <i>Dorian Gray</i> as a book · <b>1895</b> <i>Earnest</i>; prison · <b>1898</b> the Ballad · <b>30 Nov 1900</b> dies (<b>19th</b>: 1900 is the last year of the 19th century) · <b>2017</b> pardoned (21st)</p>
+          <div class="fig-clues"><b>🔎 Clues in a text:</b> an Irishman with four first names · an Oxford student famous for his wit · a portrait that grows old · a prison in a town of Berkshire · a hotel room in Paris</div>
+          <div class="fig-lat"><b>🇷🇺 Hook:</b> 1854, the Crimean War: Sevastopol is under siege the year he is born.</div></div>
+      </div>
+    </div>
+
+    <div class="exercise">
+      <div class="exercise-label">Read the wording · 3 min</div>
+      <h3>Which date?</h3>
+      <p class="instr">Eight events, ten dates. Two dates are extra. Everything is on the cards.</p>
+      <div class="bank dnd"><span>1689</span><span>1559</span><span>1066</span><span>1900</span><span>1154</span><span>1854</span><span>1603</span><span>1533</span><span>1170</span><span>1688</span></div>
+      <p class="bank-hint">Drag a date to an event, or tap the date and then the event. Tap a filled place to empty it.</p>
+      <div class="quiz">
+        <ul class="clue-list">
+          <li><span class="clue-t">The death of Elizabeth I</span><span class="gap"><span class="gn">1</span><select class="exam-select ans" data-bank="1" data-answer="1603"></select></span></li>
+          <li><span class="clue-t">Henry II’s ascension to the throne</span><span class="gap"><span class="gn">2</span><select class="exam-select ans" data-bank="1" data-answer="1154"></select></span></li>
+          <li><span class="clue-t">The birth of Oscar Wilde</span><span class="gap"><span class="gn">3</span><select class="exam-select ans" data-bank="1" data-answer="1854"></select></span></li>
+          <li><span class="clue-t">William of Orange lands in Devon with a Dutch army</span><span class="gap"><span class="gn">4</span><select class="exam-select ans" data-bank="1" data-answer="1688"></select></span></li>
+          <li><span class="clue-t">The murder of Thomas Becket in Canterbury Cathedral</span><span class="gap"><span class="gn">5</span><select class="exam-select ans" data-bank="1" data-answer="1170"></select></span></li>
+          <li><span class="clue-t">The coronation of Elizabeth I</span><span class="gap"><span class="gn">6</span><select class="exam-select ans" data-bank="1" data-answer="1559"></select></span></li>
+          <li><span class="clue-t">The death of Oscar Wilde</span><span class="gap"><span class="gn">7</span><select class="exam-select ans" data-bank="1" data-answer="1900"></select></span></li>
+          <li><span class="clue-t">Parliament passes the Bill of Rights</span><span class="gap"><span class="gn">8</span><select class="exam-select ans" data-bank="1" data-answer="1689"></select></span></li>
+        </ul>
+        <div class="after-check">
+          <details class="logic" open><summary><span>💡</span><span class="hint-txt">The extras</span></summary><div class="logic-body"><p><b>1533</b> is Elizabeth I’s <b>birth</b>, not her coronation or death. <b>1066</b> is the Norman Conquest; Windsor was begun a few years later.</p></div></details>
+        </div>
+      </div>
+    </div>
+
+    <div class="exercise">
+      <div class="exercise-label">If it isn’t St Paul’s · 2 min</div>
+      <h3>Seven cathedrals and when they were begun</h3>
+      <div class="rule-box">
+        <div class="tbl-wrap"><table class="rule-table wrap">
+          <tr><th>Cathedral</th><th>Dates</th><th>Why a setter would choose it</th></tr>
+          <tr><td>Canterbury (Kent)</td><td>first cathedral <b>597</b> (St Augustine) · rebuilt from <b>1070</b></td><td>Becket murdered here, 1170; Chaucer’s pilgrims go here</td></tr>
+          <tr><td>Durham</td><td>begun <b>1093</b> · 11th</td><td>the great Norman cathedral on a cliff over the river</td></tr>
+          <tr><td>Lincoln</td><td>begun <b>1072</b> · spire c. 1311–<b>1548</b></td><td>for over 200 years the tallest building in the world, until the spire fell in 1548 (16th)</td></tr>
+          <tr><td>Salisbury</td><td>begun <b>1220</b> · spire c. 1320</td><td>tallest spire in Britain; Magna Carta</td></tr>
+          <tr><td>Westminster Abbey (not a cathedral, but often asked)</td><td>Edward the Confessor’s church <b>1065</b> · today’s church begun <b>1245</b> by Henry III</td><td>coronations since 1066; Poets’ Corner</td></tr>
+          <tr><td>York Minster</td><td>begun <b>1220</b> · completed <b>1472</b></td><td>the largest medieval Gothic church in northern Europe</td></tr>
+          <tr><td>St Paul’s (Wren’s)</td><td><b>1675</b>–1710 · 17th–18th</td><td>after the Great Fire of 1666 (Lesson 16)</td></tr>
+          <tr><td>Liverpool (Anglican)</td><td><b>1904</b>–1978 · 20th</td><td>the largest cathedral in Britain</td></tr>
+          <tr><td>Coventry (the new one)</td><td>old one bombed <b>1940</b> · new one consecrated <b>1962</b></td><td>a symbol of peace after the Second World War</td></tr>
+        </table></div>
+      </div>
+      <div class="quiz cent-quiz">
+        <div class="answer-row"><span class="ar-num">1</span><span class="ar-txt">The beginning of construction of Salisbury Cathedral</span><select class="exam-select ans" data-opts="6th,11th,13th,14th,17th,20th" data-answer="13th"></select></div>
+        <div class="answer-row"><span class="ar-num">2</span><span class="ar-txt">The beginning of construction of Liverpool Cathedral</span><select class="exam-select ans" data-opts="6th,11th,13th,14th,17th,20th" data-answer="20th"></select></div>
+        <div class="answer-row"><span class="ar-num">3</span><span class="ar-txt">The beginning of construction of Durham Cathedral</span><select class="exam-select ans" data-opts="6th,11th,13th,14th,17th,20th" data-answer="11th"></select></div>
+        <div class="answer-row"><span class="ar-num">4</span><span class="ar-txt">Lincoln Cathedral becomes the tallest building in the world</span><select class="exam-select ans" data-opts="6th,11th,13th,14th,17th,20th" data-answer="14th"></select></div>
+        <div class="answer-row"><span class="ar-num">5</span><span class="ar-txt">St Augustine founds the first cathedral at Canterbury</span><select class="exam-select ans" data-opts="6th,11th,13th,14th,17th,20th" data-answer="6th"></select></div>
+        <div class="answer-row"><span class="ar-num">6</span><span class="ar-txt">The beginning of construction of Wren’s St Paul’s</span><select class="exam-select ans" data-opts="6th,11th,13th,14th,17th,20th" data-answer="17th"></select></div>
+        <div class="answer-row"><span class="ar-num">7</span><span class="ar-txt">Henry III begins today’s Westminster Abbey</span><select class="exam-select ans" data-opts="6th,11th,13th,14th,17th,20th" data-answer="13th"></select></div>
+        <div class="after-check">
+          <details class="logic" open><summary><span>💡</span><span class="hint-txt">The pattern</span></summary><div class="logic-body"><p>Norman cathedrals (Canterbury rebuilt, Durham, Lincoln) → <b>11th</b>. The Gothic wave (Salisbury, York, today’s Westminster Abbey) → <b>13th</b>. After the Fire → St Paul’s, <b>17th</b>. The modern ones (Liverpool, Coventry) → <b>20th</b>.</p></div></details>
+        </div>
+      </div>
+    </div>
+
+    <div class="exercise">
+      <div class="review-head"><span class="task-num">Olympway 324 · 354 · 414</span><span class="pts">5 rulers · 2 extra pairs · 2 min</span></div>
+      <h3>Families</h3>
+      <p class="instr">Match each ruler to their parents. Two pairs are extra. The cards above (and Lesson 19 for Henry VIII) have them all.</p>
+      <div class="bank dnd"><span>Henry VIII and Catherine of Aragon</span><span>Geoffrey, Count of Anjou, and Empress Matilda</span><span>Henry VII and Elizabeth of York</span><span>Henry II and Eleanor of Aquitaine</span><span>William I and Matilda of Flanders</span><span>James II and Anne Hyde</span><span>Henry VIII and Anne Boleyn</span></div>
+      <p class="bank-hint">Drag the parents to a ruler, or tap them and then the ruler. Tap a filled place to empty it.</p>
+      <div class="quiz">
+        <ul class="clue-list">
+          <li><span class="clue-t"><b>King John</b>, who sealed Magna Carta</span><span class="gap"><span class="gn">1</span><select class="exam-select ans" data-bank="1" data-answer="Henry II and Eleanor of Aquitaine"></select></span></li>
+          <li><span class="clue-t"><b>Elizabeth I</b></span><span class="gap"><span class="gn">2</span><select class="exam-select ans" data-bank="1" data-answer="Henry VIII and Anne Boleyn"></select></span></li>
+          <li><span class="clue-t"><b>Henry II</b></span><span class="gap"><span class="gn">3</span><select class="exam-select ans" data-bank="1" data-answer="Geoffrey, Count of Anjou, and Empress Matilda"></select></span></li>
+          <li><span class="clue-t"><b>Mary II</b>, William III’s wife</span><span class="gap"><span class="gn">4</span><select class="exam-select ans" data-bank="1" data-answer="James II and Anne Hyde"></select></span></li>
+          <li><span class="clue-t"><b>Henry VIII</b></span><span class="gap"><span class="gn">5</span><select class="exam-select ans" data-bank="1" data-answer="Henry VII and Elizabeth of York"></select></span></li>
+        </ul>
+        <div class="after-check">
+          <details class="logic" open><summary><span>💡</span><span class="hint-txt">The extras</span></summary><div class="logic-body"><p><b>Henry VIII and Catherine of Aragon</b> are the parents of <b>Mary I</b> (Elizabeth’s half-sister). <b>William I and Matilda of Flanders</b> are the parents of William II Rufus and Henry I (Olympway 294).</p></div></details>
+        </div>
+      </div>
+    </div>
+
+    <div class="exercise">
+      <div class="review-head"><span class="task-num">Задание 10 · set 1 · your paper</span><span class="pts">6 events · 8 centuries · 2 min</span></div>
+      <h3>Events and centuries · as you remember it</h3>
+      <p class="orig-instr">Соотнесите события, значимые для стран(ы) изучаемого языка, и века, в которых эти события происходили. Два века не соответствуют ни одному событию.</p>
+      <div class="timer" data-min="2"></div>
+      <div class="quiz cent-quiz">
+        <div class="answer-row"><span class="ar-num">1</span><span class="ar-txt">The birth of Oscar Wilde</span><select class="exam-select ans" data-opts="11th,12th,13th,15th,16th,17th,19th,20th" data-answer="19th"></select></div>
+        <div class="answer-row"><span class="ar-num">2</span><span class="ar-txt">The beginning of construction of Windsor Castle</span><select class="exam-select ans" data-opts="11th,12th,13th,15th,16th,17th,19th,20th" data-answer="11th"></select></div>
+        <div class="answer-row"><span class="ar-num">3</span><span class="ar-txt">The Glorious Revolution</span><select class="exam-select ans" data-opts="11th,12th,13th,15th,16th,17th,19th,20th" data-answer="17th"></select></div>
+        <div class="answer-row"><span class="ar-num">4</span><span class="ar-txt">Henry II’s coronation at Westminster Abbey</span><select class="exam-select ans" data-opts="11th,12th,13th,15th,16th,17th,19th,20th" data-answer="12th"></select></div>
+        <div class="answer-row"><span class="ar-num">5</span><span class="ar-txt">The beginning of construction of Salisbury Cathedral</span><select class="exam-select ans" data-opts="11th,12th,13th,15th,16th,17th,19th,20th" data-answer="13th"></select></div>
+        <div class="answer-row"><span class="ar-num">6</span><span class="ar-txt">The coronation of Elizabeth I</span><select class="exam-select ans" data-opts="11th,12th,13th,15th,16th,17th,19th,20th" data-answer="16th"></select></div>
+        <div class="after-check">
+          <details class="logic" open><summary><span>💡</span><span class="hint-txt">The dates</span></summary><div class="logic-body"><p>1854 → 19th · c. 1070 → 11th · 1688 → 17th · 1154 → 12th · 1220 → 13th · 1559 → 16th. Not used: 15th and 20th.</p></div></details>
+        </div>
+      </div>
+    </div>
+
+    <div class="exercise">
+      <div class="review-head"><span class="task-num">Задание 10 · set 2 · the other rungs</span><span class="pts">8 events · 10 centuries · 3 min</span></div>
+      <h3>Events and centuries · the traps</h3>
+      <p class="instr">The same people and places, other dates from their ladders. This is how the paper could have asked instead.</p>
+      <div class="timer" data-min="3"></div>
+      <div class="quiz cent-quiz">
+        <div class="answer-row"><span class="ar-num">1</span><span class="ar-txt">A great fire at Windsor Castle</span><select class="exam-select ans" data-opts="11th,12th,13th,14th,15th,16th,17th,19th,20th,21st" data-answer="20th"></select></div>
+        <div class="answer-row"><span class="ar-num">2</span><span class="ar-txt">The end of the Tudor dynasty</span><select class="exam-select ans" data-opts="11th,12th,13th,14th,15th,16th,17th,19th,20th,21st" data-answer="17th"></select></div>
+        <div class="answer-row"><span class="ar-num">3</span><span class="ar-txt">The murder of Thomas Becket</span><select class="exam-select ans" data-opts="11th,12th,13th,14th,15th,16th,17th,19th,20th,21st" data-answer="12th"></select></div>
+        <div class="answer-row"><span class="ar-num">4</span><span class="ar-txt">Oscar Wilde is pardoned by a new law</span><select class="exam-select ans" data-opts="11th,12th,13th,14th,15th,16th,17th,19th,20th,21st" data-answer="21st"></select></div>
+        <div class="answer-row"><span class="ar-num">5</span><span class="ar-txt">The beginning of construction of Durham Cathedral</span><select class="exam-select ans" data-opts="11th,12th,13th,14th,15th,16th,17th,19th,20th,21st" data-answer="11th"></select></div>
+        <div class="answer-row"><span class="ar-num">6</span><span class="ar-txt">The death of Oscar Wilde</span><select class="exam-select ans" data-opts="11th,12th,13th,14th,15th,16th,17th,19th,20th,21st" data-answer="19th"></select></div>
+        <div class="answer-row"><span class="ar-num">7</span><span class="ar-txt">The beginning of construction of St George’s Chapel, Windsor</span><select class="exam-select ans" data-opts="11th,12th,13th,14th,15th,16th,17th,19th,20th,21st" data-answer="15th"></select></div>
+        <div class="answer-row"><span class="ar-num">8</span><span class="ar-txt">The spire is added to Salisbury Cathedral</span><select class="exam-select ans" data-opts="11th,12th,13th,14th,15th,16th,17th,19th,20th,21st" data-answer="14th"></select></div>
+        <div class="after-check">
+          <details class="logic" open><summary><span>💡</span><span class="hint-txt">The dates</span></summary><div class="logic-body"><p>1992 → 20th · 1603 → 17th · 1170 → 12th · 2017 → 21st · 1093 → 11th · 1900 → <b>19th</b> · 1475 → 15th · c. 1320 → 14th. Not used: 13th and 16th. The two that catch people: <b>1603</b> (Elizabeth I was a 16th-century queen, but she died in the 17th) and <b>1900</b>.</p></div></details>
+        </div>
+      </div>
+    </div>
+
+    <div class="exercise">
+      <div class="review-head"><span class="task-num">Olympway 98</span><span class="pts">8 of 15 lines · 2 min</span></div>
+      <h3>The 11th to the 15th century</h3>
+      <p class="instr">The Olympway task that has Henry II in it. Only the lines you were taught are kept.</p>
+      <div class="quiz cent-quiz">
+        <div class="answer-row"><span class="ar-num">1</span><span class="ar-txt">Henry II crowned at Westminster Abbey</span><select class="exam-select ans" data-opts="11th,12th,13th,14th,15th" data-answer="12th"></select></div>
+        <div class="answer-row"><span class="ar-num">2</span><span class="ar-txt">Battle of Agincourt</span><select class="exam-select ans" data-opts="11th,12th,13th,14th,15th" data-answer="15th"></select></div>
+        <div class="answer-row"><span class="ar-num">3</span><span class="ar-txt">Magna Carta signed</span><select class="exam-select ans" data-opts="11th,12th,13th,14th,15th" data-answer="13th"></select></div>
+        <div class="answer-row"><span class="ar-num">4</span><span class="ar-txt">William the Conqueror crowned</span><select class="exam-select ans" data-opts="11th,12th,13th,14th,15th" data-answer="11th"></select></div>
+        <div class="answer-row"><span class="ar-num">5</span><span class="ar-txt">Caxton printed the first book in England</span><select class="exam-select ans" data-opts="11th,12th,13th,14th,15th" data-answer="15th"></select></div>
+        <div class="answer-row"><span class="ar-num">6</span><span class="ar-txt">The Hundred Years’ War began</span><select class="exam-select ans" data-opts="11th,12th,13th,14th,15th" data-answer="14th"></select></div>
+        <div class="answer-row"><span class="ar-num">7</span><span class="ar-txt">Domesday Book commissioned</span><select class="exam-select ans" data-opts="11th,12th,13th,14th,15th" data-answer="11th"></select></div>
+        <div class="answer-row"><span class="ar-num">8</span><span class="ar-txt">Richard the Lionheart left England for the Crusades</span><select class="exam-select ans" data-opts="11th,12th,13th,14th,15th" data-answer="12th"></select></div>
+        <div class="after-check">
+          <details class="logic" open><summary><span>💡</span><span class="hint-txt">The dates</span></summary><div class="logic-body"><p>1154 · 1415 · 1215 · 1066 · 1476 · 1337 · 1085 · 1190. Richard is Henry II’s son: father and son are both 12th century.</p></div></details>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════════════════════════════════
+       TAB 3 — Задание 5: Knute Rockne
+  ══════════════════════════════════════════════════════════ -->
+  <div class="tab-content" id="tab-ord">
+
+    <div class="teacher-only" style="margin:0 0 16px">
+      <div class="to-label">👩‍🏫 Teacher only · what to say · Задание 5</div>
+      <ul>
+        <li><b>Before:</b> “Your 20-point text was about a boy who moved, wasn’t strong enough at first, and then became famous for a tactic. Here is a real one like that. Find the opener first: a full name, no pronoun.”</li>
+        <li><b>The text, 8 min:</b> timer on. Don’t help with sports words: the links are enough.</li>
+        <li><b>Reasons aloud:</b> after Check, every link: “A after H because of <i>their new city</i> = Chicago.” The extras: L (“she”: who?) and I (it contradicts everything after it).</li>
+        <li><b>Vocabulary she lacked:</b> “the game with a leather ball” = American football (the ball is a <b>pigskin</b>); a <b>coach</b>, a <b>tactic</b>, a <b>forward pass</b>, <b>the track team</b>.</li>
+      </ul>
+    </div>
+
+    <div class="exercise">
+      <div class="exercise-label">A reminder · 1 min</div>
+      <h3>What holds the sentences together</h3>
+      <div class="rule-box">
+        <div class="tbl-wrap"><table class="rule-table wrap">
+          <tr><th>Link</th><th>What to look for</th></tr>
+          <tr><td>Pronouns</td><td><span class="lk lk-pr">he, his, they, she</span>: who is it? The person must already be in the text.</td></tr>
+          <tr><td>this / that / their + noun</td><td><span class="lk lk-th">their new city, that November, this victory</span>: it was mentioned in the sentence before.</td></tr>
+          <tr><td>Linkers</td><td><span class="lk lk-ln">so, instead, however, finally</span>: a result, a contrast, the end of a wait.</td></tr>
+          <tr><td>Time</td><td><span class="lk lk-the">when he was five, in the summer of 1913, five years later</span>: count the years.</td></tr>
+          <tr><td>The two extras</td><td>On the topic, but a pronoun points to nobody, or the sentence says what the text contradicts.</td></tr>
+        </table></div>
+      </div>
+    </div>
+
+    <div class="exercise">
+      <div class="review-head"><span class="task-num">Задание 5 · 20 баллов</span><span class="pts">10 places · 2 extra sentences</span></div>
+      <h3>The boy who was too light for football · 8 min</h3>
+      <p class="orig-instr">Поставьте предложения в логическую цепочку, чтобы получился связный текст. Два предложения являются лишними.</p>
+      <div class="facts"><span class="fact">⏱ 8 min</span><span class="fact">2 extras</span><span class="fact">🔗 the opener has no pronoun</span></div>
+      <div class="timer" data-min="8"></div>
+      <div class="bank dnd sent"><span>A · In the streets of their new city he played football with the neighbourhood boys, but he was small and light, and the bigger players often knocked him flat.</span><span>B · That November, little Notre Dame travelled to West Point to play the powerful Army team, and hardly anyone expected it to win.</span><span>C · Knute Rockne was born in 1888 in Voss, a small town in the mountains of western Norway, not far from the port of Bergen.</span><span>D · By the time he finally arrived at the University of Notre Dame, in Indiana, he was twenty-two, years older than the other new students.</span><span>E · Five years later he became Notre Dame’s head coach, and in thirteen seasons his teams lost only twelve games.</span><span>F · So at high school he joined the track team instead, and running made him fast and tough.</span><span>G · Instead, Dorais threw pass after pass to Rockne, Notre Dame won 35–13, and the next day newspapers across the country wrote about the forward pass.</span><span>H · When he was five, his family crossed the Atlantic to join his father in Chicago, a city full of new arrivals from Europe.</span><span>I · Despite this victory, the forward pass was soon forbidden, and Notre Dame never threw it again.</span><span>J · In the summer of 1913 he and his teammate Gus Dorais worked at a resort on Lake Erie, and on the beach, day after day, they practised throwing and catching the ball on the run.</span><span>K · When he left school, however, there was no money for college, so for four years he sorted letters at the Chicago post office and saved what he could.</span><span>L · She had never seen a football game, and she refused to come and watch him play.</span></div>
+      <p class="bank-hint">Drag a sentence to its place, or tap it and then the place. Tap a filled place to empty it.</p>
+      <div class="quiz">
+        <div class="slots">
+          <div class="slot"><span class="gap"><span class="gn">1</span><select class="exam-select ans" data-bank="1" data-answer="C · Knute Rockne was born in 1888 in Voss, a small town in the mountains of western Norway, not far from the port of Bergen."></select></span></div>
+          <div class="slot"><span class="gap"><span class="gn">2</span><select class="exam-select ans" data-bank="1" data-answer="H · When he was five, his family crossed the Atlantic to join his father in Chicago, a city full of new arrivals from Europe."></select></span></div>
+          <div class="slot"><span class="gap"><span class="gn">3</span><select class="exam-select ans" data-bank="1" data-answer="A · In the streets of their new city he played football with the neighbourhood boys, but he was small and light, and the bigger players often knocked him flat."></select></span></div>
+          <div class="slot"><span class="gap"><span class="gn">4</span><select class="exam-select ans" data-bank="1" data-answer="F · So at high school he joined the track team instead, and running made him fast and tough."></select></span></div>
+          <div class="slot"><span class="gap"><span class="gn">5</span><select class="exam-select ans" data-bank="1" data-answer="K · When he left school, however, there was no money for college, so for four years he sorted letters at the Chicago post office and saved what he could."></select></span></div>
+          <div class="slot"><span class="gap"><span class="gn">6</span><select class="exam-select ans" data-bank="1" data-answer="D · By the time he finally arrived at the University of Notre Dame, in Indiana, he was twenty-two, years older than the other new students."></select></span></div>
+          <div class="slot"><span class="gap"><span class="gn">7</span><select class="exam-select ans" data-bank="1" data-answer="J · In the summer of 1913 he and his teammate Gus Dorais worked at a resort on Lake Erie, and on the beach, day after day, they practised throwing and catching the ball on the run."></select></span></div>
+          <div class="slot"><span class="gap"><span class="gn">8</span><select class="exam-select ans" data-bank="1" data-answer="B · That November, little Notre Dame travelled to West Point to play the powerful Army team, and hardly anyone expected it to win."></select></span></div>
+          <div class="slot"><span class="gap"><span class="gn">9</span><select class="exam-select ans" data-bank="1" data-answer="G · Instead, Dorais threw pass after pass to Rockne, Notre Dame won 35–13, and the next day newspapers across the country wrote about the forward pass."></select></span></div>
+          <div class="slot"><span class="gap"><span class="gn">10</span><select class="exam-select ans" data-bank="1" data-answer="E · Five years later he became Notre Dame’s head coach, and in thirteen seasons his teams lost only twelve games."></select></span></div>
+        </div>
+        <div class="after-check">
+          <details class="logic" open><summary><span>🔗</span><span class="hint-txt">Why this order: say each reason aloud</span></summary><div class="logic-body">
+            <ul class="why-list">
+            <li><b>1 = C</b>: the opener: full name, birth year, birthplace.</li>
+            <li><b>2 = H</b>: <i>when he was five</i> ← born in 1888; Norway → <b>across the Atlantic</b>.</li>
+            <li><b>3 = A</b>: <i>their new city</i> ← Chicago.</li>
+            <li><b>4 = F</b>: <i>so … instead</i> ← too small, knocked flat: a result.</li>
+            <li><b>5 = K</b>: <i>when he left school, however</i> ← high school.</li>
+            <li><b>6 = D</b>: <i>finally … twenty-two</i> ← four years of saving.</li>
+            <li><b>7 = J</b>: <i>his teammate</i> ← now he is at Notre Dame; 1913.</li>
+            <li><b>8 = B</b>: <i>that November</i> ← the summer of 1913.</li>
+            <li><b>9 = G</b>: <i>instead</i> ← nobody expected it to win; <i>pass after pass</i> ← the practice on the beach.</li>
+            <li><b>10 = E</b>: <i>five years later</i> ← 1913 → 1918.</li>
+            </ul>
+            <p>The extras: <b>L</b> <i>She had never seen…</i>: there is no woman in the text. <b>I</b> <i>the forward pass was soon forbidden</i>: the text says the newspapers made it famous, and his teams went on winning.</p>
+          </div></details>
+          <details class="logic" open><summary><span>📌</span><span class="hint-txt">Words and facts to keep</span></summary><div class="logic-body"><ul>
+            <li><b>American football</b> is played with an oval <b>leather ball</b>, nicknamed a <b>pigskin</b>. A <b>forward pass</b> = throwing the ball forward to a teammate; Rockne’s team made it a famous <b>tactic</b>.</li>
+            <li><b>coach</b> = тренер · <b>the track team</b> = лёгкая атлетика (running) · <b>a season</b> = сезон.</li>
+            <li>For Задание 9: in the 1940 film about Rockne, the young <b>Ronald Reagan</b> played his star player George Gipp. “<b>Win one for the Gipper</b>” became Reagan’s nickname when he ran for President.</li>
+          </ul></div></details>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════════════════════════════════
+       TAB 4 — CULTURE: women writers, islands, and the Dickinson trap
+  ══════════════════════════════════════════════════════════ -->
+  <div class="tab-content" id="tab-cult">
+
+    <div class="teacher-only" style="margin:0 0 16px">
+      <div class="to-label">👩‍🏫 Teacher only · what to say · culture</div>
+      <ul>
+        <li><b>Start:</b> “You thought of a surname like Dickens. That was probably Dickinson: short poems. But what did your text say? A husband, parents who died, a move to islands. Dickinson had none of those. When a famous name sounds right, check it against three facts.”</li>
+        <li><b>The cards:</b> she reads each one; for each, “Could this be the woman on your paper? What fits, what doesn’t?” (Montgomery: almost everything; Barrett Browning: husband and a move, but Italy; Stevenson: islands and short poems, but a man.)</li>
+        <li><b>Decode, then Задание 9:</b> 5 min, exam pace. Question 5 is the lateral: who wrote about “Alice”?</li>
+        <li><b>Last 2 min:</b> back to her Warm-up 1 notes: “Which of these four was your text?” Write down anything she now remembers.</li>
+      </ul>
+    </div>
+
+    <div class="step-title">In class · 18 min</div>
+
+    <div class="exercise">
+      <div class="exercise-label">The trap · 2 min</div>
+      <h3>A famous name that only sounds right</h3>
+      <div class="rule-box">
+        <div class="tbl-wrap"><table class="rule-table wrap">
+          <tr><th>If the text says…</th><th>…it can’t be</th><th>because</th></tr>
+          <tr><td>her husband</td><td>Emily Dickinson · Jane Austen · Christina Rossetti</td><td>they never married</td></tr>
+          <tr><td>she moved to islands / abroad with her husband</td><td>Emily Dickinson</td><td>she hardly left her house in Amherst</td></tr>
+          <tr><td>her parents died when she was young</td><td>Dickinson · Austen · Virginia Woolf</td><td>their fathers lived into their own adult years (Woolf lost her mother at 13, not both)</td></tr>
+          <tr><td>short poems <b>and</b> stories, sold to magazines</td><td>the Brontës</td><td>they are known for novels; their poems sold two copies</td></tr>
+        </table></div>
+      </div>
+      <p class="instr">Three facts from the text are enough to rule a name out. Do it before you write the answer.</p>
+    </div>
+
+    <div class="exercise">
+      <div class="exercise-label">Meet the writers · 7 min</div>
+      <h3>Islands, husbands, short poems</h3>
+      <p class="instr">Three new people and one you know. For each: what fits the woman on your paper, and what doesn’t?</p>
+      <div class="figs">
+
+        <div class="fig"><figure class="fig-pic"><img src="images/culture/figures/montgomery.jpg" alt="L. M. Montgomery" loading="lazy"><figcaption>L. M. Montgomery, signed photograph</figcaption></figure><div class="fig-top"><span class="fig-name">L. M. Montgomery</span><span class="fig-tag">1874–1942 · NEW</span></div>
+          <div class="fig-meta">Люси Мод Монтгомери · Lucy Maud · born on Prince Edward Island, Canada</div>
+          <p><b>Life:</b> born in a village on <b>Prince Edward Island</b>, in the Gulf of St Lawrence, Canada’s smallest province. Her mother died when she was 21 months old; her father moved to the far west of Canada and died in 1900. She was brought up by strict grandparents on a farm at <b>Cavendish</b>. She taught school, worked for a newspaper in Halifax, and sold hundreds of <b>short poems and stories</b> to magazines.</p>
+          <p><b>Famous for:</b> <i>Anne of Green Gables</i> (1908): an elderly brother and sister ask for an orphan boy to help on the farm and get, by mistake, a talkative red-haired girl, Anne Shirley. Mark Twain called Anne the dearest child in fiction since “the immortal Alice”. In 1911, after her grandmother’s death, she married the minister <b>Ewan Macdonald</b> and moved with him to <b>Ontario</b>.</p>
+          <div class="fig-clues"><b>🔎 Clues in a text:</b> an island in a gulf · the smallest province · an orphan sent by mistake · red hair and a green-roofed farmhouse · a minister husband · a secret engagement of five years</div>
+          <div class="fig-lat"><b>Fits your paper:</b> poems and stories, parents gone early, a husband, an island. <b>Doesn’t:</b> she moved <i>off</i> the island, not onto it.</div></div>
+
+        <div class="fig"><figure class="fig-pic"><img src="images/culture/figures/stevenson.jpg" alt="Robert Louis Stevenson" loading="lazy"><figcaption>photo by Henry Walter Barnett, 1893</figcaption></figure><div class="fig-top"><span class="fig-name">Robert Louis Stevenson</span><span class="fig-tag">1850–1894 · NEW</span></div>
+          <div class="fig-meta">Роберт Льюис Стивенсон · born in Edinburgh · died on Samoa</div>
+          <p><b>Life:</b> the sickly only son of a family of Scottish <b>lighthouse engineers</b>. He followed an American woman, <b>Fanny Osbourne</b>, ten years older, all the way to California and married her in 1880. After his <b>father’s death in 1887</b> he left Britain for good with his wife and mother, sailed the Pacific for three years, and settled on the islands of <b>Samoa</b>, in a house called Vailima. The Samoans called him <b>Tusitala</b>, “the teller of tales”.</p>
+          <p><b>Famous for:</b> <i>Treasure Island</i> (a map drawn for his stepson; Jim Hawkins and the one-legged cook <b>Long John Silver</b>) · <i>Strange Case of Dr Jekyll and Mr Hyde</i> · <i>Kidnapped</i> · <i>A Child’s Garden of Verses</i>, a book of short poems for children.</p>
+          <div class="fig-clues"><b>🔎 Clues in a text:</b> a family that built lighthouses · a map of an island drawn on a rainy holiday · a doctor who drinks a potion · a South Sea island home · “Home is the sailor, home from sea”</div>
+          <div class="fig-lat"><b>Fits your paper:</b> short poems and stories, a death in the family, then islands with his wife. <b>Doesn’t:</b> he is a man, and only his father had died.</div></div>
+
+        <div class="fig"><figure class="fig-pic"><img src="images/culture/figures/barrett-browning.jpg" alt="Elizabeth Barrett Browning" loading="lazy"><figcaption>portrait, mid-19th century</figcaption></figure><div class="fig-top"><span class="fig-name">Elizabeth Barrett Browning</span><span class="fig-tag">1806–1861 · NEW</span></div>
+          <div class="fig-meta">Элизабет Барретт Браунинг · born in County Durham · died in Florence</div>
+          <p><b>Life:</b> the eldest of twelve children; her mother died in 1828. Ill for years, she lived shut in her room in Wimpole Street, London, with her dog <b>Flush</b>, and became the most famous woman poet in England. In 1845 the poet <b>Robert Browning</b> wrote to her: “I love your verses with all my heart.” Her father forbade his children to marry, so in 1846 they married <b>secretly</b> and ran away to <b>Italy</b>; he never forgave her.</p>
+          <p><b>Famous for:</b> <i>Sonnets from the Portuguese</i> (1850), love poems to her husband: “<b>How do I love thee? Let me count the ways.</b>” · <i>Aurora Leigh</i>, a novel in verse. Virginia Woolf wrote a “biography” of her dog: <i>Flush</i> (1933).</p>
+          <div class="fig-clues"><b>🔎 Clues in a text:</b> a sick poet who eloped · a spaniel with a famous biography · love sonnets “translated from Portuguese” that were really hers · a house in Florence</div>
+          <div class="fig-lat"><b>Fits:</b> a poet, a husband, a move after a family break. <b>Doesn’t:</b> Italy is not islands, and she wrote poems, not stories.</div></div>
+
+        <div class="fig"><figure class="fig-pic"><img src="images/culture/figures/dickinson.png" alt="Emily Dickinson" loading="lazy"><figcaption>daguerreotype, c. 1847</figcaption></figure><div class="fig-top"><span class="fig-name">Emily Dickinson</span><span class="fig-tag">1830–1886 · Lesson 17</span></div>
+          <div class="fig-meta">Эмили Дикинсон · Amherst, Massachusetts · <b>not</b> Dickens</div>
+          <p><b>You know:</b> nearly 1,800 short poems, full of dashes; dressed in white; hardly left her family’s house; her sister Lavinia found the poems after her death; fewer than a dozen were printed in her lifetime.</p>
+          <p><b>Rules her out:</b> she <b>never married</b>, <b>never moved</b>, wrote <b>no stories</b>, and her father lived until she was 43.</p>
+          <div class="fig-clues"><b>🔎 Her real clues:</b> a recluse in white · poems in a drawer · Death as a gentleman in a carriage · “Hope” is the thing with feathers</div>
+          <div class="fig-lat"><b>Dickens / Dickinson:</b> one letter-group apart, two different worlds: a London novelist, an American poet.</div></div>
+      </div>
+    </div>
+
+    <div class="exercise">
+      <div class="exercise-label">Decode the clue · 2 min</div>
+      <h3>One clue, one writer</h3>
+      <p class="instr">Two names in the box are extra.</p>
+      <div class="bank dnd faces"><span><img src="images/culture/figures/austen.jpg" alt="">Jane Austen</span><span><img src="images/culture/figures/stevenson.jpg" alt="">Robert Louis Stevenson</span><span><img src="images/culture/figures/dickens.jpg" alt="">Charles Dickens</span><span><img src="images/culture/figures/montgomery.jpg" alt="">L. M. Montgomery</span><span><img src="images/culture/figures/barrett-browning.jpg" alt="">Elizabeth Barrett Browning</span><span><img src="images/culture/figures/wilde.jpg" alt="">Oscar Wilde</span><span><img src="images/culture/figures/dickinson.png" alt="">Emily Dickinson</span><span><img src="images/culture/figures/bronte-charlotte.jpg" alt="">Charlotte Brontë</span></div>
+      <p class="bank-hint">Drag a name to a clue, or tap the name and then the clue. Tap a filled clue to empty it.</p>
+      <div class="quiz">
+        <ul class="clue-list">
+          <li><span class="clue-t">She grew up with her grandparents on an island in the Gulf of St Lawrence and wrote about a red-haired orphan.</span><span class="gap"><span class="gn">1</span><select class="exam-select ans" data-bank="1" data-answer="L. M. Montgomery"></select></span></li>
+          <li><span class="clue-t">She wrote nearly 1,800 short poems, never married, and hardly left her family’s house.</span><span class="gap"><span class="gn">2</span><select class="exam-select ans" data-bank="1" data-answer="Emily Dickinson"></select></span></li>
+          <li><span class="clue-t">After his father’s death he sailed the Pacific with his wife and settled on Samoa.</span><span class="gap"><span class="gn">3</span><select class="exam-select ans" data-bank="1" data-answer="Robert Louis Stevenson"></select></span></li>
+          <li><span class="clue-t">An invalid poet who married another poet in secret and ran away with him to Italy.</span><span class="gap"><span class="gn">4</span><select class="exam-select ans" data-bank="1" data-answer="Elizabeth Barrett Browning"></select></span></li>
+          <li><span class="clue-t">He wrote a ballad about a prison in Berkshire and died poor in Paris in 1900.</span><span class="gap"><span class="gn">5</span><select class="exam-select ans" data-bank="1" data-answer="Oscar Wilde"></select></span></li>
+          <li><span class="clue-t">At twelve he pasted labels on pots of shoe polish while his father was in prison.</span><span class="gap"><span class="gn">6</span><select class="exam-select ans" data-bank="1" data-answer="Charles Dickens"></select></span></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="exercise">
+      <div class="review-head"><span class="task-num">Задание 9 · 10 баллов</span><span class="pts">1 text · 5 questions · 5 min</span></div>
+      <h3>Who is it?</h3>
+      <p class="orig-instr">Прочитайте текст и выполните задание к нему.</p>
+      <div class="facts"><span class="fact">⏱ 5 min in class</span><span class="fact">🧠 some answers are outside the text</span><span class="fact">✍️ follow the format</span></div>
+      <div class="timer" data-min="5"></div>
+      <div class="quiz">
+        <div class="story">
+          <p>She was born in 1874 in a small village on an island in a wide gulf of the Atlantic, in what is now the smallest province of her country. Her mother died of tuberculosis before the girl was two, and her father soon went to work thousands of kilometres away in the west, so she was brought up by her strict, old-fashioned grandparents in a farmhouse near the sea.</p>
+          <p>She was a lonely child who invented imaginary friends and started writing very early. As a young woman she worked as a village schoolteacher and, for a year, on a newspaper in a port city on the mainland, and she sold hundreds of short poems and stories to magazines. After her grandfather died, she went back to the farm to look after her grandmother, and in 1900 her father died too.</p>
+          <p>In 1905 she began a novel about an elderly brother and sister who ask for an orphan boy to help them on their farm and are sent, by mistake, a talkative eleven-year-old girl with red hair. Several publishers turned it down. When it finally came out in 1908, it was a bestseller, and a famous American humorist wrote that its heroine was the dearest child in fiction since “the immortal Alice”. The farmhouse with green trim that inspired the story is now visited by thousands of tourists every year.</p>
+          <p>For five years she was secretly engaged to a Presbyterian minister, but she would not leave her grandmother. In 1911, a few months after the old lady’s death, she married him, and after a honeymoon in England and Scotland the couple settled in a village in another province. She wrote twenty novels, died in Toronto in 1942, and was buried at home, on her island.</p>
+        </div>
+        <div class="answer-row"><span class="ar-num">1</span><span class="ar-txt">Who is the person described in the text? <i>Format: First name Middle name Last name</i></span><input class="blank ans" data-answer="Lucy Maud Montgomery|L. M. Montgomery|L.M. Montgomery|LM Montgomery|Maud Montgomery|L M Montgomery" autocomplete="off" spellcheck="false"></div>
+        <div class="answer-row"><span class="ar-num">2</span><span class="ar-txt">What is the name of the island?</span><input class="blank ans" data-answer="Prince Edward Island|PEI|P.E.I." autocomplete="off" spellcheck="false"></div>
+        <div class="answer-row"><span class="ar-num">3</span><span class="ar-txt">What is the title of the novel published in 1908?</span><input class="blank ans" data-answer="Anne of Green Gables" autocomplete="off" spellcheck="false"></div>
+        <div class="answer-row"><span class="ar-num">4</span><span class="ar-txt">In which country is the island?</span><input class="blank ans" data-answer="Canada" autocomplete="off" spellcheck="false"></div>
+        <div class="answer-row"><span class="ar-num">5</span><span class="ar-txt">Who wrote the book whose heroine is “the immortal Alice”? <i>Format: First name Last name</i></span><input class="blank ans" data-answer="Lewis Carroll|Charles Dodgson|Charles Lutwidge Dodgson" autocomplete="off" spellcheck="false"></div>
+        <div class="after-check">
+          <details class="logic" open><summary><span>🔎</span><span class="hint-txt">Where the answers come from</span></summary><div class="logic-body"><ul>
+            <li>1–2: an island in a gulf, the smallest province, an orphan girl with red hair: the Montgomery card → <b>Prince Edward Island</b>.</li>
+            <li>3: the orphan sent by mistake, the green farmhouse: <b><i>Anne of Green Gables</i></b>.</li>
+            <li>4: the smallest province, Toronto: <b>Canada</b>. (The “American humorist” is Mark Twain: he is the lateral trap, not the answer.)</li>
+            <li>5: Alice in Wonderland: <b>Lewis Carroll</b> (Lesson 17).</li>
+          </ul></div></details>
+        </div>
+      </div>
+    </div>
+
+    <div class="exercise">
+      <div class="exercise-label">Back to your paper · 2 min</div>
+      <h3>Which of them was your text?</h3>
+      <p class="instr">Look at what you wrote in Warm-up 1. Was the person a “she” or a “he”? Which country, which sea? Was there a red-haired girl, a map, a dog? Write anything you now remember.</p>
+      <textarea class="free-write" data-k="paper-who" placeholder="I think it was … because the text said …"></textarea>
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════════════════════════════════
+       TAB 5 — HOMEWORK
+  ══════════════════════════════════════════════════════════ -->
+  <div class="tab-content" id="tab-hw">
+    <div class="exercise">
+      <div class="exercise-label">Homework · 57 min</div>
+      <h3>Tick each part when it’s done</h3>
+      <ul class="hw-list" id="hwList">
+        <li><label><input type="checkbox"> <span class="t">🃏 <b>Flashcards</b> (10 min): <a href="../flashcards.html">V14</a>: the six new cards (Henry II, Elizabeth I, Montgomery, Stevenson, Barrett Browning, Rockne), and V15: the three new ones (Windsor Castle, Salisbury Cathedral, the Glorious Revolution). Flip each, read the back, then <b>Learn</b> mode.</span></label></li>
+        <li><label><input type="checkbox"> <span class="t">🎂 <b>Olympway 246</b> (6 min): read the birthday table, cover it, then match.</span></label></li>
+        <li><label><input type="checkbox"> <span class="t">✍️ <b>Olympway 243</b> (5 min): Oscar Wilde, one word in each gap.</span></label></li>
+        <li><label><input type="checkbox"> <span class="t">🏛 <b>Задание 10</b> (3 min) in the demo’s wording, then <b>Olympway 92</b> (2 min).</span></label></li>
+        <li><label><input type="checkbox"> <span class="t">📖 <b>Задание 9 · Montgomery again</b> (7 min): “Who is it? · the second text” below, timed, without the card first; check the Montgomery card in the <a href="#" onclick="switchTab('cult');return false">Culture tab</a> only after.</span></label></li>
+        <li><label><input type="checkbox"> <span class="t">📖 <b>Задание 9</b> (7 min): “Who is it?” below, timed. Read the Stevenson card in the <a href="#" onclick="switchTab('cult');return false">Culture tab</a> first if you need it.</span></label></li>
+        <li><label><input type="checkbox"> <span class="t">🔁 <b>Once more</b> (5 min): the two Задание 10 sets in the <a href="#" onclick="switchTab('hist');return false">History tab</a> (press “Try again”), without the cards.</span></label></li>
+      </ul>
+    </div>
+
+    <div class="exercise">
+      <div class="review-head"><span class="task-num">Olympway 246</span><span class="pts">6 of 10 people · 2 extra dates</span></div>
+      <h3>Birthdays</h3>
+      <p class="instr">Read the table, then cover it (or scroll it away) and match.</p>
+      <div class="rule-box">
+        <div class="tbl-wrap"><table class="rule-table wrap">
+          <tr><th>Person</th><th>Born</th><th>A hook</th></tr>
+          <tr><td>Catherine of Aragon</td><td><b>16 Dec 1485</b></td><td>the year of Bosworth</td></tr>
+          <tr><td>Mary I</td><td><b>18 Feb 1516</b></td><td>Catherine’s daughter</td></tr>
+          <tr><td>Elizabeth I</td><td><b>7 Sept 1533</b></td><td>Anne Boleyn’s daughter</td></tr>
+          <tr><td>Jane Austen</td><td><b>16 Dec 1775</b></td><td>the same day as Catherine, 290 years later; the year the American War of Independence began</td></tr>
+          <tr><td>Queen Victoria</td><td><b>24 May 1819</b></td><td>Victoria Day in Canada is the Monday before 25 May</td></tr>
+          <tr><td>Florence Nightingale</td><td><b>12 May 1820</b></td><td>born in Florence, named after it; nurse in the Crimean War</td></tr>
+        </table></div>
+      </div>
+      <div class="bank dnd"><span>12 May 1820</span><span>16 December 1485</span><span>13 October 1925</span><span>18 February 1516</span><span>24 May 1819</span><span>7 September 1533</span><span>5 May 1988</span><span>16 December 1775</span></div>
+      <p class="bank-hint">Drag a date to a person, or tap it and then the person. Tap a filled place to empty it.</p>
+      <div class="quiz">
+        <ul class="clue-list">
+          <li><span class="clue-t">Mary I of England</span><span class="gap"><span class="gn">1</span><select class="exam-select ans" data-bank="1" data-answer="18 February 1516"></select></span></li>
+          <li><span class="clue-t">Jane Austen</span><span class="gap"><span class="gn">2</span><select class="exam-select ans" data-bank="1" data-answer="16 December 1775"></select></span></li>
+          <li><span class="clue-t">Elizabeth I of England</span><span class="gap"><span class="gn">3</span><select class="exam-select ans" data-bank="1" data-answer="7 September 1533"></select></span></li>
+          <li><span class="clue-t">Florence Nightingale</span><span class="gap"><span class="gn">4</span><select class="exam-select ans" data-bank="1" data-answer="12 May 1820"></select></span></li>
+          <li><span class="clue-t">Catherine of Aragon</span><span class="gap"><span class="gn">5</span><select class="exam-select ans" data-bank="1" data-answer="16 December 1485"></select></span></li>
+          <li><span class="clue-t">Queen Victoria</span><span class="gap"><span class="gn">6</span><select class="exam-select ans" data-bank="1" data-answer="24 May 1819"></select></span></li>
+        </ul>
+        <div class="after-check">
+          <details class="logic" open><summary><span>💡</span><span class="hint-txt">The extras</span></summary><div class="logic-body"><p>13 October 1925 is Margaret Thatcher; 5 May 1988 is the singer Adele (both in the Olympway task, never taught, so left out as people).</p></div></details>
+        </div>
+      </div>
+    </div>
+
+    <div class="exercise">
+      <div class="review-head"><span class="task-num">Olympway 243</span><span class="pts">5 gaps</span></div>
+      <h3>Oscar Wilde</h3>
+      <p class="instr">Write one word in each gap. The first and last letters are given.</p>
+      <div class="quiz">
+        <div class="answer-row"><span class="ar-num">1</span><span class="ar-txt">Oscar Fingal O’Flahertie Wills Wilde was an <span class="cue">I … H</span> playwright, novelist, essayist and poet.</span><input class="blank short ans" data-answer="Irish" autocomplete="off" spellcheck="false"></div>
+        <div class="answer-row"><span class="ar-num">2</span><span class="ar-txt">He is remembered for his epigrams, his novel <i>The Picture of Dorian Gray</i>, his plays, and the circumstances of his imprisonment and early <span class="cue">D … H</span>.</span><input class="blank short ans" data-answer="death" autocomplete="off" spellcheck="false"></div>
+        <div class="answer-row"><span class="ar-num">3</span><span class="ar-txt">In 1897, in <span class="cue">P … N</span>, he wrote <i>De Profundis</i>, a long letter about his spiritual journey through his trials.</span><input class="blank short ans" data-answer="prison" autocomplete="off" spellcheck="false"></div>
+        <div class="answer-row"><span class="ar-num">4</span><span class="ar-txt">He died destitute in <span class="cue">P … S</span> at the age of 46.</span><input class="blank short ans" data-answer="Paris" autocomplete="off" spellcheck="false"></div>
+        <div class="answer-row"><span class="ar-num">5</span><span class="ar-txt">In 2017, with the Policing and <span class="cue">C … E</span> Act 2017, Wilde was among about 50,000 men who were pardoned.</span><input class="blank short ans" data-answer="Crime" autocomplete="off" spellcheck="false"></div>
+      </div>
+    </div>
+
+    <div class="exercise">
+      <div class="review-head"><span class="task-num">Задание 10 · set 3</span><span class="pts">8 events · 10 centuries · 3 min</span></div>
+      <h3>Events and centuries · in the demo’s words</h3>
+      <div class="timer" data-min="3"></div>
+      <div class="quiz cent-quiz">
+        <div class="answer-row"><span class="ar-num">1</span><span class="ar-txt">Henry II’s ascension to the throne</span><select class="exam-select ans" data-opts="11th,12th,13th,14th,15th,16th,17th,19th,20th,21st" data-answer="12th"></select></div>
+        <div class="answer-row"><span class="ar-num">2</span><span class="ar-txt">The end of the Tudor dynasty</span><select class="exam-select ans" data-opts="11th,12th,13th,14th,15th,16th,17th,19th,20th,21st" data-answer="17th"></select></div>
+        <div class="answer-row"><span class="ar-num">3</span><span class="ar-txt">The beginning of construction of the first Norman stone castle in Wales</span><select class="exam-select ans" data-opts="11th,12th,13th,14th,15th,16th,17th,19th,20th,21st" data-answer="11th"></select></div>
+        <div class="answer-row"><span class="ar-num">4</span><span class="ar-txt">The completion of York Minster</span><select class="exam-select ans" data-opts="11th,12th,13th,14th,15th,16th,17th,19th,20th,21st" data-answer="15th"></select></div>
+        <div class="answer-row"><span class="ar-num">5</span><span class="ar-txt">The consecration of the new Coventry Cathedral</span><select class="exam-select ans" data-opts="11th,12th,13th,14th,15th,16th,17th,19th,20th,21st" data-answer="20th"></select></div>
+        <div class="answer-row"><span class="ar-num">6</span><span class="ar-txt">The publication of <i>The Ballad of Reading Gaol</i></span><select class="exam-select ans" data-opts="11th,12th,13th,14th,15th,16th,17th,19th,20th,21st" data-answer="19th"></select></div>
+        <div class="answer-row"><span class="ar-num">7</span><span class="ar-txt">The collapse of the spire of Lincoln Cathedral</span><select class="exam-select ans" data-opts="11th,12th,13th,14th,15th,16th,17th,19th,20th,21st" data-answer="16th"></select></div>
+        <div class="answer-row"><span class="ar-num">8</span><span class="ar-txt">The burial of Elizabeth II at Windsor</span><select class="exam-select ans" data-opts="11th,12th,13th,14th,15th,16th,17th,19th,20th,21st" data-answer="21st"></select></div>
+        <div class="after-check">
+          <details class="logic" open><summary><span>💡</span><span class="hint-txt">The dates</span></summary><div class="logic-body"><p>1154 → 12th · 1603 → 17th · 1067 (Chepstow) → 11th · 1472 → 15th · 1962 → 20th · 1898 → 19th · 1548 → 16th · 2022 → 21st. Not used: 13th and 14th.</p></div></details>
+        </div>
+      </div>
+    </div>
+
+    <div class="exercise">
+      <div class="review-head"><span class="task-num">Olympway 92</span><span class="pts">5 of 10 lines · 2 min</span></div>
+      <h3>British history · dates</h3>
+      <div class="quiz kind-quiz">
+        <div class="answer-row"><span class="ar-num">1</span><span class="ar-txt">Glorious Revolution</span><select class="exam-select ans" data-opts="1066,1415,1688,1707,1815" data-answer="1688"></select></div>
+        <div class="answer-row"><span class="ar-num">2</span><span class="ar-txt">Battle of Waterloo</span><select class="exam-select ans" data-opts="1066,1415,1688,1707,1815" data-answer="1815"></select></div>
+        <div class="answer-row"><span class="ar-num">3</span><span class="ar-txt">Norman Conquest</span><select class="exam-select ans" data-opts="1066,1415,1688,1707,1815" data-answer="1066"></select></div>
+        <div class="answer-row"><span class="ar-num">4</span><span class="ar-txt">Act of Union (England and Scotland)</span><select class="exam-select ans" data-opts="1066,1415,1688,1707,1815" data-answer="1707"></select></div>
+        <div class="answer-row"><span class="ar-num">5</span><span class="ar-txt">Battle of Agincourt</span><select class="exam-select ans" data-opts="1066,1415,1688,1707,1815" data-answer="1415"></select></div>
+      </div>
+    </div>
+
+    <div class="exercise">
+      <div class="review-head"><span class="task-num">Задание 9 · 10 баллов</span><span class="pts">1 text · 5 questions</span></div>
+      <h3>Who is it? · the second text · 7 min</h3>
+      <div class="teacher-only">
+        <div class="to-label">👩‍🏫 Teacher only · key</div>
+        <ul><li>1 Anne Shirley · 2 Cavendish · 3 the Gulf of St Lawrence · 4 Ontario · 5 Mark Twain.</li><li>The same writer as the class text, told from the other end: the novel, its places, her married life. The text names none of the answers; all five are on the Montgomery card (Twain also on his V14 card).</li></ul>
+      </div>
+      <p class="orig-instr">Прочитайте текст и выполните задание к нему.</p>
+      <div class="facts"><span class="fact">⏱ 7 min, exam pace</span><span class="fact">🧠 the answers are outside the text</span><span class="fact">✍️ follow the format</span></div>
+      <div class="timer" data-min="7"></div>
+      <div class="quiz">
+        <div class="story">
+          <p>Few novels have made a whole island famous, but hers did. Every summer thousands of visitors, many of them from Japan, come to a white farmhouse with green trim in the village where she grew up, on the north shore of an island surrounded by the waters of a great gulf. The house belonged to cousins of her grandfather, and she used it, and the woods and lanes around it, as the setting of her first and most famous book.</p>
+          <p>The heroine of that book is an orphan of eleven, thin, freckled and furious about the colour of her hair. She talks without stopping, gives romantic names to ponds and trees, and once breaks a slate over the head of a boy who calls her “Carrots”. In the story the village is given another name, Avonlea, but readers easily found the real one. A famous American humorist, the author of a book about a boy who whitewashes a fence, wrote to the writer that her heroine was the dearest child in fiction since “the immortal Alice”.</p>
+          <p>The book was so successful that her publisher asked for more, and a sequel came out the very next year; in the end there were eight books about the red-haired girl, from childhood to motherhood. Later the writer created another heroine, a girl who wants to become a writer herself, and many readers think this one is the most like her author.</p>
+          <p>Her own married life was much harder. Her husband, a Presbyterian minister, suffered from depression for years, and one of their three sons died at birth. For fifteen years she was a minister’s wife in a village in a large inland province, and later the family moved to its capital, where she died in 1942. In 1935 she was given the Order of the British Empire, but she asked to be buried among the fields she had written about.</p>
+        </div>
+        <div class="answer-row"><span class="ar-num">1</span><span class="ar-txt">What is the full name of the heroine of the first book? <i>Format: First name Last name</i></span><input class="blank ans" data-answer="Anne Shirley" autocomplete="off" spellcheck="false"></div>
+        <div class="answer-row"><span class="ar-num">2</span><span class="ar-txt">What is the real name of the village the writer called Avonlea?</span><input class="blank ans" data-answer="Cavendish" autocomplete="off" spellcheck="false"></div>
+        <div class="answer-row"><span class="ar-num">3</span><span class="ar-txt">Which gulf surrounds the island? <i>Format: the Gulf of …</i></span><input class="blank ans" data-answer="the Gulf of St Lawrence|Gulf of St Lawrence|the Gulf of St. Lawrence|Gulf of St. Lawrence|the Gulf of Saint Lawrence|Gulf of Saint Lawrence|St Lawrence|St. Lawrence|Saint Lawrence" autocomplete="off" spellcheck="false"></div>
+        <div class="answer-row"><span class="ar-num">4</span><span class="ar-txt">What is the name of the inland province where she lived after her marriage?</span><input class="blank ans" data-answer="Ontario" autocomplete="off" spellcheck="false"></div>
+        <div class="answer-row"><span class="ar-num">5</span><span class="ar-txt">Who is the American humorist in paragraph 2? <i>Format: his pen name</i></span><input class="blank ans" data-answer="Mark Twain" autocomplete="off" spellcheck="false"></div>
+        <div class="after-check">
+          <details class="logic" open><summary><span>🔎</span><span class="hint-txt">Where the answers come from</span></summary><div class="logic-body"><ul>
+            <li>The writer: a farmhouse with green trim, an orphan with red hair, the “immortal Alice” letter: <b>L. M. Montgomery</b> again, the Culture card.</li>
+            <li>1: the orphan with red hair in <i>Anne of Green Gables</i>: <b>Anne Shirley</b>.</li>
+            <li>2: the village of her grandparents’ farm: <b>Cavendish</b>.</li>
+            <li>3: Prince Edward Island lies in <b>the Gulf of St Lawrence</b>.</li>
+            <li>4: a large inland province whose capital is Toronto: <b>Ontario</b>.</li>
+            <li>5: a boy who whitewashes a fence = Tom Sawyer → <b>Mark Twain</b> (Lesson 17; the pen name, not Samuel Clemens).</li>
+          </ul></div></details>
+        </div>
+      </div>
+    </div>
+
+    <div class="exercise">
+      <div class="review-head"><span class="task-num">Задание 9 · 10 баллов</span><span class="pts">1 text · 5 questions</span></div>
+      <h3>Who is it? · 7 min</h3>
+      <div class="teacher-only">
+        <div class="to-label">👩‍🏫 Teacher only · key</div>
+        <ul><li>1 Robert Louis Stevenson · 2 Edinburgh · 3 Treasure Island · 4 Long John Silver · 5 Jekyll and Hyde.</li><li>The text names only Samoa; everything else is on the Culture card.</li></ul>
+      </div>
+      <p class="orig-instr">Прочитайте текст и выполните задание к нему.</p>
+      <div class="facts"><span class="fact">⏱ 7 min, exam pace</span><span class="fact">🧠 the answers are outside the text</span><span class="fact">✍️ follow the format</span></div>
+      <div class="timer" data-min="7"></div>
+      <div class="quiz">
+        <div class="story">
+          <p>He was born in 1850 in the Scottish capital, the only child of a family of engineers who built lighthouses around the coast of Scotland. He was often ill as a boy and spent long winters in bed, where his nurse filled his head with stories. He studied engineering and then law at the university of his home city, but all he really wanted was to write.</p>
+          <p>In France he met an American woman, ten years older than him, separated from her husband and with two children. In 1879 he crossed the ocean and the whole continent to follow her to California, and in 1880 they married. Back in Scotland, on a rainy holiday, he drew a map of an island to entertain his teenage stepson and began a story about a boy, a one-legged ship’s cook with a parrot, and buried gold.</p>
+          <p>A few years later came a book of short poems for children and a dark story about a respectable London doctor who drinks a potion and turns into a monster. When his father died in 1887, he left Britain for good with his wife and his mother. They spent a winter in the mountains of New York State, hired a yacht and sailed the Pacific for three years.</p>
+          <p>In 1890 he bought land on the islands of Samoa and built a house there. The islanders called him “the teller of tales”. He died there in 1894, aged 44, and was buried at the top of a mountain; on his grave are the lines of his own poem: “Home is the sailor, home from sea, / And the hunter home from the hill.”</p>
+        </div>
+        <div class="answer-row"><span class="ar-num">1</span><span class="ar-txt">Who is the person described in the text? <i>Format: First name Middle name Last name</i></span><input class="blank ans" data-answer="Robert Louis Stevenson|R. L. Stevenson|R.L. Stevenson|RL Stevenson" autocomplete="off" spellcheck="false"></div>
+        <div class="answer-row"><span class="ar-num">2</span><span class="ar-txt">In which city was he born?</span><input class="blank ans" data-answer="Edinburgh" autocomplete="off" spellcheck="false"></div>
+        <div class="answer-row"><span class="ar-num">3</span><span class="ar-txt">What is the title of the story that began with a map?</span><input class="blank ans" data-answer="Treasure Island" autocomplete="off" spellcheck="false"></div>
+        <div class="answer-row"><span class="ar-num">4</span><span class="ar-txt">What is the name of the one-legged cook? <i>Format: First name Middle name Last name</i></span><input class="blank ans" data-answer="Long John Silver|John Silver" autocomplete="off" spellcheck="false"></div>
+        <div class="answer-row"><span class="ar-num">5</span><span class="ar-txt">What are the doctor’s two names in the dark story? (write the names with an “and”)</span><input class="blank ans" data-answer="Jekyll and Hyde|Dr Jekyll and Mr Hyde|Dr. Jekyll and Mr. Hyde|Doctor Jekyll and Mister Hyde" autocomplete="off" spellcheck="false"></div>
+        <div class="after-check">
+          <details class="logic" open><summary><span>🔎</span><span class="hint-txt">Where the answers come from</span></summary><div class="logic-body"><ul>
+            <li>1: lighthouses, a map for a stepson, Samoa: the Stevenson card.</li>
+            <li>2: “the Scottish capital”: <b>Edinburgh</b>.</li>
+            <li>3–4: the map, the boy, the cook with a parrot: <b><i>Treasure Island</i></b>, <b>Long John Silver</b>.</li>
+            <li>5: the doctor and his monster: <b>Jekyll and Hyde</b>.</li>
+          </ul></div></details>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="btn-row" style="margin:6px 0 30px">
+    <button class="btn btn-danger" onclick="resetAll()">Clear all my answers</button>
+  </div>
+</div>
+<div class="save-indicator" id="saveIndicator">✓ Saved</div>
+
+<script>
+const LESSON_KEY = 'lesson-21';
+
+// ── Lesson 16: statements become tappable words (before the engine reads them) ──
+document.querySelectorAll('.tf-s, .st-t').forEach(s => {
+  if (s.querySelector('.u')) return;
+  s.innerHTML = s.textContent.trim().split(/\s+/).map(w => '<span class="u">' + w.replace(/&/g, '&amp;').replace(/</g, '&lt;') + '</span>').join(' ');
+});
+let data = {};
+try { data = JSON.parse(localStorage.getItem(LESSON_KEY)) || {}; } catch(e) {}
+
+function save(patch) {
+  Object.assign(data, patch);
+  try { localStorage.setItem(LESSON_KEY, JSON.stringify(data)); } catch(e) {}
+  const el = document.getElementById('saveIndicator');
+  el.classList.add('show');
+  clearTimeout(save.t);
+  save.t = setTimeout(() => el.classList.remove('show'), 1400);
+}
+
+// ── TABS ───────────────────────────────────────────────────────
+function showTab(name) {
+  const btn = document.querySelector('.tab-btn[onclick*="\'' + name + '\'"]');
+  if (!btn) return;
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  btn.classList.add('active');
+}
+function switchTab(name) {
+  showTab(name);
+  save({ activeTab: name });
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ── BUILD THE CONTROLS ─────────────────────────────────────────
+const QUIZZES = [...document.querySelectorAll('.quiz')];
+QUIZZES.forEach((q, qi) => {
+  q.id = 'q' + qi;
+  q.querySelectorAll('.ans').forEach((el, i) => { el.dataset.key = 'q' + qi + '-' + i; });
+});
+const isChecked = q => !!data['chk-' + q.id];
+
+// word-bank gaps take their options from the box above the text
+document.querySelectorAll('select[data-bank]').forEach(sel => {
+  const words = [...sel.closest('.exercise').querySelectorAll('.bank span')].map(s => s.textContent);
+  sel.dataset.opts = words.join('|');   // sentences contain commas
+});
+document.querySelectorAll('select.ans').forEach(sel => {
+  const blank = document.createElement('option');
+  blank.value = ''; blank.textContent = '—';
+  sel.appendChild(blank);
+  sel.dataset.opts.split(sel.dataset.bank ? '|' : ',').forEach(v => {
+    const o = document.createElement('option');
+    o.value = v; o.textContent = v;
+    sel.appendChild(o);
+  });
+  if (data[sel.dataset.key] !== undefined) sel.value = data[sel.dataset.key];
+  sel.addEventListener('change', () => save({ [sel.dataset.key]: sel.value }));
+});
+// word box: cross out every word that is already in a gap, with the gap's number
+function paintBank(ex) {
+  const used = {};
+  ex.querySelectorAll('select[data-bank]').forEach(sel => {
+    sel.classList.toggle('filled', !!sel.value);
+    if (sel.value) used[sel.value] = sel.closest('.gap').querySelector('.gn').textContent;
+  });
+  ex.querySelectorAll('.bank span').forEach(w => {
+    const n = used[w.textContent];
+    w.classList.toggle('used', !!n);
+    if (n) w.dataset.gap = n; else delete w.dataset.gap;
+  });
+  ex.querySelectorAll('select[data-bank] option').forEach(o => {
+    if (!o.value) return;
+    o.textContent = (used[o.value] && o.parentElement.value !== o.value ? '✓ ' : '') + o.value;   // ✓ = already used in another gap
+  });
+}
+// Задание 2 word box: drag a word into a gap (or tap a word, then tap the gap); tap a filled gap to empty it
+document.querySelectorAll('.bank').forEach(bank => {
+  const ex = bank.closest('.exercise');
+  const sels = [...ex.querySelectorAll('select[data-bank]')];
+  let picked = null;
+  const pick = w => {
+    picked = w;
+    bank.querySelectorAll('span').forEach(s => s.classList.toggle('picked', s === w));
+    ex.classList.toggle('picking', !!w);
+  };
+  const setGap = (sel, word) => { sel.value = word; sel.dispatchEvent(new Event('change')); };
+  const put = (sel, word) => {
+    if (sel.disabled) return;
+    sels.forEach(o => { if (o !== sel && o.value === word) setGap(o, ''); });   // each word goes in one gap only
+    setGap(sel, word);
+  };
+  const paintZone = sel => {
+    const dz = sel._dz;
+    dz.textContent = sel.value || '\u00a0';
+    dz.classList.toggle('filled', !!sel.value);
+    ['correct', 'wrong'].forEach(c => dz.classList.toggle(c, sel.classList.contains(c)));
+    dz.classList.toggle('locked', sel.disabled);
+  };
+  sels.forEach(sel => {
+    const dz = document.createElement('span');
+    dz.className = 'dz';
+    sel.before(dz); sel.hidden = true; sel._dz = dz;
+    dz.addEventListener('click', () => {
+      if (sel.disabled) return;
+      if (picked) { put(sel, picked.textContent); pick(null); }
+      else if (sel.value) setGap(sel, '');
+    });
+    sel.addEventListener('change', () => { paintZone(sel); paintBank(ex); });
+    new MutationObserver(() => paintZone(sel)).observe(sel, { attributes: true, attributeFilter: ['class', 'disabled'] });   // Check / Try again
+    paintZone(sel);
+  });
+  bank.querySelectorAll('span').forEach(w => {
+    w.addEventListener('pointerdown', e => {
+      if (sels[0].disabled) return;
+      e.preventDefault();
+      const x0 = e.clientX, y0 = e.clientY;
+      let ghost = null;
+      const zoneAt = ev => { const el = document.elementFromPoint(ev.clientX, ev.clientY); const dz = el && el.closest('.dz'); return dz && ex.contains(dz) ? dz : null; };
+      const move = ev => {
+        if (!ghost && Math.hypot(ev.clientX - x0, ev.clientY - y0) < 6) return;
+        if (!ghost) { ghost = document.createElement('span'); ghost.className = 'drag-ghost'; ghost.textContent = w.textContent; document.body.appendChild(ghost); pick(null); }
+        ghost.style.left = ev.clientX + 'px'; ghost.style.top = ev.clientY + 'px';
+        const dz = zoneAt(ev);
+        ex.querySelectorAll('.dz').forEach(d => d.classList.toggle('over', d === dz));
+      };
+      const up = ev => {
+        removeEventListener('pointermove', move); removeEventListener('pointerup', up); removeEventListener('pointercancel', up);
+        if (!ghost) { pick(picked === w ? null : w); return; }   // a tap: pick the word
+        ghost.remove();
+        ex.querySelectorAll('.dz.over').forEach(d => d.classList.remove('over'));
+        const dz = ev.type === 'pointerup' && zoneAt(ev);
+        if (dz) put(sels.find(s => s._dz === dz), w.textContent);
+      };
+      addEventListener('pointermove', move); addEventListener('pointerup', up); addEventListener('pointercancel', up);
+    });
+  });
+  paintBank(ex);
+});
+document.querySelectorAll('input.blank.ans').forEach(inp => {
+  if (data[inp.dataset.key] !== undefined) inp.value = data[inp.dataset.key];
+  inp.addEventListener('input', () => save({ [inp.dataset.key]: inp.value }));
+});
+
+// ── MARKING ────────────────────────────────────────────────────
+// typed answers: capitals, curly apostrophes and extra spaces don't matter; spelling does
+const norm = s => s.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[’‘`]/g, "'").replace(/[.,!?;:"“”]/g, ' ').replace(/\s+/g, ' ').trim();
+function given(el) {
+  // first-letter gaps: she types the rest of the word ("reaty"), or the whole word ("treaty")
+  const v = el.value, pre = el.dataset.prefix;
+  return pre && !norm(v).startsWith(pre) ? pre + v : v;
+}
+function mark(el) {
+  const keys = el.dataset.answer.split('|');
+  const ok = el.tagName === 'SELECT' ? keys.includes(el.value) : keys.some(k => norm(k) === norm(given(el)));
+  el.classList.add(ok ? 'correct' : 'wrong');
+  const shown = el.closest('.slots') ? keys[0].split(' ')[0] : keys.join(' / ');   // sentence places show just the letter
+  el.insertAdjacentHTML('afterend', '<span class="key">' + shown + '</span>');   // the correct answer next to every gap
+  el.disabled = true;
+  return ok ? 1 : 0;
+}
+function unmark(el) {
+  el.classList.remove('correct', 'wrong'); el.disabled = false; el.value = '';
+  if (el.nextElementSibling && el.nextElementSibling.classList.contains('key')) el.nextElementSibling.remove();
+}
+
+// ── CHECK / TRY AGAIN ──────────────────────────────────────────
+QUIZZES.forEach(q => {
+  const foot = document.createElement('div');
+  foot.className = 'quiz-foot';
+  foot.innerHTML = '<button class="btn btn-primary">Check ✓</button>' +
+                   '<button class="btn btn-ghost" style="display:none">Try again ↺</button>' +
+                   '<span class="q-result"></span>';
+  const after = q.querySelector(':scope > .after-check');
+  after ? q.insertBefore(foot, after) : q.appendChild(foot);
+  const [bCheck, bRetry] = foot.querySelectorAll('button');
+  bCheck.addEventListener('click', () => checkQuiz(q, true));
+  bRetry.addEventListener('click', () => retryQuiz(q));
+  q._foot = foot;
+});
+function checkQuiz(q, doSave) {
+  const els = [...q.querySelectorAll('.ans')];
+  const got = els.reduce((a, el) => a + mark(el), 0), max = els.length;
+  const res = q._foot.querySelector('.q-result');
+  res.textContent = got + ' / ' + max + (got === max ? ' — perfect! 🎉' : '');
+  res.className = 'q-result ' + (got === max ? 'full' : got === 0 ? 'zero' : 'part');
+  q._foot.children[0].style.display = 'none';
+  q._foot.children[1].style.display = '';
+  q.classList.add('checked');
+  q._score = [got, max];
+  if (doSave) save({ ['chk-' + q.id]: true });
+  updateProgress();
+}
+function retryQuiz(q) {
+  const patch = { ['chk-' + q.id]: false };
+  q.querySelectorAll('.ans').forEach(el => { unmark(el); patch[el.dataset.key] = undefined; });
+  q._foot.querySelector('.q-result').textContent = '';
+  const ex = q.closest('.exercise'); if (ex.querySelector('.bank')) paintBank(ex);
+  q._foot.children[0].style.display = '';
+  q._foot.children[1].style.display = 'none';
+  q.classList.remove('checked');
+  q._score = null;
+  save(patch);
+  updateProgress();
+}
+function updateProgress() {
+  const done = QUIZZES.filter(q => q._score);
+  const got = done.reduce((a, q) => a + q._score[0], 0);
+  const max = done.reduce((a, q) => a + q._score[1], 0);
+  document.getElementById('pgCount').textContent = done.length + ' / ' + QUIZZES.length;
+  document.getElementById('pgScore').textContent = got + ' / ' + max;
+  document.getElementById('pgFill').style.width = (done.length / QUIZZES.length * 100) + '%';
+}
+
+// ── AUDIO PLAYER: play/pause, drag or click the bar, ⏪ 10 s / ⏩ 10 s ──
+const fmt = s => Math.floor(s / 60) + ':' + String(Math.floor(s % 60)).padStart(2, '0');
+document.querySelectorAll('.player[data-src]').forEach(pl => {
+  const audio = new Audio(pl.dataset.src);
+  audio.preload = 'metadata';
+  pl.innerHTML =
+    '<button type="button" class="pl-btn" aria-label="Play">' +
+      '<svg class="i-play" viewBox="0 0 24 24"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.2-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z"/></svg>' +
+      '<svg class="i-pause" viewBox="0 0 24 24"><rect x="6" y="5" width="4.2" height="14" rx="1.2"/><rect x="13.8" y="5" width="4.2" height="14" rx="1.2"/></svg>' +
+    '</button>' +
+    '<div class="pl-main"><div class="pl-top"><span class="pl-label">🎧 ' + pl.dataset.label + '</span><span class="pl-time">0:00</span></div>' +
+    '<div class="pl-track"><div class="pl-fill"></div><div class="pl-knob"></div></div></div>' +
+    '<button type="button" class="pl-skip" data-s="-10" title="Back 10 seconds">⏪ 10</button>' +
+    '<button type="button" class="pl-skip" data-s="10" title="Forward 10 seconds">10 ⏩</button>';
+  pl.appendChild(audio);
+  const fill = pl.querySelector('.pl-fill'), knob = pl.querySelector('.pl-knob');
+  const time = pl.querySelector('.pl-time'), track = pl.querySelector('.pl-track');
+  const paint = () => {
+    const pct = audio.duration ? audio.currentTime / audio.duration * 100 : 0;
+    fill.style.width = pct + '%'; knob.style.left = pct + '%';
+    time.textContent = fmt(audio.currentTime) + ' / ' + (audio.duration ? fmt(audio.duration) : '…');
+  };
+  pl.querySelector('.pl-btn').addEventListener('click', () => { if (pl.classList.contains('locked')) return; audio.paused ? audio.play() : audio.pause(); });
+  pl.querySelectorAll('.pl-skip').forEach(b => b.addEventListener('click', () => {
+    if (!audio.duration || pl.classList.contains('once')) return;
+    audio.currentTime = Math.min(audio.duration, Math.max(0, audio.currentTime + +b.dataset.s));
+    paint();
+  }));
+  const seek = e => {
+    if (!audio.duration || pl.classList.contains('once')) return;
+    const r = track.getBoundingClientRect();
+    audio.currentTime = Math.min(1, Math.max(0, (e.clientX - r.left) / r.width)) * audio.duration;
+    paint();
+  };
+  track.addEventListener('pointerdown', e => { track.setPointerCapture(e.pointerId); pl.classList.add('dragging'); seek(e); });
+  track.addEventListener('pointermove', e => { if (pl.classList.contains('dragging')) seek(e); });
+  track.addEventListener('pointerup', () => pl.classList.remove('dragging'));
+  track.addEventListener('pointercancel', () => pl.classList.remove('dragging'));
+  audio.addEventListener('play', () => pl.classList.add('playing'));
+  audio.addEventListener('pause', () => pl.classList.remove('playing'));
+  audio.addEventListener('ended', () => pl.classList.remove('playing'));
+  audio.addEventListener('timeupdate', paint);
+  audio.addEventListener('loadedmetadata', paint);
+  if (pl.dataset.once) oncePlayer(pl, audio);
+});
+
+// ── PRACTICE 1 PAIRS: tap the first sentence, then a link word (values live in hidden inputs) ──
+document.querySelectorAll('.pp').forEach(pp => {
+  const first = pp.querySelector('.pp-first'), link = pp.querySelector('.pp-link');
+  const quiz = pp.closest('.quiz'), step = pp.querySelector('.pp-step');
+  const set = (inp, v) => { inp.value = v; inp.dispatchEvent(new Event('input')); };
+  const paint = () => {
+    const f = first.value;
+    pp.classList.toggle('ordered', !!f);
+    pp.querySelectorAll('.pp-s').forEach(s => {
+      const isF = s.dataset.l === f;
+      s.classList.toggle('first', isF);
+      s.classList.toggle('second', !!f && !isF);
+      s.querySelector('.pp-b').textContent = f ? (isF ? '1st' : '2nd') : s.dataset.l;
+      s.classList.toggle('ok', isF && f === first.dataset.answer);
+      s.classList.toggle('bad', isF && f !== first.dataset.answer);
+    });
+    const box = pp.querySelector('.pp-ss'), sA = box.querySelector('[data-l="A"]'), sB = box.querySelector('[data-l="B"]');
+    if (f === 'B') box.prepend(sB); else box.prepend(sA);   // the chosen sentence moves to the top
+    pp.querySelectorAll('.w').forEach(w => w.classList.toggle('pick', !!link.value && w.dataset.ph === link.value));
+    step.textContent = !f ? '① Tap the sentence that comes first' : !link.value ? '② Now tap the word that links back' : '✓ Done';
+  };
+  pp.querySelectorAll('.pp-s').forEach(s => s.addEventListener('click', () => {
+    if (quiz.classList.contains('checked') || first.value) return;
+    set(first, s.dataset.l); paint();
+  }));
+  pp.querySelectorAll('.w').forEach(w => w.addEventListener('click', e => {
+    if (quiz.classList.contains('checked') || !first.value) return;
+    e.stopPropagation();
+    set(link, link.value === w.dataset.ph ? '' : w.dataset.ph); paint();
+  }));
+  pp.querySelector('.pp-swap').addEventListener('click', () => { set(first, ''); set(link, ''); paint(); });
+  new MutationObserver(paint).observe(quiz, { attributes: true, attributeFilter: ['class'] });   // Check / Try again
+  paint();
+});
+
+
+// ── TIMERS: Start / Pause / Reset; the clock stops when the task is checked ──
+document.querySelectorAll('.timer[data-min]').forEach((tm, ti) => {
+  const limit = +tm.dataset.min * 60, key = 'tm-' + ti;
+  const quiz = tm.closest('.exercise').querySelector('.quiz');
+  let spent = +data[key] || 0, t0 = null, tick = null;
+  tm.innerHTML = '<span class="tm-clock">⏱ <b></b></span>' +
+                 '<button type="button" class="btn btn-primary">Start</button>' +
+                 '<button type="button" class="btn btn-ghost">Reset</button><span class="tm-msg"></span>';
+  const clock = tm.querySelector('b'), [go, reset] = tm.querySelectorAll('button'), msg = tm.querySelector('.tm-msg');
+  const now = () => spent + (t0 ? (Date.now() - t0) / 1000 : 0);
+  const paint = () => {
+    const left = limit - now();
+    clock.textContent = left >= 0 ? fmt(Math.ceil(left)) : '+' + fmt(-left);   // over the limit: counts up in red
+    tm.classList.toggle('over', left < 0);
+    tm.classList.toggle('running', !!t0);
+    go.textContent = t0 ? 'Pause' : spent ? 'Go on' : 'Start';
+  };
+  const stop = () => {
+    if (!t0) return;
+    spent = now(); t0 = null; clearInterval(tick);
+    save({ [key]: Math.round(spent) }); paint();
+  };
+  go.addEventListener('click', () => { if (t0) stop(); else { t0 = Date.now(); tick = setInterval(paint, 250); paint(); } });
+  reset.addEventListener('click', () => { stop(); spent = 0; msg.textContent = ''; save({ [key]: 0 }); paint(); });
+  new MutationObserver(() => {
+    if (!quiz.classList.contains('checked')) { msg.textContent = ''; return; }
+    stop();
+    if (spent && tm.dataset.kind !== 'read') msg.textContent = 'Your time: ' + fmt(spent) + (spent <= limit ? ' ✓ in time' : ' (over the limit)');
+  }).observe(quiz, { attributes: true, attributeFilter: ['class'] });
+  paint();
+});
+
+
+// ── WORDS TO USE (tap when used) · HOMEWORK ────────────────────
+document.querySelectorAll('.use-words').forEach((box, bi) => {
+  const need = +box.dataset.need || 5, out = box.nextElementSibling;
+  const paint = () => { out.textContent = box.querySelectorAll('.used').length + ' / ' + need + ' used'; };
+  box.querySelectorAll('span').forEach((w, i) => {
+    const k = 'uw-' + bi + '-' + i;
+    if (data[k]) w.classList.add('used');
+    w.addEventListener('click', () => { save({ [k]: w.classList.toggle('used') }); paint(); });
+  });
+  paint();
+});
+document.querySelectorAll('#hwList input').forEach((c, i) => {
+  c.checked = !!data['hw-' + i];
+  c.closest('li').classList.toggle('done', c.checked);
+  c.addEventListener('change', () => { save({ ['hw-' + i]: c.checked }); c.closest('li').classList.toggle('done', c.checked); });
+});
+
+// ── ONCE-ONLY PLAYER (Задание 7/8 practice): plays once, no skipping; the full player comes back after Check ──
+function oncePlayer(pl, audio) {
+  const quiz = pl.closest('.exercise').querySelector('.quiz');
+  const heard = 'heard-' + pl.dataset.src, opened = 'open-' + pl.dataset.src;
+  const note = document.createElement('p');
+  note.className = 'pl-note';
+  pl.after(note);
+  const paintOnce = () => {
+    const free = document.documentElement.classList.contains('watching') || data[opened];
+    pl.classList.toggle('once', !free);
+    pl.classList.toggle('locked', !free && !!data[heard] && audio.paused);
+    note.textContent = free ? '' : data[heard] ? (audio.paused ? '🔒 You have heard it once. Check your answers to listen again.' : '')
+                                               : '🎧 It plays once, like in the Olympiad: no going back.';
+  };
+  audio.addEventListener('ended', () => { save({ [heard]: true }); paintOnce(); });
+  audio.addEventListener('play', paintOnce);
+  if (quiz) new MutationObserver(() => {
+    if (quiz.classList.contains('checked') && !data[opened]) { save({ [opened]: true }); paintOnce(); }
+  }).observe(quiz, { attributes: true, attributeFilter: ['class'] });
+  paintOnce();
+}
+
+// ── STATEMENTS: tap a word to underline it (saved, so the teacher sees it too) ──
+document.querySelectorAll('.st-list[data-k], .quiz.tf[data-k]').forEach(list => {
+  const k = list.dataset.k, us = [...list.querySelectorAll('.u')];
+  (data[k] || []).forEach(i => us[i] && us[i].classList.add('hl'));
+  us.forEach((u, i) => u.addEventListener('click', () => {
+    u.classList.toggle('hl');
+    save({ [k]: us.map((x, j) => x.classList.contains('hl') ? j : -1).filter(j => j >= 0) });
+  }));
+});
+// ── NOTES while listening (not marked) ──
+document.querySelectorAll('input.note[data-k]').forEach(inp => {
+  inp.value = data[inp.dataset.k] || '';
+  inp.addEventListener('input', () => save({ [inp.dataset.k]: inp.value }));
+});
+// ── FREE WRITING (saved, not marked) ──
+document.querySelectorAll('textarea[data-k]').forEach(t => {
+  t.value = data[t.dataset.k] || '';
+  t.addEventListener('input', () => save({ [t.dataset.k]: t.value }));
+});
+function resetAll() {
+  if (!confirm('Clear every answer on this page (flashcard progress stays)?')) return;
+  try { localStorage.removeItem(LESSON_KEY); } catch(e) {}
+  location.reload();
+}
+
+// ── INIT ───────────────────────────────────────────────────────
+if (data.activeTab) showTab(data.activeTab);
+QUIZZES.forEach(q => { if (isChecked(q)) checkQuiz(q, false); });
+updateProgress();
+</script>
+
+<script src="../flashcards.js"></script>
+<script src="../choices.js"></script>
+<script src="../dictionary.js"></script>
+</body>
+</html>
