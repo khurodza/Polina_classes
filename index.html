@@ -18,6 +18,22 @@
       padding: 40px 20px;
       font-size: .95rem;
     }
+    /* lesson folder (earlier lessons) */
+    .lesson-folder { margin-top: 34px; }
+    .lesson-folder > summary { list-style: none; cursor: pointer; display: flex; align-items: center; gap: 14px;
+      background: var(--card); border: 2px solid var(--border); border-radius: var(--radius); padding: 14px 18px;
+      box-shadow: var(--shadow); transition: border-color .15s; }
+    .lesson-folder > summary::-webkit-details-marker { display: none; }
+    .lesson-folder > summary:hover { border-color: var(--accent); }
+    .lf-icon { font-size: 1.7rem; line-height: 1; }
+    .lf-text { flex: 1; min-width: 0; }
+    .lf-text b { display: block; font-family: 'Fraunces', Georgia, serif; font-size: 1.08rem; color: var(--text); }
+    .lf-text small { color: var(--muted); font-size: .85rem; }
+    .lf-arrow { color: var(--accent-dk); font-size: 1.1rem; transition: transform .2s; }
+    .lesson-folder[open] .lf-arrow { transform: rotate(90deg); }
+    .lesson-folder .lesson-stack { padding: 6px 4px 4px; }
+    .lesson-stamp.code { font-size: .95rem; letter-spacing: -.02em; }
+    #lyceumGrid .empty-state { padding: 22px 20px; }
   </style>
 </head>
 <body>
@@ -47,7 +63,7 @@
     </a>
     <a class="dict-home-link" href="flashcards.html">
       <span class="dh-icon">🃏</span>
-      <span><b>Flashcards</b><small>Olympiad decks: flip, learn, match, test</small></span>
+      <span><b>Flashcards</b><small>Topic decks: flip, learn, match, test</small></span>
     </a>
   </div>
 
@@ -61,11 +77,48 @@
        Stamp colors cycle automatically: terracotta → blue → rose → gold → repeat.
   ──────────────────────────────────────────────────────────────────────── -->
 
-  <div class="section-title">All Lessons</div>
+  <!-- ── ЛИЦЕЙ НИУ ВШЭ · ESSAY COURSE (from December 2026) ──────────────────
+       Lessons are numbered with the Gateway B2 Student's Book unit they are based on:
+       Unit 1 → 1.1, 1.2, 1.3 · Unit 2 → 2.1, 2.2 … Exam lessons → E.1, E.2 …
+       File name: lessons/lesson-1-1.html (stamp text: 1.1). Newest lesson first.
+  ──────────────────────────────────────────────────────────────────────── -->
+  <div class="section-title">Лицей НИУ ВШЭ · Essay course</div>
+
+  <div class="lesson-stack" id="lyceumGrid">
+
+    <!-- ADD NEW LESSONS HERE, AT THE TOP — copy this block:
+    <a class="lesson-card" href="lessons/lesson-1-1.html">
+      <span class="lesson-stamp code">1.1</span>
+      <span class="lesson-title">TOPIC</span>
+      <span class="lesson-date">DATE</span>
+      <span class="lesson-tags">
+        <span class="badge badge-class">Class</span>
+        <span class="badge badge-hw">Homework</span>
+      </span>
+    </a>
+    -->
+    <!-- LESSON 1.1 -->
+    <a class="lesson-card" href="lessons/lesson-1-1.html">
+      <span class="lesson-stamp code">1.1</span>
+      <span class="lesson-title">The Лицей exam · where you stand: a monologue, the demo test and a full-mark essay</span>
+      <span class="lesson-date">26 November 2026</span>
+      <span class="lesson-tags">
+        <span class="badge badge-class">Class</span>
+        <span class="badge badge-hw">Homework</span>
+      </span>
+    </a>
+
+  </div>
+
+  <!-- ── FOLDER: all the earlier lessons (Olympiad, September–November 2026) ── -->
+  <details class="lesson-folder">
+    <summary>
+      <span class="lf-icon">📁</span>
+      <span class="lf-text"><b>Olympiad · «Высшая проба»</b><small>Lessons 1–23 · September–November 2026</small></span>
+      <span class="lf-arrow">▸</span>
+    </summary>
 
   <div class="lesson-stack" id="lessonGrid">
-
-    <!-- ADD NEW LESSONS HERE, AT THE TOP — copy the block below -->
 
     <!-- LESSON 23 -->
     <a class="lesson-card" href="lessons/lesson-23.html">
@@ -75,6 +128,17 @@
       <span class="lesson-tags">
         <span class="badge badge-class">Class</span>
         <span class="badge badge-hw">Corrections</span>
+      </span>
+    </a>
+
+    <!-- LESSON 22 -->
+    <a class="lesson-card" href="lessons/lesson-22.html">
+      <span class="lesson-stamp">22</span>
+      <span class="lesson-title">Round 2 official demo paper · a timed practice test</span>
+      <span class="lesson-date">November 2026</span>
+      <span class="lesson-tags">
+        <span class="badge badge-class">Class</span>
+        <span class="badge badge-hw">Mock Test</span>
       </span>
     </a>
 
@@ -304,6 +368,7 @@
     </a>
 
   </div>
+  </details>
 
 </div>
 

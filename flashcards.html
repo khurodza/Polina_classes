@@ -5,6 +5,20 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Flashcards</title>
   <link rel="stylesheet" href="style.css">
+  <style>
+    .fc-group-title { font-family: 'Fraunces', Georgia, serif; font-size: 1rem; font-weight: 600; color: var(--accent); text-transform: uppercase; letter-spacing: 2px; margin: 8px 0 12px; padding-bottom: 8px; border-bottom: 2px solid var(--border); }
+    .deck-folder { margin: 6px 0 22px; }
+    .deck-folder > summary { list-style: none; cursor: pointer; display: flex; align-items: center; gap: 14px; background: var(--card); border: 2px solid var(--border); border-radius: var(--radius); padding: 12px 18px; box-shadow: var(--shadow); }
+    .deck-folder > summary::-webkit-details-marker { display: none; }
+    .deck-folder > summary:hover { border-color: var(--accent); }
+    .deck-folder .lf-icon { font-size: 1.5rem; line-height: 1; }
+    .deck-folder .lf-text { flex: 1; min-width: 0; }
+    .deck-folder .lf-text b { display: block; font-family: 'Fraunces', Georgia, serif; font-size: 1.05rem; }
+    .deck-folder .lf-text small { color: var(--muted); font-size: .85rem; }
+    .deck-folder .lf-arrow { color: var(--accent-dk); transition: transform .2s; }
+    .deck-folder[open] .lf-arrow { transform: rotate(90deg); }
+    .deck-folder .fc-decks { margin-top: 14px; }
+  </style>
 <script src="sync.js"></script>
 </head>
 <body>
@@ -16,12 +30,21 @@
 
 <div class="container">
   <div class="lesson-meta">
-    <h2>Olympiad vocabulary, B2–C1</h2>
+    <h2>Vocabulary decks</h2>
     <p>Choose a deck. Flip the cards, then practise in Learn, Match and Test. Your progress is saved on this device.</p>
   </div>
 
-  <!-- the deck list is drawn from decks.js -->
+  <!-- the deck lists are drawn from decks.js: Лицей decks (course: 'lyceum') on top, the Olympiad decks in a folder -->
+  <div class="fc-group-title">Лицей НИУ ВШЭ · topic decks</div>
   <div class="fc-decks" id="deckList"></div>
+  <details class="deck-folder" id="oldDecks">
+    <summary>
+      <span class="lf-icon">📁</span>
+      <span class="lf-text"><b>Olympiad decks · «Высшая проба»</b><small>V8–V15 · September–November 2026</small></span>
+      <span class="lf-arrow">▸</span>
+    </summary>
+    <div class="fc-decks" id="oldDeckList"></div>
+  </details>
   <div id="deckApp"></div>
 </div>
 
@@ -29,9 +52,11 @@
 <script>
   // ?deck=v8 opens that deck; otherwise the first one
   const want = new URLSearchParams(location.search).get('deck');
-  const current = (DECKS.find(d => d.id === want) || DECKS[0]).id;
-  const list = document.getElementById('deckList');
+  const current = (DECKS.find(d => d.id === want) || DECKS.find(d => d.course === 'lyceum') || DECKS[0]).id;
+  const newList = document.getElementById('deckList'), oldList = document.getElementById('oldDeckList');
+  if (DECKS.find(d => d.id === current).course !== 'lyceum') document.getElementById('oldDecks').open = true;
   DECKS.forEach(d => {
+    const list = d.course === 'lyceum' ? newList : oldList;
     let known = 0;
     try { const st = JSON.parse(localStorage.getItem('fc-' + d.id)) || {}; known = d.cards.filter(c => (st.stage || {})[c.w] === 2 || (st.known || {})[c.w]).length; } catch (e) {}
     const a = document.createElement('a');

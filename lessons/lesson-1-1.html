@@ -1,0 +1,1040 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lesson 1.1 – The Лицей Exam · Diagnostic Test · Meet the Essay</title>
+  <link rel="stylesheet" href="../style.css">
+  <style>
+    .tab-btn:nth-child(2).active { background: var(--blue); border-color: var(--blue); }
+    .tab-btn:nth-child(3).active { background: var(--rose); border-color: var(--rose); }
+    .tab-btn:nth-child(4).active { background: var(--accent-dk); border-color: var(--accent-dk); }
+    .tab-btn:nth-child(5).active { background: var(--green); border-color: var(--green); }
+
+    .instr { margin: 10px 0 12px; font-size: 1rem; line-height: 1.7; }
+    .orig-instr { font-weight: 600; border-left: 3px solid var(--border); padding-left: 14px; margin: 0 0 16px; line-height: 1.7; font-size: .98rem; }
+    .demo-note { font-size: .86rem; color: #3E6C9F; background: rgba(95,142,196,.10); border-radius: 8px; padding: 7px 12px; margin: 0 0 16px; line-height: 1.55; }
+    .task-num { display: inline-block; font-weight: 700; color: var(--accent-dk); background: rgba(201,160,48,.15); padding: 3px 12px; border-radius: 99px; font-size: .85rem; margin-bottom: 10px; }
+
+    .exam-select { font: inherit; font-weight: 600; padding: 6px 10px; border-radius: 10px; border: 2px dashed rgba(212,87,42,.5); background: #fff; color: var(--text); max-width: 100%; cursor: pointer; }
+    .exam-select.filled { border-style: solid; border-color: var(--blue); background: #EAF2FB; }
+    .exam-select:focus, .blank:focus { outline: 2px solid rgba(212,87,42,.25); border-color: var(--primary); }
+    .blank { font: inherit; font-weight: 600; width: 170px; max-width: 100%; text-align: center; padding: 4px 10px; border-radius: 10px; border: 2px dashed rgba(212,87,42,.5); background: #fff; color: var(--text); }
+    .blank.short { width: 90px; }
+    .blank::placeholder { color: #B9AC97; font-weight: 400; }
+    .ans.correct { border: 2px solid var(--green) !important; color: #3F6B2C; background: rgba(91,140,69,.14) !important; }
+    .ans.wrong { border: 2px solid var(--red) !important; color: var(--red); background: rgba(200,64,64,.06) !important; }
+    .ans:disabled { opacity: 1; cursor: default; }
+    .key { display: inline-block; line-height: 1.5; margin-left: 6px; font-size: .86rem; font-weight: 700; color: #3E6C9F; background: rgba(95,142,196,.14); padding: 2px 9px; border-radius: 6px; }
+
+    .passage-box { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px 20px; }
+    .passage-box p { margin-bottom: 12px; line-height: 1.75; } .passage-box p:last-child { margin-bottom: 0; }
+    .passage-box h4 { font-family: 'Fraunces', Georgia, serif; text-align: center; font-size: 1.15rem; margin-bottom: 10px; }
+    .gap-passage p { line-height: 2.5; }
+    .gn { font-weight: 700; color: var(--primary); font-size: .85rem; margin: 0 3px 0 2px; }
+    .stem { font-weight: 700; color: var(--accent-dk); font-size: .88rem; letter-spacing: .03em; }
+
+    .hd-list { list-style: none; display: grid; gap: 6px; background: #fff; border: 1px solid var(--border); border-radius: 14px; padding: 12px 16px; margin-bottom: 16px; }
+    .hd-list li { display: flex; gap: 10px; line-height: 1.5; }
+    .hd-list li b { color: var(--primary); min-width: 18px; }
+    .htext { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 12px 16px; margin-bottom: 12px; }
+    .htext-top { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-bottom: 8px; }
+    .htext-l { width: 30px; height: 30px; border-radius: 50%; background: var(--primary); color: #fff; font-weight: 700; display: inline-flex; align-items: center; justify-content: center; }
+    .htext p { line-height: 1.7; font-size: .97rem; }
+
+    .row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; padding: 10px 0; border-bottom: 1px dashed var(--border); line-height: 1.6; }
+    .row:last-of-type { border-bottom: none; }
+    .row-n { font-family: 'Fraunces', Georgia, serif; font-weight: 700; color: var(--primary); min-width: 22px; }
+    .row-q { flex: 1 1 280px; }
+
+    .quiz-foot { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-top: 16px; }
+    .q-result { font-weight: 700; }
+    .q-result.full { color: var(--green); } .q-result.part { color: var(--accent-dk); } .q-result.zero { color: var(--red); }
+    .after-check { display: none; margin-top: 14px; }
+    .quiz.checked .after-check { display: block; }
+    .why { margin-top: 6px; padding: 14px 18px 12px; background: rgba(91,140,69,.07); border: 1px solid rgba(91,140,69,.35); border-left: 5px solid var(--green); border-radius: var(--radius); line-height: 1.7; }
+    .why-h { font-family: 'Fraunces', Georgia, serif; font-weight: 700; color: var(--green); font-size: 1.05rem; margin-bottom: 6px; }
+    .why ul { margin: 0 0 0 20px; } .why li { margin-bottom: 4px; }
+
+    .progress-wrap { position: sticky; top: 0; z-index: 30; background: var(--bg); padding: 10px 0 12px; margin-bottom: 8px; border-bottom: 1px solid var(--border); }
+    .progress-top { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 7px; font-weight: 600; font-size: .92rem; }
+    .progress-top span { color: var(--primary); }
+    .progress-bar { height: 9px; border-radius: 99px; background: var(--border); overflow: hidden; }
+    .progress-fill { height: 100%; width: 0%; border-radius: 99px; background: linear-gradient(90deg, var(--primary), var(--accent-dk)); transition: width .3s ease; }
+
+    /* timers */
+    .timer { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin: 6px 0 14px; padding: 10px 14px; border-radius: 14px; background: rgba(95,142,196,.08); border: 2px solid rgba(95,142,196,.35); }
+    .timer .tm-label { font-weight: 700; color: #3E6C9F; }
+    .timer .tm-clock { font-family: 'Fraunces', Georgia, serif; font-size: 1.4rem; font-weight: 700; font-variant-numeric: tabular-nums; min-width: 70px; }
+    .timer .btn { padding: 6px 16px; }
+    .timer.running { border-color: var(--blue); background: rgba(95,142,196,.14); }
+    .timer.over { border-color: var(--red); background: rgba(200,64,64,.06); }
+    .timer.over .tm-clock { color: var(--red); }
+    .timer .tm-msg { font-weight: 700; color: var(--red); }
+
+    /* speaking card */
+    .scard { background: #fff; border: 2px solid rgba(196,122,150,.45); border-radius: 18px; padding: 16px 20px; margin-bottom: 14px; box-shadow: 0 2px 12px rgba(44,32,16,.06); }
+    .scard h4 { font-family: 'Fraunces', Georgia, serif; font-size: 1.25rem; margin-bottom: 6px; }
+    .scard ol { margin: 6px 0 0 20px; line-height: 1.8; font-weight: 600; }
+    .facts { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 14px; }
+    .fact { display: inline-flex; align-items: center; gap: 4px; padding: 5px 13px; border-radius: 99px; font-size: .86rem; font-weight: 700; color: #fff; background: var(--primary); }
+    .fact:nth-child(4n+2) { background: var(--blue); } .fact:nth-child(4n+3) { background: var(--rose); } .fact:nth-child(4n+4) { background: var(--green); }
+    .plan-row { display: flex; gap: 10px; align-items: center; margin: 8px 0; }
+    .plan-row b { min-width: 70px; color: var(--rose); }
+    .plan-row input { flex: 1; font: inherit; padding: 6px 10px; border-radius: 10px; border: 2px solid var(--border); background: #fff; }
+    .plan-row input:focus { outline: none; border-color: var(--rose); }
+    .phrases { columns: 2 260px; margin: 4px 0 0 18px; line-height: 1.8; }
+    .phrases i { color: var(--muted); font-style: normal; }
+
+    .check-list { list-style: none; }
+    .check-list li { padding: 8px 0; border-bottom: 1px dashed var(--border); }
+    .check-list li:last-child { border-bottom: none; }
+    .check-list label { display: flex; gap: 12px; align-items: flex-start; cursor: pointer; line-height: 1.55; }
+    .check-list input { width: 22px; height: 22px; accent-color: var(--green); flex-shrink: 0; margin-top: 1px; }
+    .check-list li.done span.t { color: var(--green); text-decoration: line-through; }
+
+    /* the essay */
+    .task-box { background: #fff; border: 2px solid var(--border); border-left: 5px solid var(--primary); border-radius: 12px; padding: 14px 18px; margin-bottom: 16px; line-height: 1.7; }
+    .task-box .prompt { font-weight: 700; font-size: 1.05rem; margin: 6px 0; }
+    .task-box ul { margin: 6px 0 0 20px; }
+    .mixed { display: grid; gap: 12px; }
+    .para { background: #fff; border: 1px solid var(--border); border-radius: 14px; padding: 12px 16px; }
+    .para-top { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-bottom: 8px; }
+    .para-l { font-family: 'Fraunces', Georgia, serif; font-weight: 700; color: var(--rose); font-size: 1.1rem; }
+    .para p { line-height: 1.75; }
+    .gate { display: none; }
+    .gate.open, html.watching .gate { display: block; }
+    .gate-msg { color: var(--muted); font-weight: 600; font-size: .92rem; margin-top: 10px; }
+    .essay { background: #fff; border: 1px solid var(--border); border-radius: var(--radius); padding: 18px 22px; line-height: 1.9; font-size: 1.02rem; box-shadow: 0 2px 10px rgba(44,32,16,.05); margin-bottom: 14px; }
+    .essay p { margin-bottom: 12px; } .essay p:last-child { margin-bottom: 0; }
+    .essay .ptag { display: inline-block; font-size: .72rem; font-weight: 800; letter-spacing: .05em; text-transform: uppercase; color: var(--rose); margin-right: 6px; }
+    .tap .w { cursor: pointer; border-radius: 4px; padding: 0 1px; transition: background .12s; }
+    .tap .w:hover { background: rgba(201,160,48,.2); }
+    .tap .w.pick { background: rgba(201,160,48,.45); box-shadow: 0 0 0 2px rgba(201,160,48,.6); }
+    .quiz.checked .tap .w { cursor: default; }
+    .quiz.checked .tap .w.is-l { background: rgba(91,140,69,.18); color: #3F6E2B; font-weight: 700; }
+    .quiz.checked .tap .w.is-l.miss { background: none; color: #3F6E2B; font-weight: 700; text-decoration: underline wavy var(--green); }
+    .quiz.checked .tap .w.pick:not(.is-l):not(.nt) { background: rgba(200,64,64,.15); box-shadow: 0 0 0 2px rgba(200,64,64,.5); }
+    .tap-hint { font-size: .85rem; color: var(--muted); margin: -4px 0 12px; }
+    .plan-map { width: 100%; border-collapse: collapse; font-size: .94rem; margin-top: 6px; }
+    .plan-map th, .plan-map td { border: 1px solid var(--border); padding: 8px 10px; text-align: left; vertical-align: top; background: #fff; }
+    .plan-map th { background: rgba(196,122,150,.10); }
+    .tbl-wrap { overflow-x: auto; }
+
+    /* criteria */
+    .crit { width: 100%; border-collapse: collapse; font-size: .93rem; }
+    .crit th, .crit td { border: 1px solid var(--border); padding: 8px 10px; text-align: left; vertical-align: top; background: #fff; line-height: 1.55; }
+    .crit th { background: rgba(201,160,48,.14); }
+    .crit td:first-child { font-weight: 700; white-space: nowrap; }
+    .crit td.pts { text-align: center; font-family: 'Fraunces', Georgia, serif; font-weight: 700; color: var(--primary); font-size: 1.1rem; }
+    .zero-box { background: rgba(200,64,64,.06); border: 2px solid rgba(200,64,64,.35); border-radius: 12px; padding: 12px 16px; margin: 14px 0; line-height: 1.65; }
+    .zero-box b { color: var(--red); }
+
+    details.reading { background: #fff; border: 1px solid var(--border); border-radius: 14px; margin-bottom: 12px; }
+    details.reading summary { cursor: pointer; padding: 11px 16px; font-family: 'Fraunces', Georgia, serif; font-weight: 700; color: var(--rose); }
+    .rd-body { padding: 0 18px 14px; line-height: 1.75; }
+    .rd-body p { margin-bottom: 10px; } .rd-body ul, .rd-body ol { margin: 0 0 10px 22px; }
+    .rd-body .plan-map { margin: 4px 0 12px; }
+    .rd-ex { background: rgba(196,122,150,.08); border-radius: 10px; padding: 8px 12px; font-size: .95rem; }
+    .word-box, .bank { display: flex; flex-wrap: wrap; gap: 8px; padding: 12px 14px; margin: 10px 0 14px; border: 2px dashed rgba(201,160,48,.55); border-radius: 14px; background: rgba(201,160,48,.07); }
+    .word-box span, .bank span { font-weight: 700; padding: 4px 13px; border-radius: 99px; background: #fff; border: 2px solid var(--border); }
+    .bank span.used { color: var(--muted); background: transparent; border-style: dashed; text-decoration: line-through; text-decoration-thickness: 2px; text-decoration-color: var(--primary); opacity: .75; }
+    .case .blank { width: 210px; }
+    audio.au { width: 100%; margin: 4px 0 6px; }
+    .free-write { min-height: 120px; }
+    .hw-list { list-style: none; }
+    .hw-list li { padding: 10px 0; border-bottom: 1px dashed var(--border); }
+    .hw-list li:last-child { border-bottom: none; }
+    .hw-list label { display: flex; gap: 12px; align-items: flex-start; cursor: pointer; line-height: 1.55; }
+    .hw-list input { width: 22px; height: 22px; accent-color: var(--green); flex-shrink: 0; margin-top: 1px; }
+    .hw-list li.done span.t { color: var(--green); text-decoration: line-through; }
+    .book { display: inline-flex; align-items: center; gap: 6px; font-size: .88rem; font-weight: 700; color: var(--rose); background: rgba(196,122,150,.12); padding: 4px 12px; border-radius: 99px; margin-top: 6px; }
+
+    /* teacher-only: shown only to the signed-in teacher (html.teacher) or inside teacher.html (html.watching) */
+    .teacher-only { display: none; }
+    html.watching .teacher-only, html.teacher .teacher-only { display: block; margin: 0 0 16px; background: #FDEAF2; border: 2px dashed #D9628F; border-radius: var(--radius); padding: 12px 16px; line-height: 1.7; }
+    .teacher-only .to-label { font-size: .75rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: #B0416C; margin-bottom: 6px; }
+    .teacher-only b { color: #9A3F64; } .teacher-only ul, .teacher-only ol { margin: 4px 0 8px 18px; }
+    .teacher-only.notes h4 { font-family: 'Fraunces', Georgia, serif; color: #9A3F64; margin: 14px 0 4px; } .teacher-only p { margin: 0 0 8px; }
+    @media (max-width: 560px) { .passage-box, .essay { padding: 14px; } .phrases { columns: 1; } }
+  </style>
+<script src="../sync.js"></script>
+<script src="../decks.js"></script>
+<script>
+  // opened from the folder on the teacher's computer: show the teacher-only notes and keys
+  if (location.protocol === 'file:') document.documentElement.classList.add('teacher');
+</script>
+</head>
+<body>
+
+<header class="site-header">
+  <h1>Lesson 1.1 — The Лицей exam: where you stand</h1>
+  <a class="back-link" href="../index.html">← All Lessons</a>
+</header>
+
+<div class="container">
+
+  <div class="lesson-meta">
+    <h2>Лицей НИУ ВШЭ · вступительные испытания в 10 класс · Gateway B2, Unit 1 «Make the grade»</h2>
+    <p>📅 26 November 2026 &nbsp;·&nbsp; Lesson 1.1 &nbsp;·&nbsp; your first ОГЭ-style monologue · the official demo test · what a good essay looks like · how the essay is marked</p>
+  </div>
+
+  <div class="progress-wrap">
+    <div class="progress-top">
+      <div>Blocks checked: <span id="pgCount">0 / 0</span></div>
+      <div>Points today: <span id="pgScore">0 / 0</span></div>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="pgFill"></div></div>
+  </div>
+
+  <details class="teacher-only to-plan">
+    <summary class="to-label" style="cursor:pointer">👩‍🏫 Teacher only · Lesson 1.1 plan · 90 min (tap to open / close)</summary>
+    <p><b>The thread:</b> she talks (the speaking baseline) → she sits the official test part cold (the test baseline) → she sees the target essay and takes it apart, writing nothing → she learns how the essay is marked. Nothing is graded on the essay today: the demo essay prompt (video games) stays unseen until Lesson E.5.</p>
+    <ul>
+      <li><b>0–10 · 🎤 Warm-up:</b> the ОГЭ monologue format in one minute; 1.5 min to plan “Why the Лицей?”; 2 min to speak (timer); her self-check; your one comment. Note the baseline (see the notes, section 2).</li>
+      <li><b>10–35 · 📝 The test:</b> the three tasks of the official 2026 demo, 25 min on the timer, no help. Then Check each task and read the green boxes together (if time is short, do the debrief of Задание 3 only, the rest at home).</li>
+      <li><b>35–75 · ✍️ Meet the essay:</b> the task and the 2026 plan (5) → label the mixed paragraphs (7) → the essay in order + six questions (10) → tap the linkers (8) → count the words (3) → the plan map, read together (7).</li>
+      <li><b>75–88 · ⚖️ The criteria:</b> the К1–К5 table and the zero rules (5) → nine situations (5) → her rules card in her own words (3).</li>
+      <li><b>88–90 · 🏠 Homework:</b> open the tab together.</li>
+    </ul>
+  </details>
+
+  <details class="teacher-only notes">
+    <summary class="to-label" style="cursor:pointer">👩‍🏫 Teacher only · Lesson notes: what this lesson is for, the key and the traps (tap to open / close)</summary>
+
+    <h4>1 · What this lesson is for</h4>
+    <p>It is the start of the Лицей course and it does two jobs. First, it gives two baselines without teaching anything: a spoken one (the ОГЭ monologue, which is now a strand in every Gateway lesson) and the English part of the first-stage комплексный тест (the official 2026 demo, file “Английский язык_ТЕСТ_10 класс_2026_ДЕМО” in ~/Desktop/Лицей ВШЭ/). Second, it shows her the target: what a full-mark essay in the 2026 format looks like and how it is marked. She writes no essay today, on purpose: the first essay she writes will be after Lessons 1.2–2.2 have taught each paragraph, and the official demo essay prompt is kept unseen for the full mock in E.5.</p>
+    <p><b>The one idea to leave her with:</b> the 2026 Лицей essay is <b>two-sided</b>. “Discuss both these views and give your own opinion”: the introduction presents both views, body paragraph 1 argues view 1, body paragraph 2 argues view 2, and her opinion comes only in the conclusion. The book «Хочу в Лицей!» (2020) teaches an older one-sided plan (opinion in the introduction, two reasons for it); its homework chapters (1–2) are read today with that difference in mind. That is why the homework asks her what is different.</p>
+
+    <h4>2 · Speaking warm-up: what to listen for</h4>
+    <p>ОГЭ oral part, Задание 3: a monologue on three points, 1.5 minutes to prepare, up to 2 minutes, 10–12 sentences. Today’s topic is hers (“Why the Лицей?”), so content is easy and you hear only the form. Write down four things for the baseline: <b>(1)</b> did she cover all three points (missing a point costs points in the ОГЭ); <b>(2)</b> how many sentences (count on your fingers); <b>(3)</b> an opening and a closing sentence, or did she just start and stop; <b>(4)</b> the longest pause. Give one comment only, the most useful one. The skeleton (opening → 3 points × 3–4 sentences → closing) is the same as the essay’s; say so, because it ties the two strands together. The recorded version is homework.</p>
+
+    <h4>3 · The test: the key, with the reason for each answer</h4>
+    <p>The demo has no published key; this one is worked out from the texts. <b>Задание 1</b> (London parks): A 7 · B 3 · C 5 · D 4 · E 1 · F 8; not used 2 and 6. <b>Задание 2</b> (stamps): wonderful · childhood · challenging · misunderstand · rearrange · beautifully · patience · fellowship · underestimate · peaceful. <b>Задание 3</b> (theatre): to attend · excited · watching · attended · had ever seen · can · the best · should · have been · discovering.</p>
+    <p><b>Traps in Задание 1:</b> A is a royal park, but so are others: “truly unique”, the largest, the zoo, the oldest open-air theatre = the best of all → <i>The jewel in the crown</i>. E (St James’s) has Charles II and the pelicans, which pulls towards <i>Long live the king!</i>, but the text is about the palace, Henry VIII, the Guard and the royal family → <i>The royal park</i>. D (Hyde Park) was opened to the public in 1637, which pulls towards 8, but Speaker’s Corner gives 4; F is literally “The People’s Park” for the working class → 8. <i>A French park</i> fits nothing (Victoria Park’s pagoda is Chinese).</p>
+    <p><b>Traps in Задание 2:</b> 4 and 9 need a prefix that changes the meaning, not just the part of speech: <i>mis</i>understand (understand wrongly) and <i>under</i>estimate (value too low). 5 needs <i>re</i>arrange (the word must be a new word formed from the base, so <i>arrange</i> itself is wrong). 8 <i>fellowship</i> is C1. Spelling counts: <i>beautifully</i> (double l), <i>challenging</i>.</p>
+    <p><b>Traps in Задание 3:</b> A <i>used to attending</i> confuses “used to + base” (a past habit) with “be used to + -ing”. B <i>excited</i>: her feeling (-ed), not the thing (-ing). D <i>was attended</i> is passive. E: the story is in the past (“the set design was the most beautiful I…”) → <i>had ever seen</i>. If she chose <i>have ever seen</i>, accept the reasoning in discussion (“still the most beautiful today”), but the past narrative makes the past perfect the exam answer. I <i>have been</i>: up to now. J <i>look forward to</i> + -ing.</p>
+    <p><b>How to read the result:</b> the test is about 10 points; each task is roughly a third. A low Задание 2 is the most common (suffixes and prefixes) and is the main target of the test strand from Lesson 1.2 (word formation every second or third lesson). Write her score and the items she lost into the score table: Lesson 1.2 opens the Error log with them.</p>
+
+    <h4>4 · Meet the essay: the model, the key and what to stress</h4>
+    <p>The model essay was written for this lesson on a topic the course does not use later (“Teenagers should spend more time outdoors”), in the exact 2026 plan, 188 words: 39 · 56 · 59 · 34 (the page counts it and accepts ±2). Paragraph order key: A = body paragraph 2 · B = introduction · C = conclusion · D = body paragraph 1. Clue words she should name: <i>Nowadays…, Whether… is a debatable issue, Some believe…, while others…</i> (introduction); <i>Supporters of this idea argue</i> (view 1); <i>On the other hand, those who disagree point out</i> (view 2); <i>To sum up… Having considered them, I am convinced</i> (conclusion).</p>
+    <p><b>The six questions:</b> 1 the opinion is only in the conclusion · 2 body paragraph 2 = the other view with its reasons · 3 the forest trip is the example for view 1 · 4 the cold weather is a reason for view 2 · 5 <i>young people</i> replaces <i>teenagers</i> (paraphrase, worth a К1 point) · 6 the introduction presents both views and gives no opinion.</p>
+    <p><b>The linkers</b> (10): while · To begin with · Moreover · For instance · On the other hand · Firstly · In addition · so · To sum up · because. <i>Nowadays</i> and <i>Having considered them</i> are neutral (not marked right or wrong). The criteria ask for at least 3–4 correct linkers; the model has 10, one at the start of almost every sentence of the body, which is the habit to build.</p>
+    <p><b>Stress:</b> both body paragraphs have the same weight (a reason + an explanation + an example each). This is the new К1 rule: “full arguments in support of both views”. And the opinion is clear and has a reason: “I am convinced that… because…”, never “everyone should decide”.</p>
+
+    <h4>5 · The criteria: the key</h4>
+    <p>1 128 words → 0 for the whole essay (minimum 135) · 2 only one view → К1 = 1 · 3 the prompt copied → К1 loses a point · 4 “everyone should decide” → К1 = 1 (opinion unclear) · 5 one long paragraph → К2 loses points · 6 four spelling mistakes → К5 = 0 · 7 240 words → only the first 200 are marked (so the conclusion and the opinion may be lost) · 8 a letter → 0 for the whole essay · 9 contractions → a style slip, К1 loses a point. The rule that matters most: <b>К1 = 0 makes the whole essay 0</b>.</p>
+
+    <h4>6 · Homework and the next lesson</h4>
+    <p>Homework (she has no Student’s Book or «Хочу в Лицей!», so everything is copied onto the page): the recorded monologue (improved); the book’s Ch. 1–2 (the full text in Russian, with two questions: the answer to Q1 is IELTS variant 2, the two-sided plan; Q2: the book’s Лицей plan puts the opinion in the introduction and both body paragraphs support it, 150+ words; 2026 presents both views, one per body paragraph, opinion only in the conclusion, 150–200 words); deck 1 · School &amp; education (first look; it is taught in Lesson 1.2); the first five cards of the Essay language deck; Gateway Unit 1 p. 6: the word-box recording (SB track 1, <i>audio/g1-school-life-words.mp3</i>), the Sixth Form case study (Exercises 1–2: a terms · b subjects · c higher education · d grades/marks · e timetable · f continuous assessment · g coursework · h assignments · i notes · j abroad; <i>break</i> not used), the Studying in the UK text with ten bold words to match to Russian meanings, and Use it (1 facilities · 2 resources · 3 tutor) with her own answers. <b>Lesson 1.2</b> (School life · Stating the problem): the test result back and the Error log; deck 1 in class; present tenses for trends; a word-formation text; book Ch. 3 (the introduction); listening: the Unit 1 video “Differences of opinion”; monologue “My school”.</p>
+  </details>
+
+  <div class="tab-bar">
+    <button class="tab-btn active" onclick="switchTab('warm', this)">🎤 Warm-up</button>
+    <button class="tab-btn"        onclick="switchTab('test', this)">📝 The test</button>
+    <button class="tab-btn"        onclick="switchTab('essay', this)">✍️ Meet the essay</button>
+    <button class="tab-btn"        onclick="switchTab('crit', this)">⚖️ The criteria</button>
+    <button class="tab-btn"        onclick="switchTab('hw', this)">🏠 Homework</button>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════
+       TAB 1 — WARM-UP · ОГЭ monologue (10 min)
+  ══════════════════════════════════════════════════════════ -->
+  <div class="tab-content active" id="tab-warm">
+
+    <div class="teacher-only">
+      <div class="to-label">👩‍🏫 Teacher only · what to say · warm-up</div>
+      <ul>
+        <li>“Two exams this year: the Лицей in March, the ОГЭ in May. In the ОГЭ you will speak for two minutes about a topic with three points. Let’s see how it goes today, with a topic you know very well: you.”</li>
+        <li>She plans for 1.5 minutes (keywords only, no sentences), then speaks for 2. Don’t interrupt. Count her sentences.</li>
+        <li>After: she ticks the self-check, then you give one comment (see the notes, section 2).</li>
+      </ul>
+    </div>
+
+    <div class="exercise">
+      <div class="exercise-label">Speaking · ОГЭ monologue · 10 min</div>
+      <h3>Why the Лицей?</h3>
+      <div class="facts">
+        <span class="fact">⏱ 1.5 min to plan</span>
+        <span class="fact">🎤 up to 2 min to speak</span>
+        <span class="fact">💬 10–12 sentences</span>
+        <span class="fact">✅ all three points</span>
+      </div>
+      <div class="scard">
+        <h4>You are going to give a talk about the school you want to go to.</h4>
+        <p>Remember to say:</p>
+        <ol>
+          <li>what you know about the Лицей НИУ ВШЭ,</li>
+          <li>what you would like to study there and why,</li>
+          <li>why this school is important for your future.</li>
+        </ol>
+        <p style="margin-top:8px">You have to talk continuously.</p>
+      </div>
+
+      <div class="timer" data-sec="90" data-label="Plan"></div>
+      <p class="instr">Write <b>keywords</b> for each point, not sentences:</p>
+      <div class="plan-row"><b>Point 1</b><input data-k="sp-p1" placeholder="e.g. Moscow · strong teachers · projects…"></div>
+      <div class="plan-row"><b>Point 2</b><input data-k="sp-p2" placeholder="e.g. humanities? economics? languages?"></div>
+      <div class="plan-row"><b>Point 3</b><input data-k="sp-p3" placeholder="e.g. university · career · friends…"></div>
+
+      <div class="timer" data-sec="120" data-label="Speak"></div>
+
+      <h3 style="margin-top:18px">Phrases that help</h3>
+      <ul class="phrases">
+        <li>I’d like to talk about… <i>(opening)</i></li>
+        <li>First of all, … / To begin with, …</li>
+        <li>As for…, … <i>(moving to the next point)</i></li>
+        <li>I’m really interested in…</li>
+        <li>That is why… / This is because…</li>
+        <li>Finally, … / Last but not least, …</li>
+        <li>To sum up, … <i>(closing)</i></li>
+        <li>That’s all I wanted to say. <i>(closing)</i></li>
+      </ul>
+
+      <h3 style="margin-top:18px">Self-check</h3>
+      <ul class="check-list" id="spCheck">
+        <li><label><input type="checkbox"><span class="t">I started with an opening sentence.</span></label></li>
+        <li><label><input type="checkbox"><span class="t">I talked about all three points.</span></label></li>
+        <li><label><input type="checkbox"><span class="t">I said about 10–12 sentences.</span></label></li>
+        <li><label><input type="checkbox"><span class="t">I finished with a closing sentence.</span></label></li>
+        <li><label><input type="checkbox"><span class="t">I didn’t stop for a long time.</span></label></li>
+      </ul>
+      <p class="instr">What will you do better next time?</p>
+      <textarea class="free-write" data-k="sp-better" placeholder="Next time I will…"></textarea>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════
+       TAB 2 — THE TEST · official demo 2026 (25 min)
+  ══════════════════════════════════════════════════════════ -->
+  <div class="tab-content" id="tab-test">
+
+    <div class="teacher-only">
+      <div class="to-label">👩‍🏫 Teacher only · what to say · the test</div>
+      <ul>
+        <li>“This is the real demo of the first exam in March: the English part of the комплексный тест. Three tasks, about 10 points. I just want to see where you are. Don’t ask me anything, do what you can.”</li>
+        <li>25 minutes on the timer. She checks each task only when all three are done; then read the green boxes together.</li>
+      </ul>
+    </div>
+
+    <div class="demo-note"><b>Комплексный тест · Задание по английскому языку · 10 класс · ДЕМО 2026.</b> The real demo of the first exam. Do all three tasks, then press Check under each one. Spelling counts in Задание 2.</div>
+    <div class="timer" data-sec="1500" data-label="The test"></div>
+
+    <!-- Задание 1 · headings -->
+    <div class="exercise">
+      <span class="task-num">Задание 1 · Headings</span>
+      <div class="teacher-only"><div class="to-label">🔑 Key · Задание 1</div>A 7 The jewel in the crown · B 3 In gratitude to the mayor · C 5 In two places at the same time · D 4 The home of free speech · E 1 The royal park · F 8 Meant for the general public · not used: 2, 6</div>
+      <p class="orig-instr">Установите соответствие между текстами A–F и заголовками, выбрав для каждого текста один заголовок из списка 1–8. Используйте каждый заголовок только один раз. В задании два заголовка лишние.</p>
+      <ul class="hd-list">
+        <li><b>1</b>The royal park</li>
+        <li><b>2</b>Long live the king!</li>
+        <li><b>3</b>In gratitude to the mayor</li>
+        <li><b>4</b>The home of free speech</li>
+        <li><b>5</b>In two places at the same time</li>
+        <li><b>6</b>A French park</li>
+        <li><b>7</b>The jewel in the crown</li>
+        <li><b>8</b>Meant for the general public</li>
+      </ul>
+      <div class="quiz">
+        <div class="htext"><div class="htext-top"><span class="htext-l">A</span><select class="exam-select ans" data-hd="1" data-answer="The jewel in the crown"></select></div>
+          <p>There are eight royal parks in London and of these Regent’s Park is considered truly unique for several reasons. To begin with, it boasts a stunning design by John Nash, showcasing beautiful gardens, lakes, and elegant architecture that exemplify Regency style. Covering 410 acres, it is one of the largest parks in London and features attractions like London Zoo, where you can see over 16,000 animals, including playful penguins and majestic tigers, and Queen Mary’s Gardens, known for its thousands of blooming roses. Additionally, Regent’s Park hosts the Open Air Theatre, the oldest of its kind in Britain, offering a diverse range of performances during the summer. Its central location and historical significance as a site for events like the Great Exhibition of 1851 further enhance its uniqueness.</p></div>
+        <div class="htext"><div class="htext-top"><span class="htext-l">B</span><select class="exam-select ans" data-hd="1" data-answer="In gratitude to the mayor"></select></div>
+          <p>Burgess Park is a large public park located in South London, covering 140 acres. It is one of the biggest parks in the area and was created from a highly built-up space that once had houses, factories, and roads. The park was named in 1973 after Councillor Jessie Burgess, Camberwell’s first female mayor. Burgess Park features beautiful gardens, sports facilities, and playgrounds, making it a popular destination for families. Visitors can enjoy walking, cycling, and various sports activities. The park also hosts community events and festivals throughout the year.</p></div>
+        <div class="htext"><div class="htext-top"><span class="htext-l">C</span><select class="exam-select ans" data-hd="1" data-answer="In two places at the same time"></select></div>
+          <p>Greenwich Park is a historic and beautiful park in southeast London, covering 180 acres. Greenwich Park is known for its lush landscapes and its historical role as a riverside settlement. The origins of Greenwich can be traced back to Roman times, but it became significant during the Anglo-Saxon period when it served as a burial ground, with several burial mounds still visible today. Visitors can explore the beautiful gardens filled with colorful flowers and well-kept landscapes. The park also features a herd of deer that roam freely, adding to its natural charm. At the top of the park sits the Royal Observatory, established in 1675. Visitors to the Royal Observatory can stand on either side of the Meridian Line, literally placing one foot in the eastern hemisphere and one in the western hemisphere.</p></div>
+        <div class="htext"><div class="htext-top"><span class="htext-l">D</span><select class="exam-select ans" data-hd="1" data-answer="The home of free speech"></select></div>
+          <p>Hyde Park, located in London, has a rich history that began in the 16th century when King Henry VIII established it as a hunting ground. It was opened to the public by King Charles I in 1637, allowing citizens to enjoy its beauty. The park features the Serpentine, a picturesque lake where visitors can rent boats and relax. Hyde Park is also home to several significant memorials, including the Diana Memorial Fountain, which honors Princess Diana. Designed by Kathryn Gustafson and opened in 2004, the fountain reflects Diana’s spirit with water flowing from two sides into a calm pool, symbolizing her life and openness. Another notable site is Speaker’s Corner, located at the northeast edge of the park, where public debate on various topics from politics to philosophy has flourished since the mid-19th century. Today, Hyde Park remains a vital green space in London, attracting millions of visitors each year.</p></div>
+        <div class="htext"><div class="htext-top"><span class="htext-l">E</span><select class="exam-select ans" data-hd="1" data-answer="The royal park"></select></div>
+          <p>St. James’s Park is a beautiful 57-acre park located in central London with stunning gardens, a picturesque lake, and a variety of wildlife, including a famous colony of pelicans that have lived there since 1664. The pelicans were a gift to King Charles II by the Russian Ambassador. The park is also known for its vibrant flower beds and peaceful walking paths. It’s also known for its close proximity to Buckingham Palace. In fact, it’s one of the oldest Royal Parks and has a rich history dating back to the 16th century when it was created as a hunting ground for King Henry VIII. Today visitors can enjoy the lovely views of Buckingham Palace from various points in the park, especially from the Blue Bridge. There are also many ceremonial events held here, such as the Changing of the Guard, providing an occasional chance to see members of the royal family.</p></div>
+        <div class="htext"><div class="htext-top"><span class="htext-l">F</span><select class="exam-select ans" data-hd="1" data-answer="Meant for the general public"></select></div>
+          <p>Victoria Park is a popular green space in East London, covering 86 acres. Designed by Sir James Pennethorne and opened in 1845 for the benefit of the East End working class, ‘The People’s Park’ has a long and rich history spanning over 170 years. The park features two large lakes, one with a charming Chinese pagoda, and offers plenty of activities for families. Visitors can enjoy playgrounds, sports facilities, and beautiful gardens filled with colorful flowers. A highlight of the park is the Dogs of Alcibiades statues at the entrance. Each weekend, a lively food market takes place, offering delicious street food and local produce. The park is the largest and most popular green space in East London, attracting around 9 million visitors a year.</p></div>
+        <div class="after-check"><div class="why">
+          <div class="why-h">🔎 Why · the heading sums up the whole text, not one word of it</div>
+          <ul>
+            <li><b>A · The jewel in the crown:</b> of the eight royal parks, Regent’s Park is “truly unique”: one of the largest, the zoo, the oldest open-air theatre. The best of them all. (It is a royal park, but so are others.)</li>
+            <li><b>B · In gratitude to the mayor:</b> named in 1973 after Jessie Burgess, the first female mayor.</li>
+            <li><b>C · In two places at the same time:</b> on the Meridian Line you have one foot in the eastern hemisphere and one in the western.</li>
+            <li><b>D · The home of free speech:</b> Speaker’s Corner, public debate since the mid-19th century. (“Opened to the public in 1637” is a detail.)</li>
+            <li><b>E · The royal park:</b> Buckingham Palace, Henry VIII’s hunting ground, the Changing of the Guard, the royal family. (Charles II and the pelicans are only a detail: not “Long live the king!”.)</li>
+            <li><b>F · Meant for the general public:</b> opened for the East End working class, “The People’s Park”.</li>
+            <li>Not used: <b>Long live the king!</b> and <b>A French park</b> (Victoria Park’s pagoda is Chinese).</li>
+          </ul>
+        </div></div>
+      </div>
+    </div>
+
+    <!-- Задание 2 · word formation -->
+    <div class="exercise">
+      <span class="task-num">Задание 2 · Word formation</span>
+      <div class="teacher-only"><div class="to-label">🔑 Key · Задание 2</div>1 wonderful · 2 childhood · 3 challenging · 4 misunderstand · 5 rearrange · 6 beautifully · 7 patience · 8 fellowship · 9 underestimate · 10 peaceful</div>
+      <p class="orig-instr">Прочитайте текст и заполните пропуски 1–10 родственными словами, образованными от предложенных опорных слов 1–10.</p>
+      <div class="demo-note">Type the new word in each gap. The word in capitals is the base word.</div>
+      <div class="quiz">
+        <div class="passage-box gap-passage">
+          <h4>The Joy of Collecting Stamps</h4>
+          <p>Collecting stamps is a <span class="gn">1</span><span class="stem">WONDER</span> <input class="blank ans" data-answer="wonderful" autocomplete="off" spellcheck="false"> hobby that brings people together. Many collectors start this journey with a simple collection from their <span class="gn">2</span><span class="stem">CHILD</span> <input class="blank ans" data-answer="childhood" autocomplete="off" spellcheck="false">, often receiving stamps as generous gifts from friends or family. As they grow older, they seek out rare stamps, which can be exciting but also <span class="gn">3</span><span class="stem">CHALLENGE</span> <input class="blank ans" data-answer="challenging" autocomplete="off" spellcheck="false">.</p>
+          <p>Some people <span class="gn">4</span><span class="stem">UNDERSTAND</span> <input class="blank ans" data-answer="misunderstand" autocomplete="off" spellcheck="false"> the hobby, thinking it is just about having a lot of stamps. However, it is much deeper than that. Collectors often face difficulties in finding the right stamps and may need to <span class="gn">5</span><span class="stem">ARRANGE</span> <input class="blank ans" data-answer="rearrange" autocomplete="off" spellcheck="false"> their collections to display them <span class="gn">6</span><span class="stem">BEAUTIFUL</span> <input class="blank ans" data-answer="beautifully" autocomplete="off" spellcheck="false">. This process requires a lot of <span class="gn">7</span><span class="stem">PATIENT</span> <input class="blank ans" data-answer="patience" autocomplete="off" spellcheck="false"> and gentleness, as each stamp has its own story.</p>
+          <p>In the world of stamp collecting, there is a strong sense of <span class="gn">8</span><span class="stem">FELLOW</span> <input class="blank ans" data-answer="fellowship" autocomplete="off" spellcheck="false"> among enthusiasts. They share tips and stories, helping each other appreciate the hobby more fully. It’s important to remember that everyone starts somewhere, and it’s easy to <span class="gn">9</span><span class="stem">ESTIMATE</span> <input class="blank ans" data-answer="underestimate" autocomplete="off" spellcheck="false"> the effort that goes into building a great collection.</p>
+          <p>For many, collecting stamps is a way to maintain sanity in a busy world. It offers a <span class="gn">10</span><span class="stem">PEACE</span> <input class="blank ans" data-answer="peaceful" autocomplete="off" spellcheck="false"> escape from daily life and allows collectors to explore history and culture in a unique way. With each new stamp, they add to their story, creating a collection that reflects their journey.</p>
+        </div>
+        <div class="after-check"><div class="why">
+          <div class="why-h">🔎 Why · first the part of speech, then the meaning</div>
+          <ul>
+            <li><b>1 wonderful:</b> <i>a ___ hobby</i> → an adjective before a noun.</li>
+            <li><b>2 childhood:</b> <i>from their ___</i> → a noun: the time when you were a child.</li>
+            <li><b>3 challenging:</b> <i>exciting but also ___</i> → an adjective like <i>exciting</i>.</li>
+            <li><b>4 misunderstand:</b> people get the hobby wrong (“thinking it is just about…”) → <i>mis-</i> = wrongly.</li>
+            <li><b>5 rearrange:</b> they already have the collections → arrange them again → <i>re-</i>. The gap needs a new word, so not <i>arrange</i>.</li>
+            <li><b>6 beautifully:</b> <i>display them ___</i> → an adverb (how?). Double <i>l</i>.</li>
+            <li><b>7 patience:</b> <i>a lot of ___ and gentleness</i> → a noun, like <i>gentleness</i>.</li>
+            <li><b>8 fellowship:</b> <i>a sense of ___ among enthusiasts</i> → a noun: friendship in a group.</li>
+            <li><b>9 underestimate:</b> it’s easy to think the effort is smaller than it is → <i>under-</i> = too little.</li>
+            <li><b>10 peaceful:</b> <i>a ___ escape</i> → an adjective.</li>
+          </ul>
+        </div></div>
+      </div>
+    </div>
+
+    <!-- Задание 3 · grammar MC -->
+    <div class="exercise">
+      <span class="task-num">Задание 3 · Grammar</span>
+      <div class="teacher-only"><div class="to-label">🔑 Key · Задание 3</div>A to attend · B excited · C watching · D attended · E had ever seen · F can · G the best · H should · I have been · J discovering</div>
+      <p class="orig-instr">Прочитайте текст и вставьте вместо каждого пропуска A–J нужную грамматическую форму, выбрав один из четырёх предложенных вариантов.</p>
+      <div class="demo-note">Choose the form for each gap.</div>
+      <div class="quiz">
+        <div class="passage-box gap-passage">
+          <h4>My Experience with Theatre</h4>
+          <p>I have always loved theatre. When I was younger, I used <span class="gn">A</span><select class="exam-select ans" data-opts="to attending|attending|to have attended|to attend" data-answer="to attend"></select> plays with my parents. We often went to the local theatre at weekends, and I remember feeling <span class="gn">B</span><select class="exam-select ans" data-opts="exciting|excited|excite|was exciting" data-answer="excited"></select> every time we were at the theatre. The atmosphere was magical, and I enjoyed <span class="gn">C</span><select class="exam-select ans" data-opts="watching|have been watching|being watched|be watching" data-answer="watching"></select> the actors perform on stage.</p>
+          <p>Last year, I <span class="gn">D</span><select class="exam-select ans" data-opts="have attended|have been attending|attended|was attended" data-answer="attended"></select> a fantastic production of ‘Romeo and Juliet.’ The actors were incredibly talented, and the set design was the most beautiful I <span class="gn">E</span><select class="exam-select ans" data-opts="have ever seen|ever saw|has ever seen|had ever seen" data-answer="had ever seen"></select>. While I watched the play, I found myself completely absorbed in the story. The emotions of the characters were so real that I felt like I was part of their world. I now understand how powerful theatre <span class="gn">F</span><select class="exam-select ans" data-opts="should|can|must|has to" data-answer="can"></select> be and these days I try to go to the theatre at least once a month.</p>
+          <p>Theatre does not only entertain me but also helps me appreciate the arts more deeply. Watching talented actors perform live is one of the <span class="gn">G</span><select class="exam-select ans" data-opts="best|better|the best|much better" data-answer="the best"></select> experiences anyone can have. The energy in the room is different from watching a movie; it feels more personal and immediate.</p>
+          <p>I believe that everyone <span class="gn">H</span><select class="exam-select ans" data-opts="need|is|should|has" data-answer="should"></select> try to attend a play at least once a year. It can change your perspective on storytelling and bring people together in ways that movies cannot. Theatre allows us to connect with emotions and ideas in a very special way.</p>
+          <p>My experiences with theatre <span class="gn">I</span><select class="exam-select ans" data-opts="were|had been|is|have been" data-answer="have been"></select> wonderful and enriching. I love learning about different stories and cultures through performances. As I continue to explore this amazing world, I look forward to <span class="gn">J</span><select class="exam-select ans" data-opts="being discovered|discover|have discovered|discovering" data-answer="discovering"></select> even more incredible productions!</p>
+        </div>
+        <div class="after-check"><div class="why">
+          <div class="why-h">🔎 Why · the words around the gap decide</div>
+          <ul>
+            <li><b>A to attend:</b> <i>used to</i> + base = a past habit. (<i>Be used to + -ing</i> is a different structure.)</li>
+            <li><b>B excited:</b> how <i>I</i> felt → <i>-ed</i>. The play is exciting; I am excited.</li>
+            <li><b>C watching:</b> <i>enjoy</i> + -ing.</li>
+            <li><b>D attended:</b> <i>Last year</i> → past simple; <i>I</i> did it → active, not <i>was attended</i>.</li>
+            <li><b>E had ever seen:</b> the story is in the past (<i>the set design was the most beautiful I…</i>) → past perfect.</li>
+            <li><b>F can:</b> what theatre is able to be (a possibility), not an obligation.</li>
+            <li><b>G the best:</b> <i>one of the</i> + superlative.</li>
+            <li><b>H should:</b> advice: <i>everyone should try</i> (+ base, no <i>to</i>).</li>
+            <li><b>I have been:</b> from childhood up to now → present perfect; <i>experiences</i> is plural.</li>
+            <li><b>J discovering:</b> <i>look forward to</i> + -ing (<i>to</i> is a preposition here).</li>
+          </ul>
+        </div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════
+       TAB 3 — MEET THE ESSAY (40 min)
+  ══════════════════════════════════════════════════════════ -->
+  <div class="tab-content" id="tab-essay">
+
+    <div class="teacher-only">
+      <div class="to-label">👩‍🏫 Teacher only · what to say · meet the essay</div>
+      <ul>
+        <li>“In March you will have 40 minutes to write an essay of 150–200 words. Today you write nothing. You will see a full-mark essay and take it apart, so you know exactly what we are building.”</li>
+        <li>Read the task box together: the key words are <b>both these views</b> and <b>your own opinion</b>. Then the mixed paragraphs: ask “how did you know?” for each label (clue words in the notes, section 4).</li>
+        <li>Step 2 opens after Step 1 is checked.</li>
+      </ul>
+    </div>
+
+    <div class="exercise">
+      <div class="exercise-label">The task · 5 min</div>
+      <h3>This is what the essay task looks like</h3>
+      <div class="task-box">
+        <div>You should spend about 40 minutes on the task. Write an opinion essay on the following topic:</div>
+        <div class="prompt">Teenagers should spend more time outdoors. However, many people think differently.</div>
+        <div><b>Discuss both these views and give your own opinion.</b> Write your essay in 150–200 words.</div>
+        <div style="margin-top:8px">Use the following plan:</div>
+        <ul>
+          <li><b>Introduction:</b> state the problem; identify the two opinions given in the task</li>
+          <li><b>Body paragraph 1:</b> point of view 1 + 1 or 2 reasons to support it</li>
+          <li><b>Body paragraph 2:</b> point of view 2 + 1 or 2 reasons to support it</li>
+          <li><b>Conclusion:</b> summarise the main points of your essay and state your opinion</li>
+        </ul>
+      </div>
+      <p class="instr">This is not the topic of your exam: it is a practice topic. The exam task always has the same shape: one opinion, “however, many people think differently”, and the same four-paragraph plan.</p>
+    </div>
+
+    <div class="exercise">
+      <div class="exercise-label">Step 1 · The paragraphs are mixed up · 7 min</div>
+      <h3>Which paragraph is which?</h3>
+      <p class="instr">Here is a full-mark essay on this task, but the paragraphs are in the wrong order. Choose the job of each paragraph.</p>
+      <div class="quiz" id="qLabels">
+        <div class="mixed">
+          <div class="para"><div class="para-top"><span class="para-l">¶ A</span><select class="exam-select ans" data-opts="Introduction: the problem + both views|Body paragraph 1: view 1 + reasons|Body paragraph 2: view 2 + reasons|Conclusion: summary + my opinion" data-answer="Body paragraph 2: view 2 + reasons"></select></div>
+            <p>On the other hand, those who disagree point out that teenagers can develop just as well at home. Firstly, many useful hobbies, such as reading, drawing or learning languages, are indoor activities. In addition, the weather in many parts of Russia is cold for half of the year, so staying outside for long is not always pleasant or safe.</p></div>
+          <div class="para"><div class="para-top"><span class="para-l">¶ B</span><select class="exam-select ans" data-opts="Introduction: the problem + both views|Body paragraph 1: view 1 + reasons|Body paragraph 2: view 2 + reasons|Conclusion: summary + my opinion" data-answer="Introduction: the problem + both views"></select></div>
+            <p>Nowadays young people spend most of their free time indoors. Whether they should spend more time outside is a debatable issue. Some believe that fresh air is essential, while others are convinced that home can be just as useful.</p></div>
+          <div class="para"><div class="para-top"><span class="para-l">¶ C</span><select class="exam-select ans" data-opts="Introduction: the problem + both views|Body paragraph 1: view 1 + reasons|Body paragraph 2: view 2 + reasons|Conclusion: summary + my opinion" data-answer="Conclusion: summary + my opinion"></select></div>
+            <p>To sum up, both views have their strong points. Having considered them, I am convinced that teenagers should spend more time outdoors, because nothing can replace the health benefits of fresh air and exercise.</p></div>
+          <div class="para"><div class="para-top"><span class="para-l">¶ D</span><select class="exam-select ans" data-opts="Introduction: the problem + both views|Body paragraph 1: view 1 + reasons|Body paragraph 2: view 2 + reasons|Conclusion: summary + my opinion" data-answer="Body paragraph 1: view 1 + reasons"></select></div>
+            <p>Supporters of this idea argue that fresh air and physical activity are vital for a teenager’s health. To begin with, a walk or a game of football helps young people stay fit and sleep better. Moreover, time outdoors reduces stress. For instance, my classmates and I always feel calmer after a school trip to the forest.</p></div>
+        </div>
+        <div class="after-check"><div class="why">
+          <div class="why-h">🔎 How you can tell</div>
+          <ul>
+            <li><b>Introduction (¶ B):</b> <i>Nowadays…</i> shows the problem is real; <i>is a debatable issue</i>; <i>Some believe…, while others are convinced…</i> = both views. No opinion of the writer.</li>
+            <li><b>Body paragraph 1 (¶ D):</b> <i>Supporters of this idea argue that…</i> = the view in the task, then reasons: <i>To begin with… Moreover… For instance…</i></li>
+            <li><b>Body paragraph 2 (¶ A):</b> <i>On the other hand, those who disagree point out that…</i> = the opposite view, then its reasons: <i>Firstly… In addition…</i></li>
+            <li><b>Conclusion (¶ C):</b> <i>To sum up</i>, both views in one sentence, then the opinion: <i>I am convinced that… because…</i></li>
+          </ul>
+        </div></div>
+      </div>
+      <p class="gate-msg" id="gateMsg">🔒 Step 2 opens when you have checked Step 1.</p>
+    </div>
+
+    <div class="gate" id="essayGate">
+      <div class="exercise">
+        <div class="exercise-label">Step 2 · The essay in order · 10 min</div>
+        <h3>Read the whole essay, then answer</h3>
+        <div class="essay" id="essayText">
+          <p><span class="ptag">Introduction</span>Nowadays young people spend most of their free time indoors. Whether they should spend more time outside is a debatable issue. Some believe that fresh air is essential, while others are convinced that home can be just as useful.</p>
+          <p><span class="ptag">Body 1</span>Supporters of this idea argue that fresh air and physical activity are vital for a teenager’s health. To begin with, a walk or a game of football helps young people stay fit and sleep better. Moreover, time outdoors reduces stress. For instance, my classmates and I always feel calmer after a school trip to the forest.</p>
+          <p><span class="ptag">Body 2</span>On the other hand, those who disagree point out that teenagers can develop just as well at home. Firstly, many useful hobbies, such as reading, drawing or learning languages, are indoor activities. In addition, the weather in many parts of Russia is cold for half of the year, so staying outside for long is not always pleasant or safe.</p>
+          <p><span class="ptag">Conclusion</span>To sum up, both views have their strong points. Having considered them, I am convinced that teenagers should spend more time outdoors, because nothing can replace the health benefits of fresh air and exercise.</p>
+        </div>
+        <div class="quiz">
+          <div class="row"><span class="row-n">1</span><span class="row-q">Where does the writer give their own opinion?</span><select class="exam-select ans" data-opts="in the introduction|in body paragraph 1|in every paragraph|only in the conclusion" data-answer="only in the conclusion"></select></div>
+          <div class="row"><span class="row-n">2</span><span class="row-q">What does body paragraph 2 do?</span><select class="exam-select ans" data-opts="it gives the writer’s opinion|it gives the other view and its reasons|it repeats body paragraph 1|it tells a story" data-answer="it gives the other view and its reasons"></select></div>
+          <div class="row"><span class="row-n">3</span><span class="row-q">Which example supports view 1 (spend more time outdoors)?</span><select class="exam-select ans" data-opts="reading and drawing|the cold weather in Russia|the school trip to the forest|time in front of a screen" data-answer="the school trip to the forest"></select></div>
+          <div class="row"><span class="row-n">4</span><span class="row-q">Which reason supports view 2 (time at home is just as useful)?</span><select class="exam-select ans" data-opts="fresh air is vital for health|the weather is cold for half of the year|time outdoors reduces stress|a walk helps you sleep better" data-answer="the weather is cold for half of the year"></select></div>
+          <div class="row"><span class="row-n">5</span><span class="row-q">The task says <i>teenagers</i>. Which words does the introduction also use for them?</span><select class="exam-select ans" data-opts="children|students|young people|adults" data-answer="young people"></select></div>
+          <div class="row"><span class="row-n">6</span><span class="row-q">What does the introduction do?</span><select class="exam-select ans" data-opts="it presents both views, with no opinion|it gives the writer’s opinion|it gives two reasons for one view|it tells us about the writer’s school" data-answer="it presents both views, with no opinion"></select></div>
+          <div class="after-check"><div class="why">
+            <div class="why-h">🔎 The rules behind the answers</div>
+            <ul>
+              <li><b>The opinion goes in the conclusion</b>, and it is clear and has a reason: <i>I am convinced that… because…</i></li>
+              <li><b>Both body paragraphs have the same weight:</b> a view, a reason, an explanation and an example in each. The examiner wants “full arguments in support of both views”.</li>
+              <li><b>Paraphrase:</b> <i>young people</i> for <i>teenagers</i>, <i>outside</i> for <i>outdoors</i>, <i>home</i> for <i>indoors</i>. Copying the task word for word costs a point.</li>
+            </ul>
+          </div></div>
+        </div>
+      </div>
+
+      <div class="exercise">
+        <div class="exercise-label">Step 3 · Linkers · 8 min</div>
+        <h3>Tap every linking word or phrase</h3>
+        <p class="instr">Linkers join ideas: <i>however, firstly, as a result, because…</i> The examiner wants at least 3–4 correct ones. How many does this essay have?</p>
+        <p class="tap-hint">Tap a word to mark it, tap again to unmark. Phrases like “on the other hand” light up as one.</p>
+        <div class="quiz" id="qLinks">
+          <div class="essay tap" id="tapEssay">
+            <p><span class="nt">Nowadays</span> young people spend most of their free time indoors. Whether they should spend more time outside is a debatable issue. Some believe that fresh air is essential, <span class="lk">while</span> others are convinced that home can be just as useful.</p>
+            <p>Supporters of this idea argue that fresh air and physical activity are vital for a teenager’s health. <span class="lk">To begin with,</span> a walk or a game of football helps young people stay fit and sleep better. <span class="lk">Moreover,</span> time outdoors reduces stress. <span class="lk">For instance,</span> my classmates and I always feel calmer after a school trip to the forest.</p>
+            <p><span class="lk">On the other hand,</span> those who disagree point out that teenagers can develop just as well at home. <span class="lk">Firstly,</span> many useful hobbies, such as reading, drawing or learning languages, are indoor activities. <span class="lk">In addition,</span> the weather in many parts of Russia is cold for half of the year, <span class="lk">so</span> staying outside for long is not always pleasant or safe.</p>
+            <p><span class="lk">To sum up,</span> both views have their strong points. <span class="nt">Having considered them,</span> I am convinced that teenagers should spend more time outdoors, <span class="lk">because</span> nothing can replace the health benefits of fresh air and exercise.</p>
+          </div>
+          <div class="after-check"><div class="why">
+            <div class="why-h">🔎 Ten linkers</div>
+            <p><b>while · To begin with · Moreover · For instance · On the other hand · Firstly · In addition · so · To sum up · because.</b> Green = you found it; underlined = you missed it; red = not a linker. Notice where they stand: almost every sentence of the body paragraphs starts with one. That is the habit to build.</p>
+          </div></div>
+        </div>
+      </div>
+
+      <div class="exercise">
+        <div class="exercise-label">Step 4 · Count the words · 3 min</div>
+        <h3>Is it long enough?</h3>
+        <p class="instr">The essay must have 150–200 words (135 is the absolute minimum). Count the words of the essay in Step 2 (not the paragraph labels). A number like “half” or “a” counts as one word.</p>
+        <div class="quiz" id="qCount">
+          <div class="row"><span class="row-q">The essay has</span><input class="blank short ans" id="wcInput" data-answer="" inputmode="numeric" autocomplete="off"><span>words.</span></div>
+          <div class="after-check"><div class="why">
+            <div class="why-h">🔎 Inside the limits</div>
+            <p>Under 135 words, the essay gets 0. Over 200, the examiner counts only the first 200 words, so a long essay can lose its conclusion, and with it your opinion. The quick way in the exam: count the words in 3 lines, divide by 3 and multiply by the number of lines.</p>
+          </div></div>
+        </div>
+      </div>
+
+      <div class="exercise">
+        <div class="exercise-label">Step 5 · The plan behind the essay · 7 min</div>
+        <h3>The four paragraphs: their job, their length, their words</h3>
+        <div class="tbl-wrap">
+          <table class="plan-map">
+            <tr><th>Paragraph</th><th>Its job</th><th>Words</th><th>The words that do the job here</th></tr>
+            <tr><td><b>Introduction</b></td><td>Show the problem is real + present both views, in new words. No opinion yet.</td><td>30–40</td><td>Nowadays… · Whether… is a debatable issue · Some believe that…, while others are convinced that…</td></tr>
+            <tr><td><b>Body 1</b></td><td>View 1 + 1–2 reasons, each with an explanation or an example.</td><td>50–60</td><td>Supporters of this idea argue that… · To begin with · Moreover · For instance</td></tr>
+            <tr><td><b>Body 2</b></td><td>View 2 + 1–2 reasons, just as full as Body 1.</td><td>50–60</td><td>On the other hand, those who disagree point out that… · Firstly · In addition · so</td></tr>
+            <tr><td><b>Conclusion</b></td><td>Sum up both views + your clear opinion with a reason.</td><td>25–35</td><td>To sum up · Having considered them, I am convinced that… because…</td></tr>
+          </table>
+        </div>
+        <p class="instr" style="margin-top:12px">From the next lesson you will learn to write each paragraph, one at a time, starting with the introduction.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════
+       TAB 4 — THE CRITERIA (15 min)
+  ══════════════════════════════════════════════════════════ -->
+  <div class="tab-content" id="tab-crit">
+
+    <div class="teacher-only">
+      <div class="to-label">👩‍🏫 Teacher only · what to say · the criteria</div>
+      <ul>
+        <li>“Ten points, five criteria. Half of them are about the task and the structure, half about accuracy. And one rule can make everything zero.”</li>
+        <li>Read the zero box first. Then the nine situations; then she writes the rules card in her own words.</li>
+      </ul>
+    </div>
+
+    <div class="exercise">
+      <div class="exercise-label">How the essay is marked · 5 min</div>
+      <h3>Five criteria, 10 points</h3>
+      <div class="tbl-wrap">
+        <table class="crit">
+          <tr><th>Критерий</th><th>Max</th><th>Full points if…</th></tr>
+          <tr><td>К1 · Решение коммуникативной задачи</td><td class="pts">3</td><td>there is an introduction, a main body and a conclusion; the introduction shows the problem exists and presents <b>both</b> views; the body gives full arguments with examples for <b>both</b> views; the conclusion sums up and gives <b>your opinion</b>; a neutral style (no slang, no contractions); the task is paraphrased.</td></tr>
+          <tr><td>К2 · Организация текста</td><td class="pts">2</td><td>it is logical; it follows the plan; it is divided into paragraphs; linkers are used correctly and often enough (<b>at least 3–4</b>).</td></tr>
+          <tr><td>К3 · Лексика</td><td class="pts">2</td><td>varied vocabulary that fits the task; <b>1</b> lexical mistake is allowed.</td></tr>
+          <tr><td>К4 · Грамматика</td><td class="pts">2</td><td>varied grammar structures (not only simple sentences); <b>1–2</b> grammar mistakes are allowed.</td></tr>
+          <tr><td>К5 · Орфография и пунктуация</td><td class="pts">1</td><td><b>1–2</b> spelling or punctuation mistakes are allowed.</td></tr>
+        </table>
+      </div>
+      <div class="zero-box">
+        <b>⚠️ К1 = 0 → the whole essay gets 0.</b> This happens if: there is no introduction and conclusion, or no main body · the essay is about a different problem · it is not an essay (a letter, an article…) · it has <b>fewer than 135 words</b> · more than 30% is copied from a published text.<br>
+        <b>📏 Over 200 words:</b> only the first 200 are marked.
+      </div>
+    </div>
+
+    <div class="exercise">
+      <div class="exercise-label">What happens if… · 5 min</div>
+      <h3>Nine situations</h3>
+      <div class="quiz">
+        <div class="row"><span class="row-n">1</span><span class="row-q">The essay has 128 words.</span><select class="exam-select ans" data-opts="0 for the whole essay|К1 loses a point|К1 = 1: only part of the task|К2 loses points|К5 = 0|only the first 200 words are marked" data-answer="0 for the whole essay"></select></div>
+        <div class="row"><span class="row-n">2</span><span class="row-q">She writes only about the view she agrees with.</span><select class="exam-select ans" data-opts="0 for the whole essay|К1 loses a point|К1 = 1: only part of the task|К2 loses points|К5 = 0|only the first 200 words are marked" data-answer="К1 = 1: only part of the task"></select></div>
+        <div class="row"><span class="row-n">3</span><span class="row-q">The introduction copies the task word for word.</span><select class="exam-select ans" data-opts="0 for the whole essay|К1 loses a point|К1 = 1: only part of the task|К2 loses points|К5 = 0|only the first 200 words are marked" data-answer="К1 loses a point"></select></div>
+        <div class="row"><span class="row-n">4</span><span class="row-q">The conclusion says: “Everyone should decide for themselves.”</span><select class="exam-select ans" data-opts="0 for the whole essay|К1 loses a point|К1 = 1: only part of the task|К2 loses points|К5 = 0|only the first 200 words are marked" data-answer="К1 = 1: only part of the task"></select></div>
+        <div class="row"><span class="row-n">5</span><span class="row-q">The essay is one long paragraph.</span><select class="exam-select ans" data-opts="0 for the whole essay|К1 loses a point|К1 = 1: only part of the task|К2 loses points|К5 = 0|only the first 200 words are marked" data-answer="К2 loses points"></select></div>
+        <div class="row"><span class="row-n">6</span><span class="row-q">There are four spelling mistakes.</span><select class="exam-select ans" data-opts="0 for the whole essay|К1 loses a point|К1 = 1: only part of the task|К2 loses points|К5 = 0|only the first 200 words are marked" data-answer="К5 = 0"></select></div>
+        <div class="row"><span class="row-n">7</span><span class="row-q">The essay has 240 words.</span><select class="exam-select ans" data-opts="0 for the whole essay|К1 loses a point|К1 = 1: only part of the task|К2 loses points|К5 = 0|only the first 200 words are marked" data-answer="only the first 200 words are marked"></select></div>
+        <div class="row"><span class="row-n">8</span><span class="row-q">She writes a letter to a friend about the topic.</span><select class="exam-select ans" data-opts="0 for the whole essay|К1 loses a point|К1 = 1: only part of the task|К2 loses points|К5 = 0|only the first 200 words are marked" data-answer="0 for the whole essay"></select></div>
+        <div class="row"><span class="row-n">9</span><span class="row-q">She writes <i>don’t</i>, <i>it’s</i> and <i>gonna</i>.</span><select class="exam-select ans" data-opts="0 for the whole essay|К1 loses a point|К1 = 1: only part of the task|К2 loses points|К5 = 0|only the first 200 words are marked" data-answer="К1 loses a point"></select></div>
+        <div class="after-check"><div class="why">
+          <div class="why-h">🔎 Three rules to remember</div>
+          <ul>
+            <li><b>Too short, or not an essay → 0 for everything.</b> Count your words in the exam.</li>
+            <li><b>Both views + a clear opinion</b>, or К1 drops to 1. “Everyone should decide” is not an opinion.</li>
+            <li><b>Neutral style:</b> <i>do not, it is, going to</i>. One slip costs a point; several cost more.</li>
+          </ul>
+        </div></div>
+      </div>
+    </div>
+
+    <div class="exercise">
+      <div class="exercise-label">Your rules card · 3 min</div>
+      <h3>The rules in your own words</h3>
+      <p class="instr">Write 4–5 short rules you must never forget in the essay (in English or in Russian).</p>
+      <textarea class="free-write" data-k="rules-card" placeholder="1. 150–200 words, never fewer than 135.&#10;2. …"></textarea>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════
+       TAB 5 — HOMEWORK
+  ══════════════════════════════════════════════════════════ -->
+  <div class="tab-content" id="tab-hw">
+
+    <div class="exercise">
+      <div class="exercise-label">Homework · about 60 min</div>
+      <h3>For Lesson 1.2</h3>
+      <ul class="hw-list" id="hwList">
+        <li><label><input type="checkbox"><span class="t">🎤 <b>Record your monologue “Why the Лицей?” again</b> (up to 2 minutes), better than in class: an opening sentence, all three points, a closing sentence. Send it to me as a voice message.</span></label></li>
+        <li><label><input type="checkbox"><span class="t">📖 <b>«Хочу в Лицей! Пишу эссе на 10 баллов», Chapters 1–2</b>: read them below and answer the two questions.</span></label></li>
+        <li><label><input type="checkbox"><span class="t">🃏 <b>Deck 1 · School &amp; education</b>: a first look. Go through all the cards below and mark ✓ Know or ✗ Still learning. We learn them properly in Lesson 1.2.</span></label></li>
+        <li><label><input type="checkbox"><span class="t">🃏 <b>Essay language deck</b>: the first five cards (the introduction phrases: <i>a debatable issue, no single opinion, a hotly debated topic, be convinced, whether</i>). <a href="../flashcards.html?deck=lessay">Open the deck →</a></span></label></li>
+        <li><label><input type="checkbox"><span class="t">📗 <b>Gateway B2, Unit 1 · School life and higher education</b>: the four exercises below (listen to the words, the Sixth Form case study, Studying in the UK, three questions).</span></label></li>
+      </ul>
+    </div>
+
+    <div class="exercise">
+      <div class="exercise-label">The book · Chapters 1–2 · read</div>
+      <h3>«Хочу в Лицей! Пишу эссе на 10 баллов»</h3>
+      <p class="instr">О. Ф. Иванова, М. М. Шиловская (2020). Read both chapters, then answer the two questions under them.</p>
+      <details class="reading" open><summary>📕 Глава 1 · Что такое эссе? Разные типы эссе</summary><div class="rd-body">
+        <p>Что такое эссе? Слово <i>essais</i> появилось благодаря французскому философу Мишелю де Монтеню, который в 1580 г. опубликовал книгу «Опыты», где сделал «попытку» (фр. <i>essai</i> — попытка) выразить свои мысли в свободной форме в виде нравоучительных текстов. В России жанр эссе стал популярным в начале XX в. как заимствованный. Однако уже в 1930-е годы по идеологическим соображениям к жанру эссе стали относиться как к разновидности очерка, являющегося литературным произведением, прежде всего описательного характера. Сегодня же правильнее делать акцент не только на описании и повествовании, но скорее на рассуждении.</p>
+        <p>На уроке иностранного языка под эссе мы понимаем прозаическое сочинение небольшого объёма, в котором его автор, придерживаясь определённой структуры текста, делится с адресатом (преподавателем) своими соображениями, подкрепляя их аргументами в пользу поставленного вопроса или проблемы (и, если нужно, приводя контраргументы). Как правило, эссе позволяет проверить не только знания ученика, но и его умение грамотно, логично сформулировать свою точку зрения, выделить причинно-следственные связи, подкрепить свои идеи правильно подобранными примерами и сделать выводы.</p>
+        <p>Сегодня эссе является неотъемлемой частью многих международных (например, FCE, CAE, CPE; TOEFL; IELTS; TestDaF, Goethe-Zertifikat) и национальных (например, ЕГЭ по иностранному языку в России) экзаменов.</p>
+        <p>Основными типами эссе на занятиях и экзаменах по иностранным языкам являются:</p>
+        <ul><li>эссе «Моё мнение» (<i>opinion essay</i>);</li><li>эссе «За и против», где рассматриваются достоинства и недостатки чего-либо (<i>for and against</i>, или <i>advantages and disadvantages essay</i>);</li><li>эссе, где рассматриваются различные способы решения обозначенной проблемы (<i>problem and solution essay</i>).</li></ul>
+        <p>Все типы эссе имеют черты текста-рассуждения, в котором происходит «изложение в словесной форме логически-последовательного ряда мыслей (суждений, умозаключений о чём-нибудь)».</p>
+        <p><b>Особенности текста-рассуждения:</b></p>
+        <ol>
+          <li>в тексте-рассуждении всегда есть коммуникативная задача (высказать и аргументировать свою точку зрения на конкретный вопрос или проблему, аргументированно доказать ошибочность противоположной точки зрения и т. д.);</li>
+          <li>текст-рассуждение всегда имеет смысловую, структурную и логическую целостность: все предложения в таком тексте объединены одной темой, каждое новое предложение основывается на предыдущих; новый абзац в основной части начинается с «тезиса», который подкрепляется аргументами и часто иллюстрируется примерами; логическая целостность текста достигается с помощью слов-связок (например, <i>first, besides, in conclusion</i>), которые помогают сделать плавный переход от одного предложения или абзаца к другому;</li>
+          <li>стиль текста-рассуждения скорее формальный, поэтому в тексте не должно быть сокращённых форм, высокопарных слов, разговорных и сленговых выражений;</li>
+          <li>текст должен быть написан максимально грамотно: количество лексических, грамматических, орфографических и пунктуационных ошибок обычно подробно оговаривается в критериях оценивания эссе.</li>
+        </ol>
+      </div></details>
+
+      <details class="reading" open><summary>📕 Глава 2 · Эссе «Моё мнение»: структура и отличительные черты</summary><div class="rd-body">
+        <p>Данный вид эссе может называться по-разному: <i>opinion essay, argumentative essay, discussion essay</i> или <i>agree/disagree essay</i>. В зависимости от сдаваемого экзамена возможны различные нюансы в написании эссе «Моё мнение». Однако общим местом всегда будет одна и та же задача — выразить своё мнение о заданном высказывании и подкрепить его убедительными аргументами. Рассмотрим наиболее часто встречающиеся варианты структуры этого эссе.</p>
+        <p><b>В ЕГЭ</b> по иностранному языку эссе «Моё мнение» должно быть написано по следующему плану:</p>
+        <table class="plan-map"><tr><td><b>§1</b></td><td>Вступление (формулировка проблемы с перефразированием заданного утверждения).</td></tr><tr><td><b>§2</b></td><td>Своё мнение, подкреплённое 2–3 аргументами.</td></tr><tr><td><b>§3</b></td><td>Противоположная точка зрения, подкреплённая 1–2 аргументами.</td></tr><tr><td><b>§4</b></td><td>Объяснение, почему не согласен(а) с противоположной точкой зрения.</td></tr><tr><td><b>§5</b></td><td>Заключение, где должна быть перефразирована своя точка зрения.</td></tr></table>
+        <p class="rd-ex"><b>Пример задания:</b> <i>Learning foreign languages is a key to success in life.</i> Что вы думаете об этом? Согласны ли вы с этим утверждением? Напишите 200–250 слов.</p>
+        <p><b>В экзамене IELTS</b> чаще всего встречаются следующие варианты эссе «Моё мнение».</p>
+        <p><b>Вариант 1</b> (<i>one-sided argument essay</i>), когда необходимо написать, в какой степени автор согласен или не согласен с высказыванием:</p>
+        <table class="plan-map"><tr><td><b>§1</b></td><td>Вступление (формулировка проблемы). Высказывание своей точки зрения.</td></tr><tr><td><b>§2</b></td><td>Аргумент 1 в поддержку своего мнения. Примеры.</td></tr><tr><td><b>§3</b></td><td>Аргумент 2 в поддержку своего мнения. Примеры.</td></tr><tr><td><b>§4</b></td><td>Альтернативный параграф, в котором даётся противоположное мнение (этот параграф можно не писать).</td></tr><tr><td><b>§5</b></td><td>Заключение, где нужно кратко перечислить приведённые аргументы и ещё раз (другими словами!) высказать свою точку зрения.</td></tr></table>
+        <p class="rd-ex"><b>Пример задания:</b> <i>Many people judge success only by money and material possessions. To what extent do you agree or disagree? Write at least 250 words.</i></p>
+        <p><b>Вариант 2</b> (<i>two-sided argument essay</i>), когда необходимо рассмотреть две противоположные точки зрения на какое-то явление и высказать своё мнение:</p>
+        <table class="plan-map"><tr><td><b>§1</b></td><td>Вступление (формулировка проблемы).</td></tr><tr><td><b>§2</b></td><td>Точка зрения 1: аргументы в пользу этого мнения.</td></tr><tr><td><b>§3</b></td><td>Точка зрения 2: аргументы в пользу этого мнения.</td></tr><tr><td><b>§4</b></td><td>Заключение, где нужно обобщить обе точки зрения и выразить своё мнение.</td></tr></table>
+        <p class="rd-ex"><b>Пример задания:</b> <i>It is generally believed that some people are born with certain talents, for example, for sports and music, and others are not. However, it is sometimes claimed that any child can be taught to become a good sports person or musician. Discuss both views and give your own opinion. Write at least 250 words.</i></p>
+        <p>И, наконец, структура эссе <b>при поступлении в Лицей НИУ ВШЭ</b> (так в книге):</p>
+        <table class="plan-map"><tr><td><b>§1</b></td><td>Вступление (формулировка проблемы). Высказывание своей точки зрения.</td></tr><tr><td><b>§2</b></td><td>Аргумент 1 в поддержку своего мнения. Примеры.</td></tr><tr><td><b>§3</b></td><td>Аргумент 2 в поддержку своего мнения. Примеры.</td></tr><tr><td><b>§4</b></td><td>Заключение, где должно быть сделано обобщение вышесказанного и ещё раз высказана своя точка зрения.</td></tr></table>
+        <p class="rd-ex"><b>Пример задания:</b> <i>You should spend about 40 minutes on the task. Write a short opinion essay to answer the following question: What famous person, dead or alive, would you most like to talk to? Explain why. Write at least 150 words. Use the following plan: 1. Introduction (state the problem; express your opinion on the problem) 2. Main Body (body paragraph 1: the first reason to support your opinion; body paragraph 2: the second reason to support your opinion) 3. Conclusion.</i></p>
+        <p>При написании любого варианта эссе «Моё мнение» необходимо сразу выяснить, какое количество слов требуется написать. Например, в ЕГЭ эссе должно быть объёмом от 200 до 250 слов, при этом разрешается написать на 10% больше или меньше, то есть 180–275 слов. Если нет минимального количества слов, работа оценивается в 0 баллов; если объём превышен, экзаменатор отсчитывает первые 250 слов и проверяет только их.</p>
+        <table class="plan-map"><tr><th>Экзамен</th><th>Количество слов в эссе (по книге)</th></tr><tr><td>Вступительное испытание в Лицей НИУ ВШЭ</td><td>по крайней мере 150 слов</td></tr><tr><td>IELTS</td><td>по крайней мере 250 слов</td></tr><tr><td>FCE</td><td>140–190 слов</td></tr><tr><td>CAE</td><td>220–260 слов</td></tr><tr><td>CPE</td><td>240–280 слов</td></tr></table>
+        <p>Нужно помнить, что больше не всегда значит лучше. Чем больше написано слов, тем выше риск сделать ошибки, причём часто — весьма досадные. Лучше написать ровно столько слов, сколько требуется, и оставить время на то, чтобы перечитать свой текст, проверить его на предмет ошибок и, по возможности, улучшить.</p>
+        <p><b>Полезные советы</b></p>
+        <ol><li>Внимательно прочитать задание, изучить план и понять, что и в каком порядке ты должен написать.</li><li>Понять, сколько слов нужно написать, а также выяснить, каким будет «наказание», если текст окажется больше или меньше требуемого объёма.</li><li>Тщательно изучить критерии оценивания, применяемые именно на том экзамене, который ты собираешься сдавать.</li></ol>
+      </div></details>
+      <span class="book">📕 Хочу в Лицей! · Глава 1–2</span>
+    </div>
+
+    <div class="exercise">
+      <div class="exercise-label">The book · Chapters 1–2 · two questions</div>
+      <h3>Two questions</h3>
+      <p class="instr"><b>1.</b> Chapter 2 shows several plans for an opinion essay (ЕГЭ, IELTS, the Лицей). Which one is closest to the 2026 plan you saw today?</p>
+      <textarea class="free-write" data-k="hw-q1" placeholder="The closest one is…"></textarea>
+      <p class="instr"><b>2.</b> The book’s Лицей plan (2019–2020) and the 2026 plan are different. What is different? Look at the introduction, the two body paragraphs and the number of words.</p>
+      <textarea class="free-write" data-k="hw-q2" placeholder="In the book… In 2026…"></textarea>
+    </div>
+
+    <div class="exercise">
+      <div class="exercise-label">Gateway B2 · Unit 1 · Vocabulary in context · 1</div>
+      <h3>Listen to the words: School life</h3>
+      <p class="instr">Listen and repeat each word. Which of them do you already know?</p>
+      <audio class="au" controls preload="metadata" src="audio/g1-school-life-words.mp3"></audio>
+      <div class="word-box"><span>abroad</span><span>assignment</span><span>break</span><span>continuous assessment</span><span>coursework</span><span>grade/mark</span><span>higher education</span><span>notes</span><span>subject</span><span>term</span><span>timetable</span></div>
+    </div>
+
+    <div class="exercise">
+      <div class="exercise-label">Gateway B2 · Unit 1 · Vocabulary in context · 2</div>
+      <h3>UK Sixth Form case study: Emma Johnstone (16)</h3>
+      <p class="instr">Read the questions and answers. What words are missing? Complete the spaces with the correct form of the words in the box. <b>One word is not used.</b> A word you have used is crossed out.</p>
+      <div class="quiz">
+        <div class="bank typed"><span data-root="abroad">abroad</span><span data-root="assignment">assignment</span><span data-root="break">break</span><span data-root="continuous assessment">continuous assessment</span><span data-root="coursework">coursework</span><span data-root="grade|mark">grade/mark</span><span data-root="higher education">higher education</span><span data-root="note">notes</span><span data-root="subject">subject</span><span data-root="term">term</span><span data-root="timetable">timetable</span></div>
+        <div class="passage-box gap-passage case">
+          <p><b>Q:</b> How many <span class="gn">a</span><input class="blank ans" data-answer="terms" autocomplete="off" spellcheck="false"> does your academic year have?<br><b>A:</b> Three. The first one always starts in September and finishes in December.</p>
+          <p><b>Q:</b> How many <span class="gn">b</span><input class="blank ans" data-answer="subjects" autocomplete="off" spellcheck="false"> do you study and which ones?<br><b>A:</b> Most people study three or four in the last two years of school, which we call Sixth Form in the UK. I study four. Biology, chemistry, maths and French.</p>
+          <p><b>Q:</b> Do you want to go on to <span class="gn">c</span><input class="blank ans" data-answer="higher education" autocomplete="off" spellcheck="false"> when you finish school?<br><b>A:</b> Yes, I want to study Veterinary science.</p>
+          <p><b>Q:</b> What <span class="gn">d</span><input class="blank ans" data-answer="grades|marks" autocomplete="off" spellcheck="false"> do you usually get?<br><b>A:</b> They’re pretty high, for example A or A+.</p>
+          <p><b>Q:</b> What’s your <span class="gn">e</span><input class="blank ans" data-answer="timetable" autocomplete="off" spellcheck="false"> like?<br><b>A:</b> I usually start at 9 am and finish at 4 pm, but two days a week, I finish earlier.</p>
+          <p><b>Q:</b> Do you have exams or is it <span class="gn">f</span><input class="blank ans" data-answer="continuous assessment" autocomplete="off" spellcheck="false">?<br><b>A:</b> Nowadays about 80% of our mark depends on exams. The rest is a question of our <span class="gn">g</span><input class="blank ans" data-answer="coursework" autocomplete="off" spellcheck="false">, including <span class="gn">h</span><input class="blank ans" data-answer="assignments" autocomplete="off" spellcheck="false">. You need to keep all the <span class="gn">i</span><input class="blank ans" data-answer="notes" autocomplete="off" spellcheck="false"> you make in class up to date – you know, everything you write down.</p>
+          <p><b>Q:</b> Would you like to study <span class="gn">j</span><input class="blank ans" data-answer="abroad" autocomplete="off" spellcheck="false"> one day?<br><b>A:</b> Yes. I think I’d like to spend a year studying in the US or Canada.</p>
+        </div>
+        <div class="after-check"><div class="why">
+          <div class="why-h">🔎 The correct form</div>
+          <ul>
+            <li><b>a terms, b subjects, d grades / marks, h assignments, i notes:</b> after <i>How many</i>, <i>What … do you usually get</i>, <i>including</i> and <i>all the</i> we need the plural.</li>
+            <li><b>f continuous assessment</b> = текущая оценка в течение года, the opposite of one final exam. <b>g coursework</b> is uncountable: no <i>-s</i>.</li>
+            <li><b>j abroad</b>: <i>study abroad</i>, no preposition (not <i>to abroad</i>).</li>
+            <li>Not used: <b>break</b> (перемена).</li>
+          </ul>
+        </div></div>
+      </div>
+      <p class="instr" style="margin-top:16px">Now answer four of the questions about <b>yourself</b>, with details like Emma’s (2–3 sentences each).</p>
+      <textarea class="free-write" data-k="gw-me" placeholder="My academic year has four terms…"></textarea>
+    </div>
+
+    <div class="exercise">
+      <div class="exercise-label">Gateway B2 · Unit 1 · Culture exchange · 3</div>
+      <h3>Getting started: Studying in the UK</h3>
+      <p class="instr">Read the text. Then choose the meaning of ten words in bold.</p>
+      <div class="passage-box culture">
+        <p>UK universities organise an <b>induction week</b> to give information to new students about studying at their new uni. As part of this week, they often organise trips to show students the whole of the <b>campus</b>, especially the <b>lecture halls</b> where you <b>attend</b> your lessons, depending on the <b>degree</b> you are studying for. But they also show you all the other <b>facilities</b>, such as the library (usually open 24 hours and with a full range of digital <b>resources</b>), sports facilities, cafés, shops, fresh food markets and maybe even clubs.</p>
+        <p>In induction week, you usually meet your <b>personal tutor</b> who gives you academic and personal guidance. You also get your timetable with all the <b>lectures</b> and <b>tutorials</b> you need to attend. You may meet some of your <b>lecturers</b>, too.</p>
+        <p>Everybody who starts at uni in the UK automatically becomes a member of that uni’s Student Union, which helps to organise all sorts of societies, clubs and events. Part of induction week is the freshers’ fair, an event where new students can find out about all the <b>extra-curricular</b> activities that are organised.</p>
+        <p>The Student Union helps all students, both <b>undergraduates</b> and <b>postgraduates</b>. They can give you <b>academic support</b> and advice about <b>student finance</b>. Some people receive a <b>scholarship</b> to help pay for university. Most people receive <b>student loans</b> to pay for their lessons and maybe for <b>student accommodation</b>, too.</p>
+      </div>
+      <div class="quiz" style="margin-top:14px">
+        <div class="row"><span class="row-n">1</span><span class="row-q"><b>induction week</b></span><select class="exam-select ans" data-opts="каникулы между семестрами|вводная неделя для первокурсников|неделя экзаменов|спортивная неделя" data-answer="вводная неделя для первокурсников"></select></div><div class="row"><span class="row-n">2</span><span class="row-q"><b>lecture halls</b></span><select class="exam-select ans" data-opts="библиотеки|общежития|лекционные залы|столовые" data-answer="лекционные залы"></select></div><div class="row"><span class="row-n">3</span><span class="row-q"><b>degree</b></span><select class="exam-select ans" data-opts="диплом, степень (например, бакалавра)|оценка за экзамен|учебный предмет|расписание" data-answer="диплом, степень (например, бакалавра)"></select></div><div class="row"><span class="row-n">4</span><span class="row-q"><b>personal tutor</b></span><select class="exam-select ans" data-opts="частный репетитор за деньги|одноклассник|директор университета|личный куратор, наставник студента" data-answer="личный куратор, наставник студента"></select></div><div class="row"><span class="row-n">5</span><span class="row-q"><b>tutorials</b></span><select class="exam-select ans" data-opts="лекции для всего курса|занятия в маленькой группе с преподавателем|домашние задания|экзамены" data-answer="занятия в маленькой группе с преподавателем"></select></div><div class="row"><span class="row-n">6</span><span class="row-q"><b>extra-curricular</b></span><select class="exam-select ans" data-opts="обязательный|дополнительный платный|внеучебный, внеклассный|вечерний" data-answer="внеучебный, внеклассный"></select></div><div class="row"><span class="row-n">7</span><span class="row-q"><b>undergraduates</b></span><select class="exam-select ans" data-opts="студенты бакалавриата|выпускники школ|преподаватели|родители студентов" data-answer="студенты бакалавриата"></select></div><div class="row"><span class="row-n">8</span><span class="row-q"><b>postgraduates</b></span><select class="exam-select ans" data-opts="первокурсники|школьники|сотрудники столовой|магистранты и аспиранты (после первого диплома)" data-answer="магистранты и аспиранты (после первого диплома)"></select></div><div class="row"><span class="row-n">9</span><span class="row-q"><b>scholarship</b></span><select class="exam-select ans" data-opts="студенческий кредит|стипендия (за успехи)|плата за обучение|зарплата" data-answer="стипендия (за успехи)"></select></div><div class="row"><span class="row-n">10</span><span class="row-q"><b>student accommodation</b></span><select class="exam-select ans" data-opts="студенческое жильё, общежитие|студенческий билет|студенческая скидка|студенческий клуб" data-answer="студенческое жильё, общежитие"></select></div>
+        <div class="after-check"><div class="why">
+          <div class="why-h">🔎 Watch out</div>
+          <ul>
+            <li><b>tutor</b> at a UK university is not a paid репетитор: it is the teacher who looks after you. A <b>lecturer</b> = преподаватель вуза.</li>
+            <li><b>a degree in sth</b>: a degree in economics. <b>attend</b> lessons (no <i>to</i>).</li>
+            <li>Many of these words are in deck 1 · School &amp; education.</li>
+          </ul>
+        </div></div>
+      </div>
+    </div>
+
+    <div class="exercise">
+      <div class="exercise-label">Gateway B2 · Unit 1 · Use it… don’t lose it! · 4</div>
+      <h3>Three questions about your school</h3>
+      <p class="instr">Complete the questions with words in bold from the text. Then answer them.</p>
+      <div class="quiz">
+        <div class="row"><span class="row-n">1</span><span class="row-q">What special <input class="blank ans" data-answer="facilities" autocomplete="off" spellcheck="false"> are there for students in your school, e.g. for studying, food and drink or sports?</span></div>
+        <div class="row"><span class="row-n">2</span><span class="row-q">What digital <input class="blank ans" data-answer="resources" autocomplete="off" spellcheck="false"> does your school have for students and teachers?</span></div>
+        <div class="row"><span class="row-n">3</span><span class="row-q">At school, do you have a personal <input class="blank ans" data-answer="tutor" autocomplete="off" spellcheck="false"> who can help you with studies and other things?</span></div>
+      </div>
+      <p class="instr" style="margin-top:14px">Your answers (2–3 sentences each):</p>
+      <textarea class="free-write" data-k="gw-q3" placeholder="1. In my school there is…"></textarea>
+    </div>
+
+    <div class="exercise">
+      <div class="exercise-label">Deck 1 · School &amp; education · first look</div>
+      <h3>Flip the cards</h3>
+      <div class="fc-app" data-deck="g1"></div>
+    </div>
+  </div>
+
+  <p style="text-align:center;margin-top:30px"><button class="btn btn-ghost" onclick="resetAll()">Clear my answers on this page</button></p>
+</div>
+
+<div class="save-indicator" id="saveIndicator">✓ Saved</div>
+
+<script>
+const LESSON_KEY = 'lesson-1-1';
+let data = {};
+try { data = JSON.parse(localStorage.getItem(LESSON_KEY)) || {}; } catch(e) {}
+
+function save(patch) {
+  Object.assign(data, patch);
+  try { localStorage.setItem(LESSON_KEY, JSON.stringify(data)); } catch(e) {}
+  const el = document.getElementById('saveIndicator');
+  el.classList.add('show');
+  clearTimeout(save.t);
+  save.t = setTimeout(() => el.classList.remove('show'), 1400);
+}
+
+// ── TABS ───────────────────────────────────────────────────────
+function showTab(name) {
+  const btn = document.querySelector('.tab-btn[onclick*="\'' + name + '\'"]');
+  if (!btn) return;
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  btn.classList.add('active');
+}
+function switchTab(name) {
+  showTab(name);
+  save({ activeTab: name });
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ── WORD COUNT of the model essay (the labels are not counted) ─
+const essayWords = (() => {
+  const box = document.getElementById('essayText').cloneNode(true);
+  box.querySelectorAll('.ptag').forEach(t => t.remove());
+  return box.textContent.trim().split(/\s+/).filter(w => /[A-Za-z]/.test(w)).length;
+})();
+const wc = document.getElementById('wcInput');
+wc.dataset.answer = [-2, -1, 0, 1, 2].map(d => essayWords + d).join('|');
+wc.dataset.show = String(essayWords);
+
+// ── BUILD THE CONTROLS ─────────────────────────────────────────
+const QUIZZES = [...document.querySelectorAll('.quiz')];
+QUIZZES.forEach((q, qi) => {
+  q.id = q.id || ('q' + qi);
+  q.querySelectorAll('.ans').forEach((el, i) => { el.dataset.key = q.id + '-' + i; });
+});
+const HEADINGS = ['The royal park', 'Long live the king!', 'In gratitude to the mayor', 'The home of free speech',
+                  'In two places at the same time', 'A French park', 'The jewel in the crown', 'Meant for the general public'];
+document.querySelectorAll('select.ans').forEach(sel => {
+  const opts = sel.dataset.hd ? HEADINGS.map((h, i) => [h, (i + 1) + ' · ' + h]) : sel.dataset.opts.split('|').map(v => [v, v]);
+  const blank = document.createElement('option');
+  blank.value = ''; blank.textContent = '—';
+  sel.appendChild(blank);
+  opts.forEach(([v, label]) => { const o = document.createElement('option'); o.value = v; o.textContent = label; sel.appendChild(o); });
+  if (data[sel.dataset.key] !== undefined) sel.value = data[sel.dataset.key];
+  const paint = () => sel.classList.toggle('filled', !!sel.value);
+  sel.addEventListener('change', () => { save({ [sel.dataset.key]: sel.value }); paint(); paintHeadings(); });
+  paint();
+});
+// Задание 1: a heading used for one text is marked “(used)” in the other lists
+function paintHeadings() {
+  const sels = [...document.querySelectorAll('select[data-hd]')];
+  const used = sels.map(s => s.value).filter(Boolean);
+  sels.forEach(sel => [...sel.options].forEach((o, i) => {
+    if (!o.value) return;
+    o.textContent = i + ' · ' + o.value + (used.includes(o.value) && sel.value !== o.value ? '  (used)' : '');
+  }));
+}
+paintHeadings();
+document.querySelectorAll('input.blank.ans').forEach(inp => {
+  if (data[inp.dataset.key] !== undefined) inp.value = data[inp.dataset.key];
+  inp.addEventListener('input', () => save({ [inp.dataset.key]: inp.value }));
+});
+
+// ── TAP THE LINKERS ────────────────────────────────────────────
+// every word becomes tappable; .lk = a linker (right), .nt = neutral (neither right nor wrong)
+const tapBox = document.getElementById('tapEssay');
+(function wrapWords(node) {
+  [...node.childNodes].forEach(ch => {
+    if (ch.nodeType === 3) {
+      const frag = document.createDocumentFragment();
+      ch.textContent.split(/(\s+)/).forEach(part => {
+        if (!part) return;
+        if (/^\s+$/.test(part)) { frag.appendChild(document.createTextNode(part)); return; }
+        const s = document.createElement('span'); s.className = 'w'; s.textContent = part; frag.appendChild(s);
+      });
+      ch.replaceWith(frag);
+    } else if (ch.nodeType === 1 && (ch.classList.contains('lk') || ch.classList.contains('nt'))) {
+      ch.classList.add('w');
+      if (ch.classList.contains('lk')) ch.classList.add('is-l');
+    } else if (ch.nodeType === 1) wrapWords(ch);
+  });
+})(tapBox);
+const TAPS = [...tapBox.querySelectorAll('.w')];
+(data.taps || []).forEach(i => TAPS[i] && TAPS[i].classList.add('pick'));
+TAPS.forEach((w, i) => w.addEventListener('click', () => {
+  if (document.getElementById('qLinks').classList.contains('checked')) return;
+  w.classList.toggle('pick');
+  save({ taps: TAPS.map((x, j) => x.classList.contains('pick') ? j : -1).filter(j => j >= 0) });
+}));
+
+// ── MARKING ────────────────────────────────────────────────────
+// typed answers: capitals, curly apostrophes and extra spaces don't matter; spelling does
+const norm = s => s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[’‘`]/g, "'").replace(/[.,!?;:"“”]/g, ' ').replace(/\s+/g, ' ').trim();
+function mark(el) {
+  const keys = el.dataset.answer.split('|');
+  const ok = el.tagName === 'SELECT' ? keys.includes(el.value) : keys.some(k => norm(k) === norm(el.value));
+  el.classList.add(ok ? 'correct' : 'wrong');
+  const shown = el.dataset.show || (el.dataset.hd ? (HEADINGS.indexOf(keys[0]) + 1) + ' · ' + keys[0] : keys.join(' / '));
+  if (!ok) el.insertAdjacentHTML('afterend', '<span class="key">' + shown + '</span>');
+  el.disabled = true;
+  return ok ? 1 : 0;
+}
+function unmark(el) {
+  el.classList.remove('correct', 'wrong'); el.disabled = false; el.value = '';
+  if (el.tagName === 'SELECT') el.classList.remove('filled');
+  if (el.nextElementSibling && el.nextElementSibling.classList.contains('key')) el.nextElementSibling.remove();
+}
+function scoreTaps() {
+  const links = TAPS.filter(w => w.classList.contains('is-l'));
+  const found = links.filter(w => w.classList.contains('pick')).length;
+  const wrong = TAPS.filter(w => w.classList.contains('pick') && !w.classList.contains('is-l') && !w.classList.contains('nt')).length;
+  links.forEach(w => w.classList.toggle('miss', !w.classList.contains('pick')));
+  return [Math.max(0, found - wrong), links.length, found, wrong];
+}
+
+// word box of a typed-gap text: a word is crossed out once a gap holds a form of it
+document.querySelectorAll('.bank.typed').forEach(bank => {
+  const quiz = bank.closest('.quiz'), inputs = [...quiz.querySelectorAll('input.ans')];
+  const paint = () => {
+    const vals = inputs.map(i => norm(i.value)).filter(Boolean);
+    bank.querySelectorAll('span').forEach(sp => {
+      const roots = sp.dataset.root.split('|');
+      sp.classList.toggle('used', vals.some(v => roots.some(r => v.startsWith(r))));
+    });
+  };
+  inputs.forEach(i => i.addEventListener('input', paint));
+  new MutationObserver(paint).observe(quiz, { attributes: true, attributeFilter: ['class'] });
+  bank._paint = paint;
+});
+
+// ── CHECK / TRY AGAIN ──────────────────────────────────────────
+QUIZZES.forEach(q => {
+  const foot = document.createElement('div');
+  foot.className = 'quiz-foot';
+  foot.innerHTML = '<button class="btn btn-primary">Check ✓</button>' +
+                   '<button class="btn btn-ghost" style="display:none">Try again ↺</button>' +
+                   '<span class="q-result"></span>';
+  const after = q.querySelector(':scope > .after-check');
+  after ? q.insertBefore(foot, after) : q.appendChild(foot);
+  const [bCheck, bRetry] = foot.querySelectorAll('button');
+  bCheck.addEventListener('click', () => checkQuiz(q, true));
+  bRetry.addEventListener('click', () => retryQuiz(q));
+  q._foot = foot;
+});
+function checkQuiz(q, doSave) {
+  let got, max, extra = '';
+  if (q.id === 'qLinks') {
+    const [s, m, found, wrong] = scoreTaps();
+    got = s; max = m;
+    extra = ' · found ' + found + ' of ' + m + (wrong ? ' · ' + wrong + ' not linkers' : '');
+  } else {
+    const els = [...q.querySelectorAll('.ans')];
+    got = els.reduce((a, el) => a + mark(el), 0); max = els.length;
+  }
+  const res = q._foot.querySelector('.q-result');
+  res.textContent = got + ' / ' + max + extra + (got === max ? ' — perfect! 🎉' : '');
+  res.className = 'q-result ' + (got === max ? 'full' : got === 0 ? 'zero' : 'part');
+  q._foot.children[0].style.display = 'none';
+  q._foot.children[1].style.display = '';
+  q.classList.add('checked');
+  q._score = [got, max];
+  if (doSave) save({ ['chk-' + q.id]: true });
+  if (q.id === 'qLabels') openGate();
+  updateProgress();
+}
+function retryQuiz(q) {
+  const patch = { ['chk-' + q.id]: false };
+  if (q.id === 'qLinks') {
+    TAPS.forEach(w => w.classList.remove('pick', 'miss')); patch.taps = [];
+  } else q.querySelectorAll('.ans').forEach(el => { unmark(el); patch[el.dataset.key] = undefined; });
+  if (q.querySelector('select[data-hd]')) paintHeadings();
+  q._foot.querySelector('.q-result').textContent = '';
+  q._foot.children[0].style.display = '';
+  q._foot.children[1].style.display = 'none';
+  q.classList.remove('checked');
+  q._score = null;
+  save(patch);
+  updateProgress();
+}
+function openGate() {
+  document.getElementById('essayGate').classList.add('open');
+  document.getElementById('gateMsg').style.display = 'none';
+}
+function updateProgress() {
+  const done = QUIZZES.filter(q => q._score);
+  const got = done.reduce((a, q) => a + q._score[0], 0);
+  const max = done.reduce((a, q) => a + q._score[1], 0);
+  document.getElementById('pgCount').textContent = done.length + ' / ' + QUIZZES.length;
+  document.getElementById('pgScore').textContent = got + ' / ' + max;
+  document.getElementById('pgFill').style.width = (done.length / QUIZZES.length * 100) + '%';
+}
+
+// ── TIMERS (not saved): Start / Pause / Reset ──────────────────
+document.querySelectorAll('.timer[data-sec]').forEach(tm => {
+  const limit = +tm.dataset.sec;
+  let left = limit, tick = null;
+  tm.innerHTML = '<span class="tm-label">⏱ ' + tm.dataset.label + '</span><span class="tm-clock"></span>' +
+                 '<button type="button" class="btn btn-primary">Start</button><button type="button" class="btn btn-ghost">Reset</button><span class="tm-msg"></span>';
+  const clock = tm.querySelector('.tm-clock'), [bGo, bReset] = tm.querySelectorAll('button'), msg = tm.querySelector('.tm-msg');
+  const paint = () => { clock.textContent = Math.floor(left / 60) + ':' + String(left % 60).padStart(2, '0'); };
+  const stop = () => { clearInterval(tick); tick = null; tm.classList.remove('running'); bGo.textContent = left < limit && left > 0 ? 'Go on' : 'Start'; };
+  bGo.addEventListener('click', () => {
+    if (tick) { stop(); return; }
+    if (left <= 0) return;
+    tm.classList.add('running'); bGo.textContent = 'Pause';
+    tick = setInterval(() => {
+      left--; paint();
+      if (left <= 0) { stop(); tm.classList.add('over'); msg.textContent = '⏰ Time!'; }
+    }, 1000);
+  });
+  bReset.addEventListener('click', () => { stop(); left = limit; tm.classList.remove('over'); msg.textContent = ''; paint(); bGo.textContent = 'Start'; });
+  paint();
+});
+
+// ── CHECKLISTS, NOTES, FREE WRITING (saved, not marked) ────────
+[['#spCheck', 'sp-'], ['#hwList', 'hw-']].forEach(([sel, pre]) => {
+  document.querySelectorAll(sel + ' input').forEach((c, i) => {
+    c.checked = !!data[pre + i];
+    c.closest('li').classList.toggle('done', c.checked);
+    c.addEventListener('change', () => { save({ [pre + i]: c.checked }); c.closest('li').classList.toggle('done', c.checked); });
+  });
+});
+document.querySelectorAll('input[data-k], textarea[data-k]').forEach(t => {
+  t.value = data[t.dataset.k] || '';
+  t.addEventListener('input', () => save({ [t.dataset.k]: t.value }));
+});
+function resetAll() {
+  if (!confirm('Clear every answer on this page (flashcard progress stays)?')) return;
+  try { localStorage.removeItem(LESSON_KEY); } catch(e) {}
+  location.reload();
+}
+
+// ── INIT ───────────────────────────────────────────────────────
+if (data.activeTab) showTab(data.activeTab);
+QUIZZES.forEach(q => { if (data['chk-' + q.id]) checkQuiz(q, false); });
+document.querySelectorAll('.bank.typed').forEach(b => b._paint());
+updateProgress();
+</script>
+
+<script src="../flashcards.js"></script>
+<script src="../dictionary.js"></script>
+</body>
+</html>

@@ -1,1 +1,5 @@
 .DS_Store
+
+# books and course materials live in ../Materials (never publish them)
+Gateway to the world/
+*.pdf
